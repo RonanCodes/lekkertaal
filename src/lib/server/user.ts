@@ -3,6 +3,7 @@
  * Always require an authenticated Clerk session; throw otherwise.
  */
 import { createServerFn } from "@tanstack/react-start";
+import { redirect } from "@tanstack/react-router";
 import { auth } from "@clerk/tanstack-react-start/server";
 import { db } from "../../db/client";
 import { users, userUnitProgress, units } from "../../db/schema";
@@ -11,7 +12,7 @@ import { requireWorkerContext } from "../../entry.server";
 
 async function currentClerkId(): Promise<string> {
   const a = await auth();
-  if (!a.userId) throw new Error("Not signed in");
+  if (!a.userId) throw redirect({ to: "/sign-in" });
   return a.userId;
 }
 
