@@ -17,3 +17,4 @@ Phase 1 target: US-001 .. US-035 (35 stories).
 [2026-05-13T06:41:52Z] US-010 PASS match-pairs drill pr#9 branch ralph/us-010-match-pairs
 [2026-05-13T06:42:48Z] US-011 PASS MC + listening drill pr#10 branch ralph/us-011-mc-and-listening
 [2026-05-13T06:43:43Z] US-012 PASS translation typing drill pr#11 branch ralph/us-012-translation-typing
+[2026-05-13T06:44:37Z] US-013 PASS fill-blank drill pr#12 branch ralph/us-013-fill-blank
