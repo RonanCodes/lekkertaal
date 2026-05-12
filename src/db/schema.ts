@@ -1,21 +1,456 @@
-import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
+import { sql } from "drizzle-orm";
+import { sqliteTable, text, integer, real, index, uniqueIndex } from "drizzle-orm/sqlite-core";
 
-// Stub: Ralph US-003 will flesh this out into the full schema per PRD section 4.
-// This stub exists so the build doesn't fail before US-003 runs.
+/**
+ * Lekkertaal schema (Phase 1 v0).
+ *
+ * SQLite / D1 dialect. All ID-bearing tables use integer auto-increment PKs
+ * except `users` (clerkId is also unique) and join tables.
+ *
+ * Convention:
+ *  - snake_case columns
+ *  - `created_at` / `updated_at` default to CURRENT_TIMESTAMP (text ISO8601)
+ *  - boolean stored as 0/1 via { mode: "boolean" }
+ *  - JSON blobs stored as text via { mode: "json" } with explicit type
+ */
 
-export const users = sqliteTable("users", {
+// ============================================================================
+// USERS + ENGAGEMENT
+// ============================================================================
+
+export const users = sqliteTable(
+  "users",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    clerkId: text("clerk_id").notNull().unique(),
+    email: text("email").unique(),
+    displayName: text("display_name").notNull(),
+    avatarUrl: text("avatar_url"),
+    cefrLevel: text("cefr_level").default("A2").notNull(),
+    timezone: text("timezone").default("Europe/Amsterdam").notNull(),
+    reminderHour: integer("reminder_hour").default(20).notNull(),
+    reminderEnabled: integer("reminder_enabled", { mode: "boolean" }).default(true).notNull(),
+    streakDays: integer("streak_days").default(0).notNull(),
+    streakFreezesBalance: integer("streak_freezes_balance").default(0).notNull(),
+    streakLastActiveDate: text("streak_last_active_date"),
+    xpTotal: integer("xp_total").default(0).notNull(),
+    coinsBalance: integer("coins_balance").default(0).notNull(),
+    isPublic: integer("is_public", { mode: "boolean" }).default(true).notNull(),
+    onboardedAt: text("onboarded_at"),
+    createdAt: text("created_at").default(sql`CURRENT_TIMESTAMP`).notNull(),
+    updatedAt: text("updated_at").default(sql`CURRENT_TIMESTAMP`).notNull(),
+  },
+  (t) => ({
+    byXp: index("idx_users_xp_total").on(t.xpTotal),
+    byDisplayName: uniqueIndex("idx_users_display_name").on(t.displayName),
+  }),
+);
+
+// ============================================================================
+// CONTENT: courses, units, lessons, exercises, vocab, grammar, scenarios
+// ============================================================================
+
+export const courses = sqliteTable("courses", {
   id: integer("id").primaryKey({ autoIncrement: true }),
-  clerkId: text("clerk_id").unique(),
-  email: text("email").unique(),
-  displayName: text("display_name"),
-  cefrLevel: text("cefr_level").default("A2"),
-  timezone: text("timezone").default("Europe/Amsterdam"),
-  reminderHour: integer("reminder_hour").default(20),
-  reminderEnabled: integer("reminder_enabled", { mode: "boolean" }).default(true),
-  streakDays: integer("streak_days").default(0),
-  streakFreezesBalance: integer("streak_freezes_balance").default(0),
-  streakLastActiveDate: text("streak_last_active_date"),
-  xpTotal: integer("xp_total").default(0),
-  coinsBalance: integer("coins_balance").default(0),
-  createdAt: text("created_at").default("CURRENT_TIMESTAMP"),
+  slug: text("slug").notNull().unique(),
+  title: text("title").notNull(),
+  description: text("description"),
+  cefrLevel: text("cefr_level").notNull(),
+  language: text("language").default("nl").notNull(),
+  isPublished: integer("is_published", { mode: "boolean" }).default(true).notNull(),
+  createdAt: text("created_at").default(sql`CURRENT_TIMESTAMP`).notNull(),
 });
+
+export const grammarConcepts = sqliteTable("grammar_concepts", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  slug: text("slug").notNull().unique(),
+  titleNl: text("title_nl").notNull(),
+  titleEn: text("title_en").notNull(),
+  explanationMd: text("explanation_md"),
+  cefrLevel: text("cefr_level").notNull(),
+});
+
+export const units = sqliteTable(
+  "units",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    courseId: integer("course_id").references(() => courses.id),
+    slug: text("slug").notNull().unique(),
+    titleNl: text("title_nl").notNull(),
+    titleEn: text("title_en").notNull(),
+    description: text("description"),
+    cefrLevel: text("cefr_level").notNull(),
+    order: integer("order").notNull(),
+    grammarConceptSlug: text("grammar_concept_slug"),
+  },
+  (t) => ({
+    byOrder: index("idx_units_order").on(t.cefrLevel, t.order),
+  }),
+);
+
+export const lessons = sqliteTable(
+  "lessons",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    unitId: integer("unit_id")
+      .notNull()
+      .references(() => units.id, { onDelete: "cascade" }),
+    slug: text("slug").notNull().unique(),
+    titleNl: text("title_nl").notNull(),
+    titleEn: text("title_en").notNull(),
+    order: integer("order").notNull(),
+    xpReward: integer("xp_reward").default(10).notNull(),
+  },
+  (t) => ({
+    byUnit: index("idx_lessons_unit").on(t.unitId, t.order),
+  }),
+);
+
+/**
+ * Exercise (a single drill question).
+ * type ∈ match_pairs | multiple_choice | translation_typing | fill_blank | word_ordering | listening_mc
+ */
+export const exercises = sqliteTable(
+  "exercises",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    lessonId: integer("lesson_id").references(() => lessons.id, { onDelete: "cascade" }),
+    unitSlug: text("unit_slug"),
+    slug: text("slug").notNull().unique(),
+    type: text("type").notNull(),
+    promptNl: text("prompt_nl"),
+    promptEn: text("prompt_en"),
+    options: text("options", { mode: "json" }).$type<unknown[]>(),
+    answer: text("answer", { mode: "json" }).$type<unknown>(),
+    hints: text("hints", { mode: "json" }).$type<string[]>(),
+    sourceRef: text("source_ref"),
+    audioUrl: text("audio_url"),
+  },
+  (t) => ({
+    byLesson: index("idx_exercises_lesson").on(t.lessonId),
+    byUnitSlug: index("idx_exercises_unit_slug").on(t.unitSlug),
+    byType: index("idx_exercises_type").on(t.type),
+  }),
+);
+
+export const vocab = sqliteTable(
+  "vocab",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    nl: text("nl").notNull(),
+    en: text("en").notNull(),
+    exampleSentenceNl: text("example_sentence_nl"),
+    exampleSentenceEn: text("example_sentence_en"),
+    sourceImagePath: text("source_image_path"),
+    cefrLevel: text("cefr_level").default("A2").notNull(),
+  },
+  (t) => ({
+    byNl: index("idx_vocab_nl").on(t.nl),
+    uniqPair: uniqueIndex("idx_vocab_nl_en").on(t.nl, t.en),
+  }),
+);
+
+export const scenarios = sqliteTable(
+  "scenarios",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    unitId: integer("unit_id").references(() => units.id),
+    unitSlug: text("unit_slug"),
+    slug: text("slug").notNull().unique(),
+    titleNl: text("title_nl").notNull(),
+    titleEn: text("title_en").notNull(),
+    difficulty: text("difficulty").default("A2").notNull(),
+    npcName: text("npc_name").notNull(),
+    npcPersona: text("npc_persona").notNull(),
+    npcVoiceId: text("npc_voice_id"),
+    openingNl: text("opening_nl").notNull(),
+    mustUseVocab: text("must_use_vocab", { mode: "json" }).$type<string[]>(),
+    mustUseGrammar: text("must_use_grammar", { mode: "json" }).$type<string[]>(),
+    successCriteria: text("success_criteria", { mode: "json" }).$type<string[]>(),
+    failureModes: text("failure_modes", { mode: "json" }).$type<string[]>(),
+    estimatedMinutes: integer("estimated_minutes").default(10).notNull(),
+    xpReward: integer("xp_reward").default(50).notNull(),
+    badgeUnlock: text("badge_unlock"),
+  },
+  (t) => ({
+    byUnit: index("idx_scenarios_unit").on(t.unitId),
+  }),
+);
+
+// ============================================================================
+// PROGRESS
+// ============================================================================
+
+export const userUnitProgress = sqliteTable(
+  "user_unit_progress",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    userId: integer("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    unitId: integer("unit_id")
+      .notNull()
+      .references(() => units.id, { onDelete: "cascade" }),
+    status: text("status").default("locked").notNull(), // locked | unlocked | in_progress | completed
+    lessonsCompleted: integer("lessons_completed").default(0).notNull(),
+    lessonsTotal: integer("lessons_total").default(0).notNull(),
+    bossFightPassed: integer("boss_fight_passed", { mode: "boolean" }).default(false).notNull(),
+    startedAt: text("started_at"),
+    completedAt: text("completed_at"),
+    updatedAt: text("updated_at").default(sql`CURRENT_TIMESTAMP`).notNull(),
+  },
+  (t) => ({
+    byUser: index("idx_uup_user").on(t.userId),
+    uniqUserUnit: uniqueIndex("idx_uup_user_unit").on(t.userId, t.unitId),
+  }),
+);
+
+export const userLessonProgress = sqliteTable(
+  "user_lesson_progress",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    userId: integer("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    lessonId: integer("lesson_id")
+      .notNull()
+      .references(() => lessons.id, { onDelete: "cascade" }),
+    status: text("status").default("not_started").notNull(),
+    correctCount: integer("correct_count").default(0).notNull(),
+    incorrectCount: integer("incorrect_count").default(0).notNull(),
+    xpEarned: integer("xp_earned").default(0).notNull(),
+    startedAt: text("started_at"),
+    completedAt: text("completed_at"),
+    updatedAt: text("updated_at").default(sql`CURRENT_TIMESTAMP`).notNull(),
+  },
+  (t) => ({
+    byUser: index("idx_ulp_user").on(t.userId),
+    uniqUserLesson: uniqueIndex("idx_ulp_user_lesson").on(t.userId, t.lessonId),
+  }),
+);
+
+// ============================================================================
+// ROLEPLAY
+// ============================================================================
+
+export const roleplaySessions = sqliteTable(
+  "roleplay_sessions",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    userId: integer("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    scenarioId: integer("scenario_id")
+      .notNull()
+      .references(() => scenarios.id),
+    transcript: text("transcript", { mode: "json" }).$type<
+      Array<{ role: "user" | "assistant" | "system"; content: string; ts: string }>
+    >(),
+    rubricGrammar: integer("rubric_grammar"),
+    rubricVocab: integer("rubric_vocab"),
+    rubricTask: integer("rubric_task"),
+    rubricFluency: integer("rubric_fluency"),
+    rubricPoliteness: integer("rubric_politeness"),
+    feedbackMd: text("feedback_md"),
+    xpAwarded: integer("xp_awarded").default(0).notNull(),
+    passed: integer("passed", { mode: "boolean" }).default(false).notNull(),
+    startedAt: text("started_at").default(sql`CURRENT_TIMESTAMP`).notNull(),
+    completedAt: text("completed_at"),
+  },
+  (t) => ({
+    byUser: index("idx_rs_user").on(t.userId),
+    byScenario: index("idx_rs_scenario").on(t.scenarioId),
+  }),
+);
+
+export const roleplayErrors = sqliteTable(
+  "roleplay_errors",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    sessionId: integer("session_id")
+      .notNull()
+      .references(() => roleplaySessions.id, { onDelete: "cascade" }),
+    userId: integer("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    category: text("category").notNull(), // grammar | vocab | spelling | register
+    incorrect: text("incorrect").notNull(),
+    correction: text("correction").notNull(),
+    explanationEn: text("explanation_en"),
+    createdAt: text("created_at").default(sql`CURRENT_TIMESTAMP`).notNull(),
+  },
+  (t) => ({
+    byUser: index("idx_re_user").on(t.userId),
+    bySession: index("idx_re_session").on(t.sessionId),
+  }),
+);
+
+// ============================================================================
+// SPACED REPETITION (SM-2)
+// ============================================================================
+
+export const spacedRepQueue = sqliteTable(
+  "spaced_rep_queue",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    userId: integer("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    itemType: text("item_type").notNull(), // vocab | exercise | grammar | roleplay_error
+    itemKey: text("item_key").notNull(), // stable key into the source table
+    payload: text("payload", { mode: "json" }).$type<Record<string, unknown>>(),
+    easeFactor: real("ease_factor").default(2.5).notNull(),
+    intervalDays: integer("interval_days").default(1).notNull(),
+    repetitions: integer("repetitions").default(0).notNull(),
+    nextReviewDate: text("next_review_date").notNull(),
+    lastReviewedAt: text("last_reviewed_at"),
+    createdAt: text("created_at").default(sql`CURRENT_TIMESTAMP`).notNull(),
+  },
+  (t) => ({
+    byUserDue: index("idx_srq_user_due").on(t.userId, t.nextReviewDate),
+    byKey: uniqueIndex("idx_srq_user_item").on(t.userId, t.itemType, t.itemKey),
+  }),
+);
+
+// ============================================================================
+// XP / COINS / DAILY COMPLETIONS / NOTIFICATIONS
+// ============================================================================
+
+export const xpEvents = sqliteTable(
+  "xp_events",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    userId: integer("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    delta: integer("delta").notNull(),
+    reason: text("reason").notNull(), // lesson_complete | roleplay | streak_bonus | badge | placement | seed
+    refType: text("ref_type"),
+    refId: text("ref_id"),
+    createdAt: text("created_at").default(sql`CURRENT_TIMESTAMP`).notNull(),
+  },
+  (t) => ({
+    byUserDate: index("idx_xp_user_date").on(t.userId, t.createdAt),
+  }),
+);
+
+export const coinEvents = sqliteTable(
+  "coin_events",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    userId: integer("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    delta: integer("delta").notNull(),
+    reason: text("reason").notNull(),
+    refType: text("ref_type"),
+    refId: text("ref_id"),
+    createdAt: text("created_at").default(sql`CURRENT_TIMESTAMP`).notNull(),
+  },
+  (t) => ({
+    byUser: index("idx_coin_user").on(t.userId, t.createdAt),
+  }),
+);
+
+export const dailyCompletions = sqliteTable(
+  "daily_completions",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    userId: integer("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    date: text("date").notNull(), // YYYY-MM-DD in user's timezone
+    xpEarned: integer("xp_earned").default(0).notNull(),
+    lessonsCompleted: integer("lessons_completed").default(0).notNull(),
+    drillsCompleted: integer("drills_completed").default(0).notNull(),
+    freezeUsed: integer("freeze_used", { mode: "boolean" }).default(false).notNull(),
+  },
+  (t) => ({
+    uniqUserDate: uniqueIndex("idx_dc_user_date").on(t.userId, t.date),
+  }),
+);
+
+// ============================================================================
+// BADGES
+// ============================================================================
+
+export const badges = sqliteTable("badges", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  slug: text("slug").notNull().unique(),
+  titleNl: text("title_nl").notNull(),
+  titleEn: text("title_en").notNull(),
+  description: text("description"),
+  iconEmoji: text("icon_emoji"),
+  iconAsset: text("icon_asset"),
+  rule: text("rule", { mode: "json" }).$type<{ kind: string; threshold?: number; key?: string }>(),
+});
+
+export const userBadges = sqliteTable(
+  "user_badges",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    userId: integer("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    badgeId: integer("badge_id")
+      .notNull()
+      .references(() => badges.id, { onDelete: "cascade" }),
+    awardedAt: text("awarded_at").default(sql`CURRENT_TIMESTAMP`).notNull(),
+  },
+  (t) => ({
+    uniqUserBadge: uniqueIndex("idx_ub_user_badge").on(t.userId, t.badgeId),
+  }),
+);
+
+// ============================================================================
+// PUSH / NOTIFICATIONS
+// ============================================================================
+
+export const pushSubscriptions = sqliteTable(
+  "push_subscriptions",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    userId: integer("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    endpoint: text("endpoint").notNull(),
+    p256dh: text("p256dh").notNull(),
+    authKey: text("auth_key").notNull(),
+    userAgent: text("user_agent"),
+    createdAt: text("created_at").default(sql`CURRENT_TIMESTAMP`).notNull(),
+  },
+  (t) => ({
+    byUser: index("idx_ps_user").on(t.userId),
+    uniqEndpoint: uniqueIndex("idx_ps_endpoint").on(t.endpoint),
+  }),
+);
+
+export const notificationLog = sqliteTable(
+  "notification_log",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    userId: integer("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    channel: text("channel").notNull(), // push | email
+    kind: text("kind").notNull(), // daily_nag | weekly_digest | streak_recovery
+    sentAt: text("sent_at").default(sql`CURRENT_TIMESTAMP`).notNull(),
+    result: text("result"),
+  },
+  (t) => ({
+    byUser: index("idx_nl_user").on(t.userId, t.sentAt),
+  }),
+);
+
+// ============================================================================
+// Type exports
+// ============================================================================
+
+export type User = typeof users.$inferSelect;
+export type NewUser = typeof users.$inferInsert;
+export type Unit = typeof units.$inferSelect;
+export type Lesson = typeof lessons.$inferSelect;
+export type Exercise = typeof exercises.$inferSelect;
+export type Vocab = typeof vocab.$inferSelect;
+export type Scenario = typeof scenarios.$inferSelect;
+export type Badge = typeof badges.$inferSelect;

@@ -11,7 +11,8 @@
     {
       "binding": "DB",
       "database_name": "lekkertaal_db",
-      "database_id": "ca05c5b2-512c-4007-88a6-b2499e4cbd12"
+      "database_id": "ca05c5b2-512c-4007-88a6-b2499e4cbd12",
+      "migrations_dir": "drizzle"
     }
   ],
   "r2_buckets": [
