@@ -17,6 +17,7 @@ import "./start";
 import { db } from "./db/client";
 import { resetStaleStreaks } from "./lib/server/gamification";
 import { runDailyPushCron } from "./lib/server/cron-push";
+import { runWeeklyDigestCron, runStreakRecoveryCron } from "./lib/server/email";
 
 export type WorkerEnv = {
   DB: D1Database;
@@ -85,7 +86,20 @@ export default {
       } catch (err) {
         console.error("[cron] runDailyPushCron failed:", err);
       }
-      // US-028 will be added here.
+      // US-028: weekly digest (Sun 10:00 UTC, gated inside the fn).
+      try {
+        const r = await runWeeklyDigestCron(db(env.DB), env);
+        if (r.sent > 0) console.log(`[cron] weekly digest sent=${r.sent}`);
+      } catch (err) {
+        console.error("[cron] runWeeklyDigestCron failed:", err);
+      }
+      // US-028: streak recovery (daily; idempotent via notification_log).
+      try {
+        const r = await runStreakRecoveryCron(db(env.DB), env);
+        if (r.sent > 0) console.log(`[cron] streak recovery sent=${r.sent}`);
+      } catch (err) {
+        console.error("[cron] runStreakRecoveryCron failed:", err);
+      }
     });
   },
 };
