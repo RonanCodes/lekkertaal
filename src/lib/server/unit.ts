@@ -85,6 +85,7 @@ export const getUnitDetail = createServerFn({ method: "GET" })
         xpTotal: me[0].xpTotal,
         coinsBalance: me[0].coinsBalance,
         streakDays: me[0].streakDays,
+        streakFreezesBalance: me[0].streakFreezesBalance,
       },
       unit,
       lessons: lessonRows.map((l) => ({

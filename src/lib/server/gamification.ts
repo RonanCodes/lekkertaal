@@ -35,6 +35,18 @@ export const LESSON_XP_REWARD = 20;
 export const LESSON_COIN_REWARD = 5;
 export const ROLEPLAY_PASSING_COIN_REWARD = 25;
 
+// US-022: milestone-day → freeze grants.
+// Keys are the streak-day threshold; values are the number of freezes to grant
+// the *first* time the user crosses that milestone (de-duplicated by checking
+// the previous streakDays value against the threshold).
+export const STREAK_MILESTONE_FREEZES: Array<{ day: number; grant: number }> = [
+  { day: 7, grant: 1 },
+  { day: 14, grant: 1 },
+  { day: 30, grant: 2 },
+  { day: 60, grant: 3 },
+  { day: 100, grant: 5 },
+];
+
 function todayUtc(): string {
   return new Date().toISOString().slice(0, 10);
 }
@@ -54,7 +66,12 @@ function yesterdayUtc(): string {
 export async function bumpStreakIfFirstToday(
   drz: DrizzleD1Database,
   userId: number,
-): Promise<{ streakDays: number; freezeUsed: boolean; alreadyActiveToday: boolean }> {
+): Promise<{
+  streakDays: number;
+  freezeUsed: boolean;
+  alreadyActiveToday: boolean;
+  milestoneFreezesAwarded: number;
+}> {
   const me = await drz.select().from(users).where(eq(users.id, userId)).limit(1);
   if (!me[0]) throw new Error("User row missing for streak bump");
   const today = todayUtc();
@@ -62,23 +79,41 @@ export async function bumpStreakIfFirstToday(
   const last = me[0].streakLastActiveDate;
 
   if (last === today) {
-    return { streakDays: me[0].streakDays, freezeUsed: false, alreadyActiveToday: true };
+    return {
+      streakDays: me[0].streakDays,
+      freezeUsed: false,
+      alreadyActiveToday: true,
+      milestoneFreezesAwarded: 0,
+    };
   }
 
+  const previousStreakDays = me[0].streakDays;
   let newStreakDays = 1;
   let freezeUsed = false;
   let newFreezeBalance = me[0].streakFreezesBalance;
 
   if (last === yesterday) {
-    newStreakDays = me[0].streakDays + 1;
+    newStreakDays = previousStreakDays + 1;
   } else if (last && last < yesterday && me[0].streakFreezesBalance > 0) {
     // The user missed a day but has a freeze available — consume one.
-    newStreakDays = me[0].streakDays + 1;
+    newStreakDays = previousStreakDays + 1;
     freezeUsed = true;
     newFreezeBalance = me[0].streakFreezesBalance - 1;
   } else {
     newStreakDays = 1; // fresh start
   }
+
+  // US-022: milestone freeze grants. Only fire when this bump crosses the
+  // threshold for the first time (previous < day && new >= day). Multiple
+  // milestones in one bump (e.g. fresh-start past 7d) are not possible since
+  // newStreakDays only ever increases by 1.
+  let milestoneFreezesAwarded = 0;
+  for (const m of STREAK_MILESTONE_FREEZES) {
+    if (previousStreakDays < m.day && newStreakDays >= m.day) {
+      milestoneFreezesAwarded += m.grant;
+    }
+  }
+  newFreezeBalance += milestoneFreezesAwarded;
 
   await drz
     .update(users)
@@ -89,7 +124,12 @@ export async function bumpStreakIfFirstToday(
     })
     .where(eq(users.id, userId));
 
-  return { streakDays: newStreakDays, freezeUsed, alreadyActiveToday: false };
+  return {
+    streakDays: newStreakDays,
+    freezeUsed,
+    alreadyActiveToday: false,
+    milestoneFreezesAwarded,
+  };
 }
 
 /** Upsert today's daily_completions row, accumulating xp/lessons/drills. */
