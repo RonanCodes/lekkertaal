@@ -10,6 +10,11 @@ import { createStartHandler, defaultStreamHandler } from "@tanstack/react-start/
 import type { D1Database, R2Bucket, ExecutionContext } from "@cloudflare/workers-types";
 import { AsyncLocalStorage } from "node:async_hooks";
 
+// Register the TanStack Start instance with clerkMiddleware as a side effect.
+// Must be imported before createStartHandler so the middleware is in the
+// global request chain and Clerk's auth() helper works in route handlers.
+import "./start";
+
 export type WorkerEnv = {
   DB: D1Database;
   TTS_CACHE: R2Bucket;
