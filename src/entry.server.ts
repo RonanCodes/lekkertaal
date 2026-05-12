@@ -14,6 +14,8 @@ import { AsyncLocalStorage } from "node:async_hooks";
 // Must be imported before createStartHandler so the middleware is in the
 // global request chain and Clerk's auth() helper works in route handlers.
 import "./start";
+import { db } from "./db/client";
+import { resetStaleStreaks } from "./lib/server/gamification";
 
 export type WorkerEnv = {
   DB: D1Database;
@@ -57,9 +59,20 @@ export default {
   },
 
   async scheduled(_event: unknown, env: WorkerEnv, ctx: ExecutionContext): Promise<void> {
-    // Cron handler — wired up by US-027 (web push) + US-028 (email).
+    // Cron handler. The 0 * * * * trigger runs hourly. Story-specific
+    // schedulers register here; each is wrapped so a single failure doesn't
+    // skip the rest.
     await requestStore.run({ env, ctx }, async () => {
-      // No-op placeholder; story-specific schedulers will register here.
+      // US-020: reset stale streaks (consume freezes when available).
+      try {
+        const reset = await resetStaleStreaks(db(env.DB));
+        if (reset > 0) {
+          console.log(`[cron] reset ${reset} stale streak(s)`);
+        }
+      } catch (err) {
+        console.error("[cron] resetStaleStreaks failed:", err);
+      }
+      // US-027 + US-028 handlers will be added here.
     });
   },
 };

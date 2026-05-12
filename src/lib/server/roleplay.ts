@@ -19,6 +19,7 @@ import { generateObject } from "ai";
 import { createAnthropic } from "@ai-sdk/anthropic";
 import { z } from "zod";
 import { enqueueRoleplayErrors } from "./spaced-rep";
+import { awardRoleplayComplete } from "./gamification";
 
 export type RoleplayTranscriptEntry = {
   role: "user" | "assistant" | "system";
@@ -335,6 +336,18 @@ Grade the learner's Dutch. Return the rubric scores, a short English feedback pa
           .set({ xpTotal: (me[0].xpTotal ?? 0) + xpDelta })
           .where(eq(users.id, me[0].id));
       }
+
+      // US-020: roleplay coins + streak + daily_completions. Only the XP delta
+      // (not the full xpAwarded) gets logged to xp_events so re-do attempts
+      // don't double-credit the leaderboard.
+      await awardRoleplayComplete(
+        drz,
+        me[0].id,
+        sess.id,
+        passed,
+        true,
+        xpDelta > 0 ? xpDelta : 0,
+      );
     }
 
     return {
