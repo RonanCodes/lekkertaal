@@ -12,3 +12,4 @@ Phase 1 target: US-001 .. US-035 (35 stories).
 [2026-05-13T06:16:54Z] US-005 PASS Placement test (5 questions) + level picker fallback pr#5 branch ralph/us-005-placement-test
 [2026-05-13T06:18:37Z] US-006 PASS Reminder-hour + push-permission onboarding pr#6 branch ralph/us-006-onboarding-notifications
 [2026-05-13T06:19:42Z] US-007 PASS Path view linear unit tree pr#7
+[2026-05-13T06:37:13Z] US-008 PASS unit detail pr#8 branch ralph/us-008-unit-detail
