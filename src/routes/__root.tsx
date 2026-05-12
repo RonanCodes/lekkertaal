@@ -4,16 +4,31 @@ import { TanStackDevtools } from "@tanstack/react-devtools";
 import { ClerkProvider, UserButton, useAuth } from "@clerk/tanstack-react-start";
 
 import appCss from "../styles.css?url";
+import { IosInstallBanner } from "../components/IosInstallBanner";
 
 export const Route = createRootRoute({
   head: () => ({
     meta: [
       { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
+      { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
+      { name: "theme-color", content: "#FF6B1A" },
+      { name: "apple-mobile-web-app-capable", content: "yes" },
+      { name: "apple-mobile-web-app-status-bar-style", content: "default" },
+      { name: "apple-mobile-web-app-title", content: "Lekkertaal" },
       { title: "Lekkertaal" },
       { name: "description", content: "Dutch, made tasty. Daily 5-minute drills + roleplay boss fights." },
     ],
-    links: [{ rel: "stylesheet", href: appCss }],
+    links: [
+      { rel: "stylesheet", href: appCss },
+      { rel: "manifest", href: "/manifest.json" },
+      { rel: "apple-touch-icon", href: "/logo192.png" },
+    ],
+    scripts: [
+      {
+        children:
+          "if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('/sw.js').catch(console.error)})}",
+      },
+    ],
   }),
   shellComponent: RootDocument,
 });
@@ -33,6 +48,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
             <AuthNav />
           </header>
           {children}
+          <IosInstallBanner />
           <TanStackDevtools
             config={{ position: "bottom-right" }}
             plugins={[
