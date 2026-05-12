@@ -1,17 +1,149 @@
-
 @import "tailwindcss";
 
-* {
-  box-sizing: border-box;
+/* ============================================================
+ * Lekkertaal theme — Cutesy Dutch.
+ * Per design research 2026-05-12.
+ * - Display: Fredoka (rounded, friendly)
+ * - Body: Nunito (readable, soft)
+ * - Palette: Dutch orange + canal blue + tulip pink + warm paper bg
+ * - Components: rounded-3xl cards, chunky 3D offset shadow buttons
+ * ============================================================ */
+
+@import url("https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;500;600;700;800&display=swap");
+
+@theme {
+  --color-brand-orange: #FF6B1A;
+  --color-brand-orange-dark: #D54E00;
+  --color-brand-orange-soft: #FFE5D2;
+  --color-brand-blue: #1F6FB2;
+  --color-brand-blue-dark: #0E4F87;
+  --color-brand-blue-soft: #D6E7F5;
+  --color-brand-pink: #FF7AA2;
+  --color-brand-pink-soft: #FFD9E4;
+
+  --color-paper: #FFF8EE;
+  --color-paper-dark: #1B1714;
+  --color-ink: #1A1410;
+  --color-ink-soft: #5C4A3A;
+
+  --color-good: #3F8A4C;
+  --color-warn: #C28E1A;
+  --color-bad:  #B23A3A;
+
+  --font-display: "Fredoka", system-ui, sans-serif;
+  --font-sans: "Nunito", system-ui, sans-serif;
+
+  --radius-card: 1.5rem;
+  --radius-button: 1rem;
+  --radius-pill: 9999px;
 }
 
-html,
-body,
-#app {
-  min-height: 100%;
-}
-
+* { box-sizing: border-box; }
+html, body, #app { min-height: 100%; }
 body {
   margin: 0;
+  font-family: var(--font-sans);
+  color: var(--color-ink);
+  background-color: var(--color-paper);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  letter-spacing: -0.01em;
+  color: var(--color-ink);
+}
+
+/* Chunky 3D button: <a class="btn-3d"> or <button class="btn-3d"> */
+.btn-3d {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1.5rem;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.05rem;
+  letter-spacing: 0.01em;
+  border-radius: var(--radius-button);
+  background: var(--color-brand-orange);
+  color: white;
+  box-shadow: 0 4px 0 0 var(--color-brand-orange-dark);
+  border: none;
+  cursor: pointer;
+  transition: transform 80ms ease-out, box-shadow 80ms ease-out, background 120ms ease;
+  text-decoration: none;
+}
+.btn-3d:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 5px 0 0 var(--color-brand-orange-dark);
+  background: color-mix(in srgb, var(--color-brand-orange) 92%, white 8%);
+}
+.btn-3d:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 0 var(--color-brand-orange-dark);
+}
+
+.btn-3d-blue {
+  background: var(--color-brand-blue);
+  box-shadow: 0 4px 0 0 var(--color-brand-blue-dark);
+}
+.btn-3d-blue:hover {
+  box-shadow: 0 5px 0 0 var(--color-brand-blue-dark);
+  background: color-mix(in srgb, var(--color-brand-blue) 92%, white 8%);
+}
+.btn-3d-blue:active {
+  box-shadow: 0 1px 0 0 var(--color-brand-blue-dark);
+}
+
+.btn-3d-ghost {
+  background: white;
+  color: var(--color-ink);
+  box-shadow: 0 4px 0 0 var(--color-ink-soft);
+  border: 1px solid var(--color-ink-soft);
+}
+.btn-3d-ghost:hover {
+  box-shadow: 0 5px 0 0 var(--color-ink-soft);
+  background: var(--color-brand-orange-soft);
+}
+.btn-3d-ghost:active {
+  box-shadow: 0 1px 0 0 var(--color-ink-soft);
+}
+
+/* Cards */
+.card {
+  background: white;
+  border-radius: var(--radius-card);
+  padding: 1.5rem;
+  box-shadow:
+    0 1px 0 0 rgba(0,0,0,0.04),
+    0 8px 24px -8px rgba(213,78,0,0.10);
+  border: 1px solid color-mix(in srgb, var(--color-brand-orange-soft) 60%, transparent);
+}
+
+/* Status / counter chips (used by top app bar later: streak / XP / coins) */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.875rem;
+  background: var(--color-brand-orange-soft);
+  color: var(--color-brand-orange-dark);
+}
+.chip-blue { background: var(--color-brand-blue-soft); color: var(--color-brand-blue-dark); }
+.chip-pink { background: var(--color-brand-pink-soft); color: #B83A6E; }
+
+@media (prefers-color-scheme: dark) {
+  body { background-color: var(--color-paper-dark); color: var(--color-paper); }
+  h1, h2, h3, h4, h5, h6 { color: var(--color-paper); }
+  .card {
+    background: #2A2420;
+    border-color: color-mix(in srgb, var(--color-brand-orange) 20%, transparent);
+  }
+  .btn-3d-ghost { background: #2A2420; color: var(--color-paper); }
+}
