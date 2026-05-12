@@ -14,3 +14,4 @@ Phase 1 target: US-001 .. US-035 (35 stories).
 [2026-05-13T06:19:42Z] US-007 PASS Path view linear unit tree pr#7
 [2026-05-13T06:37:13Z] US-008 PASS unit detail pr#8 branch ralph/us-008-unit-detail
 [2026-05-13T06:40:32Z] US-009 PASS lesson player direct-to-main (no PR - branch protection off; commit ecac8f4)
+[2026-05-13T06:41:52Z] US-010 PASS match-pairs drill pr#9 branch ralph/us-010-match-pairs
