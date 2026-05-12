@@ -1,0 +1,746 @@
+{
+  "project": "lekkertaal",
+  "version": "1.0.0",
+  "tagline": "Duolingo-class Dutch learning PWA with AI roleplay boss-fights for situational practice",
+  "vision": "Most adult Dutch learners pick up vocab and grammar from apps like Duolingo, then freeze the moment they need to actually use it - at work, with a landlord, ordering coffee. Lekkertaal closes that gap: daily 5-minute drills build the foundation, then per-unit boss-fight roleplays force you to apply it in realistic scenarios with an AI playing the other side. Streaks, coins, badges keep you coming back. Mascot is Stroop the stroopwafel.",
+  "deploy": {
+    "subdomain": "lekkertaal.ronanconnolly.dev",
+    "cf_account": "ronanconnolly (personal) — NOT Simplicity Labs",
+    "stack_canon": "TanStack Start + Cloudflare Workers + D1 + Drizzle + shadcn/ui + Clerk + Vercel AI SDK + ElevenLabs + Resend + PostHog + Sentry + UptimeRobot"
+  },
+  "key_decisions": {
+    "auth": "Clerk open signup (Google + email). No cohort, single global namespace. Public-by-default.",
+    "content_frame": "Generic CEFR-levelled (A1/A2/B1) curriculum. Origin invisible. v0 ships A2 only.",
+    "structure": "Linear path + sandbox unlock per completed unit. Duolingo's pattern.",
+    "daily_loop": "Drill-heavy ~5min daily, end-of-unit boss-fight roleplay ~10min.",
+    "drill_types": "match-pairs, multiple-choice, translation-typing, fill-in-the-blank, word-ordering, listening-mc",
+    "roleplay_scoring": "In-character during chat, 5-rubric scorecard after (grammar/vocab/task/fluency/politeness, 1-5 stars each). Errors feed into spaced-rep queue (SM-2). No fail state, best-attempt sticks.",
+    "ai_provider": "Vercel AI SDK. Claude Sonnet 4.6 primary (via @ai-sdk/anthropic), OpenAI gpt-4o-mini fallback (via @ai-sdk/openai), Gemini 2.5 Flash for image gen (via @ai-sdk/google).",
+    "tts": "ElevenLabs primary. OpenAI TTS fallback. Audio cached in R2.",
+    "stt": "DEFERRED to Phase 2",
+    "gamification": "Streaks + XP + coins + freezes + badges + global leaderboard. NO hearts. NO league system.",
+    "social": "Global leaderboard (today/week/all-time) + public profiles + users directory. No friends/follow in v0.",
+    "notifications": "Web push (daily nag) + email (weekly digest + streak recovery). No WhatsApp.",
+    "visuals": "Cutesy. Fredoka (display) + Nunito (body). Dutch palette: orange #FF6B1A, canal blue #1F6FB2, tulip pink #FF7AA2, warm paper bg. shadcn customized: rounded-3xl, chunky 3D button shadows, Motion whileTap.",
+    "mascot": "Stroop the stroopwafel via Rive (state machine: idle/happy/proud/concerned/sleeping). Concept art via Nano Banana 2.",
+    "ui_animation": "Motion (motion/react import). LazyMotion + m components for SSR-safe.",
+    "character_animation": "Rive (mascot). Lottie fallback.",
+    "sfx": "4 hero SFX: correct-ding, wrong-buzz, lesson-complete fanfare, streak-fire whoosh. Via /ro:sfx-elevenlabs."
+  },
+  "personas": [
+    "Working adults learning Dutch in the Netherlands (primary)",
+    "Yellowtail Dutch Group 4 users (Ronan, Mehmet, Judith, Michiel) seeded day-one"
+  ],
+  "out_of_scope_v0": [
+    "STT / pronunciation scoring (Phase 2)",
+    "Real-time voice / OpenAI Realtime / Gemini Live (Phase 3)",
+    "A1 + B1 starter content (Phase 2; v0 ships A2 only)",
+    "Friends / follow graph (Phase 2)",
+    "Peer drills (Phase 2)",
+    "User-suggested scenarios + moderation (Phase 2)",
+    "AI-improvised scenarios (Phase 3)",
+    "Content authoring UI for teachers (Phase 4)",
+    "League system (Phase 2 once user count > 20)",
+    "Hearts mechanic (rejected per design)",
+    "Mobile native via Expo (Phase 3)",
+    "Monetization / Stripe (Phase 4)",
+    "Multi-locale UI (Phase 4)"
+  ],
+  "ralph_instructions": {
+    "mode": "fresh",
+    "reviewer": "opus",
+    "implementer": "sonnet",
+    "max_iterations": 50,
+    "commit_per_story": true,
+    "push_per_story": true,
+    "auto_chain": true,
+    "pr_per_story": true,
+    "branch_prefix": "ralph/us-",
+    "stop_conditions": ["real-blocker", "missing-api-key", "failing-test-cannot-fix", "external-service-down"]
+  },
+  "phases": [
+    {
+      "id": "phase-1-v0",
+      "title": "Phase 1 — v0 MVP",
+      "goal": "A new user can sign up, take placement, get routed to A2 Unit 4, complete a lesson (6 drills, ~5min), earn XP + streak, see Stroop celebrate. After completing all Unit 4 lessons, unlock the Unit 4 boss-fight roleplay, complete it, get a 5-rubric scorecard with errors-into-spaced-rep, earn a badge. Tomorrow at 8pm get a push notification if they haven't done today's lesson. Sunday get an email digest. All 4 seeded users visible on leaderboard and as public profiles.",
+      "stories": [
+        {
+          "id": "US-001",
+          "title": "Ingest course content from llm-wiki vault into structured seed JSON",
+          "priority": "P0",
+          "size": "L",
+          "ears": "When the seed pipeline runs, the system shall read the WhatsApp chat transcript (raw/whatsapp/_chat.txt), the 73 notepad photos, and the 4 course PDFs from /Users/ronan/Downloads-Keep/learn-dutch/12th\\ may/, OCR / parse them via Claude or Gemini vision, and emit structured JSON for seeding: seed/{units.json, vocab.json, exercises.json, scenarios.json}.",
+          "acceptance": [
+            "Reads from /Users/ronan/Downloads-Keep/learn-dutch/12th\\ may/WhatsApp\\ Chat\\ -\\ Yellowtail\\ Dutch\\ Group/ and /Users/ronan/Downloads-Keep/learn-dutch/12th\\ may/notepad\\ photos/",
+            "At least 80% of vocab from notepad photos appears in seed/vocab.json",
+            "Photos that fail OCR are flagged in seed/ingest-errors.txt",
+            "Idempotent: re-running produces the same seed (deterministic ordering, sha-keyed dedupe)",
+            "Each vocab item has: nl, en, example_sentence_nl, example_sentence_en, source_image_path, cefr_level",
+            "Each unit-level grouping covers one Hoofdstuk or thematic block",
+            "Run via: pnpm seed:ingest --source /path/to/zip-or-folder"
+          ],
+          "depends_on": [],
+          "labels": ["foundation", "ingest", "seed"]
+        },
+        {
+          "id": "US-002",
+          "title": "Finalise TanStack Start + CF Workers scaffold",
+          "priority": "P0",
+          "size": "S",
+          "ears": "When pnpm dev runs, the system shall start a TanStack Start dev server with Cloudflare adapter wired and live-reload working.",
+          "acceptance": [
+            "wrangler.jsonc has name='lekkertaal', compatibility_date current",
+            "vite.config.ts has @cloudflare/vite-plugin + tanstackStart + viteReact + tailwindcss",
+            "pnpm dev starts cleanly on http://localhost:3000",
+            "pnpm build outputs a valid CF Worker bundle",
+            "Project README updated with stack overview"
+          ],
+          "depends_on": [],
+          "labels": ["foundation", "scaffold"]
+        },
+        {
+          "id": "US-003",
+          "title": "Drizzle schema + D1 migration + seed loader",
+          "priority": "P0",
+          "size": "L",
+          "ears": "When pnpm db:push runs against the D1 database, the system shall create all tables from src/db/schema.ts. When pnpm seed:load runs, the system shall populate the DB from seed/*.json.",
+          "acceptance": [
+            "src/db/schema.ts defines: users, courses, units, lessons, exercises, vocab, grammar_concepts, scenarios, user_lesson_progress, user_unit_progress, roleplay_sessions, roleplay_errors, spaced_rep_queue, xp_events, coin_events, daily_completions, badges, user_badges, push_subscriptions, notification_log",
+            "All foreign keys + indexes for hot query paths (leaderboard, user-current-unit, due-spaced-rep)",
+            "drizzle-kit configured with dialect=sqlite, driver=d1-http",
+            "pnpm db:generate creates migration files in drizzle/",
+            "pnpm db:push applies cleanly to local D1 (--local) and remote D1 (--remote)",
+            "pnpm seed:load reads seed/*.json and INSERT-OR-IGNORES rows (idempotent)",
+            "Uses --local flag for development; deploy story wires CF_ACCOUNT_ID to push remote"
+          ],
+          "depends_on": ["US-001", "US-002"],
+          "labels": ["foundation", "db", "drizzle"]
+        },
+        {
+          "id": "US-004",
+          "title": "Clerk auth: open signup with Google + email",
+          "priority": "P0",
+          "size": "M",
+          "ears": "When a new user clicks sign up, the system shall offer Google OAuth and email-magic-link via Clerk. When sign up completes, a Clerk webhook syncs the new user into users table.",
+          "acceptance": [
+            "pnpm add @clerk/tanstack-react-start",
+            "ClerkProvider wraps the app in __root.tsx",
+            ".dev.vars contains CLERK_SECRET_KEY + VITE_CLERK_PUBLISHABLE_KEY (from ~/.claude/.env CLERK_SECRET_KEY_LEKKERTAAL + VITE_CLERK_PUBLISHABLE_KEY_LEKKERTAAL)",
+            "/sign-in and /sign-up routes use Clerk's hosted UI",
+            "Server function /api/auth/webhook receives Clerk user.created event and inserts into users table (handles signed payload verification)",
+            "Existing Clerk users seamlessly sign in",
+            "Sign out works"
+          ],
+          "depends_on": ["US-003"],
+          "labels": ["auth", "clerk"]
+        },
+        {
+          "id": "US-005",
+          "title": "Placement test (5 questions) + level picker fallback",
+          "priority": "P0",
+          "size": "M",
+          "ears": "When a user signs up for the first time, the system shall present a 5-question placement test covering A1-to-B1 difficulty. When the user answers all 5, the system shall route them to the appropriate starting unit. The user may bypass via 'I know my level' link to pick A1/A2/B1 manually.",
+          "acceptance": [
+            "/onboarding route with placement test UI",
+            "5 questions hardcoded in src/data/placement-test.ts: Q1=A1 vocab, Q2=A2-early perfectum, Q3=A2-late word-order drag-tiles, Q4=B1-early subordinate-clause, Q5=B1-late idiom comprehension",
+            "Each correct answer moves user up a sub-level; final score sets users.cefr_level",
+            "'I know my level' link bypasses to /onboarding/level-pick with A1/A2/B1 buttons",
+            "Both paths land on /app/path at the right starting unit",
+            "Skippable for users who have already completed (idempotent)"
+          ],
+          "depends_on": ["US-004"],
+          "labels": ["onboarding", "placement"]
+        },
+        {
+          "id": "US-006",
+          "title": "Reminder-hour + push-permission onboarding",
+          "priority": "P0",
+          "size": "M",
+          "ears": "When a user completes the placement test, the system shall ask them to choose a daily reminder hour and grant web push permission. Both are skippable.",
+          "acceptance": [
+            "/onboarding/notifications route",
+            "Reminder hour picker: default 20:00 in user's timezone (auto-detected via Intl.DateTimeFormat)",
+            "users.reminder_hour, users.timezone, users.reminder_enabled stored",
+            "Web Push permission request fires only when user clicks 'Enable reminders'",
+            "On grant, subscription saved to push_subscriptions table",
+            "Skip link routes to /app/path with reminders disabled"
+          ],
+          "depends_on": ["US-005"],
+          "labels": ["onboarding", "push", "notifications"]
+        },
+        {
+          "id": "US-007",
+          "title": "Path view: linear unit tree visualisation (/app/path)",
+          "priority": "P0",
+          "size": "L",
+          "ears": "When a signed-in user navigates to /app/path, the system shall render the unit tree for their CEFR level with completed/current/locked status per unit. When a user taps a non-locked unit, the system shall navigate to its detail page.",
+          "acceptance": [
+            "Server function loads units for user.cefr_level + user_unit_progress",
+            "Vertical scrollable path UI; each unit is a Stroop-themed badge",
+            "Status indicator: green-completed, orange-in-progress, grey-locked",
+            "Tap on unlocked unit -> /app/unit/:slug",
+            "Mobile-first responsive design",
+            "Motion animation on unit-status transition (completion celebration)",
+            "Top bar always visible: streak / xp / coins counters"
+          ],
+          "depends_on": ["US-003", "US-005"],
+          "labels": ["path", "ui", "core"]
+        },
+        {
+          "id": "US-008",
+          "title": "Unit detail page (/app/unit/:slug)",
+          "priority": "P0",
+          "size": "M",
+          "ears": "When the user navigates to a unit's detail page, the system shall show the lessons list, the unit's vocab grid, the unit's grammar concept (if any), and a boss-fight CTA (locked until lessons complete).",
+          "acceptance": [
+            "Server-function load: unit + lessons + vocab + grammar_concept",
+            "Lessons list with per-lesson completion + best score",
+            "Vocab grid (preview of ~10 words; 'Show all' opens modal with full list)",
+            "Grammar concept card (collapsible Rule + Examples)",
+            "Boss-fight CTA card: locked-greyed if not all lessons done, unlocked-glowing if all done",
+            "Sticky bottom: 'Start next lesson' button (always visible)"
+          ],
+          "depends_on": ["US-007"],
+          "labels": ["unit", "ui", "core"]
+        },
+        {
+          "id": "US-009",
+          "title": "Lesson player (/app/lesson/:id)",
+          "priority": "P0",
+          "size": "L",
+          "ears": "When a user starts a lesson, the system shall render the lesson's drills sequentially. On all drills correct, the system shall navigate to a completion celebration screen with XP awarded and Stroop animation.",
+          "acceptance": [
+            "Progress bar at top, advances per drill",
+            "Each drill type renders via a per-type component (US-010..US-015)",
+            "On drill answer: immediate correct/wrong feedback + transition to next drill",
+            "Wrong answers add the item to spaced_rep_queue",
+            "On lesson complete: /app/lesson/:id/complete with +XP + Stroop happy animation + 'Back to path'",
+            "Skip lesson option (with confirm dialog)",
+            "Keyboard-navigable (Enter to submit, Tab to navigate)"
+          ],
+          "depends_on": ["US-008"],
+          "labels": ["lesson", "ui", "core"]
+        },
+        {
+          "id": "US-010",
+          "title": "Drill: Match pairs (tap NL <-> EN)",
+          "priority": "P0",
+          "size": "M",
+          "ears": "When a match-pairs drill loads, the system shall display 4 Dutch tiles and 4 English tiles. When the user taps an NL tile then an EN tile, the system shall confirm or reject the match.",
+          "acceptance": [
+            "4 NL tiles + 4 EN tiles, shuffled positions",
+            "Tap NL -> highlight; tap EN -> confirm match (correct = green flash + remove pair) or reject (red flash + 100ms shake)",
+            "Drill complete when all 4 pairs matched",
+            "Audio play option per tile (tap speaker icon -> ElevenLabs TTS via US-029)",
+            "Accessibility: full keyboard nav with arrow keys + Enter to confirm"
+          ],
+          "depends_on": ["US-009"],
+          "labels": ["drill", "match-pairs", "ui"]
+        },
+        {
+          "id": "US-011",
+          "title": "Drill: Multiple choice + Listening MC",
+          "priority": "P0",
+          "size": "M",
+          "ears": "When a multiple-choice drill loads, the system shall present a prompt (text or audio) and 4 options. When the user taps an option, the system shall confirm or reject.",
+          "acceptance": [
+            "Text MC: prompt as text, 4 options as buttons",
+            "Listening MC: 🔊 button plays ElevenLabs audio of Dutch sentence; user picks meaning from 4 options",
+            "Selected option immediately styled correct/wrong",
+            "Brief explanation on wrong: 'X is correct because Y'",
+            "Audio plays via cached R2 URL (US-029)",
+            "One component file handles both variants via a `mode: 'text' | 'audio'` prop"
+          ],
+          "depends_on": ["US-009", "US-029"],
+          "labels": ["drill", "mc", "listening", "ui"]
+        },
+        {
+          "id": "US-012",
+          "title": "Drill: Translation typing (EN -> NL)",
+          "priority": "P0",
+          "size": "M",
+          "ears": "When a translation-typing drill loads, the system shall show an English sentence and a text input. When the user submits, the system shall grade with Levenshtein tolerance.",
+          "acceptance": [
+            "Input field with mobile-friendly Dutch keyboard hint",
+            "Levenshtein distance <=1 = correct (allows one typo)",
+            "Case-insensitive, punctuation-tolerant grading",
+            "On submit: show user's answer + canonical answer side-by-side",
+            "Speaker icon to play canonical answer via ElevenLabs",
+            "Shake animation on wrong",
+            "Hint button (costs 5 coins): reveal first 2 letters"
+          ],
+          "depends_on": ["US-009", "US-029"],
+          "labels": ["drill", "translate", "ui"]
+        },
+        {
+          "id": "US-013",
+          "title": "Drill: Fill-in-the-blank",
+          "priority": "P0",
+          "size": "M",
+          "ears": "When a fill-in-the-blank drill loads, the system shall present a sentence with one word blanked out. The user types the missing word.",
+          "acceptance": [
+            "Sentence with ___ where the blank is; rest visible",
+            "Input field inline-flush with the sentence",
+            "Common grammar drills: verb conjugation (Ik ___ gegaan), articles (___ huis), prepositions (Ik ga ___ school)",
+            "Levenshtein <=1 grading like US-012",
+            "Hint button reveals first letter (10 coins)"
+          ],
+          "depends_on": ["US-009"],
+          "labels": ["drill", "fitb", "ui"]
+        },
+        {
+          "id": "US-014",
+          "title": "Drill: Word ordering (drag tiles)",
+          "priority": "P0",
+          "size": "L",
+          "ears": "When a word-ordering drill loads, the system shall present scrambled word tiles. The user taps tiles in order to build a sentence. Submit grades against canonical order.",
+          "acceptance": [
+            "Tiles pool at bottom + sentence-building area at top",
+            "Tap a tile -> moves to sentence area in tap-order; tap again -> returns to pool",
+            "Touch-friendly drag option for tablet/phone",
+            "Submit when all tiles placed; grades against canonical order (the Levenshtein-tolerant comparison handles equivalents like vandaag vs op vandaag)",
+            "Used heavily for V2 word-order practice and perfectum split",
+            "Speaker icon plays canonical sentence"
+          ],
+          "depends_on": ["US-009"],
+          "labels": ["drill", "word-order", "v2", "ui"]
+        },
+        {
+          "id": "US-015",
+          "title": "Drill: Listening MC handled in US-011 (consolidated)",
+          "priority": "P0",
+          "size": "XS",
+          "ears": "When US-011 includes the listening mode, US-015 is a no-op tracking stub for the rubric.",
+          "acceptance": [
+            "Listening MC scope folded into US-011's component (mode='audio')",
+            "This story is closed with a 1-line note in progress.txt confirming the consolidation"
+          ],
+          "depends_on": ["US-011"],
+          "labels": ["drill", "listening", "consolidate"]
+        },
+        {
+          "id": "US-016",
+          "title": "Scenario library: 8 A2 scenarios seeded",
+          "priority": "P0",
+          "size": "L",
+          "ears": "When the DB is seeded, the system shall include 8 A2 roleplay scenarios, one per unit boss-fight, each with NPC persona + opening line + must-use vocab + success criteria.",
+          "acceptance": [
+            "8 scenarios in seed/scenarios.json: cafe-ordering-coffee, weekend-recap-with-friend, doctor-appointment, supermarket-find-it, work-standup, haircut, landlord-leak, asking-directions",
+            "Each scenario has: slug, unit_id, title_nl, title_en, difficulty, npc_name, npc_persona, npc_voice_id (ElevenLabs), opening_nl, must_use_vocab[], must_use_grammar[], success_criteria (3-5 bullets), failure_modes (2-3 bullets), estimated_minutes, xp_reward (100 base), badge_unlock",
+            "Each linked to a specific A2 unit's boss-fight",
+            "Validated against seed/scenarios.schema.json"
+          ],
+          "depends_on": ["US-003"],
+          "labels": ["roleplay", "scenarios", "seed"]
+        },
+        {
+          "id": "US-017",
+          "title": "Roleplay chat UI (/app/scenario/:slug)",
+          "priority": "P0",
+          "size": "L",
+          "ears": "When a user enters a roleplay scenario, the system shall open a chat where the user types Dutch and Claude replies in character as the NPC. When 8 user turns elapse OR the user types 'klaar', the system shall end the conversation and route to the scorecard.",
+          "acceptance": [
+            "Server-function /api/roleplay/:slug/stream returns Claude streamText with NPC system prompt",
+            "Streaming UI: user types Dutch, AI streams response in chat-bubble style",
+            "Every AI Dutch message has a 🔊 tap-to-hear button (ElevenLabs voice matched to npc_voice_id)",
+            "Auto-end after 8 user turns OR user types 'klaar'/'done'/'einde'",
+            "Transcript persisted to roleplay_sessions.transcript_json",
+            "Sticky end-conversation button always visible",
+            "Streaming via @ai-sdk/react useChat() hook"
+          ],
+          "depends_on": ["US-016", "US-029"],
+          "labels": ["roleplay", "chat", "ai", "core"]
+        },
+        {
+          "id": "US-018",
+          "title": "Roleplay grading + 5-rubric scorecard",
+          "priority": "P0",
+          "size": "L",
+          "ears": "When a roleplay conversation ends, the server shall call Claude with a 5-rubric grading prompt + transcript + scenario success criteria. The system shall render a scorecard with star ratings + errors + XP + badge.",
+          "acceptance": [
+            "Server function /api/roleplay/:session-id/grade calls Claude (generateObject + Zod) with the 5-rubric structured output",
+            "Rubric: grammar (1-5), vocabulary (1-5), task-completion (1-5), fluency (1-5), politeness (1-5). Overall stars = round(avg).",
+            "Returns error list: { error_type, example_nl, correction, concept_slug } persisted to roleplay_errors",
+            "/app/scenario/:slug/scorecard route renders the breakdown + XP earned (scaled by stars) + badge if unlocked",
+            "Best-attempt model: re-doing replaces only if higher score",
+            "Retry button -> re-enters scenario",
+            "Continue button -> next unit"
+          ],
+          "depends_on": ["US-017"],
+          "labels": ["roleplay", "grading", "ai", "core"]
+        },
+        {
+          "id": "US-019",
+          "title": "Errors -> spaced repetition queue (SM-2)",
+          "priority": "P0",
+          "size": "M",
+          "ears": "When roleplay errors are recorded, the system shall enqueue corresponding drill cards in spaced_rep_queue with SM-2 scheduling. When a user starts a lesson, the system shall surface up to 3 due review cards before the new lesson's content.",
+          "acceptance": [
+            "spaced_rep_queue rows: user_id, item_type, item_id, due_at, ease (start 2.5), interval, last_seen, last_correct",
+            "On each user lesson start: query due_at <= now() LIMIT 3 -> surface as 'Review' section",
+            "On review answer: SM-2 update (ease+0.1 if correct, ease-0.2 if wrong; interval *= ease)",
+            "Errors from drill mistakes ALSO queue (not just roleplay)",
+            "Cap: max 10 active review items per user at any time (prevent backlog burnout)"
+          ],
+          "depends_on": ["US-018"],
+          "labels": ["spaced-rep", "core"]
+        },
+        {
+          "id": "US-020",
+          "title": "XP + streak engine",
+          "priority": "P0",
+          "size": "M",
+          "ears": "When a user completes a lesson, the system shall award 20 XP + 5 coins. When the user completes a boss-fight, the system shall award 100 XP × (stars/5) + 25 coins. Streak counter increments on first daily completion.",
+          "acceptance": [
+            "xp_events table populated per award with (user_id, source, source_id, amount, at)",
+            "coin_events table populated similarly",
+            "daily_completions row created on first lesson of the day",
+            "users.streak_days increments daily; resets on miss unless freeze auto-consumed",
+            "Top app bar shows: 🔥 streak · ⚡ xp · 🪙 coins (server-component, fresh on every page load)",
+            "Streak reset cron at midnight user-local-time: check yesterday's daily_completions; if missing and no freeze, reset streak"
+          ],
+          "depends_on": ["US-009", "US-018"],
+          "labels": ["gamification", "xp", "streak", "core"]
+        },
+        {
+          "id": "US-021",
+          "title": "Coins shop (/app/shop)",
+          "priority": "P1",
+          "size": "S",
+          "ears": "When a user navigates to /app/shop, the system shall show purchasable items: streak freeze (50 coins), drill hint pack (10 coins each).",
+          "acceptance": [
+            "Two items in v0: streak freeze (50🪙, increments freeze balance), hint (10🪙, increments hint balance)",
+            "Purchase server function deducts coins + grants item (transactional)",
+            "Disabled if balance < cost",
+            "coin_events records the spend",
+            "UI shows balance prominently",
+            "Phase 2 stretch: cosmetic mascot outfits"
+          ],
+          "depends_on": ["US-020"],
+          "labels": ["gamification", "shop", "coins"]
+        },
+        {
+          "id": "US-022",
+          "title": "Streak freezes (auto-consume + milestone awards)",
+          "priority": "P0",
+          "size": "S",
+          "ears": "When a user misses a day, the system shall consume one streak freeze if available; otherwise reset the streak. When a user hits 7/14/30/60/100-day milestone, the system shall auto-award a freeze.",
+          "acceptance": [
+            "Daily midnight cron checks for missed days per user; consumes from users.streak_freezes_balance",
+            "Milestone awards: 7d=+1, 14d=+1, 30d=+2, 60d=+3, 100d=+5",
+            "UI shows freeze balance + 'Use freeze' indicator on streak counter when freezes available",
+            "Streak-broken email (US-028) only fires when freeze was NOT available"
+          ],
+          "depends_on": ["US-020", "US-021"],
+          "labels": ["gamification", "streak", "freeze"]
+        },
+        {
+          "id": "US-023",
+          "title": "Badge system (15 v0 badges)",
+          "priority": "P1",
+          "size": "M",
+          "ears": "When a user crosses a milestone, the system shall auto-award the matching badge. Badges show on the profile page.",
+          "acceptance": [
+            "badges table seeded with 15 v0 badges (first-lesson, 7-day-streak, 30-day-streak, 100-day-streak, first-boss-fight, perfect-roleplay-5-stars, all-a2-unit-1-complete, all-a2-unit-2-complete, ..., a2-complete, vocab-master-100, vocab-master-500, early-bird, night-owl, weekend-warrior, comeback-kid)",
+            "Event-driven award check: after every xp_event or lesson completion, run badge eligibility check",
+            "Badge unlock UI: full-screen Stroop celebration on award",
+            "user_badges table populated",
+            "Profile shows badges grid, locked badges greyed-out"
+          ],
+          "depends_on": ["US-020"],
+          "labels": ["gamification", "badges"]
+        },
+        {
+          "id": "US-024",
+          "title": "Global leaderboard (/app/leaderboard)",
+          "priority": "P0",
+          "size": "M",
+          "ears": "When a user navigates to /app/leaderboard, the system shall show three tabs: Today / This Week / All Time. Each shows the top 50 users by XP in that window with the current user highlighted.",
+          "acceptance": [
+            "Server-function queries xp_events with date filters",
+            "Today = since 00:00 user-tz; This Week = since Monday user-tz; All-Time = total users.xp_total",
+            "Top 50 per tab; current user shown even if outside top 50 (separate row)",
+            "Per-row: display_name, avatar, xp, current_streak, level (Bronze/Silver/Gold/Platinum)",
+            "Tap user -> /app/profile/:displayName",
+            "Refresh on view (no live socket for v0)"
+          ],
+          "depends_on": ["US-020"],
+          "labels": ["social", "leaderboard"]
+        },
+        {
+          "id": "US-025",
+          "title": "Public profile page (/app/profile/:displayName)",
+          "priority": "P1",
+          "size": "M",
+          "ears": "When any user views a profile by displayName, the system shall show that user's stats: avatar, level, total XP, current streak, badges grid, unit progress chips.",
+          "acceptance": [
+            "Server function returns: user(public fields) + badges_earned + user_unit_progress",
+            "Level derived from xp_total: <1000=Bronze, <5000=Silver, <20000=Gold, >=20000=Platinum",
+            "Badge grid: 15 badges, earned ones in colour, unearned greyed",
+            "Unit progress: visual chips per unit (completed=green, in-progress=orange, locked=grey)",
+            "Public by default; no privacy controls in v0"
+          ],
+          "depends_on": ["US-023"],
+          "labels": ["social", "profile"]
+        },
+        {
+          "id": "US-026",
+          "title": "Users directory (/app/users)",
+          "priority": "P2",
+          "size": "S",
+          "ears": "When a signed-in user navigates to /app/users, the system shall show a browseable list of all signed-up users, sortable by XP / streak / level.",
+          "acceptance": [
+            "Server function paginates users by chosen sort",
+            "Sortable columns: XP, streak, level, joined-date",
+            "Each row: avatar, display name, level, streak, xp",
+            "Tap row -> /app/profile/:displayName"
+          ],
+          "depends_on": ["US-025"],
+          "labels": ["social"]
+        },
+        {
+          "id": "US-027",
+          "title": "Web push daily nag (CF scheduled worker)",
+          "priority": "P0",
+          "size": "L",
+          "ears": "When the daily cron runs at a user's reminder_hour, the system shall send a web push notification if the user hasn't completed today's lesson.",
+          "acceptance": [
+            "wrangler.jsonc adds cron trigger: 'every hour at minute 0'",
+            "scheduled handler in src/server/cron.ts: query users where reminder_hour === current_local_hour AND no daily_completion today AND reminder_enabled",
+            "For each: send Web Push (via VAPID keys) to all of user's push_subscriptions",
+            "Notification copy: '🔥 5-min lesson keeps your X-day streak alive!' (varies by streak length)",
+            "Click opens /app/path",
+            "VAPID keys generated once via wrangler secret put VAPID_PUBLIC + VAPID_PRIVATE",
+            "Stale subscriptions (HTTP 410) auto-removed from push_subscriptions"
+          ],
+          "depends_on": ["US-006", "US-020"],
+          "labels": ["notifications", "push", "cron"]
+        },
+        {
+          "id": "US-028",
+          "title": "Email: weekly digest + streak-broken recovery",
+          "priority": "P1",
+          "size": "M",
+          "ears": "When Sunday 10am cron runs, the system shall send each user a weekly digest email. When a user's streak breaks, the system shall send a one-time recovery email the next day.",
+          "acceptance": [
+            "Sunday cron: send digest via Resend API with this-week XP, leaderboard rank, badges earned, units completed",
+            "Streak-broken cron (daily): for each user whose streak reset yesterday + had streak >= 3, send recovery email",
+            "Both emails use Resend templates with Stroop branding",
+            "notification_log table tracks email sends to prevent double-send",
+            "From: noreply@lekkertaal.ronanconnolly.dev (sender domain on Resend)"
+          ],
+          "depends_on": ["US-020"],
+          "labels": ["notifications", "email", "cron"]
+        },
+        {
+          "id": "US-029",
+          "title": "ElevenLabs TTS + R2 cache",
+          "priority": "P0",
+          "size": "M",
+          "ears": "When any Dutch text in the UI is tapped on its speaker icon, the system shall play ElevenLabs-synthesised audio. The audio is cached in R2 by content hash to avoid re-charging.",
+          "acceptance": [
+            "Server function /api/tts: input {text, voice_id}, output audio/mpeg",
+            "R2 key format: tts/{voice_id}/{sha256(text)}.mp3",
+            "On hit: stream from R2 (free)",
+            "On miss: call ElevenLabs API, store to R2, then stream",
+            "Falls back to OpenAI TTS (alloy / nova voices) if ELEVENLABS_API_KEY missing OR ElevenLabs returns 5xx",
+            "wrangler.jsonc binds R2 bucket lekkertaal-tts",
+            "Client <Speaker> component plays via <audio src='/api/tts?text=…&voice=…'>",
+            "Prefetch on hover for snappier UX"
+          ],
+          "depends_on": ["US-002", "US-003"],
+          "labels": ["tts", "audio", "r2", "core"]
+        },
+        {
+          "id": "US-030",
+          "title": "Cutesy theme: Fredoka + Nunito + Dutch palette + chunky buttons",
+          "priority": "P0",
+          "size": "M",
+          "ears": "When the app loads, the system shall apply Fredoka for display headings + Nunito for body, the Dutch palette tokens, rounded-3xl card radius, chunky 3D button shadows, and Motion whileTap on interactive buttons.",
+          "acceptance": [
+            "Tailwind config loads Fredoka (display) + Nunito (body) via Google Fonts",
+            "CSS variables: --color-primary #FF6B1A, --color-secondary #1F6FB2, --color-accent #FF7AA2, --color-paper #FFF8EE, --color-ink #1A1A1A",
+            "Light + dark mode both styled (dark = warm-near-black bg)",
+            "shadcn button override: rounded-2xl, box-shadow: 0 4px 0 0 var(--color-primary-dark), translateY-1px on hover, translateY-4px on press (chunky 3D)",
+            "Motion `whileTap={{ scale: 0.95 }}` on all primary CTAs",
+            "Cards use rounded-3xl",
+            "Storybook-ish theme demo at /dev/theme route (gitignored, dev-only)"
+          ],
+          "depends_on": ["US-002"],
+          "labels": ["visual", "theme", "ui"]
+        },
+        {
+          "id": "US-031",
+          "title": "Stroop the stroopwafel mascot (Rive)",
+          "priority": "P1",
+          "size": "L",
+          "ears": "When events happen (lesson complete, streak milestone, streak at risk, long inactivity), the system shall show Stroop with the matching emotional state via Rive state machine.",
+          "acceptance": [
+            "Generate Stroop concept art via Nano Banana 2 (/ro:generate-image) — 3 sketches, pick one",
+            "Author Rive file (.riv) with state machine: idle, happy (lesson complete), proud (streak milestone), concerned (streak at risk), sleeping (24h+ inactive)",
+            "If Rive authoring is too slow tonight: fall back to a static SVG Stroop per state",
+            "<Stroop state='happy' /> component reads the right state",
+            "Appears on: /app/path (idle/concerned), lesson-complete (happy), boss-fight scorecard (proud), settings (sleeping if no activity)",
+            "Lazy-loaded via React.lazy + Suspense"
+          ],
+          "depends_on": ["US-030"],
+          "labels": ["mascot", "rive", "visual"]
+        },
+        {
+          "id": "US-032",
+          "title": "4 hero sound effects",
+          "priority": "P2",
+          "size": "S",
+          "ears": "When lesson events trigger (correct, wrong, lesson complete, streak fire), the system shall play a short SFX.",
+          "acceptance": [
+            "Generate 4 SFX via /ro:sfx-elevenlabs: correct-ding (200ms), wrong-buzz (150ms), lesson-complete fanfare (1.5s), streak-fire whoosh (600ms)",
+            "Stored in public/sfx/*.mp3",
+            "Triggered on: drill correct/wrong, lesson complete, streak milestone",
+            "Mute toggle in /app/settings (users.sfx_enabled column)",
+            "Default off on mobile to respect data, on on desktop"
+          ],
+          "depends_on": ["US-009"],
+          "labels": ["audio", "sfx"]
+        },
+        {
+          "id": "US-033",
+          "title": "PWA manifest + service worker",
+          "priority": "P1",
+          "size": "M",
+          "ears": "When a user visits the app on supported devices, the system shall be installable as a PWA. The service worker shall cache the shell + fonts + Stroop assets and handle web push.",
+          "acceptance": [
+            "vite-plugin-pwa configured with manifest: name='Lekkertaal', short_name='Lekkertaal', icons (192/512), theme_color=#FF6B1A, background_color=#FFF8EE",
+            "Service worker caches: app shell, Fredoka+Nunito fonts, /public/sfx/*, /public/stroop/*",
+            "Cache strategy: NetworkFirst for /api/*, CacheFirst for static",
+            "Web Push handler in service worker registers VAPID + displays notifications",
+            "iOS-friendly install prompt component (visible only on iOS Safari)"
+          ],
+          "depends_on": ["US-030", "US-027"],
+          "labels": ["pwa", "service-worker", "offline"]
+        },
+        {
+          "id": "US-034",
+          "title": "Production deploy to lekkertaal.ronanconnolly.dev",
+          "priority": "P0",
+          "size": "M",
+          "ears": "When pnpm deploy runs (or main branch merges), the system shall deploy to Cloudflare Workers under lekkertaal.ronanconnolly.dev.",
+          "acceptance": [
+            "wrangler.jsonc routes/domains configured for lekkertaal.ronanconnolly.dev",
+            "All secrets pushed via wrangler secret put: CLERK_SECRET_KEY, ANTHROPIC_API_KEY, OPENAI_API_KEY, GOOGLE_GENERATIVE_AI_API_KEY, ELEVENLABS_API_KEY, RESEND_API_KEY, SENTRY_DSN, POSTHOG_PROJECT_KEY, VAPID_PRIVATE_KEY, CLERK_WEBHOOK_SECRET",
+            "D1 binding wired with production database_id",
+            "R2 bucket wired (lekkertaal-tts)",
+            "DNS record added via Cloudflare API (CNAME lekkertaal -> worker, orange-cloud proxied)",
+            "Smoke test: curl https://lekkertaal.ronanconnolly.dev returns 200 and HTML",
+            "REQUIRES ronanconnolly.dev CF account token (CLOUDFLARE_API_TOKEN_RONAN). If missing, story stops with explicit message to user."
+          ],
+          "depends_on": ["US-002", "US-003", "US-004", "US-029"],
+          "labels": ["deploy", "production"]
+        },
+        {
+          "id": "US-035",
+          "title": "Seed 4 Yellowtail Dutch Group users + simulated history",
+          "priority": "P1",
+          "size": "S",
+          "ears": "When pnpm seed:users runs, the system shall create 4 users (Ronan, Mehmet, Judith, Michiel) with realistic starting state so leaderboard is non-empty on day one.",
+          "acceptance": [
+            "seed/users.json: 4 users with placeholder emails (replace at runtime), CEFR level A2, varied progress",
+            "Ronan: 14-day streak, all Unit 1-3 complete, on Unit 4",
+            "Mehmet: 21-day streak, all Unit 1-3 complete, on Unit 4 ahead",
+            "Judith: 14-day streak, all Unit 1-3 complete, on Unit 4",
+            "Michiel: 7-day streak, all Unit 1-5 complete (he's the teacher), on Unit 6",
+            "All with simulated xp_events backdated to look natural",
+            "Idempotent re-run; skips if user already exists by displayName"
+          ],
+          "depends_on": ["US-020", "US-023"],
+          "labels": ["seed", "demo"]
+        }
+      ]
+    },
+    {
+      "id": "phase-2-foundation-plus",
+      "title": "Phase 2 — Foundation+ (post-v0 ~30 stories)",
+      "goal": "Speech in/out, A1+B1 content, social features, content authoring readiness, league system trigger when user base grows.",
+      "stories": [
+        { "id": "US-101", "title": "STT via Whisper for speaking drills", "priority": "P1", "size": "L", "ears": "When a user is in a drill with speak-mode enabled, the system shall record audio + transcribe via Whisper API.", "labels": ["stt", "speaking", "phase-2"] },
+        { "id": "US-102", "title": "Pronunciation scoring (phoneme-level)", "priority": "P2", "size": "XL", "ears": "When the user speaks during a drill, the system shall compare phoneme-level match against the canonical and return a pronunciation score 1-5.", "labels": ["pronunciation", "stt", "phase-2"] },
+        { "id": "US-103", "title": "A1 starter content (10 units)", "priority": "P1", "size": "L", "ears": "When an A1 user signs up, the system shall have a full A1 curriculum with units, lessons, vocab, exercises, and 6 boss-fight scenarios.", "labels": ["content", "a1", "phase-2"] },
+        { "id": "US-104", "title": "B1 starter content (10 units)", "priority": "P1", "size": "L", "ears": "When a B1 user signs up, the system shall have a full B1 curriculum.", "labels": ["content", "b1", "phase-2"] },
+        { "id": "US-105", "title": "Friends/follow graph", "priority": "P1", "size": "M", "ears": "When user A taps Follow on user B's profile, the system shall create a follow record. Followers + following counts shown.", "labels": ["social", "phase-2"] },
+        { "id": "US-106", "title": "Friend-only leaderboard tab", "priority": "P1", "size": "S", "ears": "When a user has at least one friend, the system shall add a Friends tab to the leaderboard.", "labels": ["social", "phase-2"] },
+        { "id": "US-107", "title": "Peer drills: 'send to a friend'", "priority": "P2", "size": "L", "ears": "When user A finishes a drill, the system shall offer 'send this challenge to a friend'.", "labels": ["social", "peer-drills", "phase-2"] },
+        { "id": "US-108", "title": "User-suggested scenarios + moderation queue", "priority": "P2", "size": "L", "ears": "When a user submits a scenario via a form, the system shall queue it for admin approval.", "labels": ["roleplay", "moderation", "phase-2"] },
+        { "id": "US-109", "title": "Admin moderation UI (/admin/scenarios)", "priority": "P2", "size": "M", "ears": "When an admin views the moderation page, the system shall list pending scenarios + accept/reject buttons.", "labels": ["admin", "phase-2"] },
+        { "id": "US-110", "title": "League system (10-tier weekly)", "priority": "P2", "size": "XL", "ears": "When the user base exceeds 30 active users, the system shall enable the league system: 10 tiers, weekly promotion of top 25%, demotion of bottom 25%.", "labels": ["leagues", "gamification", "phase-2"] },
+        { "id": "US-111", "title": "More badges (50+ total)", "priority": "P3", "size": "M", "ears": "When milestones are hit, the system shall award badges from an expanded catalog.", "labels": ["badges", "gamification", "phase-2"] },
+        { "id": "US-112", "title": "Daily quests system", "priority": "P2", "size": "M", "ears": "When a user opens the app, the system shall show 3 daily quests with bonus XP/coin rewards.", "labels": ["quests", "phase-2"] },
+        { "id": "US-113", "title": "Hearts mechanic (A/B test gated)", "priority": "P3", "size": "M", "ears": "When the hearts feature flag is on, the system shall enable Duolingo-style hearts.", "labels": ["hearts", "gamification", "phase-2"] },
+        { "id": "US-114", "title": "Story mode: longer narrative scenarios", "priority": "P2", "size": "XL", "ears": "When a user enters story mode, the system shall present multi-scene narrative scenarios (~20 min each).", "labels": ["roleplay", "phase-2"] },
+        { "id": "US-115", "title": "Customizable mascot outfits", "priority": "P3", "size": "M", "ears": "When a user purchases a mascot outfit, the system shall display Stroop with that outfit.", "labels": ["cosmetics", "gamification", "phase-2"] },
+        { "id": "US-116", "title": "Achievement timeline visualization", "priority": "P3", "size": "S", "ears": "When a user views their profile, the system shall show a timeline of milestones.", "labels": ["profile", "phase-2"] },
+        { "id": "US-117", "title": "Streak history calendar view", "priority": "P3", "size": "S", "ears": "When a user views their profile, the system shall show a GitHub-style calendar of daily activity.", "labels": ["profile", "phase-2"] },
+        { "id": "US-118", "title": "Push notification A/B testing", "priority": "P2", "size": "M", "ears": "When the daily nag fires, the system shall A/B test copy variants for click-through.", "labels": ["notifications", "phase-2"] },
+        { "id": "US-119", "title": "Email: more transactional templates", "priority": "P3", "size": "S", "ears": "When milestones / re-engagement triggers fire, the system shall send branded emails.", "labels": ["email", "phase-2"] },
+        { "id": "US-120", "title": "Drill: image-based vocab", "priority": "P2", "size": "M", "ears": "When an image drill loads, the system shall show an image and ask user to pick or type the Dutch word.", "labels": ["drill", "phase-2"] },
+        { "id": "US-121", "title": "Drill: conjugation table fill", "priority": "P2", "size": "M", "ears": "When a conjugation drill loads, the system shall show a verb table with cells to fill.", "labels": ["drill", "grammar", "phase-2"] },
+        { "id": "US-122", "title": "Spaced rep algorithm tuning + reporting", "priority": "P2", "size": "M", "ears": "When SM-2 has 30 days of data, the system shall surface per-user retention stats + tune ease per-user.", "labels": ["spaced-rep", "phase-2"] },
+        { "id": "US-123", "title": "Power-user CSV export of progress", "priority": "P3", "size": "S", "ears": "When a user requests an export, the system shall email a CSV of their XP/streak/badge history.", "labels": ["data", "phase-2"] },
+        { "id": "US-124", "title": "Privacy settings", "priority": "P2", "size": "M", "ears": "When a user opens settings, the system shall let them hide profile from leaderboard, hide xp on profile, etc.", "labels": ["privacy", "phase-2"] },
+        { "id": "US-125", "title": "Account deletion flow", "priority": "P2", "size": "S", "ears": "When a user requests account deletion, the system shall delete all PII + content within 30 days.", "labels": ["privacy", "compliance", "phase-2"] },
+        { "id": "US-126", "title": "Search across vocab", "priority": "P3", "size": "S", "ears": "When a user searches a Dutch word, the system shall find it in vocab + show example uses + audio.", "labels": ["search", "phase-2"] },
+        { "id": "US-127", "title": "Grammar reference index", "priority": "P3", "size": "M", "ears": "When a user opens /app/grammar, the system shall show a browseable index of all grammar concepts.", "labels": ["content", "phase-2"] },
+        { "id": "US-128", "title": "Boss-fight retry with errors-from-last-attempt prefilled", "priority": "P3", "size": "S", "ears": "When a user retries a boss-fight, the system shall surface their previous-attempt errors as 'watch out for' tips.", "labels": ["roleplay", "phase-2"] },
+        { "id": "US-129", "title": "Mobile (Expo wrapper)", "priority": "P2", "size": "XL", "ears": "When a user installs the iOS/Android app, the system shall provide a native shell wrapping the PWA via Expo or Capacitor.", "labels": ["mobile", "expo", "phase-2"] },
+        { "id": "US-130", "title": "Push: time-zone-aware smart reminders", "priority": "P3", "size": "M", "ears": "When a user has consistent activity pattern, the system shall learn their best reminder hour.", "labels": ["notifications", "ai", "phase-2"] }
+      ]
+    },
+    {
+      "id": "phase-3-polish",
+      "title": "Phase 3 — Polish & Growth (~20 stories)",
+      "goal": "UI polish, design refinement, animations, perf, accessibility, marketing site.",
+      "stories": [
+        { "id": "US-201", "title": "A/B testing infrastructure via PostHog flags", "priority": "P1", "size": "M", "ears": "When the team wants to A/B test a feature, the system shall route via PostHog flags.", "labels": ["growth", "phase-3"] },
+        { "id": "US-202", "title": "Onboarding optimization (track + iterate funnel)", "priority": "P1", "size": "L", "ears": "When users sign up, the system shall track funnel events; team iterates on drop-off points.", "labels": ["growth", "phase-3"] },
+        { "id": "US-203", "title": "Lesson celebration animation polish", "priority": "P2", "size": "M", "ears": "When a user completes a lesson, Motion-driven celebration animation with confetti + Stroop dance.", "labels": ["visual", "phase-3"] },
+        { "id": "US-204", "title": "Loading states + skeleton screens everywhere", "priority": "P2", "size": "M", "ears": "When any data is loading, the system shall show a Stroop-themed skeleton.", "labels": ["ui", "phase-3"] },
+        { "id": "US-205", "title": "Error states + empty states designed", "priority": "P2", "size": "M", "ears": "When errors or empty data occur, the system shall show on-brand empty/error illustrations.", "labels": ["ui", "phase-3"] },
+        { "id": "US-206", "title": "Accessibility audit (WCAG AA)", "priority": "P1", "size": "L", "ears": "Every interactive element shall be keyboard-navigable, screen-reader-labelled, and meet contrast AA.", "labels": ["accessibility", "phase-3"] },
+        { "id": "US-207", "title": "Performance audit (Lighthouse > 90 PWA score)", "priority": "P1", "size": "M", "ears": "Lighthouse PWA + Performance scores >= 90 on mobile.", "labels": ["perf", "phase-3"] },
+        { "id": "US-208", "title": "SEO optimization for marketing pages", "priority": "P2", "size": "M", "ears": "Marketing pages have proper meta tags, OG images, structured data.", "labels": ["seo", "phase-3"] },
+        { "id": "US-209", "title": "Marketing landing site", "priority": "P2", "size": "L", "ears": "When a non-signed-in user lands, the system shall show a marketing site explaining the product.", "labels": ["marketing", "phase-3"] },
+        { "id": "US-210", "title": "Social share images (per-badge, per-streak-milestone)", "priority": "P3", "size": "M", "ears": "When a user unlocks a badge, the system shall generate a shareable image via Nano Banana 2.", "labels": ["growth", "phase-3"] },
+        { "id": "US-211", "title": "Referral system (invite + bonus coins)", "priority": "P2", "size": "M", "ears": "When a user refers a friend, both get bonus coins on the friend's sign-up.", "labels": ["growth", "phase-3"] },
+        { "id": "US-212", "title": "Daily quest design pass", "priority": "P3", "size": "S", "ears": "Quest variety expanded with thoughtful difficulty curves.", "labels": ["gamification", "phase-3"] },
+        { "id": "US-213", "title": "Profile customization: bio + avatar pick", "priority": "P3", "size": "S", "ears": "Users can write a bio + pick from preset avatars.", "labels": ["profile", "phase-3"] },
+        { "id": "US-214", "title": "Mascot animations during long roleplays", "priority": "P3", "size": "S", "ears": "Stroop appears intermittently during roleplay to nudge user (rare, ~once per 10 turns).", "labels": ["roleplay", "mascot", "phase-3"] },
+        { "id": "US-215", "title": "Sentry alerts wired to Slack/email", "priority": "P2", "size": "S", "ears": "When error rate > threshold, alert fires.", "labels": ["observability", "phase-3"] },
+        { "id": "US-216", "title": "Cron job monitoring (alerts on miss)", "priority": "P2", "size": "S", "ears": "When daily/weekly cron misses its window, alert fires.", "labels": ["observability", "phase-3"] },
+        { "id": "US-217", "title": "User analytics dashboard (internal)", "priority": "P3", "size": "M", "ears": "Internal /admin/analytics shows MAU, retention, conversion, etc.", "labels": ["analytics", "phase-3"] },
+        { "id": "US-218", "title": "Bug-report-in-app button", "priority": "P3", "size": "S", "ears": "When users hit a bug button, system collects context + opens ticket.", "labels": ["support", "phase-3"] },
+        { "id": "US-219", "title": "Help center / FAQ page", "priority": "P3", "size": "S", "ears": "Help center with FAQ entries.", "labels": ["support", "phase-3"] },
+        { "id": "US-220", "title": "Settings: theme picker (light/dark/auto)", "priority": "P3", "size": "S", "ears": "User can pick theme; system respects.", "labels": ["settings", "phase-3"] }
+      ]
+    },
+    {
+      "id": "phase-4-scale",
+      "title": "Phase 4 — Scale (~15 stories)",
+      "goal": "Monetization, multi-language source, content authoring, cohort feature, enterprise readiness.",
+      "stories": [
+        { "id": "US-301", "title": "Monetization: Stripe + Super tier", "priority": "P0-when-scaling", "size": "XL", "ears": "When a user wants premium features, the system shall offer a 'Super' subscription via Stripe.", "labels": ["monetization", "phase-4"] },
+        { "id": "US-302", "title": "Multi-locale UI: Dutch labels alongside English", "priority": "P2", "size": "L", "ears": "When a user picks Dutch UI, the system shall display all UI in Dutch.", "labels": ["i18n", "phase-4"] },
+        { "id": "US-303", "title": "Pivot to other languages (Spanish, French, German)", "priority": "P2", "size": "XL", "ears": "When the company adds Spanish/French/German, the system shall support multi-target-language curricula.", "labels": ["growth", "phase-4"] },
+        { "id": "US-304", "title": "AI-improvised scenarios (free-play mode)", "priority": "P2", "size": "L", "ears": "When a user types a scenario topic, AI generates a scenario live.", "labels": ["ai", "phase-4"] },
+        { "id": "US-305", "title": "Content authoring UI for teachers", "priority": "P2", "size": "XL", "ears": "When a teacher signs up, the system shall offer a content authoring flow for their own curriculum.", "labels": ["authoring", "b2b", "phase-4"] },
+        { "id": "US-306", "title": "Cohort/classroom mode", "priority": "P2", "size": "L", "ears": "When a teacher creates a cohort, the system shall support cohort-scoped users + leaderboard + progress.", "labels": ["b2b", "phase-4"] },
+        { "id": "US-307", "title": "Real-time voice via OpenAI Realtime API", "priority": "P2", "size": "XL", "ears": "When a user enters voice roleplay, AI speaks back via Realtime API.", "labels": ["voice", "ai", "phase-4"] },
+        { "id": "US-308", "title": "Story mode v2: choose-your-own-adventure", "priority": "P3", "size": "XL", "ears": "When a user enters story mode, branching narrative with choices.", "labels": ["roleplay", "phase-4"] },
+        { "id": "US-309", "title": "Group chat / classmate practice rooms", "priority": "P2", "size": "L", "ears": "When friends want to chat in Dutch, the system shall provide moderated practice rooms.", "labels": ["social", "phase-4"] },
+        { "id": "US-310", "title": "Custom scenario builder for power users", "priority": "P3", "size": "L", "ears": "When a power user wants their own scenario, the system shall offer a scenario-building UI.", "labels": ["authoring", "phase-4"] },
+        { "id": "US-311", "title": "API for external integrations", "priority": "P3", "size": "L", "ears": "When external apps want to integrate, the system shall offer a public API.", "labels": ["api", "phase-4"] },
+        { "id": "US-312", "title": "Admin dashboard for support", "priority": "P2", "size": "M", "ears": "When support staff need to help users, the system shall offer an admin dashboard.", "labels": ["admin", "phase-4"] },
+        { "id": "US-313", "title": "Analytics for self-improvement", "priority": "P3", "size": "M", "ears": "When a user views their stats, the system shall show learning-velocity charts.", "labels": ["analytics", "phase-4"] },
+        { "id": "US-314", "title": "Native iOS / Android apps", "priority": "P2", "size": "XL", "ears": "When a user installs the iOS/Android app, the system shall provide a native experience.", "labels": ["mobile", "phase-4"] },
+        { "id": "US-315", "title": "Enterprise features: SSO, audit logs, RBAC", "priority": "P3", "size": "XL", "ears": "When an enterprise buys, the system shall offer SAML SSO + audit logs + RBAC.", "labels": ["enterprise", "phase-4"] }
+      ]
+    }
+  ]
+}

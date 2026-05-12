@@ -1,0 +1,30 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "lekkertaal",
+  "compatibility_date": "2025-09-02",
+  "compatibility_flags": ["nodejs_compat"],
+  "main": "@tanstack/react-start/server-entry",
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "lekkertaal_db",
+      "database_id": "ca05c5b2-512c-4007-88a6-b2499e4cbd12"
+    }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "TTS_CACHE",
+      "bucket_name": "lekkertaal-tts"
+    }
+  ],
+  "triggers": {
+    "crons": [
+      "0 * * * *"
+    ]
+  },
+  "vars": {
+    "SENTRY_DSN": "",
+    "POSTHOG_PROJECT_KEY": "",
+    "POSTHOG_INGEST_HOST": "https://eu.i.posthog.com"
+  }
+}
