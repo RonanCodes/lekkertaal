@@ -1,0 +1,249 @@
+[
+  {
+    "slug": "cafe-ordering-coffee",
+    "unit_slug": "a2-unit-1-werkwoorden-hebben-zijn",
+    "title_nl": "Koffie bestellen",
+    "title_en": "Ordering coffee",
+    "difficulty": "A2",
+    "npc_name": "Anouk",
+    "npc_persona": "Vriendelijke barista in een drukke Amsterdamse koffiezaak.",
+    "npc_voice_id": "21m00Tcm4TlvDq8ikWAM",
+    "opening_nl": "Hoi! Welkom. Wat wil je drinken?",
+    "must_use_vocab": [
+      "koffie",
+      "thee",
+      "alstublieft",
+      "dank u wel"
+    ],
+    "must_use_grammar": [
+      "hebben-zijn-ott"
+    ],
+    "success_criteria": [
+      "Bestelt een drankje",
+      "Vraagt de prijs",
+      "Bedankt beleefd"
+    ],
+    "failure_modes": [
+      "Geen begroeting",
+      "Direct Engels"
+    ],
+    "estimated_minutes": 5,
+    "xp_reward": 100,
+    "badge_unlock": "first-boss-fight"
+  },
+  {
+    "slug": "weekend-recap-with-friend",
+    "unit_slug": "a2-unit-3-perfectum",
+    "title_nl": "Weekend met een vriend(in)",
+    "title_en": "Weekend recap with a friend",
+    "difficulty": "A2",
+    "npc_name": "Sander",
+    "npc_persona": "Goede vriend, enthousiast en geïnteresseerd in wat je gedaan hebt.",
+    "npc_voice_id": "ErXwobaYiN019PkySvjV",
+    "opening_nl": "Hé! Hoe was je weekend? Vertel eens, wat heb je gedaan?",
+    "must_use_vocab": [
+      "weekend",
+      "gisteren",
+      "leuk"
+    ],
+    "must_use_grammar": [
+      "perfectum"
+    ],
+    "success_criteria": [
+      "Gebruikt minstens 3 perfectumvormen",
+      "Beschrijft minstens 2 activiteiten",
+      "Stelt zelf een wedervraag"
+    ],
+    "failure_modes": [
+      "Alleen OTT gebruiken",
+      "Geen wedervraag"
+    ],
+    "estimated_minutes": 7,
+    "xp_reward": 100,
+    "badge_unlock": null
+  },
+  {
+    "slug": "doctor-appointment",
+    "unit_slug": "a2-unit-6-iets-te-veel-van-het-goede",
+    "title_nl": "Bij de huisarts",
+    "title_en": "Doctor appointment",
+    "difficulty": "A2",
+    "npc_name": "Dr. de Vries",
+    "npc_persona": "Geduldige huisarts. Vraagt naar symptomen en geeft advies.",
+    "npc_voice_id": "VR6AewLTigWG4xSOukaG",
+    "opening_nl": "Goedemiddag. Komt u maar binnen. Wat zijn uw klachten?",
+    "must_use_vocab": [
+      "hoofdpijn",
+      "ziek",
+      "pijn",
+      "moe"
+    ],
+    "must_use_grammar": [
+      "modal-verbs"
+    ],
+    "success_criteria": [
+      "Beschrijft minstens 2 symptomen",
+      "Gebruikt modale werkwoorden (kunnen/moeten)",
+      "Beleefde u-vorm"
+    ],
+    "failure_modes": [
+      "Je-vorm gebruiken",
+      "Te kort antwoord"
+    ],
+    "estimated_minutes": 8,
+    "xp_reward": 100,
+    "badge_unlock": null
+  },
+  {
+    "slug": "supermarket-find-it",
+    "unit_slug": "a2-unit-2-werkwoordsspelling",
+    "title_nl": "In de supermarkt",
+    "title_en": "Supermarket: find an item",
+    "difficulty": "A2",
+    "npc_name": "Joris",
+    "npc_persona": "Vriendelijke vakkenvuller bij de Albert Heijn.",
+    "npc_voice_id": "pNInz6obpgDQGcFmaJgB",
+    "opening_nl": "Hallo, kan ik u helpen?",
+    "must_use_vocab": [
+      "waar",
+      "vinden",
+      "schap",
+      "afdeling"
+    ],
+    "must_use_grammar": [
+      "verb-spelling-ott"
+    ],
+    "success_criteria": [
+      "Vraagt waar een product is",
+      "Bedankt",
+      "Stelt een vervolgvraag"
+    ],
+    "failure_modes": [
+      "Verkeerde werkwoordsvorm"
+    ],
+    "estimated_minutes": 5,
+    "xp_reward": 100,
+    "badge_unlock": null
+  },
+  {
+    "slug": "work-standup",
+    "unit_slug": "a2-unit-4-imperfectum",
+    "title_nl": "Werk standup",
+    "title_en": "Work standup",
+    "difficulty": "A2",
+    "npc_name": "Esther",
+    "npc_persona": "Scrum master die je daily standup leidt.",
+    "npc_voice_id": "EXAVITQu4vr4xnSDxMaL",
+    "opening_nl": "Goedemorgen! Wat heb je gisteren gedaan en wat ga je vandaag doen?",
+    "must_use_vocab": [
+      "gisteren",
+      "vandaag",
+      "klaar",
+      "bezig"
+    ],
+    "must_use_grammar": [
+      "imperfectum",
+      "perfectum"
+    ],
+    "success_criteria": [
+      "Beschrijft gisteren in verleden tijd",
+      "Beschrijft vandaag in OTT",
+      "Noemt minstens 1 blocker"
+    ],
+    "failure_modes": [
+      "Alle werkwoorden in OTT"
+    ],
+    "estimated_minutes": 5,
+    "xp_reward": 100,
+    "badge_unlock": null
+  },
+  {
+    "slug": "haircut",
+    "unit_slug": "a2-unit-5-vier-seizoenen",
+    "title_nl": "Bij de kapper",
+    "title_en": "At the hairdresser",
+    "difficulty": "A2",
+    "npc_name": "Lotte",
+    "npc_persona": "Praatgrage kapster die smalltalk over het weer en seizoenen begint.",
+    "npc_voice_id": "AZnzlk1XvdvUeBnXmlld",
+    "opening_nl": "Hé! Ga zitten. Wat wil je vandaag laten doen?",
+    "must_use_vocab": [
+      "kort",
+      "lang",
+      "knippen",
+      "weer"
+    ],
+    "must_use_grammar": [],
+    "success_criteria": [
+      "Beschrijft gewenst kapsel",
+      "Voert smalltalk over weer/seizoen",
+      "Bedankt"
+    ],
+    "failure_modes": [
+      "Geen smalltalk"
+    ],
+    "estimated_minutes": 7,
+    "xp_reward": 100,
+    "badge_unlock": null
+  },
+  {
+    "slug": "landlord-leak",
+    "unit_slug": "a2-unit-7-woordvolgorde-v2",
+    "title_nl": "Lekkage melden bij de verhuurder",
+    "title_en": "Report a leak to the landlord",
+    "difficulty": "A2",
+    "npc_name": "Meneer Bakker",
+    "npc_persona": "Wat brommerige huisbaas die snel ter zake wil komen.",
+    "npc_voice_id": "VR6AewLTigWG4xSOukaG",
+    "opening_nl": "Hallo, met Bakker. Wat is er aan de hand?",
+    "must_use_vocab": [
+      "lekkage",
+      "badkamer",
+      "snel",
+      "kapot"
+    ],
+    "must_use_grammar": [
+      "word-order-v2"
+    ],
+    "success_criteria": [
+      "Legt het probleem duidelijk uit",
+      "Gebruikt bijzin met 'omdat' of 'dat'",
+      "Vraagt om snelle reparatie"
+    ],
+    "failure_modes": [
+      "V2-regel breken in hoofdzin"
+    ],
+    "estimated_minutes": 8,
+    "xp_reward": 100,
+    "badge_unlock": null
+  },
+  {
+    "slug": "asking-directions",
+    "unit_slug": "a2-unit-8-schrijven-oefenexamen",
+    "title_nl": "De weg vragen",
+    "title_en": "Asking directions",
+    "difficulty": "A2",
+    "npc_name": "Voorbijganger",
+    "npc_persona": "Vriendelijke voorbijganger in het centrum van Utrecht.",
+    "npc_voice_id": "pNInz6obpgDQGcFmaJgB",
+    "opening_nl": "Ja hoor, wat zoekt u?",
+    "must_use_vocab": [
+      "links",
+      "rechts",
+      "rechtdoor",
+      "straat"
+    ],
+    "must_use_grammar": [],
+    "success_criteria": [
+      "Vraagt naar een specifieke plek",
+      "Begrijpt en herhaalt routebeschrijving",
+      "Bedankt beleefd"
+    ],
+    "failure_modes": [
+      "Geen herhaling van de route"
+    ],
+    "estimated_minutes": 5,
+    "xp_reward": 100,
+    "badge_unlock": "a2-complete"
+  }
+]

@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "LekkertaalScenarios",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": ["slug", "unit_slug", "title_nl", "title_en", "difficulty", "npc_name", "npc_persona", "npc_voice_id", "opening_nl", "must_use_vocab", "must_use_grammar", "success_criteria", "failure_modes", "estimated_minutes", "xp_reward", "badge_unlock"],
+    "properties": {
+      "slug": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+      "unit_slug": { "type": "string" },
+      "title_nl": { "type": "string" },
+      "title_en": { "type": "string" },
+      "difficulty": { "type": "string", "enum": ["A1", "A2", "B1"] },
+      "npc_name": { "type": "string" },
+      "npc_persona": { "type": "string" },
+      "npc_voice_id": { "type": "string" },
+      "opening_nl": { "type": "string" },
+      "must_use_vocab": { "type": "array", "items": { "type": "string" } },
+      "must_use_grammar": { "type": "array", "items": { "type": "string" } },
+      "success_criteria": { "type": "array", "items": { "type": "string" } },
+      "failure_modes": { "type": "array", "items": { "type": "string" } },
+      "estimated_minutes": { "type": "integer" },
+      "xp_reward": { "type": "integer" },
+      "badge_unlock": { "type": ["string", "null"] }
+    }
+  }
+}
