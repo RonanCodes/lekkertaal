@@ -2,6 +2,7 @@ import { createFileRoute, notFound } from "@tanstack/react-router";
 import { getLesson } from "../lib/server/lesson";
 import { AppShell } from "../components/AppShell";
 import { motion } from "motion/react";
+import { Stroop } from "../components/Stroop";
 
 export const Route = createFileRoute("/app/lesson/$lessonId/complete")({
   loader: async ({ params }) => {
@@ -25,14 +26,13 @@ function LessonCompletePage() {
   return (
     <AppShell user={user}>
       <div className="mx-auto max-w-md py-10 text-center">
-        {/* Stroop placeholder — real animation lands in US-031 */}
         <motion.div
-          className="mx-auto mb-6 text-7xl"
-          initial={{ scale: 0.3, rotate: -20, opacity: 0 }}
-          animate={{ scale: 1, rotate: 0, opacity: 1 }}
+          className="mx-auto mb-6"
+          initial={{ scale: 0.3, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
           transition={{ type: "spring", stiffness: 200, damping: 12 }}
         >
-          🎉
+          <Stroop state="happy" size="xl" />
         </motion.div>
 
         <motion.h1

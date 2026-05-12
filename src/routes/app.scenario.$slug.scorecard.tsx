@@ -2,6 +2,7 @@ import { createFileRoute, notFound, useNavigate, Link } from "@tanstack/react-ro
 import { getScorecard, gradeRoleplaySession } from "../lib/server/roleplay";
 import { AppShell } from "../components/AppShell";
 import { useEffect, useState } from "react";
+import { Stroop } from "../components/Stroop";
 
 export const Route = createFileRoute("/app/scenario/$slug/scorecard")({
   loader: async ({ params }) => {
@@ -91,7 +92,8 @@ function ScorecardPage() {
     <AppShell user={user}>
       <div className="mx-auto max-w-xl space-y-6 py-8">
         <div className="text-center">
-          <div className="text-sm uppercase tracking-wide text-neutral-500">
+          <Stroop state={session.passed ? "proud" : "concerned"} size="lg" className="mx-auto" />
+          <div className="mt-3 text-sm uppercase tracking-wide text-neutral-500">
             Scorecard
           </div>
           <h1 className="mt-1 text-2xl font-bold text-neutral-900">

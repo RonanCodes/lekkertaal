@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { getPath } from "../lib/server/path";
 import { AppShell } from "../components/AppShell";
+import { Stroop } from "../components/Stroop";
 
 export const Route = createFileRoute("/app/path")({
   loader: async () => await getPath(),
@@ -12,8 +13,16 @@ function PathPage() {
 
   return (
     <AppShell user={data.user}>
-      <h1 className="mb-1 text-2xl font-bold">Your path</h1>
-      <p className="mb-6 text-sm text-neutral-500">Level: {data.user.cefrLevel}</p>
+      <div className="mb-4 flex items-center gap-4">
+        <Stroop
+          state={data.user.streakDays === 0 ? "concerned" : "idle"}
+          size="md"
+        />
+        <div>
+          <h1 className="text-2xl font-bold">Your path</h1>
+          <p className="text-sm text-neutral-500">Level: {data.user.cefrLevel}</p>
+        </div>
+      </div>
 
       <ol className="space-y-4">
         {data.path.map((u, i) => {

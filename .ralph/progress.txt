@@ -34,3 +34,4 @@ Phase 1 target: US-001 .. US-035 (35 stories).
 [2026-05-13T21:08:01Z] US-024 + US-025 PASS leaderboard+public-profile pr#24
 [2026-05-13T21:10:10Z] US-026 PASS users directory pr#25
 [2026-05-13T21:13:36Z] US-027 PASS web push daily nag pr#26
+[2026-05-13T21:16:14Z] US-028 PASS email cron pr#27
