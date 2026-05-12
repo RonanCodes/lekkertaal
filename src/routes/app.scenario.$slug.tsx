@@ -6,6 +6,7 @@ import {
   getScenario,
   startRoleplaySession,
   finishRoleplaySession,
+  gradeRoleplaySession,
   type RoleplayTranscriptEntry,
 } from "../lib/server/roleplay";
 import { AppShell } from "../components/AppShell";
@@ -84,12 +85,13 @@ function ScenarioChatPage() {
     }));
     try {
       await finishRoleplaySession({ data: { sessionId, transcript } });
+      // Fire-and-await grading so the scorecard is ready by the time we land.
+      // gradeRoleplaySession is idempotent on already-graded sessions.
+      await gradeRoleplaySession({ data: { sessionId } });
     } catch (err) {
-      console.error("[scenario] finish failed:", err);
+      console.error("[scenario] finish/grade failed:", err);
     }
-    navigate({ to: "/app/path" });
-    // TODO(US-018): route to /app/scenario/:slug/scorecard once the
-    // scorecard page exists. For now, fall back to the path overview.
+    navigate({ to: "/app/scenario/$slug/scorecard", params: { slug: scenario.slug } });
   }
 
   // Trigger auto-end once the user crosses the turn budget.
