@@ -9,3 +9,4 @@ Phase 1 target: US-001 .. US-035 (35 stories).
 [2026-05-13T06:02:44Z] US-002 PASS Finalise TanStack Start + CF Workers scaffold pr#2 branch ralph/us-002-scaffold-finalisation
 [2026-05-13T06:07:29Z] US-003 PASS Drizzle schema + D1 migration + seed loader pr#3 branch ralph/us-003-schema-migrations-seed
 [2026-05-13T06:14:43Z] US-004 PASS Clerk auth: open signup with Google + email pr#4 branch ralph/us-004-clerk-auth
+[2026-05-13T06:16:54Z] US-005 PASS Placement test (5 questions) + level picker fallback pr#5 branch ralph/us-005-placement-test
