@@ -20,6 +20,7 @@ import { createAnthropic } from "@ai-sdk/anthropic";
 import { z } from "zod";
 import { enqueueRoleplayErrors } from "./spaced-rep";
 import { awardRoleplayComplete } from "./gamification";
+import { awardBadgesIfEligible } from "./badges";
 
 export type RoleplayTranscriptEntry = {
   role: "user" | "assistant" | "system";
@@ -351,6 +352,8 @@ Grade the learner's Dutch. Return the rubric scores, a short English feedback pa
       );
     }
 
+    const newBadges = await awardBadgesIfEligible(drz, me[0].id);
+
     return {
       sessionId: sess.id,
       scenarioSlug: s.slug,
@@ -366,6 +369,7 @@ Grade the learner's Dutch. Return the rubric scores, a short English feedback pa
       passed,
       cached: false,
       replacedPrevious: shouldReplace,
+      newBadges,
     };
   });
 
