@@ -63,3 +63,55 @@ git checkout main && git pull
 - R2 key: `tts/{voice_id}/{sha256(text)}.mp3`
 - ElevenLabs primary, OpenAI TTS fallback
 - Client `<Speaker text="..." voice="..." />` plays via `<audio src="/api/tts?...">`
+
+## Drill components (US-009..US-014)
+
+Every drill component lives in `src/components/drills/`:
+
+- `DrillFrame.tsx` — shared shell: prompt header + body slot + feedback strip.
+  Exports `FeedbackBanner`, `levenshtein()`, `normaliseAnswer()`, `gradeText()`.
+- `Speaker.tsx` — speaker-icon button. Calls `/api/tts?text=...&voice=...`
+  (US-029 endpoint). Degrades silently to an idle state when 404/501.
+- `DrillRenderer.tsx` — dispatch by `drill.type`. Exports `parseField<T>()`
+  helper which JSON-parses `options`/`answer` (those are shipped as JSON
+  strings, see below).
+
+Each drill component takes:
+```ts
+{ drill: DrillPayload; onSubmit: (correct: boolean, userAnswer?: string) => void }
+```
+…and is responsible for its own state. Call `onSubmit` once after a short
+feedback hold (600–800 ms) so the player parent can advance.
+
+## TanStack Start serializability gotcha (US-009)
+
+Server-fn return types must be plain-serializable for TanStack Start's
+transport. `drizzle` columns declared with `{ mode: "json" }` come back as
+`unknown[]` / `unknown` which trips the type check.
+
+Fix: re-serialise to JSON strings on the server-fn boundary, then parse
+client-side with `parseField<T>()` from `DrillRenderer.tsx`:
+
+```ts
+// server
+options: d.options == null ? null : JSON.stringify(d.options),
+answer:  d.answer  == null ? null : JSON.stringify(d.answer),
+
+// client
+const opts = parseField<MyType[]>(drill.options) ?? [];
+```
+
+## Levenshtein-tolerant text grading
+
+`gradeText(user, canonical)` in `DrillFrame.tsx`:
+- lowercase, trim, strip `.,!?;:"'()`, collapse whitespace
+- accept Levenshtein distance ≤ 1 (one typo)
+- use for translation typing, fill-blank, and word ordering
+
+For multi-answer drills, accept a string-array canonical and `.some()` over it.
+
+## Skip the routeTree.gen.ts manual edit
+
+The TanStack plugin regenerates `src/routeTree.gen.ts` on every Vite build.
+Don't try to edit it manually. If `pnpm exec tsc --noEmit` complains about a
+new route, run `pnpm build` once to regenerate the tree, then re-check.
