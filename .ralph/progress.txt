@@ -22,3 +22,4 @@ Phase 1 target: US-001 .. US-035 (35 stories).
 [2026-05-13T06:45:38Z] BATCH-1 (US-008..US-014) COMPLETE — 7 stories shipped (6 PRs merged + US-009 direct-to-main)
 [2026-05-13T07:20:00Z] US-015 CLOSED (consolidated into US-011)
 [2026-05-13T07:20:00Z] US-016 VERIFIED (seed/scenarios.json already populated with 8 A2 scenarios during earlier batches: cafe-ordering-coffee, weekend-recap-with-friend, doctor-appointment, supermarket-find-it, work-standup, haircut, landlord-leak, asking-directions)
+[2026-05-13T20:32:55Z] BUG-002 PASS auth redirect pr#15

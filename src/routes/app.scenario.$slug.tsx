@@ -1,0 +1,264 @@
+import { createFileRoute, notFound, useNavigate } from "@tanstack/react-router";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useChat } from "@ai-sdk/react";
+import { DefaultChatTransport, type UIMessage } from "ai";
+import {
+  getScenario,
+  startRoleplaySession,
+  finishRoleplaySession,
+  type RoleplayTranscriptEntry,
+} from "../lib/server/roleplay";
+import { AppShell } from "../components/AppShell";
+
+const MAX_USER_TURNS = 8;
+const END_KEYWORDS = ["klaar", "done", "einde"];
+
+export const Route = createFileRoute("/app/scenario/$slug")({
+  loader: async ({ params }) => {
+    try {
+      return await getScenario({ data: { slug: params.slug } });
+    } catch (err) {
+      if (err instanceof Error && err.message === "Scenario not found") throw notFound();
+      throw err;
+    }
+  },
+  component: ScenarioChatPage,
+});
+
+function ScenarioChatPage() {
+  const { user, scenario } = Route.useLoaderData();
+  const navigate = useNavigate();
+  const [sessionId, setSessionId] = useState<number | null>(null);
+  const [ended, setEnded] = useState(false);
+  const [draft, setDraft] = useState("");
+  const scrollRef = useRef<HTMLDivElement | null>(null);
+
+  // Start (or re-use) a roleplay_sessions row on first mount.
+  useEffect(() => {
+    let cancelled = false;
+    startRoleplaySession({ data: { scenarioId: scenario.id } }).then((r) => {
+      if (!cancelled) setSessionId(r.sessionId);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [scenario.id]);
+
+  // Seed the chat with the NPC's opening line as a Dutch assistant message.
+  const initialMessages = useMemo<UIMessage[]>(
+    () => [
+      {
+        id: "opening",
+        role: "assistant",
+        parts: [{ type: "text", text: scenario.openingNl }],
+      } as UIMessage,
+    ],
+    [scenario.openingNl],
+  );
+
+  const { messages, sendMessage, status } = useChat({
+    messages: initialMessages,
+    transport: new DefaultChatTransport({
+      api: `/api/roleplay/${scenario.slug}/stream`,
+    }),
+  });
+
+  // Count of user turns sent — drives auto-end at 8.
+  const userTurnCount = messages.filter((m) => m.role === "user").length;
+
+  // Auto-scroll to the latest message.
+  useEffect(() => {
+    scrollRef.current?.scrollTo({
+      top: scrollRef.current.scrollHeight,
+      behavior: "smooth",
+    });
+  }, [messages.length, status]);
+
+  async function endConversation() {
+    if (!sessionId || ended) return;
+    setEnded(true);
+    const transcript: RoleplayTranscriptEntry[] = messages.map((m) => ({
+      role: m.role as "user" | "assistant" | "system",
+      content: extractText(m),
+      ts: new Date().toISOString(),
+    }));
+    try {
+      await finishRoleplaySession({ data: { sessionId, transcript } });
+    } catch (err) {
+      console.error("[scenario] finish failed:", err);
+    }
+    navigate({ to: "/app/path" });
+    // TODO(US-018): route to /app/scenario/:slug/scorecard once the
+    // scorecard page exists. For now, fall back to the path overview.
+  }
+
+  // Trigger auto-end once the user crosses the turn budget.
+  useEffect(() => {
+    if (!ended && sessionId && userTurnCount >= MAX_USER_TURNS) {
+      void endConversation();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userTurnCount, sessionId]);
+
+  function onSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    const trimmed = draft.trim();
+    if (!trimmed || status === "submitted" || status === "streaming" || ended) return;
+    setDraft("");
+
+    if (END_KEYWORDS.includes(trimmed.toLowerCase())) {
+      void endConversation();
+      return;
+    }
+    void sendMessage({ text: trimmed });
+  }
+
+  return (
+    <AppShell user={user}>
+      <div className="mx-auto flex h-[calc(100vh-4rem)] max-w-2xl flex-col px-4">
+        {/* Header */}
+        <div className="border-b border-neutral-200 py-3">
+          <div className="flex items-center justify-between gap-3">
+            <div className="min-w-0">
+              <div className="truncate text-sm text-neutral-500">
+                Roleplay · {scenario.npcName}
+              </div>
+              <h1 className="truncate text-lg font-semibold text-neutral-900">
+                {scenario.titleNl}
+              </h1>
+            </div>
+            <div className="text-xs text-neutral-500">
+              Turn {Math.min(userTurnCount, MAX_USER_TURNS)} / {MAX_USER_TURNS}
+            </div>
+          </div>
+        </div>
+
+        {/* Transcript */}
+        <div
+          ref={scrollRef}
+          className="flex-1 space-y-3 overflow-y-auto py-4"
+          aria-live="polite"
+        >
+          {messages.map((m) => (
+            <ChatBubble
+              key={m.id}
+              role={m.role}
+              text={extractText(m)}
+              voiceId={scenario.npcVoiceId}
+            />
+          ))}
+          {(status === "submitted" || status === "streaming") && (
+            <div className="text-xs text-neutral-400">{scenario.npcName} typt...</div>
+          )}
+        </div>
+
+        {/* Composer + sticky end button */}
+        <form
+          onSubmit={onSubmit}
+          className="sticky bottom-0 flex gap-2 border-t border-neutral-200 bg-white/95 py-3 backdrop-blur"
+        >
+          <input
+            type="text"
+            value={draft}
+            onChange={(e) => setDraft(e.target.value)}
+            placeholder='Typ in het Nederlands... (of "klaar" om te stoppen)'
+            disabled={ended || status === "submitted" || status === "streaming"}
+            className="flex-1 rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500 disabled:bg-neutral-100"
+            autoFocus
+          />
+          <button
+            type="submit"
+            disabled={
+              !draft.trim() || ended || status === "submitted" || status === "streaming"
+            }
+            className="rounded-lg bg-orange-600 px-4 py-2 text-sm font-semibold text-white hover:bg-orange-700 disabled:cursor-not-allowed disabled:bg-neutral-300"
+          >
+            Stuur
+          </button>
+          <button
+            type="button"
+            onClick={() => void endConversation()}
+            disabled={ended}
+            className="rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm text-neutral-700 hover:bg-neutral-50 disabled:opacity-50"
+          >
+            Klaar
+          </button>
+        </form>
+      </div>
+    </AppShell>
+  );
+}
+
+function ChatBubble({
+  role,
+  text,
+  voiceId,
+}: {
+  role: string;
+  text: string;
+  voiceId: string | null;
+}) {
+  const isUser = role === "user";
+  return (
+    <div className={`flex ${isUser ? "justify-end" : "justify-start"}`}>
+      <div
+        className={`max-w-[80%] rounded-2xl px-4 py-2 text-sm ${
+          isUser
+            ? "bg-orange-600 text-white"
+            : "bg-white text-neutral-900 ring-1 ring-neutral-200"
+        }`}
+      >
+        <p className="whitespace-pre-wrap leading-relaxed">{text}</p>
+        {!isUser && text && (
+          <SpeakButton text={text} voiceId={voiceId} />
+        )}
+      </div>
+    </div>
+  );
+}
+
+function SpeakButton({ text, voiceId }: { text: string; voiceId: string | null }) {
+  const [playing, setPlaying] = useState(false);
+
+  async function speak() {
+    if (playing) return;
+    setPlaying(true);
+    try {
+      // The TTS proxy endpoint lives in US-029 (server-side ElevenLabs cache).
+      // The route is server-side so it never leaks the ELEVENLABS_API_KEY.
+      const url = `/api/tts?text=${encodeURIComponent(text)}${
+        voiceId ? `&voice=${encodeURIComponent(voiceId)}` : ""
+      }`;
+      const audio = new Audio(url);
+      audio.onended = () => setPlaying(false);
+      audio.onerror = () => setPlaying(false);
+      await audio.play();
+    } catch (err) {
+      console.error("[scenario] tts play failed:", err);
+      setPlaying(false);
+    }
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={speak}
+      className="mt-1 inline-flex items-center gap-1 text-xs text-neutral-500 hover:text-orange-600"
+      aria-label="Hoor uitspraak"
+    >
+      <span>{playing ? "🔈" : "🔊"}</span>
+      <span className="underline-offset-2 hover:underline">hoor</span>
+    </button>
+  );
+}
+
+function extractText(m: UIMessage): string {
+  // UIMessage in AI SDK v6 has a parts[] array of typed entries.
+  // We only render text parts; other parts (tool, file) get filtered out.
+  return (
+    m.parts
+      ?.filter((p) => p.type === "text")
+      .map((p) => (p as { type: "text"; text: string }).text)
+      .join("") ?? ""
+  );
+}
