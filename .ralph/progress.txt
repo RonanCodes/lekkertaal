@@ -1,0 +1,8 @@
+Ralph Phase 1 — lekkertaal — started 2026-05-13 00:14 CEST
+
+Driver note: This Ralph run is executing in a single Claude Code context (no Agent/Task sub-agent
+spawning available in this harness). The driver is implementing stories serially, one branch + PR
+per story, with the same DoD gate (typecheck + build + commit + push + PR + squash-merge) per story.
+
+Phase 1 target: US-001 .. US-035 (35 stories).
+

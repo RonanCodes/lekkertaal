@@ -1,0 +1,74 @@
+[
+  {
+    "slug": "a2-unit-1-werkwoorden-hebben-zijn",
+    "title_nl": "Werkwoorden: hebben & zijn",
+    "title_en": "Verbs: to have & to be",
+    "description": "Basis: vervoeging van hebben en zijn in OTT. Werkwoordfamilies I-II-III.",
+    "cefr_level": "A2",
+    "order": 1,
+    "grammar_concept_slug": "hebben-zijn-ott"
+  },
+  {
+    "slug": "a2-unit-2-werkwoordsspelling",
+    "title_nl": "Werkwoordsspelling",
+    "title_en": "Verb spelling rules",
+    "description": "Schrijfwijze van regelmatige werkwoorden in OTT. Stam + uitgang.",
+    "cefr_level": "A2",
+    "order": 2,
+    "grammar_concept_slug": "verb-spelling-ott"
+  },
+  {
+    "slug": "a2-unit-3-perfectum",
+    "title_nl": "Perfectum (voltooid tegenwoordige tijd)",
+    "title_en": "Present perfect",
+    "description": "Hebben/zijn + voltooid deelwoord. Regelmatige en onregelmatige werkwoorden.",
+    "cefr_level": "A2",
+    "order": 3,
+    "grammar_concept_slug": "perfectum"
+  },
+  {
+    "slug": "a2-unit-4-imperfectum",
+    "title_nl": "Imperfectum (onvoltooid verleden tijd)",
+    "title_en": "Simple past",
+    "description": "Imperfectum van regelmatige en onregelmatige werkwoorden.",
+    "cefr_level": "A2",
+    "order": 4,
+    "grammar_concept_slug": "imperfectum"
+  },
+  {
+    "slug": "a2-unit-5-vier-seizoenen",
+    "title_nl": "De vier seizoenen",
+    "title_en": "The four seasons",
+    "description": "Vocabulaire en leestekst over seizoenen. A2 leesvaardigheid.",
+    "cefr_level": "A2",
+    "order": 5,
+    "grammar_concept_slug": null
+  },
+  {
+    "slug": "a2-unit-6-iets-te-veel-van-het-goede",
+    "title_nl": "Iets te veel van het goede",
+    "title_en": "A bit too much of a good thing",
+    "description": "Hoofdstuk 4: gezondheid, eten, suikertaks discussie.",
+    "cefr_level": "A2",
+    "order": 6,
+    "grammar_concept_slug": "modal-verbs"
+  },
+  {
+    "slug": "a2-unit-7-woordvolgorde-v2",
+    "title_nl": "Woordvolgorde: V2 en bijzin",
+    "title_en": "Word order: V2 and subclause",
+    "description": "Hoofdzin V2 regel + bijzin met werkwoord achteraan.",
+    "cefr_level": "A2",
+    "order": 7,
+    "grammar_concept_slug": "word-order-v2"
+  },
+  {
+    "slug": "a2-unit-8-schrijven-oefenexamen",
+    "title_nl": "Schrijfvaardigheid oefenexamen",
+    "title_en": "Writing practice exam",
+    "description": "Oefenexamen schrijven A2: e-mails en korte teksten.",
+    "cefr_level": "A2",
+    "order": 8,
+    "grammar_concept_slug": null
+  }
+]
