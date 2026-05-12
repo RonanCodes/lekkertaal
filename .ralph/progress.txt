@@ -7,3 +7,4 @@ per story, with the same DoD gate (typecheck + build + commit + push + PR + squa
 Phase 1 target: US-001 .. US-035 (35 stories).
 
 [2026-05-13T06:02:44Z] US-002 PASS Finalise TanStack Start + CF Workers scaffold pr#2 branch ralph/us-002-scaffold-finalisation
+[2026-05-13T06:07:29Z] US-003 PASS Drizzle schema + D1 migration + seed loader pr#3 branch ralph/us-003-schema-migrations-seed
