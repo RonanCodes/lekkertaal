@@ -16,6 +16,7 @@ import { AsyncLocalStorage } from "node:async_hooks";
 import "./start";
 import { db } from "./db/client";
 import { resetStaleStreaks } from "./lib/server/gamification";
+import { runDailyPushCron } from "./lib/server/cron-push";
 
 export type WorkerEnv = {
   DB: D1Database;
@@ -31,6 +32,9 @@ export type WorkerEnv = {
   SENTRY_DSN?: string;
   POSTHOG_PROJECT_KEY?: string;
   POSTHOG_INGEST_HOST?: string;
+  VAPID_PUBLIC?: string;
+  VAPID_PRIVATE?: string;
+  VAPID_SUBJECT?: string;
 };
 
 const requestStore = new AsyncLocalStorage<{ env: WorkerEnv; ctx: ExecutionContext }>();
@@ -72,7 +76,16 @@ export default {
       } catch (err) {
         console.error("[cron] resetStaleStreaks failed:", err);
       }
-      // US-027 + US-028 handlers will be added here.
+      // US-027: daily-nag web push (matches reminder_hour to current UTC hour).
+      try {
+        const r = await runDailyPushCron(db(env.DB), env);
+        if (r.targeted > 0) {
+          console.log(`[cron] daily push: targeted=${r.targeted} sent=${r.sent}`);
+        }
+      } catch (err) {
+        console.error("[cron] runDailyPushCron failed:", err);
+      }
+      // US-028 will be added here.
     });
   },
 };
