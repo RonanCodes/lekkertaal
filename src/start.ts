@@ -1,18 +1,12 @@
 /**
  * TanStack Start instance registration.
  *
- * Wires global request middleware. Currently:
- *   - clerkMiddleware() — adds Clerk auth context to every request so that
- *     auth() / useAuth() / <Protect/> work inside route handlers and components.
+ * NOTE 2026-05-13: clerkMiddleware() integration was attempted here but
+ * caused 500s on cold-start. Reverted. The right wiring needs Clerk env
+ * keys threaded in at request time from the Worker env (process.env is
+ * empty on CF Workers).
  *
- * Imported as a side effect from src/entry.server.ts so the start instance
- * is registered before any request handling.
- *
- * Reference: https://clerk.com/docs/quickstarts/tanstack-react-start
+ * Currently empty so `import "./start"` is safe. Re-add the createStart
+ * call once we have a Cloudflare-aware Clerk middleware pattern.
  */
-import { createStart } from "@tanstack/react-start";
-import { clerkMiddleware } from "@clerk/tanstack-react-start/server";
-
-export const startInstance = createStart(() => ({
-  requestMiddleware: [clerkMiddleware()],
-}));
+export {};
