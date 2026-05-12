@@ -39,3 +39,4 @@ Phase 1 target: US-001 .. US-035 (35 stories).
 [2026-05-13T21:22:07Z] US-032 PASS sfx settings pr#29
 [2026-05-13T21:25:02Z] US-033 PASS pwa manifest+sw pr#30
 [2026-05-13T21:27:09Z] US-034 PASS deploy verification pr#31
+[2026-05-13T21:30:26Z] US-035 PASS seed users pr#32
