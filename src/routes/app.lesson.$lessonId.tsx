@@ -4,6 +4,7 @@ import { getLesson, recordDrillResult, completeLesson } from "../lib/server/less
 import { AppShell } from "../components/AppShell";
 import { DrillRenderer } from "../components/drills/DrillRenderer";
 import { FeedbackBanner } from "../components/drills/DrillFrame";
+import { ReviewRibbon } from "../components/ReviewRibbon";
 
 export const Route = createFileRoute("/app/lesson/$lessonId")({
   loader: async ({ params }) => {
@@ -22,7 +23,7 @@ export const Route = createFileRoute("/app/lesson/$lessonId")({
 function LessonPlayerPage() {
   const data = Route.useLoaderData();
   const navigate = useNavigate();
-  const { lesson, drills, user } = data;
+  const { lesson, drills, user, reviews } = data;
 
   const [drillIdx, setDrillIdx] = useState(0);
   const [feedback, setFeedback] = useState<{ correct: boolean } | null>(null);
@@ -103,6 +104,8 @@ function LessonPlayerPage() {
 
   return (
     <AppShell user={user}>
+      {/* US-019: due review cards shown before new content. */}
+      {reviews && reviews.length > 0 && <ReviewRibbon reviews={reviews} />}
       {/* Progress + skip */}
       <div className="mb-5 flex items-center gap-3">
         <button
