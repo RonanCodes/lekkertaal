@@ -15,6 +15,13 @@
       "when": 1778705654325,
       "tag": "0001_cool_exodus",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1778707193803,
+      "tag": "0002_lumpy_mentallo",
+      "breakpoints": true
     }
   ]
 }

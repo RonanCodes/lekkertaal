@@ -34,6 +34,7 @@ export type LessonPayload = {
     coinsBalance: number;
     streakDays: number;
     streakFreezesBalance: number;
+    sfxEnabled: boolean;
   };
   lesson: {
     id: number;
@@ -116,6 +117,7 @@ export const getLesson = createServerFn({ method: "GET" })
         coinsBalance: me[0].coinsBalance,
         streakDays: me[0].streakDays,
         streakFreezesBalance: me[0].streakFreezesBalance,
+        sfxEnabled: me[0].sfxEnabled,
       },
       lesson: {
         id: lessonRow[0].id,

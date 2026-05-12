@@ -3,6 +3,8 @@ import { getLesson } from "../lib/server/lesson";
 import { AppShell } from "../components/AppShell";
 import { motion } from "motion/react";
 import { Stroop } from "../components/Stroop";
+import { useSfx } from "../lib/use-sfx";
+import { useEffect } from "react";
 
 export const Route = createFileRoute("/app/lesson/$lessonId/complete")({
   loader: async ({ params }) => {
@@ -22,6 +24,12 @@ function LessonCompletePage() {
   const data = Route.useLoaderData();
   const { lesson, user } = data;
   const backTo = lesson.unitSlug ? `/app/unit/${lesson.unitSlug}` : "/app/path";
+  const sfx = useSfx(user.sfxEnabled);
+
+  useEffect(() => {
+    sfx.play("lesson-complete");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <AppShell user={user}>

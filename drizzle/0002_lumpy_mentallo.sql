@@ -1,0 +1,1 @@
+ALTER TABLE `users` ADD `sfx_enabled` integer DEFAULT true NOT NULL;
