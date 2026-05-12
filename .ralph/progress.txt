@@ -26,3 +26,4 @@ Phase 1 target: US-001 .. US-035 (35 stories).
 [2026-05-13T20:41:54Z] US-017 PASS roleplay chat pr#16
 [2026-05-13T20:45:06Z] US-018 PASS roleplay grading scorecard pr#17
 [2026-05-13T20:49:28Z] US-019 PASS spaced rep queue pr#18
+[2026-05-13T20:53:36Z] US-020 PASS xp+coins+streak engine pr#19

@@ -8,6 +8,13 @@
       "when": 1778652254028,
       "tag": "0000_supreme_riptide",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1778705654325,
+      "tag": "0001_cool_exodus",
+      "breakpoints": true
     }
   ]
 }
