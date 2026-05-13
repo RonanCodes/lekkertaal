@@ -32,6 +32,7 @@ export type LessonPayload = {
     xpTotal: number;
     coinsBalance: number;
     streakDays: number;
+    streakFreezesBalance: number;
   };
   lesson: {
     id: number;
@@ -113,6 +114,7 @@ export const getLesson = createServerFn({ method: "GET" })
         xpTotal: me[0].xpTotal,
         coinsBalance: me[0].coinsBalance,
         streakDays: me[0].streakDays,
+        streakFreezesBalance: me[0].streakFreezesBalance,
       },
       lesson: {
         id: lessonRow[0].id,

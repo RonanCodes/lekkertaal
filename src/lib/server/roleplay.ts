@@ -53,6 +53,7 @@ export const getScenario = createServerFn({ method: "GET" })
         xpTotal: me[0].xpTotal,
         coinsBalance: me[0].coinsBalance,
         streakDays: me[0].streakDays,
+        streakFreezesBalance: me[0].streakFreezesBalance,
       },
       scenario: {
         id: s.id,
@@ -415,6 +416,7 @@ export const getScorecard = createServerFn({ method: "GET" })
         xpTotal: me[0].xpTotal,
         coinsBalance: me[0].coinsBalance,
         streakDays: me[0].streakDays,
+        streakFreezesBalance: me[0].streakFreezesBalance,
       },
       scenario: {
         slug: s.slug,

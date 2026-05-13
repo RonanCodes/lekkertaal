@@ -62,6 +62,7 @@ export const getPath = createServerFn({ method: "GET" }).handler(async () => {
       xpTotal: me[0].xpTotal,
       coinsBalance: me[0].coinsBalance,
       streakDays: me[0].streakDays,
+      streakFreezesBalance: me[0].streakFreezesBalance,
     },
     path,
   };
