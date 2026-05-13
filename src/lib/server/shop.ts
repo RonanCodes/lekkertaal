@@ -14,12 +14,11 @@
  * we never deduct without also granting in the same handler turn.
  */
 import { createServerFn } from "@tanstack/react-start";
-import { redirect } from "@tanstack/react-router";
-import { auth } from "@clerk/tanstack-react-start/server";
 import { db } from "../../db/client";
 import { users, coinEvents } from "../../db/schema";
 import { eq } from "drizzle-orm";
 import { requireWorkerContext } from "../../entry.server";
+import { requireUserClerkId } from "./auth-helper";
 
 export type ShopItemId = "streak_freeze" | "hint_pack";
 
@@ -49,11 +48,10 @@ export const SHOP_CATALOGUE: ShopItem[] = [
 ];
 
 export const getShop = createServerFn({ method: "GET" }).handler(async () => {
-  const a = await auth();
-  if (!a.userId) throw redirect({ to: "/sign-in" });
+  const userId = await requireUserClerkId();
   const { env } = requireWorkerContext();
   const drz = db(env.DB);
-  const me = await drz.select().from(users).where(eq(users.clerkId, a.userId)).limit(1);
+  const me = await drz.select().from(users).where(eq(users.clerkId, userId)).limit(1);
   if (!me[0]) throw new Error("User row missing");
 
   return {
@@ -72,12 +70,11 @@ export const getShop = createServerFn({ method: "GET" }).handler(async () => {
 export const buyItem = createServerFn({ method: "POST" })
   .inputValidator((input: { itemId: ShopItemId }) => input)
   .handler(async ({ data }) => {
-    const a = await auth();
-    if (!a.userId) throw redirect({ to: "/sign-in" });
+    const userId = await requireUserClerkId();
     const { env } = requireWorkerContext();
     const drz = db(env.DB);
 
-    const me = await drz.select().from(users).where(eq(users.clerkId, a.userId)).limit(1);
+    const me = await drz.select().from(users).where(eq(users.clerkId, userId)).limit(1);
     if (!me[0]) throw new Error("User row missing");
 
     const item = SHOP_CATALOGUE.find((i) => i.id === data.itemId);

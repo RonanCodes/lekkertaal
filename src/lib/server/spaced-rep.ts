@@ -16,13 +16,12 @@
  * items are evicted past the cap so we don't crowd out new errors.
  */
 import { createServerFn } from "@tanstack/react-start";
-import { redirect } from "@tanstack/react-router";
-import { auth } from "@clerk/tanstack-react-start/server";
 import { db } from "../../db/client";
 import type { DrizzleD1Database } from "drizzle-orm/d1";
 import { users, spacedRepQueue } from "../../db/schema";
 import { and, asc, eq, lte, sql, desc } from "drizzle-orm";
 import { requireWorkerContext } from "../../entry.server";
+import { requireUserClerkId } from "./auth-helper";
 
 const MAX_ACTIVE_REVIEWS = 10;
 const DUE_BATCH = 3;
@@ -50,9 +49,8 @@ function addDays(iso: string, days: number): string {
 
 /** Read current user id (clerkId -> users.id) or throw redirect. */
 async function currentUserId(drz: ReturnType<typeof db>): Promise<number> {
-  const a = await auth();
-  if (!a.userId) throw redirect({ to: "/sign-in" });
-  const me = await drz.select().from(users).where(eq(users.clerkId, a.userId)).limit(1);
+  const userId = await requireUserClerkId();
+  const me = await drz.select().from(users).where(eq(users.clerkId, userId)).limit(1);
   if (!me[0]) throw new Error("User row missing");
   return me[0].id;
 }

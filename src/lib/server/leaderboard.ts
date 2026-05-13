@@ -13,12 +13,11 @@
  * delta, even when they're outside the top 50.
  */
 import { createServerFn } from "@tanstack/react-start";
-import { redirect } from "@tanstack/react-router";
-import { auth } from "@clerk/tanstack-react-start/server";
 import { db } from "../../db/client";
 import { users, xpEvents } from "../../db/schema";
 import { desc, eq, gte, sql } from "drizzle-orm";
 import { requireWorkerContext } from "../../entry.server";
+import { requireUserClerkId } from "./auth-helper";
 
 export type LeaderboardWindow = "today" | "week" | "all-time";
 
@@ -58,12 +57,11 @@ function windowStartIso(w: LeaderboardWindow): string | null {
 export const getLeaderboard = createServerFn({ method: "GET" })
   .inputValidator((input: { window: LeaderboardWindow }) => input)
   .handler(async ({ data }) => {
-    const a = await auth();
-    if (!a.userId) throw redirect({ to: "/sign-in" });
+    const userId = await requireUserClerkId();
     const { env } = requireWorkerContext();
     const drz = db(env.DB);
 
-    const me = await drz.select().from(users).where(eq(users.clerkId, a.userId)).limit(1);
+    const me = await drz.select().from(users).where(eq(users.clerkId, userId)).limit(1);
     if (!me[0]) throw new Error("User row missing");
 
     const meRow = me[0];
