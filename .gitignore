@@ -15,3 +15,8 @@ node_modules
 todos.json
 seed/.cache/
 src/routeTree.gen.ts
+
+# Playwright
+test-results
+playwright-report
+playwright/.cache
