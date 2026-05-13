@@ -1,4 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
+import { redirect } from "@tanstack/react-router";
 import { auth } from "@clerk/tanstack-react-start/server";
 import { db } from "../../db/client";
 import {
@@ -56,7 +57,7 @@ export const getLesson = createServerFn({ method: "GET" })
   .inputValidator((input: { lessonId: number }) => input)
   .handler(async ({ data }): Promise<LessonPayload> => {
     const a = await auth();
-    if (!a.userId) throw new Error("Not signed in");
+    if (!a.userId) throw redirect({ to: "/sign-in" });
     const { env } = requireWorkerContext();
     const drz = db(env.DB);
 
@@ -118,7 +119,7 @@ export const recordDrillResult = createServerFn({ method: "POST" })
   )
   .handler(async ({ data }) => {
     const a = await auth();
-    if (!a.userId) throw new Error("Not signed in");
+    if (!a.userId) throw redirect({ to: "/sign-in" });
     const { env } = requireWorkerContext();
     const drz = db(env.DB);
     const me = await drz.select().from(users).where(eq(users.clerkId, a.userId)).limit(1);
@@ -166,7 +167,7 @@ export const completeLesson = createServerFn({ method: "POST" })
   )
   .handler(async ({ data }) => {
     const a = await auth();
-    if (!a.userId) throw new Error("Not signed in");
+    if (!a.userId) throw redirect({ to: "/sign-in" });
     const { env } = requireWorkerContext();
     const drz = db(env.DB);
     const me = await drz.select().from(users).where(eq(users.clerkId, a.userId)).limit(1);

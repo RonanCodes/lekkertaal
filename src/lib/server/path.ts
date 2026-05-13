@@ -1,4 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
+import { redirect } from "@tanstack/react-router";
 import { auth } from "@clerk/tanstack-react-start/server";
 import { db } from "../../db/client";
 import { users, units, userUnitProgress } from "../../db/schema";
@@ -18,7 +19,7 @@ export type PathUnit = {
 
 export const getPath = createServerFn({ method: "GET" }).handler(async () => {
   const a = await auth();
-  if (!a.userId) throw new Error("Not signed in");
+  if (!a.userId) throw redirect({ to: "/sign-in" });
   const { env } = requireWorkerContext();
   const drz = db(env.DB);
   const me = await drz.select().from(users).where(eq(users.clerkId, a.userId)).limit(1);

@@ -1,4 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
+import { redirect } from "@tanstack/react-router";
 import { auth } from "@clerk/tanstack-react-start/server";
 import { db } from "../../db/client";
 import {
@@ -17,7 +18,7 @@ export const getUnitDetail = createServerFn({ method: "GET" })
   .inputValidator((input: { slug: string }) => input)
   .handler(async ({ data }) => {
     const a = await auth();
-    if (!a.userId) throw new Error("Not signed in");
+    if (!a.userId) throw redirect({ to: "/sign-in" });
     const { env } = requireWorkerContext();
     const drz = db(env.DB);
 
