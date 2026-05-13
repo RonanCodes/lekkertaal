@@ -9,8 +9,6 @@
  * and uses the AI SDK's streamText directly.
  */
 import { createServerFn } from "@tanstack/react-start";
-import { redirect } from "@tanstack/react-router";
-import { auth } from "@clerk/tanstack-react-start/server";
 import { db } from "../../db/client";
 import { users, scenarios, roleplaySessions, roleplayErrors } from "../../db/schema";
 import { eq, and, isNull, desc } from "drizzle-orm";
@@ -21,6 +19,7 @@ import { z } from "zod";
 import { enqueueRoleplayErrors } from "./spaced-rep";
 import { awardRoleplayComplete } from "./gamification";
 import { awardBadgesIfEligible } from "./badges";
+import { requireUserClerkId } from "./auth-helper";
 
 export type RoleplayTranscriptEntry = {
   role: "user" | "assistant" | "system";
@@ -31,12 +30,11 @@ export type RoleplayTranscriptEntry = {
 export const getScenario = createServerFn({ method: "GET" })
   .inputValidator((input: { slug: string }) => input)
   .handler(async ({ data }) => {
-    const a = await auth();
-    if (!a.userId) throw redirect({ to: "/sign-in" });
+    const userId = await requireUserClerkId();
     const { env } = requireWorkerContext();
     const drz = db(env.DB);
 
-    const me = await drz.select().from(users).where(eq(users.clerkId, a.userId)).limit(1);
+    const me = await drz.select().from(users).where(eq(users.clerkId, userId)).limit(1);
     if (!me[0]) throw new Error("User row missing");
 
     const scenarioRow = await drz
@@ -79,12 +77,11 @@ export const getScenario = createServerFn({ method: "GET" })
 export const startRoleplaySession = createServerFn({ method: "POST" })
   .inputValidator((input: { scenarioId: number }) => input)
   .handler(async ({ data }) => {
-    const a = await auth();
-    if (!a.userId) throw redirect({ to: "/sign-in" });
+    const userId = await requireUserClerkId();
     const { env } = requireWorkerContext();
     const drz = db(env.DB);
 
-    const me = await drz.select().from(users).where(eq(users.clerkId, a.userId)).limit(1);
+    const me = await drz.select().from(users).where(eq(users.clerkId, userId)).limit(1);
     if (!me[0]) throw new Error("User row missing");
 
     // Re-use an open session if one exists for this user+scenario (incomplete).
@@ -118,12 +115,11 @@ export const finishRoleplaySession = createServerFn({ method: "POST" })
     (input: { sessionId: number; transcript: RoleplayTranscriptEntry[] }) => input,
   )
   .handler(async ({ data }) => {
-    const a = await auth();
-    if (!a.userId) throw redirect({ to: "/sign-in" });
+    const userId = await requireUserClerkId();
     const { env } = requireWorkerContext();
     const drz = db(env.DB);
 
-    const me = await drz.select().from(users).where(eq(users.clerkId, a.userId)).limit(1);
+    const me = await drz.select().from(users).where(eq(users.clerkId, userId)).limit(1);
     if (!me[0]) throw new Error("User row missing");
 
     // Ownership check
@@ -179,13 +175,12 @@ export type RoleplayRubric = z.infer<typeof RubricSchema>;
 export const gradeRoleplaySession = createServerFn({ method: "POST" })
   .inputValidator((input: { sessionId: number }) => input)
   .handler(async ({ data }) => {
-    const a = await auth();
-    if (!a.userId) throw redirect({ to: "/sign-in" });
+    const userId = await requireUserClerkId();
     const { env } = requireWorkerContext();
     if (!env.ANTHROPIC_API_KEY) throw new Error("ANTHROPIC_API_KEY not configured");
 
     const drz = db(env.DB);
-    const me = await drz.select().from(users).where(eq(users.clerkId, a.userId)).limit(1);
+    const me = await drz.select().from(users).where(eq(users.clerkId, userId)).limit(1);
     if (!me[0]) throw new Error("User row missing");
 
     const sessRow = await drz
@@ -376,12 +371,11 @@ Grade the learner's Dutch. Return the rubric scores, a short English feedback pa
 export const getScorecard = createServerFn({ method: "GET" })
   .inputValidator((input: { slug: string }) => input)
   .handler(async ({ data }) => {
-    const a = await auth();
-    if (!a.userId) throw redirect({ to: "/sign-in" });
+    const userId = await requireUserClerkId();
     const { env } = requireWorkerContext();
     const drz = db(env.DB);
 
-    const me = await drz.select().from(users).where(eq(users.clerkId, a.userId)).limit(1);
+    const me = await drz.select().from(users).where(eq(users.clerkId, userId)).limit(1);
     if (!me[0]) throw new Error("User row missing");
 
     const scenarioRow = await drz

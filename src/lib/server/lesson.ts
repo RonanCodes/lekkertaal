@@ -1,6 +1,4 @@
 import { createServerFn } from "@tanstack/react-start";
-import { redirect } from "@tanstack/react-router";
-import { auth } from "@clerk/tanstack-react-start/server";
 import { db } from "../../db/client";
 import {
   users,
@@ -18,6 +16,7 @@ import { requireWorkerContext } from "../../entry.server";
 import { enqueueDrillMistake } from "./spaced-rep";
 import { awardLessonComplete } from "./gamification";
 import { awardBadgesIfEligible } from "./badges";
+import { requireUserClerkId } from "./auth-helper";
 
 export type DrillType =
   | "match_pairs"
@@ -69,12 +68,11 @@ export type DrillPayload = {
 export const getLesson = createServerFn({ method: "GET" })
   .inputValidator((input: { lessonId: number }) => input)
   .handler(async ({ data }): Promise<LessonPayload> => {
-    const a = await auth();
-    if (!a.userId) throw redirect({ to: "/sign-in" });
+    const userId = await requireUserClerkId();
     const { env } = requireWorkerContext();
     const drz = db(env.DB);
 
-    const me = await drz.select().from(users).where(eq(users.clerkId, a.userId)).limit(1);
+    const me = await drz.select().from(users).where(eq(users.clerkId, userId)).limit(1);
     if (!me[0]) throw new Error("User row missing");
 
     const lessonRow = await drz
@@ -153,11 +151,10 @@ export const recordDrillResult = createServerFn({ method: "POST" })
     (input: { exerciseId: number; correct: boolean; userAnswer?: string }) => input,
   )
   .handler(async ({ data }) => {
-    const a = await auth();
-    if (!a.userId) throw redirect({ to: "/sign-in" });
+    const userId = await requireUserClerkId();
     const { env } = requireWorkerContext();
     const drz = db(env.DB);
-    const me = await drz.select().from(users).where(eq(users.clerkId, a.userId)).limit(1);
+    const me = await drz.select().from(users).where(eq(users.clerkId, userId)).limit(1);
     if (!me[0]) throw new Error("User row missing");
 
     if (!data.correct) {
@@ -175,11 +172,10 @@ export const completeLesson = createServerFn({ method: "POST" })
     (input: { lessonId: number; correctCount: number; incorrectCount: number }) => input,
   )
   .handler(async ({ data }) => {
-    const a = await auth();
-    if (!a.userId) throw redirect({ to: "/sign-in" });
+    const userId = await requireUserClerkId();
     const { env } = requireWorkerContext();
     const drz = db(env.DB);
-    const me = await drz.select().from(users).where(eq(users.clerkId, a.userId)).limit(1);
+    const me = await drz.select().from(users).where(eq(users.clerkId, userId)).limit(1);
     if (!me[0]) throw new Error("User row missing");
 
     const lessonRow = await drz

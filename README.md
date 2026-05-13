@@ -23,7 +23,19 @@ pnpm build        # produces dist/server + dist/client
 pnpm typecheck
 ```
 
-Secrets for local dev live in `.dev.vars` (gitignored). Copy from `~/.claude/.env` if rebuilding the box.
+Secrets for local dev live in `.dev.vars` (gitignored). Copy from `~/.claude/.env` if rebuilding the box. See `.dev.vars.example` for the full key list.
+
+### Localhost auth bypass (dev only)
+
+Clicking through Clerk's hosted UI on every dev restart gets old. To auto-sign-in as a fixed seed user when `pnpm dev` is running, add this line to `.dev.vars` and restart the dev server:
+
+```
+DEV_BYPASS_AUTH=true
+```
+
+You will be signed in as the `seed_ronan` clerk-id placeholder, which matches the "Ronan" demo row from `seed/users.json`. Run `pnpm seed:users` once first so the row exists in local D1.
+
+The bypass is **localhost-only**. Two locks: (1) the helper checks `import.meta.env.DEV`, which Vite statically replaces with `false` in the production build (the bypass branch is dead-code-eliminated from the deployed worker), and (2) `wrangler.jsonc` vars MUST never set `DEV_BYPASS_AUTH=true` — only `.dev.vars` may do so.
 
 ## Database (Drizzle + D1)
 

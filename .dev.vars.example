@@ -1,0 +1,19 @@
+# Example .dev.vars — copy to .dev.vars and fill in real values.
+# .dev.vars is gitignored; this template is committed.
+#
+# Localhost-only Clerk auth bypass. When set to "true" AND running under
+# `pnpm dev` (Vite dev mode), server functions auto-sign-in as the fixed
+# seed user `seed_ronan`. Run `pnpm seed:users` once so the row exists.
+# MUST NEVER be set to "true" in wrangler.jsonc vars (production safety).
+# DEV_BYPASS_AUTH=false
+
+# Clerk
+CLERK_SECRET_KEY=sk_test_REPLACE_ME
+VITE_CLERK_PUBLISHABLE_KEY=pk_test_REPLACE_ME
+
+# AI / TTS providers (optional; copy from ~/.claude/.env)
+# ANTHROPIC_API_KEY=
+# OPENAI_API_KEY=
+# GOOGLE_GENERATIVE_AI_API_KEY=
+# ELEVENLABS_API_KEY=
+# RESEND_API_KEY=

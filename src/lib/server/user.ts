@@ -3,21 +3,14 @@
  * Always require an authenticated Clerk session; throw otherwise.
  */
 import { createServerFn } from "@tanstack/react-start";
-import { redirect } from "@tanstack/react-router";
-import { auth } from "@clerk/tanstack-react-start/server";
 import { db } from "../../db/client";
 import { users, userUnitProgress, units } from "../../db/schema";
 import { eq, and } from "drizzle-orm";
 import { requireWorkerContext } from "../../entry.server";
-
-async function currentClerkId(): Promise<string> {
-  const a = await auth();
-  if (!a.userId) throw redirect({ to: "/sign-in" });
-  return a.userId;
-}
+import { requireUserClerkId } from "./auth-helper";
 
 export const getMe = createServerFn({ method: "GET" }).handler(async () => {
-  const clerkId = await currentClerkId();
+  const clerkId = await requireUserClerkId();
   const { env } = requireWorkerContext();
   const drz = db(env.DB);
   const rows = await drz.select().from(users).where(eq(users.clerkId, clerkId)).limit(1);
@@ -27,7 +20,7 @@ export const getMe = createServerFn({ method: "GET" }).handler(async () => {
 export const setCefrLevel = createServerFn({ method: "POST" })
   .inputValidator((input: { level: "A1" | "A2" | "B1"; placementScore?: number }) => input)
   .handler(async ({ data }) => {
-    const clerkId = await currentClerkId();
+    const clerkId = await requireUserClerkId();
     const { env } = requireWorkerContext();
     const drz = db(env.DB);
     await drz
@@ -44,7 +37,7 @@ export const setCefrLevel = createServerFn({ method: "POST" })
 export const setReminderPrefs = createServerFn({ method: "POST" })
   .inputValidator((input: { hour: number; enabled: boolean; timezone?: string }) => input)
   .handler(async ({ data }) => {
-    const clerkId = await currentClerkId();
+    const clerkId = await requireUserClerkId();
     const { env } = requireWorkerContext();
     const drz = db(env.DB);
     await drz
@@ -61,7 +54,7 @@ export const setReminderPrefs = createServerFn({ method: "POST" })
 
 /** Unlock the first unit of the user's CEFR level. Idempotent. */
 export const unlockStartingUnit = createServerFn({ method: "POST" }).handler(async () => {
-  const clerkId = await currentClerkId();
+  const clerkId = await requireUserClerkId();
   const { env } = requireWorkerContext();
   const drz = db(env.DB);
   const me = await drz.select().from(users).where(eq(users.clerkId, clerkId)).limit(1);

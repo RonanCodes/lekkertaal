@@ -36,6 +36,12 @@ export type WorkerEnv = {
   VAPID_PUBLIC?: string;
   VAPID_PRIVATE?: string;
   VAPID_SUBJECT?: string;
+  /**
+   * Opt-in localhost dev bypass for Clerk auth. Only respected when
+   * `import.meta.env.DEV === true`. MUST NEVER be set to `"true"` in
+   * `wrangler.jsonc` vars — production safety. See `src/lib/server/auth-helper.ts`.
+   */
+  DEV_BYPASS_AUTH?: string;
 };
 
 const requestStore = new AsyncLocalStorage<{ env: WorkerEnv; ctx: ExecutionContext }>();
