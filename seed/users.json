@@ -1,0 +1,62 @@
+[
+  {
+    "display_name": "Ronan",
+    "email_placeholder": "ronan@example.com",
+    "cefr_level": "A2",
+    "streak_days": 14,
+    "xp_total": 720,
+    "coins_balance": 60,
+    "streak_freezes_balance": 1,
+    "hints_balance": 2,
+    "units_completed": ["a2-unit-1-werkwoorden-hebben-zijn", "a2-unit-2-werkwoordsspelling", "a2-unit-3-perfectum"],
+    "current_unit": "a2-unit-4-imperfectum",
+    "current_unit_lessons_completed": 2,
+    "current_unit_lessons_total": 5,
+    "days_active": 14
+  },
+  {
+    "display_name": "Mehmet",
+    "email_placeholder": "mehmet@example.com",
+    "cefr_level": "A2",
+    "streak_days": 21,
+    "xp_total": 980,
+    "coins_balance": 110,
+    "streak_freezes_balance": 2,
+    "hints_balance": 0,
+    "units_completed": ["a2-unit-1-werkwoorden-hebben-zijn", "a2-unit-2-werkwoordsspelling", "a2-unit-3-perfectum"],
+    "current_unit": "a2-unit-4-imperfectum",
+    "current_unit_lessons_completed": 4,
+    "current_unit_lessons_total": 5,
+    "days_active": 21
+  },
+  {
+    "display_name": "Judith",
+    "email_placeholder": "judith@example.com",
+    "cefr_level": "A2",
+    "streak_days": 14,
+    "xp_total": 690,
+    "coins_balance": 55,
+    "streak_freezes_balance": 1,
+    "hints_balance": 1,
+    "units_completed": ["a2-unit-1-werkwoorden-hebben-zijn", "a2-unit-2-werkwoordsspelling", "a2-unit-3-perfectum"],
+    "current_unit": "a2-unit-4-imperfectum",
+    "current_unit_lessons_completed": 1,
+    "current_unit_lessons_total": 5,
+    "days_active": 14
+  },
+  {
+    "display_name": "Michiel",
+    "email_placeholder": "michiel@example.com",
+    "cefr_level": "A2",
+    "streak_days": 7,
+    "xp_total": 1480,
+    "coins_balance": 180,
+    "streak_freezes_balance": 3,
+    "hints_balance": 0,
+    "units_completed": ["a2-unit-1-werkwoorden-hebben-zijn", "a2-unit-2-werkwoordsspelling", "a2-unit-3-perfectum", "a2-unit-4-imperfectum", "a2-unit-5-vier-seizoenen"],
+    "current_unit": "a2-unit-6-iets-te-veel-van-het-goede",
+    "current_unit_lessons_completed": 1,
+    "current_unit_lessons_total": 5,
+    "days_active": 7
+  }
+]
