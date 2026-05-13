@@ -18,6 +18,7 @@ import { requireWorkerContext } from "../../entry.server";
 import { generateObject } from "ai";
 import { createAnthropic } from "@ai-sdk/anthropic";
 import { z } from "zod";
+import { enqueueRoleplayErrors } from "./spaced-rep";
 
 export type RoleplayTranscriptEntry = {
   role: "user" | "assistant" | "system";
@@ -295,15 +296,33 @@ Grade the learner's Dutch. Return the rubric scores, a short English feedback pa
 
       // Replace error rows for this session.
       await drz.delete(roleplayErrors).where(eq(roleplayErrors.sessionId, sess.id));
+      let insertedErrors: Array<{ id: number }> = [];
       if (rubric.errors.length > 0) {
-        await drz.insert(roleplayErrors).values(
-          rubric.errors.map((e) => ({
+        insertedErrors = await drz
+          .insert(roleplayErrors)
+          .values(
+            rubric.errors.map((e) => ({
+              sessionId: sess.id,
+              userId: me[0].id,
+              category: e.category,
+              incorrect: e.incorrect,
+              correction: e.correction,
+              explanationEn: e.explanationEn ?? null,
+            })),
+          )
+          .returning({ id: roleplayErrors.id });
+
+        // US-019: enqueue each error as a review card.
+        await enqueueRoleplayErrors(
+          drz,
+          me[0].id,
+          rubric.errors.map((e, i) => ({
             sessionId: sess.id,
-            userId: me[0].id,
+            errorId: insertedErrors[i]?.id ?? 0,
             category: e.category,
             incorrect: e.incorrect,
             correction: e.correction,
-            explanationEn: e.explanationEn ?? null,
+            explanationEn: e.explanationEn,
           })),
         );
       }

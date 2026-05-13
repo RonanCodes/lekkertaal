@@ -12,9 +12,10 @@ import {
   spacedRepQueue,
   xpEvents,
 } from "../../db/schema";
-import { eq, and, asc } from "drizzle-orm";
+import { eq, and, asc, lte } from "drizzle-orm";
 import { sql } from "drizzle-orm";
 import { requireWorkerContext } from "../../entry.server";
+import { enqueueDrillMistake } from "./spaced-rep";
 
 export type DrillType =
   | "match_pairs"
@@ -39,6 +40,14 @@ export type LessonPayload = {
     unitSlug: string;
   };
   drills: Array<DrillPayload>;
+  reviews: Array<ReviewCardPayload>;
+};
+
+export type ReviewCardPayload = {
+  id: number;
+  itemType: string;
+  itemKey: string;
+  payload: Record<string, unknown> | null;
 };
 
 export type DrillPayload = {
@@ -83,6 +92,20 @@ export const getLesson = createServerFn({ method: "GET" })
       .where(eq(exercises.lessonId, data.lessonId))
       .orderBy(asc(exercises.id));
 
+    // US-019: surface up to 3 due review cards before the new content.
+    const now = new Date().toISOString();
+    const reviewRows = await drz
+      .select()
+      .from(spacedRepQueue)
+      .where(
+        and(
+          eq(spacedRepQueue.userId, me[0].id),
+          lte(spacedRepQueue.nextReviewDate, now),
+        ),
+      )
+      .orderBy(asc(spacedRepQueue.nextReviewDate))
+      .limit(3);
+
     return {
       user: {
         displayName: me[0].displayName,
@@ -110,6 +133,12 @@ export const getLesson = createServerFn({ method: "GET" })
         hints: d.hints,
         audioUrl: d.audioUrl,
       })),
+      reviews: reviewRows.map((r) => ({
+        id: r.id,
+        itemType: r.itemType,
+        itemKey: r.itemKey,
+        payload: r.payload ?? null,
+      })),
     };
   });
 
@@ -126,37 +155,11 @@ export const recordDrillResult = createServerFn({ method: "POST" })
     if (!me[0]) throw new Error("User row missing");
 
     if (!data.correct) {
-      // Enqueue into spaced rep queue (SM-2 defaults). Upsert by (user,item).
-      const tomorrow = new Date();
-      tomorrow.setDate(tomorrow.getDate() + 1);
-      const nextReview = tomorrow.toISOString().slice(0, 10);
-      try {
-        await drz.insert(spacedRepQueue).values({
-          userId: me[0].id,
-          itemType: "exercise",
-          itemKey: String(data.exerciseId),
-          payload: { exerciseId: data.exerciseId, lastUserAnswer: data.userAnswer ?? null },
-          nextReviewDate: nextReview,
-        });
-      } catch {
-        // Already enqueued — reset interval to 1 day.
-        await drz
-          .update(spacedRepQueue)
-          .set({
-            intervalDays: 1,
-            repetitions: 0,
-            easeFactor: 2.5,
-            nextReviewDate: nextReview,
-            lastReviewedAt: new Date().toISOString(),
-          })
-          .where(
-            and(
-              eq(spacedRepQueue.userId, me[0].id),
-              eq(spacedRepQueue.itemType, "exercise"),
-              eq(spacedRepQueue.itemKey, String(data.exerciseId)),
-            ),
-          );
-      }
+      // US-019: route through the cap-aware SM-2 helper so a flurry of wrong
+      // drill answers doesn't blow past the 10-item active-review cap.
+      await enqueueDrillMistake(drz, me[0].id, data.exerciseId, {
+        lastUserAnswer: data.userAnswer ?? null,
+      });
     }
     return { ok: true };
   });
