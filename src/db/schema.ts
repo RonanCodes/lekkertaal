@@ -36,6 +36,7 @@ export const users = sqliteTable(
     xpTotal: integer("xp_total").default(0).notNull(),
     coinsBalance: integer("coins_balance").default(0).notNull(),
     hintsBalance: integer("hints_balance").default(0).notNull(),
+    sfxEnabled: integer("sfx_enabled", { mode: "boolean" }).default(true).notNull(),
     isPublic: integer("is_public", { mode: "boolean" }).default(true).notNull(),
     onboardedAt: text("onboarded_at"),
     createdAt: text("created_at").default(sql`CURRENT_TIMESTAMP`).notNull(),

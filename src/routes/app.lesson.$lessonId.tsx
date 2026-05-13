@@ -5,6 +5,7 @@ import { AppShell } from "../components/AppShell";
 import { DrillRenderer } from "../components/drills/DrillRenderer";
 import { FeedbackBanner } from "../components/drills/DrillFrame";
 import { ReviewRibbon } from "../components/ReviewRibbon";
+import { useSfx } from "../lib/use-sfx";
 
 export const Route = createFileRoute("/app/lesson/$lessonId")({
   loader: async ({ params }) => {
@@ -24,6 +25,7 @@ function LessonPlayerPage() {
   const data = Route.useLoaderData();
   const navigate = useNavigate();
   const { lesson, drills, user, reviews } = data;
+  const sfx = useSfx(user.sfxEnabled);
 
   const [drillIdx, setDrillIdx] = useState(0);
   const [feedback, setFeedback] = useState<{ correct: boolean } | null>(null);
@@ -50,6 +52,7 @@ function LessonPlayerPage() {
   const handleSubmit = async (correct: boolean, userAnswer?: string) => {
     if (feedback) return; // ignore duplicate submits
     setFeedback({ correct });
+    sfx.play(correct ? "correct" : "wrong");
     if (correct) setCorrectCount((c) => c + 1);
     else setIncorrectCount((c) => c + 1);
 
