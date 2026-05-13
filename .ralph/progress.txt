@@ -30,3 +30,4 @@ Phase 1 target: US-001 .. US-035 (35 stories).
 [2026-05-13T20:56:34Z] US-021 PASS coins shop pr#20
 [2026-05-13T20:59:27Z] US-022 PASS streak freeze milestones pr#21
 [2026-05-13T21:01:38Z] US-029 PASS elevenlabs tts r2 cache pr#22
+[2026-05-13T21:04:54Z] US-023 PASS badges pr#23
