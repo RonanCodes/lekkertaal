@@ -1,0 +1,1 @@
+ALTER TABLE `users` ADD `hints_balance` integer DEFAULT 0 NOT NULL;
