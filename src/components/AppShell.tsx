@@ -15,9 +15,9 @@ export function AppShell({
             Lekkertaal
           </a>
           <div className="flex items-center gap-4 text-sm">
-            <span title="Streak">🔥 {user.streakDays}</span>
-            <span title="XP">⭐ {user.xpTotal}</span>
-            <span title="Coins">🪙 {user.coinsBalance}</span>
+            <span title="Daily streak" aria-label="streak">🔥 {user.streakDays}</span>
+            <span title="Total XP" aria-label="xp">⚡ {user.xpTotal}</span>
+            <span title="Coins" aria-label="coins">🪙 {user.coinsBalance}</span>
             <span className="hidden text-neutral-500 sm:inline">{user.displayName}</span>
           </div>
         </div>

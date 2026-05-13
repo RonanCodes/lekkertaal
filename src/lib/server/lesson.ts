@@ -16,6 +16,7 @@ import { eq, and, asc, lte } from "drizzle-orm";
 import { sql } from "drizzle-orm";
 import { requireWorkerContext } from "../../entry.server";
 import { enqueueDrillMistake } from "./spaced-rep";
+import { awardLessonComplete } from "./gamification";
 
 export type DrillType =
   | "match_pairs"
@@ -198,19 +199,18 @@ export const completeLesson = createServerFn({ method: "POST" })
       )
       .limit(1);
 
-    let xpAwarded = lesson.xpReward;
     let alreadyDone = false;
     if (existing[0]) {
       alreadyDone = existing[0].status === "completed";
-      // Award XP only on first completion.
-      if (alreadyDone) xpAwarded = 0;
       await drz
         .update(userLessonProgress)
         .set({
           status: "completed",
           correctCount: data.correctCount,
           incorrectCount: data.incorrectCount,
-          xpEarned: alreadyDone ? existing[0].xpEarned : lesson.xpReward,
+          // Keep historical xpEarned on the row; awardLessonComplete decides
+          // the actual XP/coin grant based on alreadyDone.
+          xpEarned: alreadyDone ? existing[0].xpEarned : 20,
           completedAt: existing[0].completedAt ?? now,
           updatedAt: now,
         })
@@ -222,27 +222,16 @@ export const completeLesson = createServerFn({ method: "POST" })
         status: "completed",
         correctCount: data.correctCount,
         incorrectCount: data.incorrectCount,
-        xpEarned: lesson.xpReward,
+        xpEarned: 20,
         startedAt: now,
         completedAt: now,
         updatedAt: now,
       });
     }
 
-    if (xpAwarded > 0) {
-      // Bump XP + log event.
-      await drz
-        .update(users)
-        .set({ xpTotal: sql`${users.xpTotal} + ${xpAwarded}` })
-        .where(eq(users.id, me[0].id));
-      await drz.insert(xpEvents).values({
-        userId: me[0].id,
-        delta: xpAwarded,
-        reason: "lesson_complete",
-        refType: "lesson",
-        refId: String(lesson.id),
-      });
-    }
+    // US-020: XP + coins + daily_completions + streak.
+    const award = await awardLessonComplete(drz, me[0].id, lesson.id, alreadyDone);
+    const xpAwarded = award.xpAwarded;
 
     // Bump unit lessons_completed counter.
     const unitProg = await drz
@@ -280,5 +269,11 @@ export const completeLesson = createServerFn({ method: "POST" })
       });
     }
 
-    return { ok: true, xpAwarded };
+    return {
+      ok: true,
+      xpAwarded,
+      coinsAwarded: award.coinsAwarded,
+      streakDays: award.streakDays,
+      freezeUsed: award.freezeUsed,
+    };
   });
