@@ -17,6 +17,7 @@ import { sql } from "drizzle-orm";
 import { requireWorkerContext } from "../../entry.server";
 import { enqueueDrillMistake } from "./spaced-rep";
 import { awardLessonComplete } from "./gamification";
+import { awardBadgesIfEligible } from "./badges";
 
 export type DrillType =
   | "match_pairs"
@@ -271,11 +272,14 @@ export const completeLesson = createServerFn({ method: "POST" })
       });
     }
 
+    const newBadges = await awardBadgesIfEligible(drz, me[0].id);
+
     return {
       ok: true,
       xpAwarded,
       coinsAwarded: award.coinsAwarded,
       streakDays: award.streakDays,
       freezeUsed: award.freezeUsed,
+      newBadges,
     };
   });
