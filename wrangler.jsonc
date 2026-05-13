@@ -29,6 +29,8 @@
   "vars": {
     "SENTRY_DSN": "",
     "POSTHOG_PROJECT_KEY": "",
-    "POSTHOG_INGEST_HOST": "https://eu.i.posthog.com"
+    "POSTHOG_INGEST_HOST": "https://eu.i.posthog.com",
+    "CLERK_PUBLISHABLE_KEY": "pk_test_dml0YWwtbW9sbHktNTkuY2xlcmsuYWNjb3VudHMuZGV2JA",
+    "VITE_CLERK_PUBLISHABLE_KEY": "pk_test_dml0YWwtbW9sbHktNTkuY2xlcmsuYWNjb3VudHMuZGV2JA"
   }
 }
