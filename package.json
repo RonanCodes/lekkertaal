@@ -26,7 +26,9 @@
     "test:ui": "vitest --ui",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
-    "dev:bypass-auth": "bash scripts/dev-bypass-auth.sh"
+    "dev:bypass-auth": "bash scripts/dev-bypass-auth.sh",
+    "quality": "pnpm test && pnpm build",
+    "quality:full": "pnpm typecheck && pnpm lint && pnpm test && pnpm build"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^3.0.77",
