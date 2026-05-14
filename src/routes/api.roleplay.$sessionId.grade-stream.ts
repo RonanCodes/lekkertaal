@@ -9,9 +9,10 @@ import { requireWorkerContext } from "../entry.server";
 import {
   RubricSchema,
   buildGradingPrompt,
-  persistRubric,
-  type RoleplayRubric,
+  persistRubric
+  
 } from "../lib/server/roleplay";
+import type {RoleplayRubric} from "../lib/server/roleplay";
 import { awardBadgesIfEligible } from "./../lib/server/badges";
 import { emitAiCall, buildAiCallPayload } from "../lib/ai-telemetry";
 import { log } from "../lib/logger";

@@ -20,7 +20,8 @@ import { users } from "../db/schema";
 import { eq } from "drizzle-orm";
 import { requireWorkerContext } from "../entry.server";
 import { getUserIdByClerkId, listFriends } from "../lib/server/friends";
-import { listInbox, type InboxEntry } from "../lib/server/peer-drills";
+import { listInbox  } from "../lib/server/peer-drills";
+import type {InboxEntry} from "../lib/server/peer-drills";
 import { AppShell } from "../components/AppShell";
 
 const loadPeer = createServerFn({ method: "GET" }).handler(async () => {

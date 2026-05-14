@@ -10,8 +10,7 @@ import {
   spacedRepQueue,
   xpEvents,
 } from "../../db/schema";
-import { eq, and, asc, lte } from "drizzle-orm";
-import { sql } from "drizzle-orm";
+import { eq, and, asc, lte, sql  } from "drizzle-orm";
 import { requireWorkerContext } from "../../entry.server";
 import { enqueueDrillMistake } from "./spaced-rep";
 import { awardLessonComplete } from "./gamification";

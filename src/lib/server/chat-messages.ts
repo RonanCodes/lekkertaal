@@ -58,7 +58,7 @@ export async function loadChatMessages(
     id: r.clientMessageId,
     role: r.role as UIMessage["role"],
     parts: (r.parts ?? []) as UIMessage["parts"],
-  })) as UIMessage[];
+  }));
 }
 
 /**
@@ -224,5 +224,5 @@ export function pickResponseMessageId(responseMessage: UIMessage): string {
 export function uiMessageTextParts(
   m: UIMessage,
 ): Array<{ type: string; text?: string; [k: string]: unknown }> {
-  return (m.parts ?? []) as Array<{ type: string; text?: string; [k: string]: unknown }>;
+  return (m.parts ?? []);
 }

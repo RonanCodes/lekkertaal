@@ -32,7 +32,8 @@
  * `gradeRoleplaySession`; it surfaces higher-level patterns rather than
  * individual mistakes.
  */
-import { streamText, stepCountIs, tool, type LanguageModel } from "ai";
+import { streamText, stepCountIs, tool  } from "ai";
+import type {LanguageModel} from "ai";
 import type { DB } from "../../db/client";
 import { and, eq } from "drizzle-orm";
 import { z } from "zod";

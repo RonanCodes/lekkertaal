@@ -35,7 +35,7 @@ describe("ImageWordDrill", () => {
   it("renders the image with descriptive alt text", () => {
     const onSubmit = vi.fn();
     render(<ImageWordDrill drill={makeDrill()} onSubmit={onSubmit} />);
-    const img = screen.getByTestId("image-word-drill-image") as HTMLImageElement;
+    const img = screen.getByTestId("image-word-drill-image");
     expect(img).toBeInTheDocument();
     expect(img.src).toBe("https://images.example.test/kat.png");
     expect(img.getAttribute("alt")).toMatch(/dutch/i);
@@ -51,7 +51,7 @@ describe("ImageWordDrill", () => {
   it("accepts the canonical Dutch noun and calls onSubmit(true)", () => {
     const onSubmit = vi.fn();
     render(<ImageWordDrill drill={makeDrill()} onSubmit={onSubmit} />);
-    const input = screen.getByTestId("image-word-drill-input") as HTMLInputElement;
+    const input = screen.getByTestId("image-word-drill-input");
     fireEvent.change(input, { target: { value: "kat" } });
     fireEvent.click(screen.getByTestId("image-word-drill-check"));
     act(() => {
@@ -64,7 +64,7 @@ describe("ImageWordDrill", () => {
   it("accepts the articled form when included in the answer array", () => {
     const onSubmit = vi.fn();
     render(<ImageWordDrill drill={makeDrill()} onSubmit={onSubmit} />);
-    const input = screen.getByTestId("image-word-drill-input") as HTMLInputElement;
+    const input = screen.getByTestId("image-word-drill-input");
     fireEvent.change(input, { target: { value: "de kat" } });
     fireEvent.click(screen.getByTestId("image-word-drill-check"));
     act(() => {
@@ -76,7 +76,7 @@ describe("ImageWordDrill", () => {
   it("tolerates a single typo via Levenshtein <= 1", () => {
     const onSubmit = vi.fn();
     render(<ImageWordDrill drill={makeDrill()} onSubmit={onSubmit} />);
-    const input = screen.getByTestId("image-word-drill-input") as HTMLInputElement;
+    const input = screen.getByTestId("image-word-drill-input");
     fireEvent.change(input, { target: { value: "kut" } }); // 1 substitution off "kat"
     fireEvent.click(screen.getByTestId("image-word-drill-check"));
     act(() => {
@@ -88,7 +88,7 @@ describe("ImageWordDrill", () => {
   it("rejects an obviously wrong answer and reveals the canonical", () => {
     const onSubmit = vi.fn();
     render(<ImageWordDrill drill={makeDrill()} onSubmit={onSubmit} />);
-    const input = screen.getByTestId("image-word-drill-input") as HTMLInputElement;
+    const input = screen.getByTestId("image-word-drill-input");
     fireEvent.change(input, { target: { value: "hond" } });
     fireEvent.click(screen.getByTestId("image-word-drill-check"));
     act(() => {
@@ -102,7 +102,7 @@ describe("ImageWordDrill", () => {
   it("ignores empty submissions (Check button stays disabled)", () => {
     const onSubmit = vi.fn();
     render(<ImageWordDrill drill={makeDrill()} onSubmit={onSubmit} />);
-    const check = screen.getByTestId("image-word-drill-check") as HTMLButtonElement;
+    const check = screen.getByTestId("image-word-drill-check");
     expect(check.disabled).toBe(true);
     fireEvent.click(check);
     act(() => {
@@ -114,7 +114,7 @@ describe("ImageWordDrill", () => {
   it("submits on Enter key", () => {
     const onSubmit = vi.fn();
     render(<ImageWordDrill drill={makeDrill()} onSubmit={onSubmit} />);
-    const input = screen.getByTestId("image-word-drill-input") as HTMLInputElement;
+    const input = screen.getByTestId("image-word-drill-input");
     fireEvent.change(input, { target: { value: "kat" } });
     fireEvent.keyDown(input, { key: "Enter" });
     act(() => {

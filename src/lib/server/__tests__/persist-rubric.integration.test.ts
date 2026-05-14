@@ -106,7 +106,7 @@ describe("persistRubric (integration: in-memory D1)", () => {
     const [sess] = await seedSession(drz, userId, scenarioId);
 
     const result = await persistRubric({
-      drz: asD1(drz) as unknown as DbClient,
+      drz: asD1(drz),
       sess: {
         id: sess.id,
         rubricGrammar: null,
@@ -147,7 +147,7 @@ describe("persistRubric (integration: in-memory D1)", () => {
     const [sess] = await seedSession(drz, userId, scenarioId);
 
     await persistRubric({
-      drz: asD1(drz) as unknown as DbClient,
+      drz: asD1(drz),
       sess: {
         id: sess.id,
         rubricGrammar: null,
@@ -192,7 +192,7 @@ describe("persistRubric (integration: in-memory D1)", () => {
     const [sess] = await seedSession(drz, userId, scenarioId);
 
     const result = await persistRubric({
-      drz: asD1(drz) as unknown as DbClient,
+      drz: asD1(drz),
       sess: {
         id: sess.id,
         rubricGrammar: null,
@@ -222,7 +222,7 @@ describe("persistRubric (integration: in-memory D1)", () => {
 
     // First grade: a strong attempt.
     await persistRubric({
-      drz: asD1(drz) as unknown as DbClient,
+      drz: asD1(drz),
       sess: {
         id: sess.id,
         rubricGrammar: null,
@@ -253,7 +253,7 @@ describe("persistRubric (integration: in-memory D1)", () => {
 
     // Second grade: weaker attempt.
     const result2 = await persistRubric({
-      drz: asD1(drz) as unknown as DbClient,
+      drz: asD1(drz),
       sess: {
         id: sess.id,
         rubricGrammar: afterFirst[0].rubricGrammar,
@@ -294,7 +294,7 @@ describe("persistRubric (integration: in-memory D1)", () => {
 
     // First grade: mediocre.
     const first = await persistRubric({
-      drz: asD1(drz) as unknown as DbClient,
+      drz: asD1(drz),
       sess: {
         id: sess.id,
         rubricGrammar: null,
@@ -330,7 +330,7 @@ describe("persistRubric (integration: in-memory D1)", () => {
 
     // Second grade: better.
     const second = await persistRubric({
-      drz: asD1(drz) as unknown as DbClient,
+      drz: asD1(drz),
       sess: {
         id: sess.id,
         rubricGrammar: after1[0].rubricGrammar,

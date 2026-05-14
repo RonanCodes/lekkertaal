@@ -133,7 +133,7 @@ describe("SpeakDrill", () => {
     render(<SpeakDrill drill={makeDrill()} onSubmit={onSubmit} />);
 
     const file = new File(["fake-bytes"], "clip.webm", { type: "audio/webm" });
-    const input = screen.getByTestId("speak-upload-input") as HTMLInputElement;
+    const input = screen.getByTestId("speak-upload-input");
     fireEvent.change(input, { target: { files: [file] } });
 
     await waitFor(() =>
@@ -154,7 +154,7 @@ describe("SpeakDrill", () => {
     render(<SpeakDrill drill={makeDrill()} onSubmit={onSubmit} />);
 
     const file = new File(["bytes"], "clip.webm", { type: "audio/webm" });
-    const input = screen.getByTestId("speak-upload-input") as HTMLInputElement;
+    const input = screen.getByTestId("speak-upload-input");
     fireEvent.change(input, { target: { files: [file] } });
 
     await waitFor(() =>

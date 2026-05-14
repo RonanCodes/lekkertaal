@@ -18,7 +18,8 @@ import {
   LESSON_COIN_REWARD,
 } from "../gamification";
 import { enqueueDrillMistake } from "../spaced-rep";
-import { makeTestDb, asD1, seedUser, type TestDb } from "./test-db";
+import { makeTestDb, asD1, seedUser  } from "./test-db";
+import type {TestDb} from "./test-db";
 import { eq } from "drizzle-orm";
 import { users, spacedRepQueue, xpEvents, coinEvents, dailyCompletions } from "../../../db/schema";
 

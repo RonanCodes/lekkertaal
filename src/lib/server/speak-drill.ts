@@ -14,8 +14,7 @@
  *      progress + daily-quest xp progress.
  */
 import type { DB } from "../../db/client";
-import { and, eq } from "drizzle-orm";
-import { sql } from "drizzle-orm";
+import { and, eq, sql  } from "drizzle-orm";
 import { speakDrillAttempts, users, xpEvents } from "../../db/schema";
 import { bumpQuestProgress } from "./daily-quests";
 

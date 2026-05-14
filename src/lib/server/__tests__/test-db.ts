@@ -12,7 +12,8 @@
  * delete + `sql` template literals, none of which differ between drivers).
  */
 import Database from "better-sqlite3";
-import { drizzle, type BetterSQLite3Database } from "drizzle-orm/better-sqlite3";
+import { drizzle  } from "drizzle-orm/better-sqlite3";
+import type {BetterSQLite3Database} from "drizzle-orm/better-sqlite3";
 import { readdirSync, readFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import * as schema from "../../../db/schema";

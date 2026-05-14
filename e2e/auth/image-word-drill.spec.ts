@@ -81,7 +81,7 @@ test.describe("Image-word drill (AI-SDK-7)", () => {
 
     test.skip(imageDrill === null, "No image-word drill in this lesson. Seed not loaded.");
 
-    await expect(imageDrill!).toBeVisible();
+    await expect(imageDrill).toBeVisible();
 
     // Type the canonical noun ("kat" is the first seed entry; if seed
     // ordering changes the read-the-feedback assertion still passes as
