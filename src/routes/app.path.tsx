@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { getPath } from "../lib/server/path";
 import { AppShell } from "../components/AppShell";
 import { Stroop } from "../components/Stroop";
+import { DailyQuests } from "../components/DailyQuests";
 
 export const Route = createFileRoute("/app/path")({
   loader: async () => await getPath(),
@@ -23,6 +24,8 @@ function PathPage() {
           <p className="text-sm text-neutral-500">Level: {data.user.cefrLevel}</p>
         </div>
       </div>
+
+      <DailyQuests initial={data.quests} />
 
       <ol className="space-y-4">
         {data.path.map((u, i) => {

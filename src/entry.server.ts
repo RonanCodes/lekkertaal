@@ -18,6 +18,7 @@ import { db } from "./db/client";
 import { resetStaleStreaks } from "./lib/server/gamification";
 import { runDailyPushCron } from "./lib/server/cron-push";
 import { runWeeklyDigestCron, runStreakRecoveryCron } from "./lib/server/email";
+import { runDailyQuestsCron } from "./lib/server/daily-quests";
 import { configureLogger, withRequestLogContext, log } from "./lib/logger";
 
 export type WorkerEnv = {
@@ -134,6 +135,18 @@ export default {
         if (r.sent > 0) log.info("cron: streak recovery", { sent: r.sent });
       } catch (err) {
         log.error("cron: runStreakRecoveryCron failed", { err });
+      }
+      // P2-CON-3: seed today's daily quests for every user. Idempotent —
+      // the per-user helper short-circuits when rows for the user's local
+      // date already exist. Runs hourly so users in any tz get rows within
+      // the first hour past their local midnight.
+      try {
+        const r = await runDailyQuestsCron(db(env.DB));
+        if (r.seeded > 0) {
+          log.info("cron: daily quests seeded", { seeded: r.seeded, scanned: r.scanned });
+        }
+      } catch (err) {
+        log.error("cron: runDailyQuestsCron failed", { err });
       }
     });
   },

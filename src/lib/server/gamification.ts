@@ -30,6 +30,7 @@ import {
   dailyCompletions,
 } from "../../db/schema";
 import { eq, and, sql } from "drizzle-orm";
+import { bumpQuestProgress } from "./daily-quests";
 
 export const LESSON_XP_REWARD = 20;
 export const LESSON_COIN_REWARD = 5;
@@ -215,6 +216,19 @@ export async function awardLessonComplete(
     freezeUsed: streak.freezeUsed,
   });
 
+  // P2-CON-3: feed daily-quest progress. XP and lesson grants count toward
+  // their respective quest kinds; the streak bump feeds the `streak` quest
+  // exactly once per day (the helper returns alreadyActiveToday on re-calls).
+  if (xpAwarded > 0) {
+    await bumpQuestProgress(drz, userId, "xp", xpAwarded);
+  }
+  if (!alreadyDone) {
+    await bumpQuestProgress(drz, userId, "lessons", 1);
+  }
+  if (!streak.alreadyActiveToday) {
+    await bumpQuestProgress(drz, userId, "streak", 1);
+  }
+
   return {
     xpAwarded,
     coinsAwarded,
@@ -269,6 +283,17 @@ export async function awardRoleplayComplete(
     lessons: 0,
     freezeUsed: streak.freezeUsed,
   });
+
+  // P2-CON-3: feed daily-quest progress for roleplay XP grants + streak bump.
+  // The `speak` kind is wired by P2-STT-3 (#56) when the speak-drill submit
+  // path lands; until then, roleplay XP only feeds the `xp` quest.
+  // TODO(#56): bump `speak` quest from the speak-drill submit handler.
+  if (newlyAwarded && xpJustAwarded > 0) {
+    await bumpQuestProgress(drz, userId, "xp", xpJustAwarded);
+  }
+  if (!streak.alreadyActiveToday) {
+    await bumpQuestProgress(drz, userId, "streak", 1);
+  }
 
   return {
     coinsAwarded,
