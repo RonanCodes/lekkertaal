@@ -4,7 +4,7 @@ import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport, type UIMessage } from "ai";
 import {
   getScenario,
-  startRoleplaySession,
+  getRoleplayHistory,
   finishRoleplaySession,
   gradeRoleplaySession,
   type RoleplayTranscriptEntry,
@@ -17,7 +17,14 @@ const END_KEYWORDS = ["klaar", "done", "einde"];
 export const Route = createFileRoute("/app/scenario/$slug")({
   loader: async ({ params }) => {
     try {
-      return await getScenario({ data: { slug: params.slug } });
+      const scenarioPayload = await getScenario({ data: { slug: params.slug } });
+      // AI-SDK-2: hydrate the chat from the server-persisted message history
+      // so a page refresh mid-conversation puts the learner back on the turn
+      // they left.
+      const history = await getRoleplayHistory({
+        data: { scenarioId: scenarioPayload.scenario.id },
+      });
+      return { ...scenarioPayload, history };
     } catch (err) {
       if (err instanceof Error && err.message === "Scenario not found") throw notFound();
       throw err;
@@ -27,40 +34,44 @@ export const Route = createFileRoute("/app/scenario/$slug")({
 });
 
 function ScenarioChatPage() {
-  const { user, scenario } = Route.useLoaderData();
+  const { user, scenario, history } = Route.useLoaderData();
   const navigate = useNavigate();
-  const [sessionId, setSessionId] = useState<number | null>(null);
+  // sessionId is supplied by the loader; the streaming endpoint also
+  // accepts it via the chat `id` so the server never has to guess.
+  const [sessionId] = useState<number>(history.sessionId);
   const [ended, setEnded] = useState(false);
   const [draft, setDraft] = useState("");
   const scrollRef = useRef<HTMLDivElement | null>(null);
 
-  // Start (or re-use) a roleplay_sessions row on first mount.
-  useEffect(() => {
-    let cancelled = false;
-    startRoleplaySession({ data: { scenarioId: scenario.id } }).then((r) => {
-      if (!cancelled) setSessionId(r.sessionId);
-    });
-    return () => {
-      cancelled = true;
-    };
-  }, [scenario.id]);
-
-  // Seed the chat with the NPC's opening line as a Dutch assistant message.
-  const initialMessages = useMemo<UIMessage[]>(
-    () => [
+  // Seed messages. If the server has any persisted turns, use those (so a
+  // refresh mid-conversation resumes the transcript intact). Otherwise
+  // fall back to the NPC's scripted opening line.
+  const initialMessages = useMemo<UIMessage[]>(() => {
+    if (history.messages.length > 0) return history.messages as UIMessage[];
+    return [
       {
         id: "opening",
         role: "assistant",
         parts: [{ type: "text", text: scenario.openingNl }],
       } as UIMessage,
-    ],
-    [scenario.openingNl],
-  );
+    ];
+  }, [history.messages, scenario.openingNl]);
 
   const { messages, sendMessage, status } = useChat({
+    id: String(sessionId),
     messages: initialMessages,
     transport: new DefaultChatTransport({
       api: `/api/roleplay/${scenario.slug}/stream`,
+      // v6 persistence pattern: send only the latest user turn + the
+      // chat id; server owns the full history and reloads from D1.
+      prepareSendMessagesRequest: ({ id, messages, trigger, messageId }) => ({
+        body: {
+          id: Number(id),
+          messages: [messages[messages.length - 1]],
+          trigger,
+          messageId,
+        },
+      }),
     }),
   });
 
