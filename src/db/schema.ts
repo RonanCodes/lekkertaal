@@ -288,6 +288,40 @@ export const roleplayErrors = sqliteTable(
 );
 
 // ============================================================================
+// SPEECH-TO-TEXT (STT)
+// ============================================================================
+
+/**
+ * Whisper transcription record.
+ *
+ * One row per /api/stt/transcribe call. Stores the R2 audio key (so the raw
+ * clip is retrievable for debugging or pronunciation rescoring), the
+ * transcript Whisper returned, and the clip duration the client claimed.
+ *
+ * `drillId` is nullable: STT can be invoked outside a drill context (free
+ * speak mode, future pronunciation tester, etc.). When tied to a specific
+ * exercise we set it so the speak-mode drill can join back later.
+ */
+export const transcripts = sqliteTable(
+  "transcripts",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    userId: integer("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    drillId: integer("drill_id").references(() => exercises.id),
+    audioKey: text("audio_key").notNull(),
+    transcript: text("transcript").notNull(),
+    durationMs: integer("duration_ms").notNull(),
+    createdAt: text("created_at").default(sql`CURRENT_TIMESTAMP`).notNull(),
+  },
+  (t) => ({
+    byUser: index("idx_transcripts_user").on(t.userId, t.createdAt),
+    byDrill: index("idx_transcripts_drill").on(t.drillId),
+  }),
+);
+
+// ============================================================================
 // SPACED REPETITION (SM-2)
 // ============================================================================
 
@@ -500,3 +534,5 @@ export type Scenario = typeof scenarios.$inferSelect;
 export type Badge = typeof badges.$inferSelect;
 export type Friendship = typeof friendships.$inferSelect;
 export type NewFriendship = typeof friendships.$inferInsert;
+export type Transcript = typeof transcripts.$inferSelect;
+export type NewTranscript = typeof transcripts.$inferInsert;
