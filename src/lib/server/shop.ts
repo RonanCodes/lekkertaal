@@ -87,7 +87,7 @@ export const buyItem = createServerFn({ method: "POST" })
     const grant: Partial<{ streakFreezesBalance: number; hintsBalance: number }> = {};
     if (item.id === "streak_freeze") {
       grant.streakFreezesBalance = me[0].streakFreezesBalance + 1;
-    } else if (item.id === "hint_pack") {
+    } else {
       grant.hintsBalance = me[0].hintsBalance + 1;
     }
 

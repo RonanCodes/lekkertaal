@@ -57,7 +57,7 @@ export async function loadChatMessages(
   return rows.map((r) => ({
     id: r.clientMessageId,
     role: r.role as UIMessage["role"],
-    parts: (r.parts ?? []) as UIMessage["parts"],
+    parts: r.parts as UIMessage["parts"],
   }));
 }
 
@@ -170,7 +170,7 @@ export async function syncTranscriptColumn(
     .orderBy(asc(chatMessages.createdAt), asc(chatMessages.id));
 
   const transcript = rows.map((r) => {
-    const parts = (r.parts ?? []) as Array<{ type: string; text?: string }>;
+    const parts = r.parts as Array<{ type: string; text?: string }>;
     const content = parts
       .filter((p) => p.type === "text" && typeof p.text === "string")
       .map((p) => p.text)
@@ -224,5 +224,5 @@ export function pickResponseMessageId(responseMessage: UIMessage): string {
 export function uiMessageTextParts(
   m: UIMessage,
 ): Array<{ type: string; text?: string; [k: string]: unknown }> {
-  return (m.parts ?? []);
+  return m.parts;
 }

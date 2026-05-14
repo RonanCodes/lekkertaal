@@ -1,6 +1,5 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { getLesson } from "../lib/server/lesson";
-import type { LessonPayload } from "../lib/server/lesson";
 import { AppShell } from "../components/AppShell";
 import { motion } from "motion/react";
 import { Stroop } from "../components/Stroop";
@@ -22,7 +21,7 @@ export const Route = createFileRoute("/app/lesson/$lessonId/complete")({
 });
 
 function LessonCompletePage() {
-  const data = Route.useLoaderData() as LessonPayload;
+  const data = Route.useLoaderData();
   const { lesson, user } = data;
   const backTo = lesson.unitSlug ? `/app/unit/${lesson.unitSlug}` : "/app/path";
   const sfx = useSfx(user.sfxEnabled);

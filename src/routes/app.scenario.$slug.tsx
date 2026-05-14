@@ -35,12 +35,8 @@ export const Route = createFileRoute("/app/scenario/$slug")({
   component: ScenarioChatPage,
 });
 
-type ScenarioLoaderData = Awaited<ReturnType<typeof getScenario>> & {
-  history: Awaited<ReturnType<typeof getRoleplayHistory>>;
-};
-
 function ScenarioChatPage() {
-  const { user, scenario, history } = Route.useLoaderData() as ScenarioLoaderData;
+  const { user, scenario, history } = Route.useLoaderData();
   const navigate = useNavigate();
   // sessionId is supplied by the loader; the streaming endpoint also
   // accepts it via the chat `id` so the server never has to guess.
@@ -53,7 +49,7 @@ function ScenarioChatPage() {
   // refresh mid-conversation resumes the transcript intact). Otherwise
   // fall back to the NPC's scripted opening line.
   const initialMessages = useMemo<UIMessage[]>(() => {
-    if (history.messages.length > 0) return history.messages as UIMessage[];
+    if (history.messages.length > 0) return history.messages;
     return [
       {
         id: "opening",
