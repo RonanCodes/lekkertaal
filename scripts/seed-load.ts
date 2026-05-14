@@ -18,6 +18,18 @@
  *   - exercises
  *   - scenarios
  *   - badges (15 hardcoded v0 badges)
+ *
+ * Cross-environment FK resolution (issue #87):
+ *   Foreign-key integer columns (units.course_id, lessons.unit_id,
+ *   exercises.lesson_id, scenarios.unit_id) are emitted as SQL subqueries
+ *   resolving via the parent row's unique slug, not as baked-in autoincrement
+ *   integers. The autoincrement assigned to a slug in one D1 instance is
+ *   never guaranteed to match the autoincrement in another (dev != staging
+ *   != prod), so embedding integers in the seed file makes it fail with
+ *   `FOREIGN KEY constraint failed` on any cross-env load. Subqueries side-
+ *   step that entirely: each FK row resolves against whatever id the parent
+ *   slug currently has in the target DB. Works for fresh DBs, partial DBs,
+ *   and re-runs alike, while preserving real FK referential integrity.
  */
 import { readFile, writeFile, mkdir, readdir } from "node:fs/promises";
 import { existsSync } from "node:fs";
@@ -44,8 +56,30 @@ const DRILL_TYPE_MAP: Record<string, string> = {
   speak: "speak",
 };
 
+/**
+ * Tagged wrapper for a raw SQL expression (e.g. a subquery). `sqlString`
+ * emits the wrapped expression verbatim, no quoting, no escaping. Use only
+ * for trusted, generator-controlled SQL — never user input.
+ */
+class RawSql {
+  constructor(public readonly sql: string) {}
+}
+
+/**
+ * Cross-env FK resolver. Returns a `(SELECT id FROM <table> WHERE slug = '<slug>')`
+ * subquery wrapped in `RawSql` so it is emitted unquoted by `sqlString`. This
+ * is the mechanism behind issue #87: integer FKs get resolved at load time
+ * against the target DB's actual autoincrement state, not at generate time
+ * against the local one.
+ */
+function fkSlug(table: string, slug: string): RawSql {
+  const escaped = slug.replace(/'/g, "''");
+  return new RawSql(`(SELECT id FROM ${table} WHERE slug = '${escaped}')`);
+}
+
 function sqlString(v: unknown): string {
   if (v === null || v === undefined) return "NULL";
+  if (v instanceof RawSql) return v.sql;
   if (typeof v === "boolean") return v ? "1" : "0";
   if (typeof v === "number") return String(v);
   if (typeof v === "object") return sqlString(JSON.stringify(v));
@@ -244,10 +278,11 @@ async function main() {
   }
   lines.push("");
 
-  // Units
+  // Units. course_id resolved via slug subquery (#87) so a load into any D1
+  // instance picks up that env's actual course id, not the local one.
   for (const u of units) {
     lines.push(insertRow("units", {
-      course_id: 1,
+      course_id: fkSlug("courses", "a2-yellowtail"),
       slug: u.slug,
       title_nl: u.title_nl,
       title_en: u.title_en,
@@ -259,10 +294,12 @@ async function main() {
   }
   lines.push("");
 
-  // Lessons (one per unit for v0 — drills group under it)
+  // Lessons (one per unit for v0 — drills group under it). unit_id resolved
+  // via the unit's slug so it works on a target DB with any autoincrement
+  // state.
   for (const u of units) {
     lines.push(insertRow("lessons", {
-      unit_id: u.order, // assumes units load 1..N in order
+      unit_id: fkSlug("units", u.slug),
       slug: `${u.slug}--lesson-1`,
       title_nl: `${u.title_nl} — oefening`,
       title_en: `${u.title_en} — practice`,
@@ -285,12 +322,16 @@ async function main() {
   }
   lines.push("");
 
-  // Exercises
-  const unitSlugToOrder = new Map(units.map((u) => [u.slug, u.order]));
+  // Exercises. lesson_id resolved via the parent lesson's slug. We know each
+  // unit has exactly one lesson named `<unit-slug>--lesson-1`, so the drill's
+  // unit_slug uniquely identifies the parent lesson.
+  const knownUnitSlugs = new Set(units.map((u) => u.slug));
   for (const e of exercises) {
-    const unitOrder = unitSlugToOrder.get(e.unit_slug);
+    const lessonRef = knownUnitSlugs.has(e.unit_slug)
+      ? fkSlug("lessons", `${e.unit_slug}--lesson-1`)
+      : null;
     lines.push(insertRow("exercises", {
-      lesson_id: unitOrder ?? null,
+      lesson_id: lessonRef,
       unit_slug: e.unit_slug,
       slug: e.slug,
       type: e.type,
@@ -306,11 +347,12 @@ async function main() {
   }
   lines.push("");
 
-  // Scenarios
+  // Scenarios. unit_id resolved via unit_slug subquery; null when the scenario
+  // is not tied to a specific unit.
   for (const s of scenarios) {
-    const unitOrder = s.unit_slug ? unitSlugToOrder.get(s.unit_slug) : null;
+    const unitRef = s.unit_slug ? fkSlug("units", s.unit_slug) : null;
     lines.push(insertRow("scenarios", {
-      unit_id: unitOrder ?? null,
+      unit_id: unitRef,
       unit_slug: s.unit_slug,
       slug: s.slug,
       title_nl: s.title_nl,
@@ -352,7 +394,7 @@ async function main() {
     for (const c of a1Curriculum) {
       const u = c.unit;
       lines.push(insertRow("units", {
-        course_id: 2,
+        course_id: fkSlug("courses", "a1-starter"),
         slug: u.slug,
         title_nl: u.title_nl,
         title_en: u.title_en,
@@ -367,11 +409,9 @@ async function main() {
     for (const c of a1Curriculum) {
       const u = c.unit;
       lines.push(insertRow("lessons", {
-        // Offset lesson IDs above the A2 course's range so they don't collide
-        // when both seed runs are applied together. A2 has 8 units / lessons
-        // today, so A1 lessons start at unit_id from the A1 units' insert order.
-        // INSERT OR IGNORE means re-runs are safe even if IDs shift.
-        unit_id: 100 + u.order,
+        // unit_id resolved via slug subquery (#87) so cross-env loads work
+        // regardless of the target D1's autoincrement state.
+        unit_id: fkSlug("units", u.slug),
         slug: `${u.slug}--lesson-1`,
         title_nl: `${u.title_nl}: oefening`,
         title_en: `${u.title_en}: practice`,
@@ -385,7 +425,9 @@ async function main() {
       for (const d of c.drills) {
         const dbType = DRILL_TYPE_MAP[d.type] ?? d.type;
         lines.push(insertRow("exercises", {
-          lesson_id: null,
+          // lesson_id resolved against the parent lesson's slug. Previously
+          // null because we didn't know the autoincrement id at emit time.
+          lesson_id: fkSlug("lessons", `${c.unit.slug}--lesson-1`),
           unit_slug: c.unit.slug,
           slug: d.slug,
           type: dbType,
@@ -420,7 +462,7 @@ async function main() {
     for (const c of b1Curriculum) {
       const u = c.unit;
       lines.push(insertRow("units", {
-        course_id: 3,
+        course_id: fkSlug("courses", "b1-starter"),
         slug: u.slug,
         title_nl: u.title_nl,
         title_en: u.title_en,
@@ -435,8 +477,7 @@ async function main() {
     for (const c of b1Curriculum) {
       const u = c.unit;
       lines.push(insertRow("lessons", {
-        // Offset above the A1 range (100+) so IDs do not collide.
-        unit_id: 200 + u.order,
+        unit_id: fkSlug("units", u.slug),
         slug: `${u.slug}--lesson-1`,
         title_nl: `${u.title_nl}: oefening`,
         title_en: `${u.title_en}: practice`,
@@ -450,7 +491,7 @@ async function main() {
       for (const d of c.drills) {
         const dbType = DRILL_TYPE_MAP[d.type] ?? d.type;
         lines.push(insertRow("exercises", {
-          lesson_id: null,
+          lesson_id: fkSlug("lessons", `${c.unit.slug}--lesson-1`),
           unit_slug: c.unit.slug,
           slug: d.slug,
           type: dbType,
