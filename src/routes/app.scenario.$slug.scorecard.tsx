@@ -1,8 +1,9 @@
 import { createFileRoute, notFound, useNavigate, Link } from "@tanstack/react-router";
-import { getScorecard, gradeRoleplaySession } from "../lib/server/roleplay";
+import { getScorecard } from "../lib/server/roleplay";
 import { AppShell } from "../components/AppShell";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Stroop } from "../components/Stroop";
+import { LiveRubric } from "../components/LiveRubric";
 
 export const Route = createFileRoute("/app/scenario/$slug/scorecard")({
   loader: async ({ params }) => {
@@ -20,28 +21,7 @@ function ScorecardPage() {
   const data = Route.useLoaderData();
   const navigate = useNavigate();
   const { user, scenario, session, errors } = data;
-  const [grading, setGrading] = useState(false);
-  const [refreshKey, setRefreshKey] = useState(0);
-
-  // If a session exists but isn't graded yet (race between finish + grade),
-  // kick off grading once on mount and reload the loader.
-  useEffect(() => {
-    if (session && !session.graded && !grading) {
-      setGrading(true);
-      gradeRoleplaySession({ data: { sessionId: session.id } })
-        .catch((err) => console.error("[scorecard] grade failed:", err))
-        .finally(() => {
-          setRefreshKey((k) => k + 1);
-          // Reload route data so the loader re-fetches with the now-graded row.
-          void navigate({
-            to: "/app/scenario/$slug/scorecard",
-            params: { slug: scenario.slug },
-            replace: true,
-          });
-        });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [session?.id, refreshKey]);
+  const [streamSettled, setStreamSettled] = useState(false);
 
   if (!session) {
     return (
@@ -66,12 +46,29 @@ function ScorecardPage() {
   if (!session.graded) {
     return (
       <AppShell user={user}>
-        <div className="mx-auto max-w-xl py-20 text-center">
-          <div className="text-4xl">⏳</div>
-          <h1 className="mt-4 text-xl font-semibold">Grading your conversation...</h1>
-          <p className="mt-2 text-sm text-neutral-500">
-            Claude is scoring grammar, vocab, task completion, fluency, and politeness.
-          </p>
+        <div className="mx-auto max-w-xl space-y-6 py-8">
+          <div className="text-center">
+            <Stroop state="idle" size="lg" className="mx-auto" />
+            <h1 className="mt-3 text-xl font-semibold">Grading your conversation</h1>
+            <p className="mt-2 text-sm text-neutral-500">
+              Claude is scoring grammar, vocab, task completion, fluency, and politeness.
+              The scores fill in as the model thinks.
+            </p>
+          </div>
+          <LiveRubric
+            sessionId={session.id}
+            onFinish={() => {
+              if (streamSettled) return;
+              setStreamSettled(true);
+              // Reload loader so the persisted scorecard (errors, badges,
+              // XP, full feedback) replaces the live partial view.
+              void navigate({
+                to: "/app/scenario/$slug/scorecard",
+                params: { slug: scenario.slug },
+                replace: true,
+              });
+            }}
+          />
         </div>
       </AppShell>
     );

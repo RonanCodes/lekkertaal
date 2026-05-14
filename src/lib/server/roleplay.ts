@@ -190,7 +190,7 @@ export const finishRoleplaySession = createServerFn({ method: "POST" })
 // US-018: grading + scorecard
 // ============================================================================
 
-const RubricSchema = z.object({
+export const RubricSchema = z.object({
   grammar: z.number().int().min(1).max(5),
   vocabulary: z.number().int().min(1).max(5),
   taskCompletion: z.number().int().min(1).max(5),
@@ -211,6 +211,52 @@ const RubricSchema = z.object({
 });
 
 export type RoleplayRubric = z.infer<typeof RubricSchema>;
+
+/**
+ * Pure helper: build the system + user prompt for the grading call.
+ *
+ * Extracted so the non-streaming `generateObject` path (gradeRoleplaySession
+ * server fn) and the streaming `streamObject` path (api.roleplay.$sessionId
+ * .grade-stream route) share one prompt builder. Drift between the two would
+ * mean the live scorecard and the final-persisted scorecard could score
+ * differently for the same transcript.
+ */
+export function buildGradingPrompt(args: {
+  scenario: {
+    titleNl: string;
+    titleEn: string;
+    npcName: string;
+    npcPersona: string;
+    difficulty: string;
+    mustUseVocab: string[] | null;
+    mustUseGrammar: string[] | null;
+    successCriteria: string[] | null;
+  };
+  transcript: RoleplayTranscriptEntry[];
+}): { system: string; prompt: string } {
+  const s = args.scenario;
+  const transcriptLines = args.transcript
+    .filter((t) => t.role === "user" || t.role === "assistant")
+    .map((t) => `${t.role === "user" ? "Learner" : s.npcName}: ${t.content}`)
+    .join("\n");
+
+  const system = `You are a Dutch language teacher grading a CEFR ${s.difficulty} roleplay conversation.
+The learner had to: ${(s.successCriteria ?? []).join("; ") || "complete a natural conversation"}.
+Score on five rubrics (1-5 each), give actionable feedback in English, and list specific Dutch errors with corrections.
+Be encouraging. A 3 is a passing CEFR ${s.difficulty} performance, 4 is strong, 5 is exceptional.`;
+
+  const prompt = `Scenario: ${s.titleNl} (${s.titleEn})
+NPC: ${s.npcName} ${s.npcPersona}
+Must-use vocab: ${(s.mustUseVocab ?? []).join(", ") || "(none)"}
+Must-use grammar: ${(s.mustUseGrammar ?? []).join(", ") || "(none)"}
+
+Transcript:
+${transcriptLines}
+
+Grade the learner's Dutch. Return the rubric scores, a short English feedback paragraph (2-4 sentences), and a list of specific errors with corrections.`;
+
+  return { system, prompt };
+}
 
 export const gradeRoleplaySession = createServerFn({ method: "POST" })
   .inputValidator((input: { sessionId: number }) => input)
@@ -272,10 +318,10 @@ export const gradeRoleplaySession = createServerFn({ method: "POST" })
 
     const anthropic = createAnthropic({ apiKey: env.ANTHROPIC_API_KEY });
 
-    const transcriptLines = (sess.transcript ?? [])
-      .filter((t) => t.role === "user" || t.role === "assistant")
-      .map((t) => `${t.role === "user" ? "Learner" : s.npcName}: ${t.content}`)
-      .join("\n");
+    const { system: gradeSystem, prompt: gradePrompt } = buildGradingPrompt({
+      scenario: s,
+      transcript: sess.transcript ?? [],
+    });
 
     const gradeModelId = "claude-sonnet-4-5";
     const gradeFunctionId = "roleplay.grade";
@@ -286,19 +332,8 @@ export const gradeRoleplaySession = createServerFn({ method: "POST" })
       gradeResult = await generateObject({
         model: anthropic(gradeModelId),
         schema: RubricSchema,
-        system: `You are a Dutch language teacher grading a CEFR ${s.difficulty} roleplay conversation.
-The learner had to: ${(s.successCriteria ?? []).join("; ") || "complete a natural conversation"}.
-Score on five rubrics (1-5 each), give actionable feedback in English, and list specific Dutch errors with corrections.
-Be encouraging. A 3 is a passing CEFR ${s.difficulty} performance, 4 is strong, 5 is exceptional.`,
-        prompt: `Scenario: ${s.titleNl} (${s.titleEn})
-NPC: ${s.npcName} — ${s.npcPersona}
-Must-use vocab: ${(s.mustUseVocab ?? []).join(", ") || "(none)"}
-Must-use grammar: ${(s.mustUseGrammar ?? []).join(", ") || "(none)"}
-
-Transcript:
-${transcriptLines}
-
-Grade the learner's Dutch. Return the rubric scores, a short English feedback paragraph (2-4 sentences), and a list of specific errors with corrections.`,
+        system: gradeSystem,
+        prompt: gradePrompt,
         experimental_telemetry: {
           isEnabled: true,
           functionId: gradeFunctionId,
@@ -343,93 +378,157 @@ Grade the learner's Dutch. Return the rubric scores, a short English feedback pa
 
     const rubric = gradeResult.object;
 
-    const avg =
-      (rubric.grammar +
-        rubric.vocabulary +
-        rubric.taskCompletion +
-        rubric.fluency +
-        rubric.politeness) /
-      5;
-    const stars = Math.round(avg);
-    const passed = stars >= 3;
-    // XP scaled by stars: 0-2 -> 25%, 3 -> 60%, 4 -> 85%, 5 -> 100%.
-    const xpScale = stars >= 5 ? 1.0 : stars === 4 ? 0.85 : stars === 3 ? 0.6 : 0.25;
-    const xpAwarded = Math.round((s.xpReward ?? 0) * xpScale);
+    const persistResult = await persistRubric({
+      drz,
+      sess,
+      scenario: s,
+      meId: me[0].id,
+      meXpTotal: me[0].xpTotal ?? 0,
+      rubric,
+    });
 
-    // Best-attempt: only overwrite if this attempt is strictly higher.
-    // Score the previous best by stars-equivalent (sum of 5 rubrics).
-    const previousSum =
-      (sess.rubricGrammar ?? 0) +
-      (sess.rubricVocab ?? 0) +
-      (sess.rubricTask ?? 0) +
-      (sess.rubricFluency ?? 0) +
-      (sess.rubricPoliteness ?? 0);
-    const currentSum =
-      rubric.grammar +
+    const newBadges = await awardBadgesIfEligible(drz, me[0].id);
+
+    return {
+      sessionId: sess.id,
+      scenarioSlug: s.slug,
+      rubric: {
+        grammar: rubric.grammar,
+        vocabulary: rubric.vocabulary,
+        taskCompletion: rubric.taskCompletion,
+        fluency: rubric.fluency,
+        politeness: rubric.politeness,
+      },
+      feedbackMd: rubric.feedbackEn,
+      xpAwarded: persistResult.xpAwarded,
+      passed: persistResult.passed,
+      cached: false,
+      replacedPrevious: persistResult.replacedPrevious,
+      newBadges,
+    };
+  });
+
+/**
+ * Persist a final rubric to D1: writes scores on roleplay_sessions, inserts
+ * error rows in roleplay_errors, enqueues spaced-rep cards, awards XP and
+ * gamification side-effects. Best-attempt semantics: only overwrites when the
+ * new rubric strictly outscores the previous attempt.
+ *
+ * Extracted from gradeRoleplaySession so the streaming endpoint
+ * (api.roleplay.$sessionId.grade-stream) can persist the final streamed
+ * rubric on `onFinish` using the same path. Returns the derived xpAwarded /
+ * passed / replacedPrevious so the caller can shape its response.
+ */
+export async function persistRubric(args: {
+  drz: ReturnType<typeof db>;
+  sess: {
+    id: number;
+    rubricGrammar: number | null;
+    rubricVocab: number | null;
+    rubricTask: number | null;
+    rubricFluency: number | null;
+    rubricPoliteness: number | null;
+    xpAwarded: number | null;
+    transcript?: RoleplayTranscriptEntry[] | null;
+  };
+  scenario: { slug?: string; xpReward: number | null };
+  meId: number;
+  meXpTotal: number;
+  rubric: RoleplayRubric;
+  /**
+   * When true (default), runs the AI-SDK-5 agentic spaced-rep promotion
+   * after the rubric is persisted. The streaming endpoint can disable it
+   * if it ever needs to skip the second model call.
+   */
+  runPromote?: boolean;
+}): Promise<{ xpAwarded: number; passed: boolean; replacedPrevious: boolean }> {
+  const { drz, sess, scenario, meId, meXpTotal, rubric, runPromote = true } = args;
+
+  const avg =
+    (rubric.grammar +
       rubric.vocabulary +
       rubric.taskCompletion +
       rubric.fluency +
-      rubric.politeness;
-    const shouldReplace = currentSum > previousSum;
+      rubric.politeness) /
+    5;
+  const stars = Math.round(avg);
+  const passed = stars >= 3;
+  // XP scaled by stars: 0-2 -> 25%, 3 -> 60%, 4 -> 85%, 5 -> 100%.
+  const xpScale = stars >= 5 ? 1.0 : stars === 4 ? 0.85 : stars === 3 ? 0.6 : 0.25;
+  const xpAwarded = Math.round((scenario.xpReward ?? 0) * xpScale);
 
-    if (shouldReplace) {
-      await drz
-        .update(roleplaySessions)
-        .set({
-          rubricGrammar: rubric.grammar,
-          rubricVocab: rubric.vocabulary,
-          rubricTask: rubric.taskCompletion,
-          rubricFluency: rubric.fluency,
-          rubricPoliteness: rubric.politeness,
-          feedbackMd: rubric.feedbackEn,
-          xpAwarded,
-          passed,
-        })
-        .where(eq(roleplaySessions.id, sess.id));
+  // Best-attempt: only overwrite if this attempt is strictly higher.
+  const previousSum =
+    (sess.rubricGrammar ?? 0) +
+    (sess.rubricVocab ?? 0) +
+    (sess.rubricTask ?? 0) +
+    (sess.rubricFluency ?? 0) +
+    (sess.rubricPoliteness ?? 0);
+  const currentSum =
+    rubric.grammar +
+    rubric.vocabulary +
+    rubric.taskCompletion +
+    rubric.fluency +
+    rubric.politeness;
+  const replacedPrevious = currentSum > previousSum;
 
-      // Replace error rows for this session.
-      await drz.delete(roleplayErrors).where(eq(roleplayErrors.sessionId, sess.id));
-      let insertedErrors: Array<{ id: number }> = [];
-      if (rubric.errors.length > 0) {
-        insertedErrors = await drz
-          .insert(roleplayErrors)
-          .values(
-            rubric.errors.map((e) => ({
-              sessionId: sess.id,
-              userId: me[0].id,
-              category: e.category,
-              incorrect: e.incorrect,
-              correction: e.correction,
-              explanationEn: e.explanationEn ?? null,
-            })),
-          )
-          .returning({ id: roleplayErrors.id });
+  if (replacedPrevious) {
+    await drz
+      .update(roleplaySessions)
+      .set({
+        rubricGrammar: rubric.grammar,
+        rubricVocab: rubric.vocabulary,
+        rubricTask: rubric.taskCompletion,
+        rubricFluency: rubric.fluency,
+        rubricPoliteness: rubric.politeness,
+        feedbackMd: rubric.feedbackEn,
+        xpAwarded,
+        passed,
+      })
+      .where(eq(roleplaySessions.id, sess.id));
 
-        // US-019: enqueue each error as a review card.
-        await enqueueRoleplayErrors(
-          drz,
-          me[0].id,
-          rubric.errors.map((e, i) => ({
+    await drz.delete(roleplayErrors).where(eq(roleplayErrors.sessionId, sess.id));
+    let insertedErrors: Array<{ id: number }> = [];
+    if (rubric.errors.length > 0) {
+      insertedErrors = await drz
+        .insert(roleplayErrors)
+        .values(
+          rubric.errors.map((e) => ({
             sessionId: sess.id,
-            errorId: insertedErrors[i]?.id ?? 0,
+            userId: meId,
             category: e.category,
             incorrect: e.incorrect,
             correction: e.correction,
-            explanationEn: e.explanationEn,
+            explanationEn: e.explanationEn ?? null,
           })),
-        );
-      }
+        )
+        .returning({ id: roleplayErrors.id });
 
-      // US-049 / AI-SDK-5: agentic spaced-rep promotion. Ask the model to
-      // look at the rubric + transcript and pick 1-3 concepts to promote
-      // or demote in the learner's queue (separate row family from the
-      // per-error rows enqueued above; itemType = "concept"). Best-effort:
-      // failure here must not block grading, so we swallow + log.
+      await enqueueRoleplayErrors(
+        drz,
+        meId,
+        rubric.errors.map((e, i) => ({
+          sessionId: sess.id,
+          errorId: insertedErrors[i]?.id ?? 0,
+          category: e.category,
+          incorrect: e.incorrect,
+          correction: e.correction,
+          explanationEn: e.explanationEn,
+        })),
+      );
+    }
+
+    // US-049 / AI-SDK-5: agentic spaced-rep promotion. Ask the model to
+    // look at the rubric + transcript and pick 1-3 concepts to promote
+    // or demote in the learner's queue (separate row family from the
+    // per-error rows enqueued above; itemType = "concept"). Best-effort:
+    // failure here must not block grading, so we swallow + log.
+    if (runPromote && scenario.slug) {
       try {
         const promoteResult = await promoteFromRoleplay(models.primary, drz, {
-          userId: me[0].id,
+          userId: meId,
           sessionId: sess.id,
-          scenarioSlug: s.slug,
+          scenarioSlug: scenario.slug,
           rubric: {
             grammar: rubric.grammar,
             vocabulary: rubric.vocabulary,
@@ -446,59 +545,38 @@ Grade the learner's Dutch. Return the rubric scores, a short English feedback pa
         });
         log.info("roleplay.promote.done", {
           sessionId: sess.id,
-          userId: me[0].id,
+          userId: meId,
           toolCalls: promoteResult.toolCalls.length,
         });
       } catch (err) {
         log.warn("roleplay.promote.failed", {
           sessionId: sess.id,
-          userId: me[0].id,
+          userId: meId,
           error: String(err),
         });
       }
-
-      // Award XP at the user level on best-attempt improvement only.
-      const xpDelta = xpAwarded - (sess.xpAwarded ?? 0);
-      if (xpDelta > 0) {
-        await drz
-          .update(users)
-          .set({ xpTotal: (me[0].xpTotal ?? 0) + xpDelta })
-          .where(eq(users.id, me[0].id));
-      }
-
-      // US-020: roleplay coins + streak + daily_completions. Only the XP delta
-      // (not the full xpAwarded) gets logged to xp_events so re-do attempts
-      // don't double-credit the leaderboard.
-      await awardRoleplayComplete(
-        drz,
-        me[0].id,
-        sess.id,
-        passed,
-        true,
-        xpDelta > 0 ? xpDelta : 0,
-      );
     }
 
-    const newBadges = await awardBadgesIfEligible(drz, me[0].id);
+    const xpDelta = xpAwarded - (sess.xpAwarded ?? 0);
+    if (xpDelta > 0) {
+      await drz
+        .update(users)
+        .set({ xpTotal: meXpTotal + xpDelta })
+        .where(eq(users.id, meId));
+    }
 
-    return {
-      sessionId: sess.id,
-      scenarioSlug: s.slug,
-      rubric: {
-        grammar: rubric.grammar,
-        vocabulary: rubric.vocabulary,
-        taskCompletion: rubric.taskCompletion,
-        fluency: rubric.fluency,
-        politeness: rubric.politeness,
-      },
-      feedbackMd: rubric.feedbackEn,
-      xpAwarded,
+    await awardRoleplayComplete(
+      drz,
+      meId,
+      sess.id,
       passed,
-      cached: false,
-      replacedPrevious: shouldReplace,
-      newBadges,
-    };
-  });
+      true,
+      xpDelta > 0 ? xpDelta : 0,
+    );
+  }
+
+  return { xpAwarded, passed, replacedPrevious };
+}
 
 export const getScorecard = createServerFn({ method: "GET" })
   .inputValidator((input: { slug: string }) => input)
