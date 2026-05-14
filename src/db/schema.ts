@@ -596,10 +596,13 @@ export const notificationLog = sqliteTable(
     userId: integer("user_id")
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
-    channel: text("channel").notNull(), // push | email
-    kind: text("kind").notNull(), // daily_nag | weekly_digest | streak_recovery
+    channel: text("channel").notNull(), // push | email | in_app
+    kind: text("kind").notNull(), // daily_nag | weekly_digest | streak_recovery | peer_drill_completed
     sentAt: text("sent_at").default(sql`CURRENT_TIMESTAMP`).notNull(),
     result: text("result"),
+    // Set when an in-app notification is dismissed by the recipient. NULL means
+    // unread; the inbox endpoint filters on `channel='in_app' AND read_at IS NULL`.
+    readAt: text("read_at"),
   },
   (t) => ({
     byUser: index("idx_nl_user").on(t.userId, t.sentAt),
