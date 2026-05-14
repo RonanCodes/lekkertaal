@@ -445,6 +445,48 @@ export const notificationLog = sqliteTable(
 );
 
 // ============================================================================
+// SOCIAL: friendships
+// ============================================================================
+
+/**
+ * Symmetric opt-in friendship graph.
+ *
+ * One row per (requesterId, addresseeId) pair. The `requesterId` is the user
+ * who initiated the request; `addresseeId` is the recipient. Status starts
+ * `pending`; the addressee can transition it to `accepted` or `declined`.
+ *
+ * Symmetry is enforced at query time (see `src/lib/server/friends.ts`):
+ * `list` and `pending` queries union both directions so an accepted row works
+ * regardless of who originally sent it.
+ *
+ * Uniqueness: the ordered pair `(requesterId, addresseeId)` is unique. To
+ * keep "dupe request" detection cheap we ALSO normalise inserts so the
+ * smaller user id is always on one side when checking for an existing
+ * accepted edge (see helper logic), but the underlying row preserves who
+ * actually invited whom.
+ */
+export const friendships = sqliteTable(
+  "friendships",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    requesterId: integer("requester_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    addresseeId: integer("addressee_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    status: text("status").default("pending").notNull(), // pending | accepted | declined
+    createdAt: text("created_at").default(sql`CURRENT_TIMESTAMP`).notNull(),
+    respondedAt: text("responded_at"),
+  },
+  (t) => ({
+    byRequester: index("idx_friendships_requester").on(t.requesterId),
+    byAddressee: index("idx_friendships_addressee").on(t.addresseeId),
+    uniqPair: uniqueIndex("idx_friendships_pair").on(t.requesterId, t.addresseeId),
+  }),
+);
+
+// ============================================================================
 // Type exports
 // ============================================================================
 
@@ -456,3 +498,5 @@ export type Exercise = typeof exercises.$inferSelect;
 export type Vocab = typeof vocab.$inferSelect;
 export type Scenario = typeof scenarios.$inferSelect;
 export type Badge = typeof badges.$inferSelect;
+export type Friendship = typeof friendships.$inferSelect;
+export type NewFriendship = typeof friendships.$inferInsert;
