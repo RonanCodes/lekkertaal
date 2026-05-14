@@ -561,6 +561,47 @@ export const friendships = sqliteTable(
 );
 
 // ============================================================================
+// SOCIAL: peer drills
+// ============================================================================
+
+/**
+ * Peer drills — one friend sends another a Dutch sentence to translate.
+ *
+ * Send/receive flow:
+ *   - Sender POSTs `/api/peer-drills/send` with `{ toUserId, prompt }`.
+ *   - Recipient lists pending rows via `/api/peer-drills/inbox`.
+ *   - Recipient submits an attempt via `/api/peer-drills/:id/submit`, which
+ *     records the answer, flips status to `completed`, stamps `completedAt`,
+ *     and writes an in-app notification back to the sender (channel="in_app",
+ *     kind="peer_drill_completed").
+ *
+ * Both ends must be on an `accepted` friendships row; the HTTP layer enforces
+ * this against `src/lib/server/friends.ts`.
+ */
+export const peerDrills = sqliteTable(
+  "peer_drills",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    fromUserId: integer("from_user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    toUserId: integer("to_user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    prompt: text("prompt").notNull(),
+    expectedAnswerHint: text("expected_answer_hint"),
+    status: text("status").default("pending").notNull(), // pending | completed | skipped
+    answer: text("answer"),
+    createdAt: text("created_at").default(sql`CURRENT_TIMESTAMP`).notNull(),
+    completedAt: text("completed_at"),
+  },
+  (t) => ({
+    byTo: index("idx_peer_drills_to").on(t.toUserId, t.status),
+    byFrom: index("idx_peer_drills_from").on(t.fromUserId, t.status),
+  }),
+);
+
+// ============================================================================
 // Type exports
 // ============================================================================
 
@@ -578,3 +619,5 @@ export type Transcript = typeof transcripts.$inferSelect;
 export type NewTranscript = typeof transcripts.$inferInsert;
 export type DailyQuest = typeof dailyQuests.$inferSelect;
 export type NewDailyQuest = typeof dailyQuests.$inferInsert;
+export type PeerDrill = typeof peerDrills.$inferSelect;
+export type NewPeerDrill = typeof peerDrills.$inferInsert;
