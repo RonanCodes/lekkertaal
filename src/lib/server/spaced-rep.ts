@@ -171,7 +171,7 @@ export async function enqueueDrillMistake(
   });
 }
 
-export const getDueReviews = createServerFn({ method: "GET" }).handler(async () => {
+export const getDueReviews = createServerFn({ method: "GET", strict: false }).handler(async () => {
   const { env } = requireWorkerContext();
   const drz = db(env.DB);
   const userId = await currentUserId(drz);

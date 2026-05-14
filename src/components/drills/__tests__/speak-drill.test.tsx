@@ -24,6 +24,7 @@ function makeDrill(overrides: Partial<DrillPayload> = {}): DrillPayload {
     answer: JSON.stringify("Goedemorgen"),
     hints: null,
     audioUrl: null,
+    imageUrl: null,
     ...overrides,
   };
 }

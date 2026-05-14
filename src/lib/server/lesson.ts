@@ -8,7 +8,6 @@ import {
   userLessonProgress,
   userUnitProgress,
   spacedRepQueue,
-  xpEvents,
 } from "../../db/schema";
 import { eq, and, asc, lte, sql  } from "drizzle-orm";
 import { requireWorkerContext } from "../../entry.server";
@@ -67,7 +66,7 @@ export type DrillPayload = {
   imageUrl: string | null;
 };
 
-export const getLesson = createServerFn({ method: "GET" })
+export const getLesson = createServerFn({ method: "GET", strict: false })
   .inputValidator((input: { lessonId: number }) => input)
   .handler(async ({ data }): Promise<LessonPayload> => {
     const userId = await requireUserClerkId();

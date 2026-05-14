@@ -28,9 +28,6 @@ import {
 } from "../../../db/schema";
 import { persistRubric } from "../roleplay";
 import type { RoleplayRubric } from "../roleplay";
-import type { db as dbClient } from "../../../db/client";
-
-type DbClient = ReturnType<typeof dbClient>;
 
 function seedScenario(drz: TestDb, slug = "bakery") {
   return drz

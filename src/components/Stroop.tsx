@@ -13,6 +13,7 @@
  *  - sleeping:  z-z-z snore drift
  */
 import { motion } from "motion/react";
+import type { HTMLMotionProps } from "motion/react";
 
 export type StroopState = "idle" | "happy" | "proud" | "concerned" | "sleeping";
 
@@ -44,7 +45,9 @@ export function Stroop({ state = "idle", size = "md", className = "" }: StroopPr
   );
 }
 
-function stateMotion(state: StroopState) {
+function stateMotion(
+  state: StroopState,
+): Pick<HTMLMotionProps<"div">, "initial" | "animate" | "transition"> {
   switch (state) {
     case "happy":
       return {

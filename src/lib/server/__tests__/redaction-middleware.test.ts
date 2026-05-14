@@ -177,8 +177,8 @@ function makeStubModel(opts: {
       const text = opts.generateText ?? "ok";
       return {
         content: [{ type: "text", text }],
-        finishReason: "stop",
-        usage: { inputTokens: 1, outputTokens: 1, totalTokens: 2 },
+        finishReason: { unified: "stop", raw: "stop" },
+        usage: { inputTokens: { total: 1, noCache: 1, cacheRead: undefined, cacheWrite: undefined }, outputTokens: { total: 1, text: 1, reasoning: undefined } },
         warnings: [],
       };
     },
@@ -193,8 +193,8 @@ function makeStubModel(opts: {
           controller.enqueue({ type: "text-end", id: "t1" });
           controller.enqueue({
             type: "finish",
-            finishReason: "stop",
-            usage: { inputTokens: 1, outputTokens: 1, totalTokens: 2 },
+            finishReason: { unified: "stop", raw: "stop" },
+            usage: { inputTokens: { total: 1, noCache: 1, cacheRead: undefined, cacheWrite: undefined }, outputTokens: { total: 1, text: 1, reasoning: undefined } },
           });
           controller.close();
         },

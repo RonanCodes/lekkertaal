@@ -24,7 +24,7 @@ import {
   executeFlagSuspectedError,
   executeLookupVocab,
 } from "../roleplay-tools";
-import { roleplayErrors, roleplaySessions, scenarios, users, vocab } from "../../../db/schema";
+import { roleplayErrors } from "../../../db/schema";
 import { makeTestDb, asD1  } from "./test-db";
 import type {TestDb} from "./test-db";
 

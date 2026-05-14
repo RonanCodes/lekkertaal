@@ -1,6 +1,7 @@
 import { createFileRoute, notFound, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { getLesson, recordDrillResult, completeLesson } from "../lib/server/lesson";
+import type { LessonPayload } from "../lib/server/lesson";
 import { AppShell } from "../components/AppShell";
 import { DrillRenderer } from "../components/drills/DrillRenderer";
 import { FeedbackBanner } from "../components/drills/DrillFrame";
@@ -22,7 +23,7 @@ export const Route = createFileRoute("/app/lesson/$lessonId")({
 });
 
 function LessonPlayerPage() {
-  const data = Route.useLoaderData();
+  const data = Route.useLoaderData() as LessonPayload;
   const navigate = useNavigate();
   const { lesson, drills, user, reviews } = data;
   const sfx = useSfx(user.sfxEnabled);

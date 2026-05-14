@@ -35,7 +35,7 @@ describe("ImageWordDrill", () => {
   it("renders the image with descriptive alt text", () => {
     const onSubmit = vi.fn();
     render(<ImageWordDrill drill={makeDrill()} onSubmit={onSubmit} />);
-    const img = screen.getByTestId("image-word-drill-image");
+    const img = screen.getByTestId("image-word-drill-image") as HTMLImageElement;
     expect(img).toBeInTheDocument();
     expect(img.src).toBe("https://images.example.test/kat.png");
     expect(img.getAttribute("alt")).toMatch(/dutch/i);
@@ -102,7 +102,7 @@ describe("ImageWordDrill", () => {
   it("ignores empty submissions (Check button stays disabled)", () => {
     const onSubmit = vi.fn();
     render(<ImageWordDrill drill={makeDrill()} onSubmit={onSubmit} />);
-    const check = screen.getByTestId("image-word-drill-check");
+    const check = screen.getByTestId("image-word-drill-check") as HTMLButtonElement;
     expect(check.disabled).toBe(true);
     fireEvent.click(check);
     act(() => {

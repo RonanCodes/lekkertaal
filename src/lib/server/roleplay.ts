@@ -127,7 +127,7 @@ export const startRoleplaySession = createServerFn({ method: "POST" })
  * `useChat`'s `messages` option so a page refresh mid-conversation puts
  * the learner back on the same turn they left.
  */
-export const getRoleplayHistory = createServerFn({ method: "GET" })
+export const getRoleplayHistory = createServerFn({ method: "GET", strict: false })
   .inputValidator((input: { scenarioId: number }) => input)
   .handler(async ({ data }) => {
     const userId = await requireUserClerkId();

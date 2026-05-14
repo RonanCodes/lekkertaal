@@ -35,8 +35,12 @@ export const Route = createFileRoute("/app/scenario/$slug")({
   component: ScenarioChatPage,
 });
 
+type ScenarioLoaderData = Awaited<ReturnType<typeof getScenario>> & {
+  history: Awaited<ReturnType<typeof getRoleplayHistory>>;
+};
+
 function ScenarioChatPage() {
-  const { user, scenario, history } = Route.useLoaderData();
+  const { user, scenario, history } = Route.useLoaderData() as ScenarioLoaderData;
   const navigate = useNavigate();
   // sessionId is supplied by the loader; the streaming endpoint also
   // accepts it via the chat `id` so the server never has to guess.

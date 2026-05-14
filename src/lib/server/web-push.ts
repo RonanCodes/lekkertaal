@@ -167,7 +167,7 @@ async function importVapidPrivateKey(base64Url: string): Promise<CryptoKey> {
   const pkcs8 = buildEcPkcs8(d);
   return await crypto.subtle.importKey(
     "pkcs8",
-    pkcs8,
+    pkcs8.buffer.slice(pkcs8.byteOffset, pkcs8.byteOffset + pkcs8.byteLength) as ArrayBuffer,
     { name: "ECDSA", namedCurve: "P-256" },
     false,
     ["sign"],
