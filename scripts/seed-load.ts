@@ -19,7 +19,8 @@
  *   - scenarios
  *   - badges (15 hardcoded v0 badges)
  */
-import { readFile, writeFile, mkdir } from "node:fs/promises";
+import { readFile, writeFile, mkdir, readdir } from "node:fs/promises";
+import { existsSync } from "node:fs";
 import { execSync } from "node:child_process";
 import { resolve, join } from "node:path";
 
@@ -29,6 +30,19 @@ const EMIT_ONLY = args.includes("--emit-only");
 const SEED_DIR = resolve("seed");
 const OUT_DIR = resolve("drizzle/seed");
 const OUT_SQL = join(OUT_DIR, "seed-data.sql");
+const CURRICULUM_DIR = join(SEED_DIR, "curriculum");
+
+/**
+ * Drill type aliases used in curriculum files (P2 vocabulary) → existing
+ * exercises.type values. Keeps content authoring readable while preserving the
+ * canonical type strings the DrillFrame and renderer expect.
+ */
+const DRILL_TYPE_MAP: Record<string, string> = {
+  translate: "translation-typing",
+  multipleChoice: "multiple-choice",
+  fillBlank: "fill-in-the-blank",
+  speak: "speak",
+};
 
 function sqlString(v: unknown): string {
   if (v === null || v === undefined) return "NULL";
@@ -112,6 +126,51 @@ type ScenarioSeed = {
   badge_unlock: string | null;
 };
 
+type CurriculumUnitFile = {
+  unit: {
+    slug: string;
+    title_nl: string;
+    title_en: string;
+    description: string | null;
+    cefr_level: "A1" | "A2" | "B1";
+    order: number;
+    grammar_concept_slug: string | null;
+  };
+  drills: Array<{
+    slug: string;
+    type: string;
+    prompt_nl?: string | null;
+    prompt_en?: string | null;
+    canonical_dutch: string;
+    expected_english: string;
+    audio_voice_id: string;
+    hints?: string[] | null;
+    options?: unknown[] | null;
+  }>;
+};
+
+/**
+ * Discover authored curriculum units under seed/curriculum/<level>/*.json.
+ * Each file represents one unit with its drills. Files are numerically
+ * prefixed (01-..., 02-...) for stable ordering. Returns an empty array if
+ * the directory does not exist.
+ */
+async function loadCurriculum(level: "a1" | "b1"): Promise<CurriculumUnitFile[]> {
+  const dir = join(CURRICULUM_DIR, level);
+  if (!existsSync(dir)) return [];
+  const files = (await readdir(dir)).filter((f) => f.endsWith(".json")).sort();
+  const out: CurriculumUnitFile[] = [];
+  for (const f of files) {
+    try {
+      const raw = await readFile(join(dir, f), "utf8");
+      out.push(JSON.parse(raw) as CurriculumUnitFile);
+    } catch (err) {
+      throw new Error(`Failed to parse curriculum file ${join(dir, f)}: ${(err as Error).message}`);
+    }
+  }
+  return out;
+}
+
 const BADGES_V0 = [
   { slug: "first-lesson", title_nl: "Eerste les", title_en: "First lesson", description: "Complete your first lesson", icon_emoji: "🎉", rule: { kind: "lessons_completed", threshold: 1 } },
   { slug: "streak-3", title_nl: "Drie dagen op rij", title_en: "3-day streak", description: "Keep a 3-day streak", icon_emoji: "🔥", rule: { kind: "streak_days", threshold: 3 } },
@@ -138,7 +197,12 @@ async function main() {
   const exercises = await readSeedJson<ExerciseSeed>("exercises.json");
   const scenarios = await readSeedJson<ScenarioSeed>("scenarios.json");
 
+  // Authored curriculum units (A1, future B1). Each file = one unit + drills.
+  const a1Curriculum = await loadCurriculum("a1");
+  const a1DrillCount = a1Curriculum.reduce((acc, u) => acc + u.drills.length, 0);
+
   console.log(`Loaded seeds: ${units.length} units, ${vocab.length} vocab, ${exercises.length} exercises, ${scenarios.length} scenarios`);
+  console.log(`Curriculum: A1 ${a1Curriculum.length} units, ${a1DrillCount} drills`);
 
   const lines: string[] = [];
   lines.push("-- Lekkertaal seed data (idempotent via INSERT OR IGNORE)");
@@ -257,6 +321,77 @@ async function main() {
     }));
   }
   lines.push("");
+
+  // A1 starter curriculum (authored, file-per-unit under seed/curriculum/a1/).
+  // Uses its own course (a1-starter) so order numbering does not collide with
+  // the existing A2 Yellowtail course. Lessons are one-per-unit; exercises
+  // attach to the unit via unit_slug (lesson_id is left NULL because we don't
+  // know the autoincrement IDs at SQL-emission time; the runtime renderer
+  // groups exercises by unit_slug).
+  if (a1Curriculum.length > 0) {
+    lines.push("-- A1 starter curriculum");
+    lines.push(insertRow("courses", {
+      slug: "a1-starter",
+      title: "Dutch A1 starter",
+      description: "A1-level Dutch starter curriculum: greetings, numbers, family, food, days, time, weather, daily routine, transport, shopping.",
+      cefr_level: "A1",
+      language: "nl",
+      is_published: true,
+    }));
+    lines.push("");
+
+    for (const c of a1Curriculum) {
+      const u = c.unit;
+      lines.push(insertRow("units", {
+        course_id: 2,
+        slug: u.slug,
+        title_nl: u.title_nl,
+        title_en: u.title_en,
+        description: u.description,
+        cefr_level: u.cefr_level,
+        order: u.order,
+        grammar_concept_slug: u.grammar_concept_slug,
+      }));
+    }
+    lines.push("");
+
+    for (const c of a1Curriculum) {
+      const u = c.unit;
+      lines.push(insertRow("lessons", {
+        // Offset lesson IDs above the A2 course's range so they don't collide
+        // when both seed runs are applied together. A2 has 8 units / lessons
+        // today, so A1 lessons start at unit_id from the A1 units' insert order.
+        // INSERT OR IGNORE means re-runs are safe even if IDs shift.
+        unit_id: 100 + u.order,
+        slug: `${u.slug}--lesson-1`,
+        title_nl: `${u.title_nl}: oefening`,
+        title_en: `${u.title_en}: practice`,
+        order: 1,
+        xp_reward: 15,
+      }));
+    }
+    lines.push("");
+
+    for (const c of a1Curriculum) {
+      for (const d of c.drills) {
+        const dbType = DRILL_TYPE_MAP[d.type] ?? d.type;
+        lines.push(insertRow("exercises", {
+          lesson_id: null,
+          unit_slug: c.unit.slug,
+          slug: d.slug,
+          type: dbType,
+          prompt_nl: d.prompt_nl ?? null,
+          prompt_en: d.prompt_en ?? d.expected_english,
+          options: d.options ?? null,
+          answer: d.canonical_dutch,
+          hints: d.hints ?? [],
+          source_ref: `curriculum/a1/${c.unit.slug}`,
+          audio_url: null,
+        }));
+      }
+    }
+    lines.push("");
+  }
 
   // Badges
   for (const b of BADGES_V0) {

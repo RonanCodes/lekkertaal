@@ -1,0 +1,163 @@
+{
+  "unit": {
+    "slug": "a1-unit-04-food-drink",
+    "title_nl": "Eten en drinken",
+    "title_en": "Food and drink",
+    "description": "Basic food and drink vocabulary, ordering, expressing likes.",
+    "cefr_level": "A1",
+    "order": 4,
+    "grammar_concept_slug": null
+  },
+  "drills": [
+    {
+      "slug": "a1-04-food-d01",
+      "type": "translate",
+      "prompt_en": "bread",
+      "canonical_dutch": "brood",
+      "expected_english": "bread",
+      "audio_voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-04-food-d02",
+      "type": "translate",
+      "prompt_en": "cheese",
+      "canonical_dutch": "kaas",
+      "expected_english": "cheese",
+      "audio_voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-04-food-d03",
+      "type": "translate",
+      "prompt_en": "milk",
+      "canonical_dutch": "melk",
+      "expected_english": "milk",
+      "audio_voice_id": "AZnzlk1XvdvUeBnXmlld",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-04-food-d04",
+      "type": "translate",
+      "prompt_en": "water",
+      "canonical_dutch": "water",
+      "expected_english": "water",
+      "audio_voice_id": "AZnzlk1XvdvUeBnXmlld",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-04-food-d05",
+      "type": "translate",
+      "prompt_en": "coffee",
+      "canonical_dutch": "koffie",
+      "expected_english": "coffee",
+      "audio_voice_id": "ErXwobaYiN019PkySvjV",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-04-food-d06",
+      "type": "translate",
+      "prompt_en": "tea",
+      "canonical_dutch": "thee",
+      "expected_english": "tea",
+      "audio_voice_id": "ErXwobaYiN019PkySvjV",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-04-food-d07",
+      "type": "translate",
+      "prompt_en": "apple",
+      "canonical_dutch": "appel",
+      "expected_english": "apple",
+      "audio_voice_id": "EXAVITQu4vr4xnSDxMaL",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-04-food-d08",
+      "type": "translate",
+      "prompt_en": "I drink water.",
+      "canonical_dutch": "Ik drink water.",
+      "expected_english": "I drink water.",
+      "audio_voice_id": "EXAVITQu4vr4xnSDxMaL",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-04-food-d09",
+      "type": "multipleChoice",
+      "prompt_en": "Choose: I would like a coffee, please.",
+      "canonical_dutch": "Ik wil graag een koffie, alstublieft.",
+      "expected_english": "I would like a coffee, please.",
+      "audio_voice_id": "pNInz6obpgDQGcFmaJgB",
+      "hints": [],
+      "options": ["Ik wil graag een koffie, alstublieft.", "Ik graag wil koffie alstublieft.", "Ik wil koffie graag, dank u.", "Ik heb koffie, alstublieft."]
+    },
+    {
+      "slug": "a1-04-food-d10",
+      "type": "multipleChoice",
+      "prompt_en": "Choose: Do you like cheese?",
+      "canonical_dutch": "Houd je van kaas?",
+      "expected_english": "Do you like cheese?",
+      "audio_voice_id": "pNInz6obpgDQGcFmaJgB",
+      "hints": [],
+      "options": ["Houd je van kaas?", "Hou jij kaas leuk?", "Mag kaas je?", "Lijkt je kaas?"]
+    },
+    {
+      "slug": "a1-04-food-d11",
+      "type": "multipleChoice",
+      "prompt_en": "Choose: I eat bread with cheese.",
+      "canonical_dutch": "Ik eet brood met kaas.",
+      "expected_english": "I eat bread with cheese.",
+      "audio_voice_id": "VR6AewLTigWG4xSOukaG",
+      "hints": [],
+      "options": ["Ik eet brood met kaas.", "Ik eten brood en kaas.", "Brood met kaas eet ik.", "Ik heb brood en kaas."]
+    },
+    {
+      "slug": "a1-04-food-d12",
+      "type": "fillBlank",
+      "prompt_en": "Fill in the blank: Ik drink ___ koffie (a).",
+      "canonical_dutch": "een",
+      "expected_english": "a",
+      "audio_voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-04-food-d13",
+      "type": "fillBlank",
+      "prompt_en": "Fill in the blank: Een glas ___, alstublieft (water).",
+      "canonical_dutch": "water",
+      "expected_english": "water",
+      "audio_voice_id": "AZnzlk1XvdvUeBnXmlld",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-04-food-d14",
+      "type": "speak",
+      "prompt_en": "Say in Dutch: I would like a tea, please.",
+      "canonical_dutch": "Ik wil graag een thee, alstublieft.",
+      "expected_english": "I would like a tea, please.",
+      "audio_voice_id": "ErXwobaYiN019PkySvjV",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-04-food-d15",
+      "type": "speak",
+      "prompt_en": "Say in Dutch: I do not eat meat.",
+      "canonical_dutch": "Ik eet geen vlees.",
+      "expected_english": "I do not eat meat.",
+      "audio_voice_id": "EXAVITQu4vr4xnSDxMaL",
+      "hints": [],
+      "options": null
+    }
+  ]
+}

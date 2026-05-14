@@ -1,0 +1,163 @@
+{
+  "unit": {
+    "slug": "a1-unit-03-family",
+    "title_nl": "Familie",
+    "title_en": "Family",
+    "description": "Vader, moeder, broer, zus, en talking about your family.",
+    "cefr_level": "A1",
+    "order": 3,
+    "grammar_concept_slug": null
+  },
+  "drills": [
+    {
+      "slug": "a1-03-family-d01",
+      "type": "translate",
+      "prompt_en": "father",
+      "canonical_dutch": "vader",
+      "expected_english": "father",
+      "audio_voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-03-family-d02",
+      "type": "translate",
+      "prompt_en": "mother",
+      "canonical_dutch": "moeder",
+      "expected_english": "mother",
+      "audio_voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-03-family-d03",
+      "type": "translate",
+      "prompt_en": "brother",
+      "canonical_dutch": "broer",
+      "expected_english": "brother",
+      "audio_voice_id": "AZnzlk1XvdvUeBnXmlld",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-03-family-d04",
+      "type": "translate",
+      "prompt_en": "sister",
+      "canonical_dutch": "zus",
+      "expected_english": "sister",
+      "audio_voice_id": "AZnzlk1XvdvUeBnXmlld",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-03-family-d05",
+      "type": "translate",
+      "prompt_en": "son",
+      "canonical_dutch": "zoon",
+      "expected_english": "son",
+      "audio_voice_id": "ErXwobaYiN019PkySvjV",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-03-family-d06",
+      "type": "translate",
+      "prompt_en": "daughter",
+      "canonical_dutch": "dochter",
+      "expected_english": "daughter",
+      "audio_voice_id": "ErXwobaYiN019PkySvjV",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-03-family-d07",
+      "type": "translate",
+      "prompt_en": "grandfather",
+      "canonical_dutch": "opa",
+      "expected_english": "grandfather",
+      "audio_voice_id": "EXAVITQu4vr4xnSDxMaL",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-03-family-d08",
+      "type": "translate",
+      "prompt_en": "grandmother",
+      "canonical_dutch": "oma",
+      "expected_english": "grandmother",
+      "audio_voice_id": "EXAVITQu4vr4xnSDxMaL",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-03-family-d09",
+      "type": "multipleChoice",
+      "prompt_en": "Choose: I have two brothers.",
+      "canonical_dutch": "Ik heb twee broers.",
+      "expected_english": "I have two brothers.",
+      "audio_voice_id": "pNInz6obpgDQGcFmaJgB",
+      "hints": [],
+      "options": ["Ik heb twee broers.", "Ik ben twee broers.", "Ik heb twee broeren.", "Ik hebben twee broer."]
+    },
+    {
+      "slug": "a1-03-family-d10",
+      "type": "multipleChoice",
+      "prompt_en": "Choose: My sister is twelve years old.",
+      "canonical_dutch": "Mijn zus is twaalf jaar oud.",
+      "expected_english": "My sister is twelve years old.",
+      "audio_voice_id": "pNInz6obpgDQGcFmaJgB",
+      "hints": [],
+      "options": ["Mijn zus is twaalf jaar oud.", "Mij zus heeft twaalf jaar.", "Mijn zus is twaalf jaren.", "Mij zus is jaar twaalf."]
+    },
+    {
+      "slug": "a1-03-family-d11",
+      "type": "multipleChoice",
+      "prompt_en": "Choose: This is my mother.",
+      "canonical_dutch": "Dit is mijn moeder.",
+      "expected_english": "This is my mother.",
+      "audio_voice_id": "VR6AewLTigWG4xSOukaG",
+      "hints": [],
+      "options": ["Dit is mijn moeder.", "Dit ben mijn moeder.", "Deze is mij moeder.", "Hier mijn moeder."]
+    },
+    {
+      "slug": "a1-03-family-d12",
+      "type": "fillBlank",
+      "prompt_en": "Fill in the blank: Ik heb een ___ (sister).",
+      "canonical_dutch": "zus",
+      "expected_english": "sister",
+      "audio_voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-03-family-d13",
+      "type": "fillBlank",
+      "prompt_en": "Fill in the blank: Mijn ___ is leraar (father).",
+      "canonical_dutch": "vader",
+      "expected_english": "father",
+      "audio_voice_id": "AZnzlk1XvdvUeBnXmlld",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-03-family-d14",
+      "type": "speak",
+      "prompt_en": "Say in Dutch: My family is big.",
+      "canonical_dutch": "Mijn familie is groot.",
+      "expected_english": "My family is big.",
+      "audio_voice_id": "ErXwobaYiN019PkySvjV",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-03-family-d15",
+      "type": "speak",
+      "prompt_en": "Say in Dutch: I have one brother and two sisters.",
+      "canonical_dutch": "Ik heb een broer en twee zussen.",
+      "expected_english": "I have one brother and two sisters.",
+      "audio_voice_id": "EXAVITQu4vr4xnSDxMaL",
+      "hints": [],
+      "options": null
+    }
+  ]
+}

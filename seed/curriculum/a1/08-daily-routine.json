@@ -1,0 +1,163 @@
+{
+  "unit": {
+    "slug": "a1-unit-08-daily-routine",
+    "title_nl": "Dagelijkse routine",
+    "title_en": "Daily routine",
+    "description": "Opstaan, werken, eten, slapen. Verbs and times of day.",
+    "cefr_level": "A1",
+    "order": 8,
+    "grammar_concept_slug": null
+  },
+  "drills": [
+    {
+      "slug": "a1-08-routine-d01",
+      "type": "translate",
+      "prompt_en": "I get up at seven.",
+      "canonical_dutch": "Ik sta op om zeven uur.",
+      "expected_english": "I get up at seven o'clock.",
+      "audio_voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "hints": ["opstaan"],
+      "options": null
+    },
+    {
+      "slug": "a1-08-routine-d02",
+      "type": "translate",
+      "prompt_en": "I eat breakfast.",
+      "canonical_dutch": "Ik eet ontbijt.",
+      "expected_english": "I eat breakfast.",
+      "audio_voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-08-routine-d03",
+      "type": "translate",
+      "prompt_en": "I go to work.",
+      "canonical_dutch": "Ik ga naar mijn werk.",
+      "expected_english": "I go to work.",
+      "audio_voice_id": "AZnzlk1XvdvUeBnXmlld",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-08-routine-d04",
+      "type": "translate",
+      "prompt_en": "I work at home.",
+      "canonical_dutch": "Ik werk thuis.",
+      "expected_english": "I work at home.",
+      "audio_voice_id": "AZnzlk1XvdvUeBnXmlld",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-08-routine-d05",
+      "type": "translate",
+      "prompt_en": "I have lunch.",
+      "canonical_dutch": "Ik eet lunch.",
+      "expected_english": "I eat lunch.",
+      "audio_voice_id": "ErXwobaYiN019PkySvjV",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-08-routine-d06",
+      "type": "translate",
+      "prompt_en": "I go home.",
+      "canonical_dutch": "Ik ga naar huis.",
+      "expected_english": "I go home.",
+      "audio_voice_id": "ErXwobaYiN019PkySvjV",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-08-routine-d07",
+      "type": "translate",
+      "prompt_en": "I have dinner.",
+      "canonical_dutch": "Ik eet avondeten.",
+      "expected_english": "I eat dinner.",
+      "audio_voice_id": "EXAVITQu4vr4xnSDxMaL",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-08-routine-d08",
+      "type": "translate",
+      "prompt_en": "I go to bed.",
+      "canonical_dutch": "Ik ga naar bed.",
+      "expected_english": "I go to bed.",
+      "audio_voice_id": "EXAVITQu4vr4xnSDxMaL",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-08-routine-d09",
+      "type": "multipleChoice",
+      "prompt_en": "Choose: I always drink coffee in the morning.",
+      "canonical_dutch": "Ik drink 's ochtends altijd koffie.",
+      "expected_english": "I always drink coffee in the morning.",
+      "audio_voice_id": "pNInz6obpgDQGcFmaJgB",
+      "hints": [],
+      "options": ["Ik drink 's ochtends altijd koffie.", "Ik altijd drink koffie ochtend.", "Altijd in ochtend koffie ik drink.", "Ik koffie drink elke ochtend."]
+    },
+    {
+      "slug": "a1-08-routine-d10",
+      "type": "multipleChoice",
+      "prompt_en": "Choose: What do you do every day?",
+      "canonical_dutch": "Wat doe je elke dag?",
+      "expected_english": "What do you do every day?",
+      "audio_voice_id": "pNInz6obpgDQGcFmaJgB",
+      "hints": [],
+      "options": ["Wat doe je elke dag?", "Wat doen jij elk dag?", "Wat je dag elke doe?", "Elke dag wat doen?"]
+    },
+    {
+      "slug": "a1-08-routine-d11",
+      "type": "multipleChoice",
+      "prompt_en": "Choose: She works from nine to five.",
+      "canonical_dutch": "Zij werkt van negen tot vijf.",
+      "expected_english": "She works from nine to five.",
+      "audio_voice_id": "VR6AewLTigWG4xSOukaG",
+      "hints": [],
+      "options": ["Zij werkt van negen tot vijf.", "Ze werkt vanaf negen naar vijf.", "Zij werken negen vijf.", "Negen tot vijf werkt ze."]
+    },
+    {
+      "slug": "a1-08-routine-d12",
+      "type": "fillBlank",
+      "prompt_en": "Fill in the blank: Ik ___ om half acht op. (get up)",
+      "canonical_dutch": "sta",
+      "expected_english": "stand / get",
+      "audio_voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "hints": ["opstaan"],
+      "options": null
+    },
+    {
+      "slug": "a1-08-routine-d13",
+      "type": "fillBlank",
+      "prompt_en": "Fill in the blank: Ik ___ om elf uur naar bed. (go)",
+      "canonical_dutch": "ga",
+      "expected_english": "go",
+      "audio_voice_id": "AZnzlk1XvdvUeBnXmlld",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-08-routine-d14",
+      "type": "speak",
+      "prompt_en": "Say in Dutch: I work every day.",
+      "canonical_dutch": "Ik werk elke dag.",
+      "expected_english": "I work every day.",
+      "audio_voice_id": "ErXwobaYiN019PkySvjV",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-08-routine-d15",
+      "type": "speak",
+      "prompt_en": "Say in Dutch: In the evening I read a book.",
+      "canonical_dutch": "'s Avonds lees ik een boek.",
+      "expected_english": "In the evening I read a book.",
+      "audio_voice_id": "EXAVITQu4vr4xnSDxMaL",
+      "hints": [],
+      "options": null
+    }
+  ]
+}

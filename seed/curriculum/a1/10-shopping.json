@@ -1,0 +1,163 @@
+{
+  "unit": {
+    "slug": "a1-unit-10-shopping",
+    "title_nl": "Boodschappen doen",
+    "title_en": "Simple shopping",
+    "description": "Vragen om iets, prijzen, betalen. Basic shopping interactions.",
+    "cefr_level": "A1",
+    "order": 10,
+    "grammar_concept_slug": null
+  },
+  "drills": [
+    {
+      "slug": "a1-10-shopping-d01",
+      "type": "translate",
+      "prompt_en": "How much is it?",
+      "canonical_dutch": "Hoeveel kost het?",
+      "expected_english": "How much does it cost?",
+      "audio_voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-10-shopping-d02",
+      "type": "translate",
+      "prompt_en": "It costs five euros.",
+      "canonical_dutch": "Het kost vijf euro.",
+      "expected_english": "It costs five euros.",
+      "audio_voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-10-shopping-d03",
+      "type": "translate",
+      "prompt_en": "shop",
+      "canonical_dutch": "winkel",
+      "expected_english": "shop",
+      "audio_voice_id": "AZnzlk1XvdvUeBnXmlld",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-10-shopping-d04",
+      "type": "translate",
+      "prompt_en": "supermarket",
+      "canonical_dutch": "supermarkt",
+      "expected_english": "supermarket",
+      "audio_voice_id": "AZnzlk1XvdvUeBnXmlld",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-10-shopping-d05",
+      "type": "translate",
+      "prompt_en": "I am paying by card.",
+      "canonical_dutch": "Ik betaal met de pinpas.",
+      "expected_english": "I am paying by debit card.",
+      "audio_voice_id": "ErXwobaYiN019PkySvjV",
+      "hints": ["pinpas"],
+      "options": null
+    },
+    {
+      "slug": "a1-10-shopping-d06",
+      "type": "translate",
+      "prompt_en": "I would like to pay.",
+      "canonical_dutch": "Ik wil graag betalen.",
+      "expected_english": "I would like to pay.",
+      "audio_voice_id": "ErXwobaYiN019PkySvjV",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-10-shopping-d07",
+      "type": "translate",
+      "prompt_en": "Do you have a bag?",
+      "canonical_dutch": "Heeft u een tas?",
+      "expected_english": "Do you have a bag?",
+      "audio_voice_id": "EXAVITQu4vr4xnSDxMaL",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-10-shopping-d08",
+      "type": "translate",
+      "prompt_en": "the receipt",
+      "canonical_dutch": "de bon",
+      "expected_english": "the receipt",
+      "audio_voice_id": "EXAVITQu4vr4xnSDxMaL",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-10-shopping-d09",
+      "type": "multipleChoice",
+      "prompt_en": "Choose: I am just looking, thanks.",
+      "canonical_dutch": "Ik kijk alleen, bedankt.",
+      "expected_english": "I am just looking, thanks.",
+      "audio_voice_id": "pNInz6obpgDQGcFmaJgB",
+      "hints": [],
+      "options": ["Ik kijk alleen, bedankt.", "Ik alleen kijk dankjewel.", "Alleen kijk ik bedank.", "Ik kijken bedankt alleen."]
+    },
+    {
+      "slug": "a1-10-shopping-d10",
+      "type": "multipleChoice",
+      "prompt_en": "Choose: Can I help you?",
+      "canonical_dutch": "Kan ik u helpen?",
+      "expected_english": "Can I help you?",
+      "audio_voice_id": "pNInz6obpgDQGcFmaJgB",
+      "hints": [],
+      "options": ["Kan ik u helpen?", "Kan u ik helpen?", "Mag ik help?", "Helpen ik kan u?"]
+    },
+    {
+      "slug": "a1-10-shopping-d11",
+      "type": "multipleChoice",
+      "prompt_en": "Choose: That is too expensive.",
+      "canonical_dutch": "Dat is te duur.",
+      "expected_english": "That is too expensive.",
+      "audio_voice_id": "VR6AewLTigWG4xSOukaG",
+      "hints": [],
+      "options": ["Dat is te duur.", "Het te is duur.", "Duur is dat te.", "Dat te duur is."]
+    },
+    {
+      "slug": "a1-10-shopping-d12",
+      "type": "fillBlank",
+      "prompt_en": "Fill in the blank: Ik wil graag deze ___ kopen. (jacket)",
+      "canonical_dutch": "jas",
+      "expected_english": "jacket",
+      "audio_voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-10-shopping-d13",
+      "type": "fillBlank",
+      "prompt_en": "Fill in the blank: Hoeveel ___ deze appels? (cost)",
+      "canonical_dutch": "kosten",
+      "expected_english": "cost",
+      "audio_voice_id": "AZnzlk1XvdvUeBnXmlld",
+      "hints": ["kosten"],
+      "options": null
+    },
+    {
+      "slug": "a1-10-shopping-d14",
+      "type": "speak",
+      "prompt_en": "Say in Dutch: How much does this cost?",
+      "canonical_dutch": "Hoeveel kost dit?",
+      "expected_english": "How much does this cost?",
+      "audio_voice_id": "ErXwobaYiN019PkySvjV",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-10-shopping-d15",
+      "type": "speak",
+      "prompt_en": "Say in Dutch: I would like to pay by card, please.",
+      "canonical_dutch": "Ik wil graag met de pinpas betalen, alstublieft.",
+      "expected_english": "I would like to pay by card, please.",
+      "audio_voice_id": "EXAVITQu4vr4xnSDxMaL",
+      "hints": [],
+      "options": null
+    }
+  ]
+}
