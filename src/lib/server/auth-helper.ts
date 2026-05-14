@@ -38,7 +38,9 @@ export const DEV_BYPASS_CLERK_ID = "seed_ronan";
 export async function requireUserClerkId(): Promise<string> {
   if (import.meta.env.DEV) {
     const ctx = getWorkerContext();
-    if (ctx?.env.DEV_BYPASS_AUTH === "true") {
+    const fromCtx = ctx?.env.DEV_BYPASS_AUTH === "true";
+    const fromProcEnv = typeof process !== "undefined" && process.env?.DEV_BYPASS_AUTH === "true";
+    if (fromCtx || fromProcEnv) {
       return DEV_BYPASS_CLERK_ID;
     }
   }
