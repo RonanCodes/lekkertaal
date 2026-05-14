@@ -35,7 +35,11 @@ export const Route = createFileRoute("/")({
 function Home() {
   return (
     <main className="mx-auto max-w-3xl px-6 py-16 text-center">
-      <div className="mb-6 text-8xl">🧇</div>
+      <img
+        src="/mascot/stroop-512.png"
+        alt="Stroop the stroopwafel"
+        className="mx-auto mb-6 h-32 w-32"
+      />
 
       <h1 className="text-6xl font-extrabold tracking-tight">
         <span style={{ color: "var(--color-brand-orange)" }}>Lekker</span>
