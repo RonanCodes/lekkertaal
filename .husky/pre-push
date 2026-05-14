@@ -1,12 +1,6 @@
 #!/usr/bin/env sh
 # Quality gate. Mirrors GitHub Actions `Build (PR + main)` job + adds local test run.
 # Bypass with SKIP_QUALITY_CHECKS=1 only in real emergencies.
-#
-# NOT enforced yet (pre-existing main debt — track via cleanup PR):
-#   - pnpm typecheck
-#   - pnpm lint
-#
-# Enable both once the debt is cleared.
 
 if [ "$SKIP_QUALITY_CHECKS" = "1" ]; then
   echo "⚠️  SKIP_QUALITY_CHECKS=1 set; bypassing pre-push gate"
@@ -14,6 +8,10 @@ if [ "$SKIP_QUALITY_CHECKS" = "1" ]; then
 fi
 
 set -e
+echo "▶ typecheck"
+pnpm typecheck
+echo "▶ lint"
+pnpm lint
 echo "▶ test"
 pnpm test
 echo "▶ build"
