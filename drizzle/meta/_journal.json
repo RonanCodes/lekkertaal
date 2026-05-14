@@ -57,6 +57,13 @@
       "when": 1778850100000,
       "tag": "0007_leagues",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "6",
+      "when": 1778769432948,
+      "tag": "0008_speak_drill",
+      "breakpoints": true
     }
   ]
 }
