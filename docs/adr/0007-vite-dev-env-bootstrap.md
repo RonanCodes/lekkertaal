@@ -1,6 +1,6 @@
-# 0007 — Bootstrap a dev env fallback via `cloudflare:workers`
+# 0007: Bootstrap a dev env fallback via `cloudflare:workers`
 
-**Status:** Accepted
+**Status:** Accepted (revised by [0008](./0008-server-only-worker-context.md))
 **Date:** 2026-05-14
 **Supersedes the dev half of:** [0002](./0002-async-local-storage-globalthis-dev-fallback.md)
 
