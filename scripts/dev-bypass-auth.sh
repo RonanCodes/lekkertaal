@@ -46,4 +46,9 @@ echo "[dev:bypass-auth] auto-signed in as seed_ronan (see seed/users.json)"
 echo "[dev:bypass-auth] press Ctrl+C to stop and restore .dev.vars"
 echo ""
 
+# ALSO export as a shell env var so the Node process running Vite sees it.
+# The auth-helper checks `process.env.DEV_BYPASS_AUTH` as a fallback for
+# requests that don't go through entry.server.fetch (route loaders in
+# Vite dev mode bypass the CF-emulator fetch handler entirely).
+export DEV_BYPASS_AUTH=true
 pnpm dev

@@ -20,8 +20,10 @@
 
 import { test, expect } from "@playwright/test";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { isClerkTestingConfigured, signInAsTestUser } from "../setup/clerk-auth";
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const FIXTURE_AUDIO = path.resolve(__dirname, "..", "fixtures", "speak-clip.webm");
 
 const skipReason =
