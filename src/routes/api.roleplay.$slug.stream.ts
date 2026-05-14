@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { streamText, convertToModelMessages, stepCountIs } from "ai";
+import { streamText, convertToModelMessages, stepCountIs, createIdGenerator } from "ai";
 import type { UIMessage } from "ai";
 import { createAnthropic } from "@ai-sdk/anthropic";
 import { auth } from "@clerk/tanstack-react-start/server";
@@ -11,26 +11,43 @@ import { emitAiCall, buildAiCallPayload } from "../lib/ai-telemetry";
 import { buildRoleplaySystem } from "../lib/server/roleplay-system-prompt";
 import { buildRoleplayTools } from "../lib/server/roleplay-tools";
 import { log } from "../lib/logger";
+import {
+  loadChatMessages,
+  appendUserMessage,
+  appendAssistantMessage,
+  syncTranscriptColumn,
+  pickLatestUserMessage,
+  uiMessageTextParts,
+} from "../lib/server/chat-messages";
 
 /**
  * Roleplay streaming endpoint.
  *
  * POST /api/roleplay/:slug/stream
  *
- * Wire-compatible with the AI SDK v6 `useChat()` UI message protocol: the
- * client sends `{ messages, id, trigger }`, we reply with a UI message stream.
+ * Wire-compatible with the AI SDK v6 `useChat()` UI message protocol.
  *
- * We hydrate the NPC system prompt from the scenarios row keyed on :slug, so
- * the persona, opening line, must-use vocab/grammar, and success criteria all
- * shape the model's behaviour.
+ * AI-SDK-2 — server-side persistence + resume:
+ *  - Client ships `{ id: sessionId, messages: [latestUserMessage] }` via
+ *    `prepareSendMessagesRequest` on its `DefaultChatTransport`.
+ *  - Server reloads the conversation from the `chat_messages` table using
+ *    `id` as the session key.
+ *  - Server appends the new user turn (idempotent on `clientMessageId`)
+ *    and feeds the FULL history to `streamText`.
+ *  - On stream finish (`toUIMessageStreamResponse({ onFinish })`) the
+ *    assistant turn is persisted with its server-generated stable id.
+ *  - `roleplay_sessions.transcript` (JSON) is rewritten each turn so the
+ *    grader keeps reading whole transcripts from one column.
  *
- * Prompt caching: the system prompt is built via `buildRoleplaySystem` which
- * attaches Anthropic ephemeral cache_control. From turn 2 onward of a given
- * scenario session the system block reads from cache at ~10% of normal input
- * cost. Cache hit metrics land in `ai.call` telemetry (cachedTokens) and in a
- * dedicated `roleplay stream finish` log line with the raw cache_creation /
- * cache_read counts pulled off providerMetadata.
+ * Prompt caching (AI-SDK-1): the system prompt is built via
+ * `buildRoleplaySystem` which attaches Anthropic ephemeral cache_control.
+ * Cache hit metrics land in `ai.call` telemetry and in `roleplay stream
+ * finish` log lines.
  */
+
+// Stable assistant-message ids so the persisted store and client agree.
+const generateMessageId = createIdGenerator({ prefix: "msg", size: 16 });
+
 export const Route = createFileRoute("/api/roleplay/$slug/stream")({
   server: {
     handlers: {
@@ -57,7 +74,82 @@ export const Route = createFileRoute("/api/roleplay/$slug/stream")({
         if (!scenarioRow[0]) return new Response("Scenario not found", { status: 404 });
         const s = scenarioRow[0];
 
-        const body = (await request.json()) as { messages: UIMessage[] };
+        // The client ships the chat id (== sessionId for this scenario) plus
+        // either a single new user message or the full list (depending on
+        // whether `prepareSendMessagesRequest` is wired). We handle both.
+        const body = (await request.json()) as {
+          id?: string | number;
+          messages: UIMessage[];
+        };
+
+        // Resolve the sessionId. Prefer the explicit `id` from the client,
+        // fall back to the most-recent open session for this user+scenario.
+        let sessionId: number | null =
+          typeof body.id === "number"
+            ? body.id
+            : typeof body.id === "string" && /^\d+$/.test(body.id)
+              ? Number(body.id)
+              : null;
+
+        if (sessionId !== null) {
+          // Ownership + existence check.
+          const ownRow = await drz
+            .select({ id: roleplaySessions.id })
+            .from(roleplaySessions)
+            .where(
+              and(
+                eq(roleplaySessions.id, sessionId),
+                eq(roleplaySessions.userId, me[0].id),
+              ),
+            )
+            .limit(1);
+          if (!ownRow[0]) {
+            return new Response("Session not found", { status: 404 });
+          }
+        } else {
+          // No id supplied — pick or create an open session for this scenario.
+          const openRow = await drz
+            .select({ id: roleplaySessions.id })
+            .from(roleplaySessions)
+            .where(
+              and(
+                eq(roleplaySessions.userId, me[0].id),
+                eq(roleplaySessions.scenarioId, s.id),
+              ),
+            )
+            .limit(1);
+          if (openRow[0]) {
+            sessionId = openRow[0].id;
+          } else {
+            const inserted = await drz
+              .insert(roleplaySessions)
+              .values({
+                userId: me[0].id,
+                scenarioId: s.id,
+                transcript: [],
+              })
+              .returning({ id: roleplaySessions.id });
+            sessionId = inserted[0].id;
+          }
+        }
+
+        // Persist the new user turn (the LAST user message in the shipped
+        // payload, ignoring any older history the client also sent — server
+        // is the source of truth).
+        const latestUser = pickLatestUserMessage(body.messages);
+        if (latestUser) {
+          await appendUserMessage(drz, {
+            sessionId,
+            userId: me[0].id,
+            clientMessageId: latestUser.id,
+            parts: latestUser.parts as Array<{ type: string; text?: string }>,
+          });
+        }
+
+        // Reload full history server-side and feed the model.
+        const persistedMessages = await loadChatMessages(drz, sessionId);
+        // Keep the transcript JSON column in sync for the grader.
+        await syncTranscriptColumn(drz, sessionId);
 
         // Find the in-flight session for this user+scenario so tool calls
         // (flagSuspectedError) can attribute rows to the right session row.
@@ -106,7 +198,7 @@ export const Route = createFileRoute("/api/roleplay/$slug/stream")({
         const result = streamText({
           model: anthropic(modelId),
           system: systemMessages,
-          messages: await convertToModelMessages(body.messages),
+          messages: await convertToModelMessages(persistedMessages),
           temperature: 0.7,
           abortSignal: request.signal,
           tools,
@@ -120,12 +212,10 @@ export const Route = createFileRoute("/api/roleplay/$slug/stream")({
             metadata: {
               userId: a.userId,
               scenarioSlug: params.slug,
+              sessionId,
             },
           },
           onFinish: ({ usage, finishReason, providerMetadata }) => {
-            // Anthropic returns cache_creation / cache_read counts in the
-            // provider-metadata bag. Turn 1 of a scenario: cache_creation > 0,
-            // cache_read == 0. Turn 2+: cache_creation == 0, cache_read > 0.
             const anth = providerMetadata?.anthropic as
               | { cacheCreationInputTokens?: number; cacheReadInputTokens?: number }
               | undefined;
@@ -135,7 +225,8 @@ export const Route = createFileRoute("/api/roleplay/$slug/stream")({
             log.info("roleplay stream finish", {
               scenarioSlug: params.slug,
               userId: me[0].id,
-              turnUserMessages: body.messages.length,
+              sessionId,
+              turnUserMessages: persistedMessages.length,
               inputTokens: usage.inputTokens,
               outputTokens: usage.outputTokens,
               cacheCreationInputTokens,
@@ -151,6 +242,7 @@ export const Route = createFileRoute("/api/roleplay/$slug/stream")({
               userId: a.userId,
               scenarioSlug: params.slug,
               extra: {
+                sessionId,
                 cacheCreationInputTokens,
                 cacheReadInputTokens,
               },
@@ -165,13 +257,35 @@ export const Route = createFileRoute("/api/roleplay/$slug/stream")({
               finishReason: "error",
               userId: a.userId,
               scenarioSlug: params.slug,
-              extra: { error: String(error) },
+              extra: { sessionId, error: String(error) },
             });
             emitAiCall(payload, env, ctx);
           },
         });
 
-        return result.toUIMessageStreamResponse();
+        return result.toUIMessageStreamResponse({
+          originalMessages: persistedMessages,
+          generateMessageId,
+          onFinish: async ({ responseMessage }) => {
+            // Persist the assistant turn now that the full message is built.
+            // Wrap in try/catch so a write failure does not crash the stream
+            // for the client — the user already received the tokens.
+            try {
+              await appendAssistantMessage(drz, {
+                sessionId: sessionId!,
+                userId: me[0].id,
+                clientMessageId: responseMessage.id,
+                parts: uiMessageTextParts(responseMessage),
+              });
+              await syncTranscriptColumn(drz, sessionId!);
+            } catch (err) {
+              log.error("roleplay persist assistant failed", {
+                sessionId,
+                err: String(err),
+              });
+            }
+          },
+        });
       },
     },
   },

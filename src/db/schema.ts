@@ -287,6 +287,51 @@ export const roleplayErrors = sqliteTable(
   }),
 );
 
+/**
+ * Per-message append-only store for roleplay chat.
+ *
+ * AI SDK v6 persistence + resume pattern: client ships only the latest user
+ * message + a stable `useChat` id; the server reloads history from this
+ * table, appends the new user turn, calls `streamText`, then writes the
+ * assistant turn back inside `toUIMessageStreamResponse({ onFinish })`.
+ *
+ * `roleplay_sessions.transcript` (JSON) stays in sync as a denormalised
+ * mirror so the grader keeps working unchanged. This table is the
+ * source-of-truth for resume; the JSON column is convenience for grading
+ * and old code that scans whole transcripts.
+ *
+ * `clientMessageId` is the v6 stable id (e.g. `msg-abc123`) the client uses
+ * for React keys and idempotency; unique per session so duplicate submits
+ * from a flaky network don't double-insert.
+ *
+ * `parts` is the raw `UIMessage.parts[]` blob (`{ type: "text", text: ... }`
+ * etc). Stored as JSON so we round-trip tool calls and future multimodal
+ * parts without schema churn.
+ */
+export const chatMessages = sqliteTable(
+  "chat_messages",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    sessionId: integer("session_id")
+      .notNull()
+      .references(() => roleplaySessions.id, { onDelete: "cascade" }),
+    userId: integer("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    clientMessageId: text("client_message_id").notNull(),
+    role: text("role").notNull(), // "user" | "assistant" | "system"
+    parts: text("parts", { mode: "json" }).$type<
+      Array<{ type: string; text?: string; [k: string]: unknown }>
+    >().notNull(),
+    createdAt: text("created_at").default(sql`CURRENT_TIMESTAMP`).notNull(),
+  },
+  (t) => ({
+    bySession: index("idx_chat_messages_session").on(t.sessionId, t.createdAt),
+    byUser: index("idx_chat_messages_user").on(t.userId),
+    uniqClient: uniqueIndex("idx_chat_messages_client").on(t.sessionId, t.clientMessageId),
+  }),
+);
+
 // ============================================================================
 // SPEECH-TO-TEXT (STT)
 // ============================================================================

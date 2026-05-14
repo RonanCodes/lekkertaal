@@ -25,6 +25,7 @@ import { log } from "../logger";
 import { requireUserClerkId } from "./auth-helper";
 import { emitAiCall, buildAiCallPayload } from "../ai-telemetry";
 import { redactText, summariseMatches } from "./redaction-middleware";
+import { loadChatMessages } from "./chat-messages";
 
 export type RoleplayTranscriptEntry = {
   role: "user" | "assistant" | "system";
@@ -113,6 +114,62 @@ export const startRoleplaySession = createServerFn({ method: "POST" })
       })
       .returning({ id: roleplaySessions.id });
     return { sessionId: inserted[0].id };
+  });
+
+/**
+ * Server-side hydration for the resume-mid-conversation flow.
+ *
+ * Returns:
+ *  - `sessionId` (creates / reuses an open session for the user+scenario)
+ *  - `messages` (`UIMessage[]` ready to feed into `useChat({ messages })`)
+ *
+ * The route loader calls this and the React side passes the result into
+ * `useChat`'s `messages` option so a page refresh mid-conversation puts
+ * the learner back on the same turn they left.
+ */
+export const getRoleplayHistory = createServerFn({ method: "GET" })
+  .inputValidator((input: { scenarioId: number }) => input)
+  .handler(async ({ data }) => {
+    const userId = await requireUserClerkId();
+    const { env } = requireWorkerContext();
+    const drz = db(env.DB);
+
+    const me = await drz.select().from(users).where(eq(users.clerkId, userId)).limit(1);
+    if (!me[0]) throw new Error("User row missing");
+
+    // Reuse the open session for this user+scenario, or insert a fresh one.
+    // Mirrors startRoleplaySession but rolled into a single round-trip so
+    // the loader does not need a second call.
+    const open = await drz
+      .select()
+      .from(roleplaySessions)
+      .where(
+        and(
+          eq(roleplaySessions.userId, me[0].id),
+          eq(roleplaySessions.scenarioId, data.scenarioId),
+          isNull(roleplaySessions.completedAt),
+        ),
+      )
+      .orderBy(desc(roleplaySessions.startedAt))
+      .limit(1);
+
+    let sessionId: number;
+    if (open[0]) {
+      sessionId = open[0].id;
+    } else {
+      const inserted = await drz
+        .insert(roleplaySessions)
+        .values({
+          userId: me[0].id,
+          scenarioId: data.scenarioId,
+          transcript: [],
+        })
+        .returning({ id: roleplaySessions.id });
+      sessionId = inserted[0].id;
+    }
+
+    const messages = await loadChatMessages(drz, sessionId);
+    return { sessionId, messages };
   });
 
 export const finishRoleplaySession = createServerFn({ method: "POST" })
