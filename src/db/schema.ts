@@ -123,7 +123,17 @@ export const exercises = sqliteTable(
     promptNl: text("prompt_nl"),
     promptEn: text("prompt_en"),
     options: text("options", { mode: "json" }).$type<unknown[]>(),
-    answer: text("answer", { mode: "json" }).$type<unknown>(),
+    // Raw text, NOT JSON-mode. Most drill types (translation-typing,
+    // fill-in-the-blank, multiple-choice, speak, word-ordering) seed `answer`
+    // as a plain string like "Mijn nationaliteit is (Iers)". `match-pairs`
+    // happens to seed a JSON-encoded array here, but no consumer reads it —
+    // the match-pairs UI uses `options` instead. So `text` (no JSON decode)
+    // is the right shape; lesson.ts re-stringifies before shipping to the
+    // client and DrillRenderer.parseField parses it back. Drizzle's
+    // mode:"json" wrapper was JSON.parse-ing the raw strings on read and
+    // throwing SyntaxError, 500-ing every translation-typing drill.
+    // See issue #104.
+    answer: text("answer"),
     hints: text("hints", { mode: "json" }).$type<string[]>(),
     sourceRef: text("source_ref"),
     audioUrl: text("audio_url"),
