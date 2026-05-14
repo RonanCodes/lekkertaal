@@ -15,11 +15,12 @@
 import { createServerFn } from "@tanstack/react-start";
 import type { DrizzleD1Database } from "drizzle-orm/d1";
 import { db } from "../../db/client";
-import { users, xpEvents } from "../../db/schema";
-import { desc, eq, gte, sql } from "drizzle-orm";
+import { leagues, users, xpEvents } from "../../db/schema";
+import { desc, eq, sql } from "drizzle-orm";
 import { requireWorkerContext } from "../../entry.server";
 import { requireUserClerkId } from "./auth-helper";
 import { listFriends } from "./friends";
+import { utcMondayOnOrBefore } from "./leagues";
 
 export type LeaderboardWindow = "today" | "week" | "all-time";
 export type LeaderboardScope = "global" | "friends";
@@ -33,6 +34,8 @@ export type LeaderboardRow = {
   streakDays: number;
   level: "Bronze" | "Silver" | "Gold" | "Platinum";
   rank: number;
+  /** Current-week league tier (1-10) or null when the user has no row yet. */
+  leagueTier: number | null;
 };
 
 const TOP_N = 50;
@@ -52,6 +55,34 @@ function levelForXp(xp: number): "Bronze" | "Silver" | "Gold" | "Platinum" {
   if (xp >= 2500) return "Gold";
   if (xp >= 500) return "Silver";
   return "Bronze";
+}
+
+/**
+ * Batched lookup of the current-week league tier for a set of user ids.
+ * Returns a Map keyed by userId. Users without a row this week are absent
+ * from the map (callers should default to `null`).
+ *
+ * One round-trip via `IN (...)` keeps this O(1) DB hops regardless of how
+ * many users we render.
+ */
+async function getCurrentLeagueTiers(
+  drz: DrizzleD1Database,
+  userIds: number[],
+): Promise<Map<number, number>> {
+  const out = new Map<number, number>();
+  if (userIds.length === 0) return out;
+  const thisWeek = utcMondayOnOrBefore();
+  const rows = await drz
+    .select({ userId: leagues.userId, tier: leagues.tier })
+    .from(leagues)
+    .where(
+      sql`${leagues.weekStartDate} = ${thisWeek} AND ${leagues.userId} IN (${sql.join(
+        userIds.map((id) => sql`${id}`),
+        sql`, `,
+      )})`,
+    );
+  for (const r of rows) out.set(r.userId, r.tier);
+  return out;
 }
 
 function windowStartIso(w: LeaderboardWindow): string | null {
@@ -106,6 +137,7 @@ export const getLeaderboard = createServerFn({ method: "GET" })
         streakDays: r.streakDays,
         level: levelForXp(r.xpTotal),
         rank: i + 1,
+        leagueTier: null,
       }));
     } else if (since) {
       // Sum xp_events per user since `since`. Join to users for display.
@@ -135,6 +167,7 @@ export const getLeaderboard = createServerFn({ method: "GET" })
         streakDays: r.streakDays,
         level: levelForXp(r.xpTotal),
         rank: i + 1,
+        leagueTier: null,
       }));
     }
 
@@ -187,7 +220,17 @@ export const getLeaderboard = createServerFn({ method: "GET" })
         streakDays: meRow.streakDays,
         level: levelForXp(meRow.xpTotal),
         rank: ranked + 1,
+        leagueTier: null,
       };
+    }
+
+    // Decorate with current-week league tier in a single batched query.
+    const ids = topRows.map((r) => r.userId);
+    if (current && !ids.includes(current.userId)) ids.push(current.userId);
+    const tiers = await getCurrentLeagueTiers(drz, ids);
+    topRows = topRows.map((r) => ({ ...r, leagueTier: tiers.get(r.userId) ?? null }));
+    if (current) {
+      current = { ...current, leagueTier: tiers.get(current.userId) ?? null };
     }
 
     return {
@@ -287,6 +330,11 @@ export async function getFriendsLeaderboardForUser(
     return a.displayName.localeCompare(b.displayName);
   });
 
+  const tiers = await getCurrentLeagueTiers(
+    drz,
+    withWindowXp.map((c) => c.userId),
+  );
+
   const rows: FriendsLeaderboardRow[] = withWindowXp.map((c, i) => ({
     userId: c.userId,
     displayName: c.displayName,
@@ -297,6 +345,7 @@ export async function getFriendsLeaderboardForUser(
     level: levelForXp(c.xpTotal),
     rank: i + 1,
     isMe: c.isMe,
+    leagueTier: tiers.get(c.userId) ?? null,
   }));
 
   return { window: windowName, rows };
