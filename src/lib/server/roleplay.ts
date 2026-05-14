@@ -22,6 +22,7 @@ import { awardBadgesIfEligible } from "./badges";
 import { log } from "../logger";
 import { requireUserClerkId } from "./auth-helper";
 import { emitAiCall, buildAiCallPayload } from "../ai-telemetry";
+import { redactText, summariseMatches } from "./redaction-middleware";
 
 export type RoleplayTranscriptEntry = {
   role: "user" | "assistant" | "system";
@@ -137,10 +138,45 @@ export const finishRoleplaySession = createServerFn({ method: "POST" })
       .limit(1);
     if (!sess[0]) throw new Error("Session not found");
 
+    // Belt-and-suspenders: scrub PII out of the persisted transcript even
+    // though the model-side redaction middleware already saw the prompt.
+    // The transcript is built client-side and round-trips back here, so we
+    // re-run the same regex pass over each entry's content. Any matches
+    // produce a single `ai.redacted` log entry per session — counts only,
+    // never the raw token.
+    const redactedTranscript: RoleplayTranscriptEntry[] = [];
+    const matchSummary: ReturnType<typeof summariseMatches> = {
+      email: 0,
+      bsn: 0,
+      phone: 0,
+      iban: 0,
+    };
+    let totalMatches = 0;
+    for (const entry of data.transcript) {
+      const r = redactText(entry.content);
+      if (r.matches.length > 0) {
+        totalMatches += r.matches.length;
+        const counts = summariseMatches(r.matches);
+        matchSummary.email += counts.email;
+        matchSummary.bsn += counts.bsn;
+        matchSummary.phone += counts.phone;
+        matchSummary.iban += counts.iban;
+      }
+      redactedTranscript.push({ ...entry, content: r.text });
+    }
+    if (totalMatches > 0) {
+      log.info("ai.redacted", {
+        direction: "transcript",
+        sessionId: data.sessionId,
+        total: totalMatches,
+        counts: matchSummary,
+      });
+    }
+
     await drz
       .update(roleplaySessions)
       .set({
-        transcript: data.transcript,
+        transcript: redactedTranscript,
         completedAt: new Date().toISOString(),
       })
       .where(eq(roleplaySessions.id, data.sessionId));
