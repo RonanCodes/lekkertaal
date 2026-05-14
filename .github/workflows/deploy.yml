@@ -23,14 +23,17 @@ jobs:
         with: { node-version: 22, cache: pnpm }
       - name: Install deps
         run: pnpm install --frozen-lockfile
+      # Build first: routeTree.gen.ts is gitignored and generated as a side
+      # effect of the tanstackStart vite plugin. Typecheck needs it to resolve
+      # route-id types. Local dev gets it via `vite dev`; CI needs `vite build`.
+      - name: Build
+        run: pnpm build
       - name: Typecheck
         run: pnpm typecheck
       - name: Lint
         run: pnpm lint
       - name: Test
         run: pnpm test
-      - name: Build
-        run: pnpm build
 
   deploy:
     name: Deploy to Cloudflare

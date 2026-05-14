@@ -8,12 +8,16 @@ if [ "$SKIP_QUALITY_CHECKS" = "1" ]; then
 fi
 
 set -e
+# Build first so routeTree.gen.ts exists (gitignored, generated as a side
+# effect of the tanstackStart vite plugin). Typecheck + lint need it to
+# resolve route-id types. Local dev gets it via `vite dev`; this hook + CI
+# need an explicit build first.
+echo "▶ build"
+pnpm build
 echo "▶ typecheck"
 pnpm typecheck
 echo "▶ lint"
 pnpm lint
 echo "▶ test"
 pnpm test
-echo "▶ build"
-pnpm build
 echo "✓ pre-push quality gate passed"
