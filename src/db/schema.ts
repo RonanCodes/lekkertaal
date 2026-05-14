@@ -519,6 +519,51 @@ export const notificationLog = sqliteTable(
 );
 
 // ============================================================================
+// LEAGUES (P2-ENG-1)
+// ============================================================================
+
+/**
+ * Weekly league standings.
+ *
+ * Bronze → Diamond ladder of 10 tiers. Each Monday a cron rolls every user
+ * into a new row for the week, then computes finalRank + movement for the
+ * PREVIOUS week's rows based on weeklyXp. Top 7 promote, bottom 5 demote,
+ * middle stay; no demotion below tier 1.
+ *
+ * Columns:
+ *   - tier              Current tier 1..10
+ *   - weekStartDate     ISO YYYY-MM-DD of the Monday the row covers (UTC)
+ *   - weeklyXp          Cached sum(xp_events.delta) for the user across the week
+ *   - finalRank         Position within the tier at week close (null until rolled)
+ *   - movement          'up' | 'same' | 'down' once rolled
+ *
+ * Uniqueness on (userId, weekStartDate). The cron upserts.
+ *
+ * Feature gate: the cron only writes when active-user count >= 30 (see
+ * `src/lib/server/leagues.ts`).
+ */
+export const leagues = sqliteTable(
+  "leagues",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    userId: integer("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    tier: integer("tier").notNull(),
+    weekStartDate: text("week_start_date").notNull(), // YYYY-MM-DD (Mon, UTC)
+    weeklyXp: integer("weekly_xp").default(0).notNull(),
+    finalRank: integer("final_rank"),
+    movement: text("movement"), // up | same | down (null until rolled)
+    createdAt: text("created_at").default(sql`CURRENT_TIMESTAMP`).notNull(),
+  },
+  (t) => ({
+    byUser: index("idx_leagues_user").on(t.userId),
+    byWeekTier: index("idx_leagues_week_tier").on(t.weekStartDate, t.tier),
+    uniqUserWeek: uniqueIndex("idx_leagues_user_week").on(t.userId, t.weekStartDate),
+  }),
+);
+
+// ============================================================================
 // SOCIAL: friendships
 // ============================================================================
 
@@ -621,3 +666,5 @@ export type DailyQuest = typeof dailyQuests.$inferSelect;
 export type NewDailyQuest = typeof dailyQuests.$inferInsert;
 export type PeerDrill = typeof peerDrills.$inferSelect;
 export type NewPeerDrill = typeof peerDrills.$inferInsert;
+export type League = typeof leagues.$inferSelect;
+export type NewLeague = typeof leagues.$inferInsert;

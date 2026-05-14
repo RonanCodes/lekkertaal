@@ -6,6 +6,7 @@ import type {
   LeaderboardWindow,
   LeaderboardScope,
 } from "../lib/server/leaderboard";
+import { tierMeta } from "../lib/server/leagues";
 import { AppShell } from "../components/AppShell";
 
 const searchSchema = z.object({
@@ -213,6 +214,16 @@ function Row({ row, isMe }: { row: LeaderboardRow; isMe: boolean }) {
       >
         {row.level}
       </span>
+      {row.leagueTier && (
+        <span
+          data-testid="leaderboard-league-badge"
+          className="hidden rounded-full bg-orange-100 px-2 py-0.5 text-xs font-semibold text-orange-800 sm:inline"
+          title={`${tierMeta(row.leagueTier).name} league`}
+        >
+          <span aria-hidden>{tierMeta(row.leagueTier).emoji}</span>{" "}
+          {tierMeta(row.leagueTier).name}
+        </span>
+      )}
       <span className="hidden text-xs text-neutral-500 sm:inline">
         🔥 {row.streakDays}
       </span>

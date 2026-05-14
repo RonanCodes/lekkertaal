@@ -7,6 +7,7 @@ import { users } from "../db/schema";
 import { eq } from "drizzle-orm";
 import { requireWorkerContext } from "../entry.server";
 import { getProfileBadges } from "../lib/server/badges";
+import { getCurrentLeagueForUser, tierMeta } from "../lib/server/leagues";
 import { AppShell } from "../components/AppShell";
 
 /**
@@ -22,6 +23,7 @@ const getOwnProfile = createServerFn({ method: "GET" }).handler(async () => {
   const me = await drz.select().from(users).where(eq(users.clerkId, a.userId)).limit(1);
   if (!me[0]) throw new Error("User row missing");
   const badges = await getProfileBadges(drz, me[0].id);
+  const league = await getCurrentLeagueForUser(drz, me[0].id);
   return {
     user: {
       displayName: me[0].displayName,
@@ -33,6 +35,9 @@ const getOwnProfile = createServerFn({ method: "GET" }).handler(async () => {
       avatarUrl: me[0].avatarUrl,
     },
     badges,
+    league: league
+      ? { tier: league.tier, weeklyXp: league.weeklyXp, ...tierMeta(league.tier) }
+      : null,
   };
 });
 
@@ -42,7 +47,7 @@ export const Route = createFileRoute("/app/profile")({
 });
 
 function ProfilePage() {
-  const { user, badges } = Route.useLoaderData();
+  const { user, badges, league } = Route.useLoaderData();
   const earned = badges.filter((b) => b.awarded);
 
   return (
@@ -60,14 +65,27 @@ function ProfilePage() {
               {user.displayName.slice(0, 2).toUpperCase()}
             </div>
           )}
-          <div>
+          <div className="min-w-0 flex-1">
             <h1 className="text-2xl font-bold text-neutral-900">{user.displayName}</h1>
-            <div className="mt-1 flex items-center gap-3 text-sm text-neutral-600">
+            <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-neutral-600">
               <span>CEFR {user.cefrLevel}</span>
               <span>·</span>
               <span>🔥 {user.streakDays}</span>
               <span>·</span>
               <span>⚡ {user.xpTotal} XP</span>
+              {league && (
+                <>
+                  <span>·</span>
+                  <span
+                    data-testid="profile-league-badge"
+                    className="inline-flex items-center gap-1 rounded-full bg-orange-100 px-2 py-0.5 text-xs font-semibold text-orange-800"
+                    title={`${league.name} league — ${league.weeklyXp} XP this week`}
+                  >
+                    <span aria-hidden>{league.emoji}</span>
+                    {league.name}
+                  </span>
+                </>
+              )}
             </div>
           </div>
         </header>

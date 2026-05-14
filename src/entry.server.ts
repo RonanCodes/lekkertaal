@@ -19,6 +19,7 @@ import { resetStaleStreaks } from "./lib/server/gamification";
 import { runDailyPushCron } from "./lib/server/cron-push";
 import { runWeeklyDigestCron, runStreakRecoveryCron } from "./lib/server/email";
 import { runDailyQuestsCron } from "./lib/server/daily-quests";
+import { runWeeklyLeagueRoll } from "./lib/server/leagues";
 import { configureLogger, withRequestLogContext, log } from "./lib/logger";
 
 export type WorkerEnv = {
@@ -147,6 +148,29 @@ export default {
         }
       } catch (err) {
         log.error("cron: runDailyQuestsCron failed", { err });
+      }
+      // P2-ENG-1: weekly league roll. The CF Workers cron fires hourly; we
+      // gate to "Monday between 00:00 and 01:00 UTC" so the roll runs once
+      // per week. Idempotent via the unique (userId, weekStartDate) index,
+      // so a duplicate tick is a no-op. Also gated below 30 active users.
+      try {
+        const now = new Date();
+        const isMonday = now.getUTCDay() === 1;
+        const hour = now.getUTCHours();
+        if (isMonday && hour === 0) {
+          const r = await runWeeklyLeagueRoll(db(env.DB), { now });
+          if (!r.ran) {
+            log.info("leagues skipped, threshold not met", { activeUsers: r.activeUsers });
+          } else {
+            log.info("cron: weekly league roll", {
+              activeUsers: r.activeUsers,
+              closed: r.closed,
+              opened: r.opened,
+            });
+          }
+        }
+      } catch (err) {
+        log.error("cron: runWeeklyLeagueRoll failed", { err });
       }
     });
   },
