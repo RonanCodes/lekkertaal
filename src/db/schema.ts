@@ -407,6 +407,46 @@ export const dailyCompletions = sqliteTable(
 );
 
 // ============================================================================
+// DAILY QUESTS (P2-CON-3)
+// ============================================================================
+
+/**
+ * Daily quest assignments.
+ *
+ * The cron handler seeds 3 quests per active user per local-tz day. Kinds:
+ *   - xp       → "earn N XP today" (target = 30 | 50 | 100)
+ *   - lessons  → "finish N lessons today" (target = 1 | 2 | 3)
+ *   - streak   → "extend your streak today" (target = 1; bumps when streakDays grows)
+ *   - speak    → "complete N speak drills" (target = 1 | 2). Wired by P2-STT-3 (#56).
+ *
+ * Idempotency: unique (userId, date, kind). The cron upserts; same-day reruns
+ * are no-ops. `date` is YYYY-MM-DD in the user's local timezone.
+ */
+export const dailyQuests = sqliteTable(
+  "daily_quests",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    userId: integer("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    date: text("date").notNull(), // YYYY-MM-DD in user's local timezone
+    kind: text("kind").notNull(), // xp | lessons | streak | speak
+    target: integer("target").notNull(),
+    progress: integer("progress").default(0).notNull(),
+    completed: integer("completed", { mode: "boolean" }).default(false).notNull(),
+    claimed: integer("claimed", { mode: "boolean" }).default(false).notNull(),
+    bonusXp: integer("bonus_xp").default(15).notNull(),
+    bonusCoins: integer("bonus_coins").default(5).notNull(),
+    createdAt: text("created_at").default(sql`CURRENT_TIMESTAMP`).notNull(),
+    claimedAt: text("claimed_at"),
+  },
+  (t) => ({
+    byUserDate: index("idx_daily_quests_user_date").on(t.userId, t.date),
+    uniqUserDateKind: uniqueIndex("idx_daily_quests_user_date_kind").on(t.userId, t.date, t.kind),
+  }),
+);
+
+// ============================================================================
 // BADGES
 // ============================================================================
 
@@ -536,3 +576,5 @@ export type Friendship = typeof friendships.$inferSelect;
 export type NewFriendship = typeof friendships.$inferInsert;
 export type Transcript = typeof transcripts.$inferSelect;
 export type NewTranscript = typeof transcripts.$inferInsert;
+export type DailyQuest = typeof dailyQuests.$inferSelect;
+export type NewDailyQuest = typeof dailyQuests.$inferInsert;

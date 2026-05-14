@@ -48,4 +48,12 @@ test.describe("Signed-in /app/path", () => {
     await page.waitForURL(/\/app\/unit\//);
     expect(page.url()).toMatch(/\/app\/unit\//);
   });
+
+  test("shows the daily quests ribbon with 3 quests", async ({ page }) => {
+    await page.goto("/app/path");
+    const ribbon = page.getByRole("region", { name: /daily quests/i });
+    await expect(ribbon).toBeVisible();
+    const quests = page.getByTestId("daily-quest");
+    await expect(quests).toHaveCount(3);
+  });
 });

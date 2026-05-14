@@ -4,6 +4,21 @@ import { users, units, userUnitProgress } from "../../db/schema";
 import { eq, asc } from "drizzle-orm";
 import { requireWorkerContext } from "../../entry.server";
 import { requireUserClerkId } from "./auth-helper";
+import { listQuestsForUser, seedQuestsForUser } from "./daily-quests";
+import type { QuestKind } from "./daily-quests";
+
+export type PathQuest = {
+  id: number;
+  kind: QuestKind;
+  target: number;
+  progress: number;
+  completed: boolean;
+  claimed: boolean;
+  bonusXp: number;
+  bonusCoins: number;
+  titleNl: string;
+  titleEn: string;
+};
 
 export type PathUnit = {
   id: number;
@@ -53,6 +68,17 @@ export const getPath = createServerFn({ method: "GET" }).handler(async () => {
     };
   });
 
+  // P2-CON-3: ensure today's quests exist (covers the gap between cron ticks
+  // for new users and the very first hour of a freshly-deployed env). Safe to
+  // call on every loader hit because the helper short-circuits when rows
+  // already exist for the user's local date.
+  try {
+    await seedQuestsForUser(drz, me[0].id, me[0].timezone);
+  } catch {
+    // Lazy-seed failure is non-fatal — the cron will recover on the next tick.
+  }
+  const quests = await listQuestsForUser(drz, me[0].id, me[0].timezone);
+
   return {
     user: {
       displayName: me[0].displayName,
@@ -63,5 +89,6 @@ export const getPath = createServerFn({ method: "GET" }).handler(async () => {
       streakFreezesBalance: me[0].streakFreezesBalance,
     },
     path,
+    quests,
   };
 });
