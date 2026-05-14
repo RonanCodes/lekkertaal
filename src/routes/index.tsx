@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useAuth } from "@clerk/tanstack-react-start";
 
 export const Route = createFileRoute("/")({ component: Home });
 
@@ -21,8 +22,7 @@ function Home() {
       </p>
 
       <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
-        <a href="/sign-up" className="btn-3d">Start learning</a>
-        <a href="/sign-in" className="btn-3d btn-3d-ghost">Sign in</a>
+        <LandingCtas />
       </div>
 
       <div className="mt-16 grid grid-cols-1 gap-6 text-left sm:grid-cols-3">
@@ -49,5 +49,27 @@ function Home() {
         </div>
       </div>
     </main>
+  );
+}
+
+/**
+ * Auth-aware landing CTAs.
+ * - signed-out: Start learning / Sign in
+ * - signed-in: Continue learning (-> /app/path)
+ * - loading (Clerk still hydrating): empty slot, no layout shift after load
+ */
+function LandingCtas() {
+  const { isLoaded, isSignedIn } = useAuth();
+  if (!isLoaded) {
+    return <div className="h-14" aria-hidden />;
+  }
+  if (isSignedIn) {
+    return <a href="/app/path" className="btn-3d">Continue learning</a>;
+  }
+  return (
+    <>
+      <a href="/sign-up" className="btn-3d">Start learning</a>
+      <a href="/sign-in" className="btn-3d btn-3d-ghost">Sign in</a>
+    </>
   );
 }
