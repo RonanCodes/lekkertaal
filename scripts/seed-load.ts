@@ -105,6 +105,8 @@ type ExerciseSeed = {
   answer: unknown;
   hints: string[] | null;
   source_ref: string | null;
+  /** R2 image URL for `image-word` drills (AI-SDK-7). Optional. */
+  image_url?: string | null;
 };
 
 type ScenarioSeed = {
@@ -195,6 +197,10 @@ async function main() {
   const units = await readSeedJson<UnitSeed>("units.json");
   const vocab = await readSeedJson<VocabSeed>("vocab.json");
   const exercises = await readSeedJson<ExerciseSeed>("exercises.json");
+  // Image-input drill seeds (AI-SDK-7). Optional file produced by
+  // `scripts/seed-image-drills.ts`; absent = no image drills loaded.
+  const imageDrills = await readSeedJson<ExerciseSeed>("image-drills.json");
+  exercises.push(...imageDrills);
   const scenarios = await readSeedJson<ScenarioSeed>("scenarios.json");
 
   // Authored curriculum units. Each file = one unit + drills.
@@ -295,6 +301,7 @@ async function main() {
       hints: e.hints ?? null,
       source_ref: e.source_ref,
       audio_url: null,
+      image_url: e.image_url ?? null,
     }));
   }
   lines.push("");

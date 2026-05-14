@@ -4,6 +4,7 @@ import { TranslationTypingDrill } from "./TranslationTypingDrill";
 import { FillBlankDrill } from "./FillBlankDrill";
 import { WordOrderingDrill } from "./WordOrderingDrill";
 import { SpeakDrill } from "./SpeakDrill";
+import { ImageWordDrill } from "./ImageWordDrill";
 import { DrillFrame } from "./DrillFrame";
 import type { DrillPayload } from "../../lib/server/lesson";
 
@@ -47,6 +48,8 @@ export function DrillRenderer({ drill, onSubmit }: DrillProps) {
       return <WordOrderingDrill drill={drill} onSubmit={onSubmit} />;
     case "speak":
       return <SpeakDrill drill={drill} onSubmit={onSubmit} />;
+    case "image_word":
+      return <ImageWordDrill drill={drill} onSubmit={onSubmit} />;
     default:
       return (
         <DrillFrame promptLabel="Unsupported drill" prompt={`Type: ${drill.type}`}>
