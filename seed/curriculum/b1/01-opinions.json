@@ -1,0 +1,178 @@
+{
+  "unit": {
+    "slug": "b1-unit-01-opinions",
+    "title_nl": "Meningen geven",
+    "title_en": "Giving opinions",
+    "description": "Je mening geven, het oneens of eens zijn, en argumenten onderbouwen.",
+    "cefr_level": "B1",
+    "order": 1,
+    "grammar_concept_slug": null
+  },
+  "drills": [
+    {
+      "slug": "b1-01-opinions-d01",
+      "type": "translate",
+      "prompt_en": "In my opinion, the film is too long.",
+      "canonical_dutch": "Naar mijn mening is de film te lang.",
+      "expected_english": "In my opinion, the film is too long.",
+      "audio_voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "hints": ["naar mijn mening", "te lang"],
+      "options": null
+    },
+    {
+      "slug": "b1-01-opinions-d02",
+      "type": "translate",
+      "prompt_en": "I think we should leave earlier.",
+      "canonical_dutch": "Ik vind dat we eerder moeten vertrekken.",
+      "expected_english": "I think we should leave earlier.",
+      "audio_voice_id": "EXAVITQu4vr4xnSDxMaL",
+      "hints": ["ik vind dat", "vertrekken"],
+      "options": null
+    },
+    {
+      "slug": "b1-01-opinions-d03",
+      "type": "translate",
+      "prompt_en": "I completely agree with you.",
+      "canonical_dutch": "Ik ben het helemaal met je eens.",
+      "expected_english": "I completely agree with you.",
+      "audio_voice_id": "ErXwobaYiN019PkySvjV",
+      "hints": ["het eens zijn"],
+      "options": null
+    },
+    {
+      "slug": "b1-01-opinions-d04",
+      "type": "translate",
+      "prompt_en": "I disagree with that statement.",
+      "canonical_dutch": "Ik ben het niet eens met die uitspraak.",
+      "expected_english": "I disagree with that statement.",
+      "audio_voice_id": "AZnzlk1XvdvUeBnXmlld",
+      "hints": ["niet eens", "uitspraak"],
+      "options": null
+    },
+    {
+      "slug": "b1-01-opinions-d05",
+      "type": "translate",
+      "prompt_en": "On the one hand it is cheap, on the other hand the quality is low.",
+      "canonical_dutch": "Aan de ene kant is het goedkoop, aan de andere kant is de kwaliteit laag.",
+      "expected_english": "On the one hand it is cheap, on the other hand the quality is low.",
+      "audio_voice_id": "VR6AewLTigWG4xSOukaG",
+      "hints": ["aan de ene kant", "aan de andere kant"],
+      "options": null
+    },
+    {
+      "slug": "b1-01-opinions-d06",
+      "type": "multipleChoice",
+      "prompt_en": "Choose the correct translation of: I am convinced that this is the best choice.",
+      "canonical_dutch": "Ik ben ervan overtuigd dat dit de beste keuze is.",
+      "expected_english": "I am convinced that this is the best choice.",
+      "audio_voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "hints": [],
+      "options": [
+        "Ik ben ervan overtuigd dat dit de beste keuze is.",
+        "Ik denk misschien dat dit de beste keuze is.",
+        "Ik ben overtuigd voor de beste keuze.",
+        "Het is overtuigd dat dit beste keuze is."
+      ]
+    },
+    {
+      "slug": "b1-01-opinions-d07",
+      "type": "multipleChoice",
+      "prompt_en": "Choose the correct translation of: Personally, I prefer to travel by train.",
+      "canonical_dutch": "Persoonlijk reis ik liever met de trein.",
+      "expected_english": "Personally, I prefer to travel by train.",
+      "audio_voice_id": "EXAVITQu4vr4xnSDxMaL",
+      "hints": [],
+      "options": [
+        "Persoonlijk reis ik liever met de trein.",
+        "Persoon ik reis liever de trein.",
+        "Ik persoonlijk reizen graag met trein.",
+        "Persoonlijk ik liever reis trein."
+      ]
+    },
+    {
+      "slug": "b1-01-opinions-d08",
+      "type": "multipleChoice",
+      "prompt_en": "Choose the correct translation of: I doubt that he is telling the truth.",
+      "canonical_dutch": "Ik betwijfel of hij de waarheid vertelt.",
+      "expected_english": "I doubt that he is telling the truth.",
+      "audio_voice_id": "ErXwobaYiN019PkySvjV",
+      "hints": [],
+      "options": [
+        "Ik betwijfel of hij de waarheid vertelt.",
+        "Ik twijfel hij waarheid vertelt.",
+        "Ik geloof dat hij waarheid niet vertellen.",
+        "Het betwijfel of waarheid hij vertelt."
+      ]
+    },
+    {
+      "slug": "b1-01-opinions-d09",
+      "type": "fillBlank",
+      "prompt_en": "Fill in the blank: Ik ___ dat we moeten wachten.",
+      "canonical_dutch": "vind",
+      "expected_english": "think",
+      "audio_voice_id": "AZnzlk1XvdvUeBnXmlld",
+      "hints": ["vinden"],
+      "options": null
+    },
+    {
+      "slug": "b1-01-opinions-d10",
+      "type": "fillBlank",
+      "prompt_en": "Fill in the blank: Naar ___ mening is dit een goed idee.",
+      "canonical_dutch": "mijn",
+      "expected_english": "my",
+      "audio_voice_id": "VR6AewLTigWG4xSOukaG",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "b1-01-opinions-d11",
+      "type": "fillBlank",
+      "prompt_en": "Fill in the blank: Ik ben het ___ eens met je voorstel.",
+      "canonical_dutch": "helemaal",
+      "expected_english": "completely",
+      "audio_voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "b1-01-opinions-d12",
+      "type": "speak",
+      "prompt_en": "Say in Dutch: I think that working from home has many advantages.",
+      "canonical_dutch": "Ik vind dat thuiswerken veel voordelen heeft.",
+      "expected_english": "I think that working from home has many advantages.",
+      "audio_voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "b1-01-opinions-d13",
+      "type": "speak",
+      "prompt_en": "Say in Dutch: In my opinion, public transport is too expensive.",
+      "canonical_dutch": "Naar mijn mening is het openbaar vervoer te duur.",
+      "expected_english": "In my opinion, public transport is too expensive.",
+      "audio_voice_id": "EXAVITQu4vr4xnSDxMaL",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "b1-01-opinions-d14",
+      "type": "speak",
+      "prompt_en": "Say in Dutch: I disagree because the price is too high.",
+      "canonical_dutch": "Ik ben het er niet mee eens omdat de prijs te hoog is.",
+      "expected_english": "I disagree because the price is too high.",
+      "audio_voice_id": "ErXwobaYiN019PkySvjV",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "b1-01-opinions-d15",
+      "type": "speak",
+      "prompt_en": "Say in Dutch: On the one hand it is fast, on the other hand it is risky.",
+      "canonical_dutch": "Aan de ene kant is het snel, aan de andere kant is het riskant.",
+      "expected_english": "On the one hand it is fast, on the other hand it is risky.",
+      "audio_voice_id": "AZnzlk1XvdvUeBnXmlld",
+      "hints": [],
+      "options": null
+    }
+  ]
+}

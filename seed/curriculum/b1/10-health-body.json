@@ -1,0 +1,178 @@
+{
+  "unit": {
+    "slug": "b1-unit-10-health-body",
+    "title_nl": "Gezondheid en lichaam",
+    "title_en": "Health and body",
+    "description": "Praten over je gezondheid, naar de dokter gaan, lichaamsdelen en levensstijl.",
+    "cefr_level": "B1",
+    "order": 10,
+    "grammar_concept_slug": null
+  },
+  "drills": [
+    {
+      "slug": "b1-10-health-d01",
+      "type": "translate",
+      "prompt_en": "I have a headache.",
+      "canonical_dutch": "Ik heb hoofdpijn.",
+      "expected_english": "I have a headache.",
+      "audio_voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "hints": ["hoofdpijn"],
+      "options": null
+    },
+    {
+      "slug": "b1-10-health-d02",
+      "type": "translate",
+      "prompt_en": "She has been sick for a week.",
+      "canonical_dutch": "Zij is al een week ziek.",
+      "expected_english": "She has been sick for a week.",
+      "audio_voice_id": "EXAVITQu4vr4xnSDxMaL",
+      "hints": ["ziek"],
+      "options": null
+    },
+    {
+      "slug": "b1-10-health-d03",
+      "type": "translate",
+      "prompt_en": "I need to make an appointment with the doctor.",
+      "canonical_dutch": "Ik moet een afspraak maken bij de dokter.",
+      "expected_english": "I need to make an appointment with the doctor.",
+      "audio_voice_id": "ErXwobaYiN019PkySvjV",
+      "hints": ["afspraak"],
+      "options": null
+    },
+    {
+      "slug": "b1-10-health-d04",
+      "type": "translate",
+      "prompt_en": "My back hurts after the long flight.",
+      "canonical_dutch": "Mijn rug doet pijn na de lange vlucht.",
+      "expected_english": "My back hurts after the long flight.",
+      "audio_voice_id": "AZnzlk1XvdvUeBnXmlld",
+      "hints": ["rug", "pijn"],
+      "options": null
+    },
+    {
+      "slug": "b1-10-health-d05",
+      "type": "translate",
+      "prompt_en": "Healthy eating is important for everyone.",
+      "canonical_dutch": "Gezond eten is belangrijk voor iedereen.",
+      "expected_english": "Healthy eating is important for everyone.",
+      "audio_voice_id": "VR6AewLTigWG4xSOukaG",
+      "hints": ["gezond"],
+      "options": null
+    },
+    {
+      "slug": "b1-10-health-d06",
+      "type": "multipleChoice",
+      "prompt_en": "Choose the correct translation of: I exercise three times a week.",
+      "canonical_dutch": "Ik sport drie keer per week.",
+      "expected_english": "I exercise three times a week.",
+      "audio_voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "hints": [],
+      "options": [
+        "Ik sport drie keer per week.",
+        "Ik doe drie keer sport week.",
+        "Ik sportief drie weken keer.",
+        "Drie sport in week ik."
+      ]
+    },
+    {
+      "slug": "b1-10-health-d07",
+      "type": "multipleChoice",
+      "prompt_en": "Choose the correct translation of: The doctor prescribed me antibiotics.",
+      "canonical_dutch": "De dokter heeft mij antibiotica voorgeschreven.",
+      "expected_english": "The doctor prescribed me antibiotics.",
+      "audio_voice_id": "EXAVITQu4vr4xnSDxMaL",
+      "hints": [],
+      "options": [
+        "De dokter heeft mij antibiotica voorgeschreven.",
+        "De dokter mij antibiotica geven.",
+        "Dokter schreef antibiotica voor ik.",
+        "Ik antibiotica van dokter heb."
+      ]
+    },
+    {
+      "slug": "b1-10-health-d08",
+      "type": "multipleChoice",
+      "prompt_en": "Choose the correct translation of: You should drink at least two liters of water a day.",
+      "canonical_dutch": "Je zou minstens twee liter water per dag moeten drinken.",
+      "expected_english": "You should drink at least two liters of water a day.",
+      "audio_voice_id": "ErXwobaYiN019PkySvjV",
+      "hints": [],
+      "options": [
+        "Je zou minstens twee liter water per dag moeten drinken.",
+        "Je drinkt twee liter water dag.",
+        "Minstens drink water twee liter dag.",
+        "Je moet twee dag water liter."
+      ]
+    },
+    {
+      "slug": "b1-10-health-d09",
+      "type": "fillBlank",
+      "prompt_en": "Fill in the blank: Ik heb pijn in mijn ___.",
+      "canonical_dutch": "buik",
+      "expected_english": "stomach",
+      "audio_voice_id": "AZnzlk1XvdvUeBnXmlld",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "b1-10-health-d10",
+      "type": "fillBlank",
+      "prompt_en": "Fill in the blank: Slapen is belangrijk voor je ___.",
+      "canonical_dutch": "gezondheid",
+      "expected_english": "health",
+      "audio_voice_id": "VR6AewLTigWG4xSOukaG",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "b1-10-health-d11",
+      "type": "fillBlank",
+      "prompt_en": "Fill in the blank: De dokter ___ naar mijn keel.",
+      "canonical_dutch": "kijkt",
+      "expected_english": "looks",
+      "audio_voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "hints": ["kijken"],
+      "options": null
+    },
+    {
+      "slug": "b1-10-health-d12",
+      "type": "speak",
+      "prompt_en": "Say in Dutch: I have not been feeling well for a few days.",
+      "canonical_dutch": "Ik voel me al een paar dagen niet lekker.",
+      "expected_english": "I have not been feeling well for a few days.",
+      "audio_voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "b1-10-health-d13",
+      "type": "speak",
+      "prompt_en": "Say in Dutch: I try to walk every day to stay fit.",
+      "canonical_dutch": "Ik probeer elke dag te wandelen om fit te blijven.",
+      "expected_english": "I try to walk every day to stay fit.",
+      "audio_voice_id": "EXAVITQu4vr4xnSDxMaL",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "b1-10-health-d14",
+      "type": "speak",
+      "prompt_en": "Say in Dutch: My doctor said I need to rest more.",
+      "canonical_dutch": "Mijn dokter zei dat ik meer moet rusten.",
+      "expected_english": "My doctor said I need to rest more.",
+      "audio_voice_id": "ErXwobaYiN019PkySvjV",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "b1-10-health-d15",
+      "type": "speak",
+      "prompt_en": "Say in Dutch: Stress can have a big effect on your body.",
+      "canonical_dutch": "Stress kan een grote invloed op je lichaam hebben.",
+      "expected_english": "Stress can have a big effect on your body.",
+      "audio_voice_id": "AZnzlk1XvdvUeBnXmlld",
+      "hints": [],
+      "options": null
+    }
+  ]
+}

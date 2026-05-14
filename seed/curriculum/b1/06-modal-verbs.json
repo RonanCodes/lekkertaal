@@ -1,0 +1,178 @@
+{
+  "unit": {
+    "slug": "b1-unit-06-modal-verbs",
+    "title_nl": "Modale werkwoorden",
+    "title_en": "Modal verbs",
+    "description": "Kunnen, moeten, mogen, willen en zullen in dagelijkse situaties.",
+    "cefr_level": "B1",
+    "order": 6,
+    "grammar_concept_slug": null
+  },
+  "drills": [
+    {
+      "slug": "b1-06-modal-d01",
+      "type": "translate",
+      "prompt_en": "I have to work late today.",
+      "canonical_dutch": "Ik moet vandaag laat werken.",
+      "expected_english": "I have to work late today.",
+      "audio_voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "hints": ["moeten"],
+      "options": null
+    },
+    {
+      "slug": "b1-06-modal-d02",
+      "type": "translate",
+      "prompt_en": "You may sit here.",
+      "canonical_dutch": "Je mag hier zitten.",
+      "expected_english": "You may sit here.",
+      "audio_voice_id": "EXAVITQu4vr4xnSDxMaL",
+      "hints": ["mogen"],
+      "options": null
+    },
+    {
+      "slug": "b1-06-modal-d03",
+      "type": "translate",
+      "prompt_en": "She wants to study Dutch.",
+      "canonical_dutch": "Zij wil Nederlands studeren.",
+      "expected_english": "She wants to study Dutch.",
+      "audio_voice_id": "ErXwobaYiN019PkySvjV",
+      "hints": ["willen"],
+      "options": null
+    },
+    {
+      "slug": "b1-06-modal-d04",
+      "type": "translate",
+      "prompt_en": "Can you help me, please?",
+      "canonical_dutch": "Kun je me helpen, alsjeblieft?",
+      "expected_english": "Can you help me, please?",
+      "audio_voice_id": "AZnzlk1XvdvUeBnXmlld",
+      "hints": ["kunnen"],
+      "options": null
+    },
+    {
+      "slug": "b1-06-modal-d05",
+      "type": "translate",
+      "prompt_en": "We should leave now.",
+      "canonical_dutch": "We zouden nu moeten vertrekken.",
+      "expected_english": "We should leave now.",
+      "audio_voice_id": "VR6AewLTigWG4xSOukaG",
+      "hints": ["zouden moeten"],
+      "options": null
+    },
+    {
+      "slug": "b1-06-modal-d06",
+      "type": "multipleChoice",
+      "prompt_en": "Choose the correct translation of: I cannot come to the meeting.",
+      "canonical_dutch": "Ik kan niet naar de vergadering komen.",
+      "expected_english": "I cannot come to the meeting.",
+      "audio_voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "hints": [],
+      "options": [
+        "Ik kan niet naar de vergadering komen.",
+        "Ik niet kan vergadering kom.",
+        "Ik mag niet vergadering naar gaan.",
+        "Ik wil niet kom vergadering."
+      ]
+    },
+    {
+      "slug": "b1-06-modal-d07",
+      "type": "multipleChoice",
+      "prompt_en": "Choose the correct translation of: You must not park here.",
+      "canonical_dutch": "Je mag hier niet parkeren.",
+      "expected_english": "You must not park here.",
+      "audio_voice_id": "EXAVITQu4vr4xnSDxMaL",
+      "hints": [],
+      "options": [
+        "Je mag hier niet parkeren.",
+        "Je moet niet parkeren hier.",
+        "Je kunt parkeer niet hier.",
+        "Hier niet je mag parkeren."
+      ]
+    },
+    {
+      "slug": "b1-06-modal-d08",
+      "type": "multipleChoice",
+      "prompt_en": "Choose the correct translation of: They would like to come too.",
+      "canonical_dutch": "Zij willen ook graag komen.",
+      "expected_english": "They would like to come too.",
+      "audio_voice_id": "ErXwobaYiN019PkySvjV",
+      "hints": [],
+      "options": [
+        "Zij willen ook graag komen.",
+        "Zij zouden graag komen ook.",
+        "Zij ook willen graag te komen.",
+        "Zij wil graag ook kom."
+      ]
+    },
+    {
+      "slug": "b1-06-modal-d09",
+      "type": "fillBlank",
+      "prompt_en": "Fill in the blank: ___ ik even iets vragen?",
+      "canonical_dutch": "Mag",
+      "expected_english": "May",
+      "audio_voice_id": "AZnzlk1XvdvUeBnXmlld",
+      "hints": ["mogen"],
+      "options": null
+    },
+    {
+      "slug": "b1-06-modal-d10",
+      "type": "fillBlank",
+      "prompt_en": "Fill in the blank: Hij ___ heel goed schaken.",
+      "canonical_dutch": "kan",
+      "expected_english": "can",
+      "audio_voice_id": "VR6AewLTigWG4xSOukaG",
+      "hints": ["kunnen"],
+      "options": null
+    },
+    {
+      "slug": "b1-06-modal-d11",
+      "type": "fillBlank",
+      "prompt_en": "Fill in the blank: Wij ___ morgen een test maken.",
+      "canonical_dutch": "moeten",
+      "expected_english": "have to",
+      "audio_voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "b1-06-modal-d12",
+      "type": "speak",
+      "prompt_en": "Say in Dutch: I would like to make an appointment.",
+      "canonical_dutch": "Ik wil graag een afspraak maken.",
+      "expected_english": "I would like to make an appointment.",
+      "audio_voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "b1-06-modal-d13",
+      "type": "speak",
+      "prompt_en": "Say in Dutch: You should drink more water.",
+      "canonical_dutch": "Je zou meer water moeten drinken.",
+      "expected_english": "You should drink more water.",
+      "audio_voice_id": "EXAVITQu4vr4xnSDxMaL",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "b1-06-modal-d14",
+      "type": "speak",
+      "prompt_en": "Say in Dutch: Can I pay with my card here?",
+      "canonical_dutch": "Kan ik hier met mijn kaart betalen?",
+      "expected_english": "Can I pay with my card here?",
+      "audio_voice_id": "ErXwobaYiN019PkySvjV",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "b1-06-modal-d15",
+      "type": "speak",
+      "prompt_en": "Say in Dutch: We must hurry, otherwise we will miss the train.",
+      "canonical_dutch": "We moeten opschieten, anders missen we de trein.",
+      "expected_english": "We must hurry, otherwise we will miss the train.",
+      "audio_voice_id": "AZnzlk1XvdvUeBnXmlld",
+      "hints": [],
+      "options": null
+    }
+  ]
+}

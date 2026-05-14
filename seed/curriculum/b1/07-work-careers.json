@@ -1,0 +1,178 @@
+{
+  "unit": {
+    "slug": "b1-unit-07-work-careers",
+    "title_nl": "Werk en carrière",
+    "title_en": "Work and careers",
+    "description": "Praten over je baan, sollicitatiegesprekken, collega's en carrièrekeuzes.",
+    "cefr_level": "B1",
+    "order": 7,
+    "grammar_concept_slug": null
+  },
+  "drills": [
+    {
+      "slug": "b1-07-work-d01",
+      "type": "translate",
+      "prompt_en": "I work as a software engineer.",
+      "canonical_dutch": "Ik werk als software-engineer.",
+      "expected_english": "I work as a software engineer.",
+      "audio_voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "hints": ["werken als"],
+      "options": null
+    },
+    {
+      "slug": "b1-07-work-d02",
+      "type": "translate",
+      "prompt_en": "She has a meeting with her manager.",
+      "canonical_dutch": "Zij heeft een vergadering met haar manager.",
+      "expected_english": "She has a meeting with her manager.",
+      "audio_voice_id": "EXAVITQu4vr4xnSDxMaL",
+      "hints": ["vergadering"],
+      "options": null
+    },
+    {
+      "slug": "b1-07-work-d03",
+      "type": "translate",
+      "prompt_en": "The deadline is next Friday.",
+      "canonical_dutch": "De deadline is volgende week vrijdag.",
+      "expected_english": "The deadline is next Friday.",
+      "audio_voice_id": "ErXwobaYiN019PkySvjV",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "b1-07-work-d04",
+      "type": "translate",
+      "prompt_en": "I am applying for a new job.",
+      "canonical_dutch": "Ik solliciteer voor een nieuwe baan.",
+      "expected_english": "I am applying for a new job.",
+      "audio_voice_id": "AZnzlk1XvdvUeBnXmlld",
+      "hints": ["solliciteren"],
+      "options": null
+    },
+    {
+      "slug": "b1-07-work-d05",
+      "type": "translate",
+      "prompt_en": "My salary is enough but the working hours are long.",
+      "canonical_dutch": "Mijn salaris is voldoende, maar de werktijden zijn lang.",
+      "expected_english": "My salary is enough but the working hours are long.",
+      "audio_voice_id": "VR6AewLTigWG4xSOukaG",
+      "hints": ["salaris", "werktijden"],
+      "options": null
+    },
+    {
+      "slug": "b1-07-work-d06",
+      "type": "multipleChoice",
+      "prompt_en": "Choose the correct translation of: I had a job interview yesterday.",
+      "canonical_dutch": "Ik had gisteren een sollicitatiegesprek.",
+      "expected_english": "I had a job interview yesterday.",
+      "audio_voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "hints": [],
+      "options": [
+        "Ik had gisteren een sollicitatiegesprek.",
+        "Ik heb gisteren sollicitatie.",
+        "Gisteren ik gehad gesprek.",
+        "Ik had baan gesprek gisteren."
+      ]
+    },
+    {
+      "slug": "b1-07-work-d07",
+      "type": "multipleChoice",
+      "prompt_en": "Choose the correct translation of: My colleagues are very friendly.",
+      "canonical_dutch": "Mijn collega's zijn heel vriendelijk.",
+      "expected_english": "My colleagues are very friendly.",
+      "audio_voice_id": "EXAVITQu4vr4xnSDxMaL",
+      "hints": [],
+      "options": [
+        "Mijn collega's zijn heel vriendelijk.",
+        "Mijn collega zijn vriendelijk veel.",
+        "Mijn collega's zeer vriendelijk is.",
+        "Heel vriendelijk mijn collega's zijn ze."
+      ]
+    },
+    {
+      "slug": "b1-07-work-d08",
+      "type": "multipleChoice",
+      "prompt_en": "Choose the correct translation of: I work part-time at a bookstore.",
+      "canonical_dutch": "Ik werk parttime bij een boekwinkel.",
+      "expected_english": "I work part-time at a bookstore.",
+      "audio_voice_id": "ErXwobaYiN019PkySvjV",
+      "hints": [],
+      "options": [
+        "Ik werk parttime bij een boekwinkel.",
+        "Ik parttime boekwinkel werken.",
+        "Bij boekwinkel werk ik parttime is.",
+        "Ik werkt deeltijds in boekje."
+      ]
+    },
+    {
+      "slug": "b1-07-work-d09",
+      "type": "fillBlank",
+      "prompt_en": "Fill in the blank: Hij ___ als leraar op een middelbare school.",
+      "canonical_dutch": "werkt",
+      "expected_english": "works",
+      "audio_voice_id": "AZnzlk1XvdvUeBnXmlld",
+      "hints": ["werken"],
+      "options": null
+    },
+    {
+      "slug": "b1-07-work-d10",
+      "type": "fillBlank",
+      "prompt_en": "Fill in the blank: Ik heb een ___ gestuurd voor die functie.",
+      "canonical_dutch": "sollicitatie",
+      "expected_english": "application",
+      "audio_voice_id": "VR6AewLTigWG4xSOukaG",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "b1-07-work-d11",
+      "type": "fillBlank",
+      "prompt_en": "Fill in the blank: Mijn ___ is hoofd van de afdeling.",
+      "canonical_dutch": "manager",
+      "expected_english": "manager",
+      "audio_voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "b1-07-work-d12",
+      "type": "speak",
+      "prompt_en": "Say in Dutch: I have been working at this company for five years.",
+      "canonical_dutch": "Ik werk al vijf jaar bij dit bedrijf.",
+      "expected_english": "I have been working at this company for five years.",
+      "audio_voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "b1-07-work-d13",
+      "type": "speak",
+      "prompt_en": "Say in Dutch: I want to change jobs because I am looking for new challenges.",
+      "canonical_dutch": "Ik wil van baan veranderen omdat ik nieuwe uitdagingen zoek.",
+      "expected_english": "I want to change jobs because I am looking for new challenges.",
+      "audio_voice_id": "EXAVITQu4vr4xnSDxMaL",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "b1-07-work-d14",
+      "type": "speak",
+      "prompt_en": "Say in Dutch: My responsibilities include planning and reporting.",
+      "canonical_dutch": "Mijn taken zijn onder andere plannen en rapporteren.",
+      "expected_english": "My responsibilities include planning and reporting.",
+      "audio_voice_id": "ErXwobaYiN019PkySvjV",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "b1-07-work-d15",
+      "type": "speak",
+      "prompt_en": "Say in Dutch: I would like to work from home two days a week.",
+      "canonical_dutch": "Ik zou graag twee dagen per week thuiswerken.",
+      "expected_english": "I would like to work from home two days a week.",
+      "audio_voice_id": "AZnzlk1XvdvUeBnXmlld",
+      "hints": [],
+      "options": null
+    }
+  ]
+}

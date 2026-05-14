@@ -1,0 +1,178 @@
+{
+  "unit": {
+    "slug": "b1-unit-03-past-tense",
+    "title_nl": "Verleden tijd",
+    "title_en": "Past tense",
+    "description": "Imperfectum en perfectum: gebeurtenissen uit het verleden navertellen.",
+    "cefr_level": "B1",
+    "order": 3,
+    "grammar_concept_slug": null
+  },
+  "drills": [
+    {
+      "slug": "b1-03-past-tense-d01",
+      "type": "translate",
+      "prompt_en": "Yesterday I went to the supermarket.",
+      "canonical_dutch": "Gisteren ging ik naar de supermarkt.",
+      "expected_english": "Yesterday I went to the supermarket.",
+      "audio_voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "hints": ["gisteren", "gaan"],
+      "options": null
+    },
+    {
+      "slug": "b1-03-past-tense-d02",
+      "type": "translate",
+      "prompt_en": "We watched a film last night.",
+      "canonical_dutch": "We hebben gisteravond een film gekeken.",
+      "expected_english": "We watched a film last night.",
+      "audio_voice_id": "EXAVITQu4vr4xnSDxMaL",
+      "hints": ["gekeken"],
+      "options": null
+    },
+    {
+      "slug": "b1-03-past-tense-d03",
+      "type": "translate",
+      "prompt_en": "She lived in Belgium for ten years.",
+      "canonical_dutch": "Zij woonde tien jaar in België.",
+      "expected_english": "She lived in Belgium for ten years.",
+      "audio_voice_id": "ErXwobaYiN019PkySvjV",
+      "hints": ["wonen"],
+      "options": null
+    },
+    {
+      "slug": "b1-03-past-tense-d04",
+      "type": "translate",
+      "prompt_en": "I have already eaten.",
+      "canonical_dutch": "Ik heb al gegeten.",
+      "expected_english": "I have already eaten.",
+      "audio_voice_id": "AZnzlk1XvdvUeBnXmlld",
+      "hints": ["gegeten"],
+      "options": null
+    },
+    {
+      "slug": "b1-03-past-tense-d05",
+      "type": "translate",
+      "prompt_en": "Last week we visited my grandmother.",
+      "canonical_dutch": "Vorige week hebben we mijn oma bezocht.",
+      "expected_english": "Last week we visited my grandmother.",
+      "audio_voice_id": "VR6AewLTigWG4xSOukaG",
+      "hints": ["bezoeken"],
+      "options": null
+    },
+    {
+      "slug": "b1-03-past-tense-d06",
+      "type": "multipleChoice",
+      "prompt_en": "Choose the correct translation of: I read that book last month.",
+      "canonical_dutch": "Ik heb dat boek vorige maand gelezen.",
+      "expected_english": "I read that book last month.",
+      "audio_voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "hints": [],
+      "options": [
+        "Ik heb dat boek vorige maand gelezen.",
+        "Ik las dat boek vorige maand geleden.",
+        "Ik dat boek vorige maand lees.",
+        "Vorige maand ik gelezen dat boek."
+      ]
+    },
+    {
+      "slug": "b1-03-past-tense-d07",
+      "type": "multipleChoice",
+      "prompt_en": "Choose the correct translation of: They walked home together.",
+      "canonical_dutch": "Zij liepen samen naar huis.",
+      "expected_english": "They walked home together.",
+      "audio_voice_id": "EXAVITQu4vr4xnSDxMaL",
+      "hints": [],
+      "options": [
+        "Zij liepen samen naar huis.",
+        "Zij lopen huis samen.",
+        "Zij hebben gelopen huis samen.",
+        "Zij gingen lopen naar samen huis."
+      ]
+    },
+    {
+      "slug": "b1-03-past-tense-d08",
+      "type": "multipleChoice",
+      "prompt_en": "Choose the correct translation of: Have you ever been to Amsterdam?",
+      "canonical_dutch": "Ben je ooit in Amsterdam geweest?",
+      "expected_english": "Have you ever been to Amsterdam?",
+      "audio_voice_id": "ErXwobaYiN019PkySvjV",
+      "hints": [],
+      "options": [
+        "Ben je ooit in Amsterdam geweest?",
+        "Heb je nooit Amsterdam gezien?",
+        "Was je ooit Amsterdam?",
+        "Ben je ooit naar Amsterdam zijn?"
+      ]
+    },
+    {
+      "slug": "b1-03-past-tense-d09",
+      "type": "fillBlank",
+      "prompt_en": "Fill in the blank: Ik ___ gisteren naar de markt gegaan.",
+      "canonical_dutch": "ben",
+      "expected_english": "have",
+      "audio_voice_id": "AZnzlk1XvdvUeBnXmlld",
+      "hints": ["zijn"],
+      "options": null
+    },
+    {
+      "slug": "b1-03-past-tense-d10",
+      "type": "fillBlank",
+      "prompt_en": "Fill in the blank: Wij ___ een leuk weekend gehad.",
+      "canonical_dutch": "hebben",
+      "expected_english": "have",
+      "audio_voice_id": "VR6AewLTigWG4xSOukaG",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "b1-03-past-tense-d11",
+      "type": "fillBlank",
+      "prompt_en": "Fill in the blank: Hij ___ vroeger in Utrecht.",
+      "canonical_dutch": "woonde",
+      "expected_english": "lived",
+      "audio_voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "hints": ["wonen"],
+      "options": null
+    },
+    {
+      "slug": "b1-03-past-tense-d12",
+      "type": "speak",
+      "prompt_en": "Say in Dutch: Last summer I traveled through Spain.",
+      "canonical_dutch": "Vorige zomer heb ik door Spanje gereisd.",
+      "expected_english": "Last summer I traveled through Spain.",
+      "audio_voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "b1-03-past-tense-d13",
+      "type": "speak",
+      "prompt_en": "Say in Dutch: When I was young, I played football every day.",
+      "canonical_dutch": "Toen ik jong was, speelde ik elke dag voetbal.",
+      "expected_english": "When I was young, I played football every day.",
+      "audio_voice_id": "EXAVITQu4vr4xnSDxMaL",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "b1-03-past-tense-d14",
+      "type": "speak",
+      "prompt_en": "Say in Dutch: We have already finished the project.",
+      "canonical_dutch": "We hebben het project al afgemaakt.",
+      "expected_english": "We have already finished the project.",
+      "audio_voice_id": "ErXwobaYiN019PkySvjV",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "b1-03-past-tense-d15",
+      "type": "speak",
+      "prompt_en": "Say in Dutch: My parents met in nineteen eighty-five.",
+      "canonical_dutch": "Mijn ouders hebben elkaar in negentienvijfentachtig ontmoet.",
+      "expected_english": "My parents met in nineteen eighty-five.",
+      "audio_voice_id": "AZnzlk1XvdvUeBnXmlld",
+      "hints": [],
+      "options": null
+    }
+  ]
+}
