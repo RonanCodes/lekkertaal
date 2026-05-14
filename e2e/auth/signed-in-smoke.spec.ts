@@ -32,9 +32,11 @@ test.describe("Signed-in /app/path", () => {
 
   test("shows the top-bar streak / XP / coin chips", async ({ page }) => {
     await page.goto("/app/path");
-    // AppShell exposes ARIA labels on the chips so we do not depend on emoji
-    await expect(page.getByLabel("xp")).toBeVisible();
-    await expect(page.getByLabel("coins")).toBeVisible();
+    // AppShell exposes ARIA labels on the chips so we do not depend on emoji.
+    // Use { exact: true } so the locator does not collide with the daily-quest
+    // "claim quest xp" button rendered further down the page.
+    await expect(page.getByLabel("xp", { exact: true })).toBeVisible();
+    await expect(page.getByLabel("coins", { exact: true })).toBeVisible();
     // Streak chip uses the `title` attribute (no aria-label) — fall back to text
     await expect(page.getByRole("heading", { name: /your path/i })).toBeVisible();
   });
