@@ -19,6 +19,7 @@ import { z } from "zod";
 import { enqueueRoleplayErrors } from "./spaced-rep";
 import { awardRoleplayComplete } from "./gamification";
 import { awardBadgesIfEligible } from "./badges";
+import { log } from "../logger";
 import { requireUserClerkId } from "./auth-helper";
 
 export type RoleplayTranscriptEntry = {
@@ -177,11 +178,18 @@ export const gradeRoleplaySession = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     const userId = await requireUserClerkId();
     const { env } = requireWorkerContext();
-    if (!env.ANTHROPIC_API_KEY) throw new Error("ANTHROPIC_API_KEY not configured");
+    if (!env.ANTHROPIC_API_KEY) {
+      log.error("gradeRoleplaySession: ANTHROPIC_API_KEY missing", { sessionId: data.sessionId });
+      throw new Error("ANTHROPIC_API_KEY not configured");
+    }
 
     const drz = db(env.DB);
     const me = await drz.select().from(users).where(eq(users.clerkId, userId)).limit(1);
-    if (!me[0]) throw new Error("User row missing");
+    if (!me[0]) {
+      log.error("gradeRoleplaySession: user row missing", { clerkId: userId });
+      throw new Error("User row missing");
+    }
+    log.debug("gradeRoleplaySession: start", { sessionId: data.sessionId, userId: me[0].id });
 
     const sessRow = await drz
       .select()
