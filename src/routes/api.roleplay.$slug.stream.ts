@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { streamText, convertToModelMessages, type UIMessage } from "ai";
+import { streamText, convertToModelMessages } from "ai";
+import type { UIMessage } from "ai";
 import { createAnthropic } from "@ai-sdk/anthropic";
 import { auth } from "@clerk/tanstack-react-start/server";
 import { db } from "../db/client";
@@ -7,18 +8,27 @@ import { users, scenarios } from "../db/schema";
 import { eq } from "drizzle-orm";
 import { requireWorkerContext } from "../entry.server";
 import { emitAiCall, buildAiCallPayload } from "../lib/ai-telemetry";
+import { buildRoleplaySystem } from "../lib/server/roleplay-system-prompt";
+import { log } from "../lib/logger";
 
 /**
  * Roleplay streaming endpoint.
  *
  * POST /api/roleplay/:slug/stream
  *
- * Wire-compatible with the AI SDK v6 `useChat()` UI message protocol — the
+ * Wire-compatible with the AI SDK v6 `useChat()` UI message protocol: the
  * client sends `{ messages, id, trigger }`, we reply with a UI message stream.
  *
  * We hydrate the NPC system prompt from the scenarios row keyed on :slug, so
  * the persona, opening line, must-use vocab/grammar, and success criteria all
  * shape the model's behaviour.
+ *
+ * Prompt caching: the system prompt is built via `buildRoleplaySystem` which
+ * attaches Anthropic ephemeral cache_control. From turn 2 onward of a given
+ * scenario session the system block reads from cache at ~10% of normal input
+ * cost. Cache hit metrics land in `ai.call` telemetry (cachedTokens) and in a
+ * dedicated `roleplay stream finish` log line with the raw cache_creation /
+ * cache_read counts pulled off providerMetadata.
  */
 export const Route = createFileRoute("/api/roleplay/$slug/stream")({
   server: {
@@ -48,7 +58,7 @@ export const Route = createFileRoute("/api/roleplay/$slug/stream")({
 
         const body = (await request.json()) as { messages: UIMessage[] };
 
-        const systemPrompt = buildSystemPrompt({
+        const systemMessages = buildRoleplaySystem({
           npcName: s.npcName,
           npcPersona: s.npcPersona,
           titleNl: s.titleNl,
@@ -70,8 +80,8 @@ export const Route = createFileRoute("/api/roleplay/$slug/stream")({
 
         const result = streamText({
           model: anthropic(modelId),
-          system: systemPrompt,
-          messages: convertToModelMessages(body.messages),
+          system: systemMessages,
+          messages: await convertToModelMessages(body.messages),
           temperature: 0.7,
           abortSignal: request.signal,
           experimental_telemetry: {
@@ -82,7 +92,26 @@ export const Route = createFileRoute("/api/roleplay/$slug/stream")({
               scenarioSlug: params.slug,
             },
           },
-          onFinish: ({ usage, finishReason }) => {
+          onFinish: ({ usage, finishReason, providerMetadata }) => {
+            // Anthropic returns cache_creation / cache_read counts in the
+            // provider-metadata bag. Turn 1 of a scenario: cache_creation > 0,
+            // cache_read == 0. Turn 2+: cache_creation == 0, cache_read > 0.
+            const anth = providerMetadata?.anthropic as
+              | { cacheCreationInputTokens?: number; cacheReadInputTokens?: number }
+              | undefined;
+            const cacheCreationInputTokens = anth?.cacheCreationInputTokens ?? 0;
+            const cacheReadInputTokens = anth?.cacheReadInputTokens ?? 0;
+
+            log.info("roleplay stream finish", {
+              scenarioSlug: params.slug,
+              userId: me[0].id,
+              turnUserMessages: body.messages.length,
+              inputTokens: usage.inputTokens,
+              outputTokens: usage.outputTokens,
+              cacheCreationInputTokens,
+              cacheReadInputTokens,
+            });
+
             const payload = buildAiCallPayload({
               functionId,
               model: modelId,
@@ -91,6 +120,10 @@ export const Route = createFileRoute("/api/roleplay/$slug/stream")({
               finishReason,
               userId: a.userId,
               scenarioSlug: params.slug,
+              extra: {
+                cacheCreationInputTokens,
+                cacheReadInputTokens,
+              },
             });
             emitAiCall(payload, env, ctx);
           },
@@ -113,35 +146,3 @@ export const Route = createFileRoute("/api/roleplay/$slug/stream")({
     },
   },
 });
-
-function buildSystemPrompt(s: {
-  npcName: string;
-  npcPersona: string;
-  titleNl: string;
-  openingNl: string;
-  mustUseVocab: string[];
-  mustUseGrammar: string[];
-  successCriteria: string[];
-  difficulty: string;
-}): string {
-  return `You are ${s.npcName}. ${s.npcPersona}
-
-You are roleplaying with a Dutch language learner at CEFR level ${s.difficulty}.
-Scenario: ${s.titleNl}
-Your opening line was: "${s.openingNl}"
-
-RULES — non-negotiable:
-- Reply ONLY in Dutch. Never switch to English, even if the user does.
-- Stay in character as ${s.npcName} at all times.
-- Keep replies short (1 to 3 sentences). This is a spoken-style conversation, not an essay.
-- Speak naturally at CEFR ${s.difficulty} level — simple sentence structures, common vocab. No idioms or advanced register unless the learner uses them first.
-- Do NOT correct the user's Dutch. Do NOT explain grammar. Just respond as the character would.
-- If the user types in English or asks for help in English, gently nudge back to Dutch in character (e.g. "Sorry, ik begrijp het niet helemaal. Kun je het in het Nederlands proberen?").
-- If the user types "klaar", "done", or "einde", the conversation will end on the next turn — give a brief, in-character farewell.
-
-Scenario success looks like the user achieving: ${s.successCriteria.join("; ") || "a natural conversation"}.
-${s.mustUseVocab.length > 0 ? `Try to organically draw the user toward using: ${s.mustUseVocab.join(", ")}.` : ""}
-${s.mustUseGrammar.length > 0 ? `Encourage natural use of grammar: ${s.mustUseGrammar.join(", ")}.` : ""}
-
-Begin the conversation in your role. The user will reply.`;
-}
