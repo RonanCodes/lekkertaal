@@ -17,3 +17,19 @@ VITE_CLERK_PUBLISHABLE_KEY=pk_test_REPLACE_ME
 # GOOGLE_GENERATIVE_AI_API_KEY=
 # ELEVENLABS_API_KEY=
 # RESEND_API_KEY=
+
+# Web Push (VAPID) — generate via `npx web-push generate-vapid-keys`
+# VAPID_PUBLIC=
+# VAPID_PRIVATE=
+# VAPID_SUBJECT=mailto:you@example.com
+
+# Clerk test fixture (used by playwright e2e signed-in specs).
+# Email MUST contain `+clerk_test` in the local-part so Clerk skips bot
+# protection + real email delivery. Create the user once in the Clerk
+# dashboard with these exact values. The @clerk/testing ticket flow used
+# in e2e does NOT actually authenticate with the password, but it's recorded
+# so manual login as the fixture user is possible. See e2e/setup/clerk-auth.ts.
+# CLERK_TEST_USER_EMAIL=you+clerk_test@example.com
+# CLERK_TEST_USER_FIRST_NAME=Test
+# CLERK_TEST_USER_LAST_NAME=Clerk
+# CLERK_TEST_USER_PASSWORD=
