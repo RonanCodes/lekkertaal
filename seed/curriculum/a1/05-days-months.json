@@ -1,0 +1,163 @@
+{
+  "unit": {
+    "slug": "a1-unit-05-days-months",
+    "title_nl": "Dagen en maanden",
+    "title_en": "Days and months",
+    "description": "Days of the week, months, dates, asking what day it is.",
+    "cefr_level": "A1",
+    "order": 5,
+    "grammar_concept_slug": null
+  },
+  "drills": [
+    {
+      "slug": "a1-05-days-d01",
+      "type": "translate",
+      "prompt_en": "Monday",
+      "canonical_dutch": "maandag",
+      "expected_english": "Monday",
+      "audio_voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-05-days-d02",
+      "type": "translate",
+      "prompt_en": "Tuesday",
+      "canonical_dutch": "dinsdag",
+      "expected_english": "Tuesday",
+      "audio_voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-05-days-d03",
+      "type": "translate",
+      "prompt_en": "Wednesday",
+      "canonical_dutch": "woensdag",
+      "expected_english": "Wednesday",
+      "audio_voice_id": "AZnzlk1XvdvUeBnXmlld",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-05-days-d04",
+      "type": "translate",
+      "prompt_en": "Thursday",
+      "canonical_dutch": "donderdag",
+      "expected_english": "Thursday",
+      "audio_voice_id": "AZnzlk1XvdvUeBnXmlld",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-05-days-d05",
+      "type": "translate",
+      "prompt_en": "Friday",
+      "canonical_dutch": "vrijdag",
+      "expected_english": "Friday",
+      "audio_voice_id": "ErXwobaYiN019PkySvjV",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-05-days-d06",
+      "type": "translate",
+      "prompt_en": "Saturday",
+      "canonical_dutch": "zaterdag",
+      "expected_english": "Saturday",
+      "audio_voice_id": "ErXwobaYiN019PkySvjV",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-05-days-d07",
+      "type": "translate",
+      "prompt_en": "Sunday",
+      "canonical_dutch": "zondag",
+      "expected_english": "Sunday",
+      "audio_voice_id": "EXAVITQu4vr4xnSDxMaL",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-05-days-d08",
+      "type": "translate",
+      "prompt_en": "January",
+      "canonical_dutch": "januari",
+      "expected_english": "January",
+      "audio_voice_id": "EXAVITQu4vr4xnSDxMaL",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-05-days-d09",
+      "type": "translate",
+      "prompt_en": "May",
+      "canonical_dutch": "mei",
+      "expected_english": "May",
+      "audio_voice_id": "pNInz6obpgDQGcFmaJgB",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-05-days-d10",
+      "type": "translate",
+      "prompt_en": "December",
+      "canonical_dutch": "december",
+      "expected_english": "December",
+      "audio_voice_id": "pNInz6obpgDQGcFmaJgB",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-05-days-d11",
+      "type": "multipleChoice",
+      "prompt_en": "Choose: Today is Wednesday.",
+      "canonical_dutch": "Vandaag is het woensdag.",
+      "expected_english": "Today is Wednesday.",
+      "audio_voice_id": "VR6AewLTigWG4xSOukaG",
+      "hints": [],
+      "options": ["Vandaag is het woensdag.", "Vandaag woensdag is.", "Is woensdag vandaag.", "Dit is woensdag dag."]
+    },
+    {
+      "slug": "a1-05-days-d12",
+      "type": "multipleChoice",
+      "prompt_en": "Choose: My birthday is in July.",
+      "canonical_dutch": "Mijn verjaardag is in juli.",
+      "expected_english": "My birthday is in July.",
+      "audio_voice_id": "VR6AewLTigWG4xSOukaG",
+      "hints": [],
+      "options": ["Mijn verjaardag is in juli.", "Mij verjaardag in juli is.", "Verjaardag mijn in juli.", "Mijn verjaardag op juli."]
+    },
+    {
+      "slug": "a1-05-days-d13",
+      "type": "fillBlank",
+      "prompt_en": "Fill in the blank: Welke ___ is het? (day)",
+      "canonical_dutch": "dag",
+      "expected_english": "day",
+      "audio_voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-05-days-d14",
+      "type": "speak",
+      "prompt_en": "Say in Dutch: I work on Monday and Tuesday.",
+      "canonical_dutch": "Ik werk op maandag en dinsdag.",
+      "expected_english": "I work on Monday and Tuesday.",
+      "audio_voice_id": "AZnzlk1XvdvUeBnXmlld",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-05-days-d15",
+      "type": "speak",
+      "prompt_en": "Say in Dutch: My birthday is in May.",
+      "canonical_dutch": "Mijn verjaardag is in mei.",
+      "expected_english": "My birthday is in May.",
+      "audio_voice_id": "ErXwobaYiN019PkySvjV",
+      "hints": [],
+      "options": null
+    }
+  ]
+}

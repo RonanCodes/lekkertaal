@@ -1,0 +1,163 @@
+{
+  "unit": {
+    "slug": "a1-unit-07-weather",
+    "title_nl": "Het weer",
+    "title_en": "Weather",
+    "description": "Weather vocabulary: sun, rain, wind, hot, cold, and small talk.",
+    "cefr_level": "A1",
+    "order": 7,
+    "grammar_concept_slug": null
+  },
+  "drills": [
+    {
+      "slug": "a1-07-weather-d01",
+      "type": "translate",
+      "prompt_en": "the weather",
+      "canonical_dutch": "het weer",
+      "expected_english": "the weather",
+      "audio_voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-07-weather-d02",
+      "type": "translate",
+      "prompt_en": "sun",
+      "canonical_dutch": "zon",
+      "expected_english": "sun",
+      "audio_voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-07-weather-d03",
+      "type": "translate",
+      "prompt_en": "rain",
+      "canonical_dutch": "regen",
+      "expected_english": "rain",
+      "audio_voice_id": "AZnzlk1XvdvUeBnXmlld",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-07-weather-d04",
+      "type": "translate",
+      "prompt_en": "wind",
+      "canonical_dutch": "wind",
+      "expected_english": "wind",
+      "audio_voice_id": "AZnzlk1XvdvUeBnXmlld",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-07-weather-d05",
+      "type": "translate",
+      "prompt_en": "snow",
+      "canonical_dutch": "sneeuw",
+      "expected_english": "snow",
+      "audio_voice_id": "ErXwobaYiN019PkySvjV",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-07-weather-d06",
+      "type": "translate",
+      "prompt_en": "cloud",
+      "canonical_dutch": "wolk",
+      "expected_english": "cloud",
+      "audio_voice_id": "ErXwobaYiN019PkySvjV",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-07-weather-d07",
+      "type": "translate",
+      "prompt_en": "It is raining.",
+      "canonical_dutch": "Het regent.",
+      "expected_english": "It is raining.",
+      "audio_voice_id": "EXAVITQu4vr4xnSDxMaL",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-07-weather-d08",
+      "type": "translate",
+      "prompt_en": "It is sunny.",
+      "canonical_dutch": "De zon schijnt.",
+      "expected_english": "The sun is shining.",
+      "audio_voice_id": "EXAVITQu4vr4xnSDxMaL",
+      "hints": ["schijnen"],
+      "options": null
+    },
+    {
+      "slug": "a1-07-weather-d09",
+      "type": "multipleChoice",
+      "prompt_en": "Choose: It is cold today.",
+      "canonical_dutch": "Het is vandaag koud.",
+      "expected_english": "It is cold today.",
+      "audio_voice_id": "pNInz6obpgDQGcFmaJgB",
+      "hints": [],
+      "options": ["Het is vandaag koud.", "Vandaag koud is het.", "Het koud vandaag.", "Vandaag het koud is."]
+    },
+    {
+      "slug": "a1-07-weather-d10",
+      "type": "multipleChoice",
+      "prompt_en": "Choose: What is the weather like?",
+      "canonical_dutch": "Wat voor weer is het?",
+      "expected_english": "What is the weather like? (lit. What sort of weather is it?)",
+      "audio_voice_id": "pNInz6obpgDQGcFmaJgB",
+      "hints": [],
+      "options": ["Wat voor weer is het?", "Hoe weer het is?", "Wat is weer als?", "Weer voor wat is?"]
+    },
+    {
+      "slug": "a1-07-weather-d11",
+      "type": "multipleChoice",
+      "prompt_en": "Choose: It is going to rain tomorrow.",
+      "canonical_dutch": "Het gaat morgen regenen.",
+      "expected_english": "It is going to rain tomorrow.",
+      "audio_voice_id": "VR6AewLTigWG4xSOukaG",
+      "hints": [],
+      "options": ["Het gaat morgen regenen.", "Morgen regen het gaat.", "Het regent morgen gaan.", "Morgen het regen gaat."]
+    },
+    {
+      "slug": "a1-07-weather-d12",
+      "type": "fillBlank",
+      "prompt_en": "Fill in the blank: Het is ___ buiten. (warm)",
+      "canonical_dutch": "warm",
+      "expected_english": "warm",
+      "audio_voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-07-weather-d13",
+      "type": "fillBlank",
+      "prompt_en": "Fill in the blank: De ___ schijnt. (sun)",
+      "canonical_dutch": "zon",
+      "expected_english": "sun",
+      "audio_voice_id": "AZnzlk1XvdvUeBnXmlld",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-07-weather-d14",
+      "type": "speak",
+      "prompt_en": "Say in Dutch: It is windy today.",
+      "canonical_dutch": "Het waait vandaag.",
+      "expected_english": "It is windy today (lit. It blows today).",
+      "audio_voice_id": "ErXwobaYiN019PkySvjV",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-07-weather-d15",
+      "type": "speak",
+      "prompt_en": "Say in Dutch: I like rainy weather.",
+      "canonical_dutch": "Ik houd van regenachtig weer.",
+      "expected_english": "I like rainy weather.",
+      "audio_voice_id": "EXAVITQu4vr4xnSDxMaL",
+      "hints": [],
+      "options": null
+    }
+  ]
+}

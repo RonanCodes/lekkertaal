@@ -1,0 +1,163 @@
+{
+  "unit": {
+    "slug": "a1-unit-01-greetings",
+    "title_nl": "Begroetingen",
+    "title_en": "Greetings",
+    "description": "Hallo, dag, goedemorgen, en hoe stel je jezelf voor.",
+    "cefr_level": "A1",
+    "order": 1,
+    "grammar_concept_slug": null
+  },
+  "drills": [
+    {
+      "slug": "a1-01-greetings-d01",
+      "type": "translate",
+      "prompt_en": "Hello, how are you?",
+      "canonical_dutch": "Hallo, hoe gaat het?",
+      "expected_english": "Hello, how are you?",
+      "audio_voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "hints": ["hallo", "hoe gaat het"],
+      "options": null
+    },
+    {
+      "slug": "a1-01-greetings-d02",
+      "type": "translate",
+      "prompt_en": "Good morning.",
+      "canonical_dutch": "Goedemorgen.",
+      "expected_english": "Good morning.",
+      "audio_voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "hints": ["goede", "morgen"],
+      "options": null
+    },
+    {
+      "slug": "a1-01-greetings-d03",
+      "type": "translate",
+      "prompt_en": "Good afternoon.",
+      "canonical_dutch": "Goedemiddag.",
+      "expected_english": "Good afternoon.",
+      "audio_voice_id": "EXAVITQu4vr4xnSDxMaL",
+      "hints": ["middag"],
+      "options": null
+    },
+    {
+      "slug": "a1-01-greetings-d04",
+      "type": "translate",
+      "prompt_en": "Good evening.",
+      "canonical_dutch": "Goedenavond.",
+      "expected_english": "Good evening.",
+      "audio_voice_id": "EXAVITQu4vr4xnSDxMaL",
+      "hints": ["avond"],
+      "options": null
+    },
+    {
+      "slug": "a1-01-greetings-d05",
+      "type": "translate",
+      "prompt_en": "Goodbye.",
+      "canonical_dutch": "Tot ziens.",
+      "expected_english": "Goodbye.",
+      "audio_voice_id": "AZnzlk1XvdvUeBnXmlld",
+      "hints": ["tot"],
+      "options": null
+    },
+    {
+      "slug": "a1-01-greetings-d06",
+      "type": "translate",
+      "prompt_en": "See you tomorrow.",
+      "canonical_dutch": "Tot morgen.",
+      "expected_english": "See you tomorrow.",
+      "audio_voice_id": "AZnzlk1XvdvUeBnXmlld",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-01-greetings-d07",
+      "type": "multipleChoice",
+      "prompt_en": "Choose the correct translation of: My name is Ronan.",
+      "canonical_dutch": "Ik heet Ronan.",
+      "expected_english": "My name is Ronan.",
+      "audio_voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "hints": [],
+      "options": ["Ik heet Ronan.", "Ik ben Ronan jaar.", "Mij naam Ronan.", "Het is Ronan."]
+    },
+    {
+      "slug": "a1-01-greetings-d08",
+      "type": "multipleChoice",
+      "prompt_en": "Choose the correct translation of: What is your name?",
+      "canonical_dutch": "Hoe heet je?",
+      "expected_english": "What is your name?",
+      "audio_voice_id": "AZnzlk1XvdvUeBnXmlld",
+      "hints": [],
+      "options": ["Hoe heet je?", "Wat ben je?", "Wie is jij?", "Hoe oud ben je?"]
+    },
+    {
+      "slug": "a1-01-greetings-d09",
+      "type": "multipleChoice",
+      "prompt_en": "Choose the correct translation of: I am from Ireland.",
+      "canonical_dutch": "Ik kom uit Ierland.",
+      "expected_english": "I am from Ireland.",
+      "audio_voice_id": "ErXwobaYiN019PkySvjV",
+      "hints": [],
+      "options": ["Ik kom uit Ierland.", "Ik ga naar Ierland.", "Ik ben Iers ben.", "Mijn Ierland is."]
+    },
+    {
+      "slug": "a1-01-greetings-d10",
+      "type": "fillBlank",
+      "prompt_en": "Fill in the blank: Hoe ___ het met je?",
+      "canonical_dutch": "gaat",
+      "expected_english": "goes",
+      "audio_voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "hints": ["gaan"],
+      "options": null
+    },
+    {
+      "slug": "a1-01-greetings-d11",
+      "type": "fillBlank",
+      "prompt_en": "Fill in the blank: ___ heet je?",
+      "canonical_dutch": "Hoe",
+      "expected_english": "How",
+      "audio_voice_id": "EXAVITQu4vr4xnSDxMaL",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-01-greetings-d12",
+      "type": "fillBlank",
+      "prompt_en": "Fill in the blank: Goedemorgen, ___ gaat het?",
+      "canonical_dutch": "hoe",
+      "expected_english": "how",
+      "audio_voice_id": "ErXwobaYiN019PkySvjV",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-01-greetings-d13",
+      "type": "translate",
+      "prompt_en": "Nice to meet you.",
+      "canonical_dutch": "Aangenaam.",
+      "expected_english": "Nice to meet you.",
+      "audio_voice_id": "VR6AewLTigWG4xSOukaG",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-01-greetings-d14",
+      "type": "speak",
+      "prompt_en": "Say in Dutch: Good morning, how are you?",
+      "canonical_dutch": "Goedemorgen, hoe gaat het?",
+      "expected_english": "Good morning, how are you?",
+      "audio_voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-01-greetings-d15",
+      "type": "speak",
+      "prompt_en": "Say in Dutch: My name is Anna and I am from Amsterdam.",
+      "canonical_dutch": "Ik heet Anna en ik kom uit Amsterdam.",
+      "expected_english": "My name is Anna and I am from Amsterdam.",
+      "audio_voice_id": "AZnzlk1XvdvUeBnXmlld",
+      "hints": [],
+      "options": null
+    }
+  ]
+}

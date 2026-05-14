@@ -1,0 +1,163 @@
+{
+  "unit": {
+    "slug": "a1-unit-06-telling-time",
+    "title_nl": "De tijd",
+    "title_en": "Telling time",
+    "description": "Hoe laat is het, kwart over, half, kwart voor. Clock vocabulary.",
+    "cefr_level": "A1",
+    "order": 6,
+    "grammar_concept_slug": null
+  },
+  "drills": [
+    {
+      "slug": "a1-06-time-d01",
+      "type": "translate",
+      "prompt_en": "What time is it?",
+      "canonical_dutch": "Hoe laat is het?",
+      "expected_english": "What time is it?",
+      "audio_voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-06-time-d02",
+      "type": "translate",
+      "prompt_en": "It is one o'clock.",
+      "canonical_dutch": "Het is een uur.",
+      "expected_english": "It is one o'clock.",
+      "audio_voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-06-time-d03",
+      "type": "translate",
+      "prompt_en": "It is quarter past two.",
+      "canonical_dutch": "Het is kwart over twee.",
+      "expected_english": "It is quarter past two.",
+      "audio_voice_id": "AZnzlk1XvdvUeBnXmlld",
+      "hints": ["kwart"],
+      "options": null
+    },
+    {
+      "slug": "a1-06-time-d04",
+      "type": "translate",
+      "prompt_en": "It is half past three.",
+      "canonical_dutch": "Het is half vier.",
+      "expected_english": "It is half past three.",
+      "audio_voice_id": "AZnzlk1XvdvUeBnXmlld",
+      "hints": ["half"],
+      "options": null
+    },
+    {
+      "slug": "a1-06-time-d05",
+      "type": "translate",
+      "prompt_en": "It is quarter to five.",
+      "canonical_dutch": "Het is kwart voor vijf.",
+      "expected_english": "It is quarter to five.",
+      "audio_voice_id": "ErXwobaYiN019PkySvjV",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-06-time-d06",
+      "type": "translate",
+      "prompt_en": "morning",
+      "canonical_dutch": "ochtend",
+      "expected_english": "morning",
+      "audio_voice_id": "ErXwobaYiN019PkySvjV",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-06-time-d07",
+      "type": "translate",
+      "prompt_en": "afternoon",
+      "canonical_dutch": "middag",
+      "expected_english": "afternoon",
+      "audio_voice_id": "EXAVITQu4vr4xnSDxMaL",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-06-time-d08",
+      "type": "translate",
+      "prompt_en": "evening",
+      "canonical_dutch": "avond",
+      "expected_english": "evening",
+      "audio_voice_id": "EXAVITQu4vr4xnSDxMaL",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-06-time-d09",
+      "type": "multipleChoice",
+      "prompt_en": "Choose: It is ten o'clock.",
+      "canonical_dutch": "Het is tien uur.",
+      "expected_english": "It is ten o'clock.",
+      "audio_voice_id": "pNInz6obpgDQGcFmaJgB",
+      "hints": [],
+      "options": ["Het is tien uur.", "Het is tien klok.", "Tien uur is het.", "Het uur tien."]
+    },
+    {
+      "slug": "a1-06-time-d10",
+      "type": "multipleChoice",
+      "prompt_en": "Choose: It is half past seven (Dutch convention).",
+      "canonical_dutch": "Het is half acht.",
+      "expected_english": "It is half past seven (lit. half to eight).",
+      "audio_voice_id": "pNInz6obpgDQGcFmaJgB",
+      "hints": ["Dutch counts toward the next hour"],
+      "options": ["Het is half acht.", "Het is half zeven.", "Het is half negen.", "Half zeven is het."]
+    },
+    {
+      "slug": "a1-06-time-d11",
+      "type": "multipleChoice",
+      "prompt_en": "Choose: At what time does the meeting start?",
+      "canonical_dutch": "Hoe laat begint de vergadering?",
+      "expected_english": "At what time does the meeting start?",
+      "audio_voice_id": "VR6AewLTigWG4xSOukaG",
+      "hints": [],
+      "options": ["Hoe laat begint de vergadering?", "Wanneer is de vergadering klok?", "Hoe laat de vergadering begint?", "Wat tijd vergadering?"]
+    },
+    {
+      "slug": "a1-06-time-d12",
+      "type": "fillBlank",
+      "prompt_en": "Fill in: Het is kwart ___ vier. (past)",
+      "canonical_dutch": "over",
+      "expected_english": "past",
+      "audio_voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-06-time-d13",
+      "type": "fillBlank",
+      "prompt_en": "Fill in: Het is ___ uur. (eight)",
+      "canonical_dutch": "acht",
+      "expected_english": "eight",
+      "audio_voice_id": "AZnzlk1XvdvUeBnXmlld",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-06-time-d14",
+      "type": "speak",
+      "prompt_en": "Say in Dutch: It is nine o'clock.",
+      "canonical_dutch": "Het is negen uur.",
+      "expected_english": "It is nine o'clock.",
+      "audio_voice_id": "ErXwobaYiN019PkySvjV",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-06-time-d15",
+      "type": "speak",
+      "prompt_en": "Say in Dutch: The train leaves at half past six.",
+      "canonical_dutch": "De trein vertrekt om half zeven.",
+      "expected_english": "The train leaves at half past six (lit. half to seven).",
+      "audio_voice_id": "EXAVITQu4vr4xnSDxMaL",
+      "hints": [],
+      "options": null
+    }
+  ]
+}

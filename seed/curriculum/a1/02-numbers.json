@@ -1,0 +1,163 @@
+{
+  "unit": {
+    "slug": "a1-unit-02-numbers",
+    "title_nl": "Getallen 0 tot 100",
+    "title_en": "Numbers 0 to 100",
+    "description": "Tellen, ages, telephone numbers, basic counting.",
+    "cefr_level": "A1",
+    "order": 2,
+    "grammar_concept_slug": null
+  },
+  "drills": [
+    {
+      "slug": "a1-02-numbers-d01",
+      "type": "translate",
+      "prompt_en": "one",
+      "canonical_dutch": "een",
+      "expected_english": "one",
+      "audio_voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-02-numbers-d02",
+      "type": "translate",
+      "prompt_en": "three",
+      "canonical_dutch": "drie",
+      "expected_english": "three",
+      "audio_voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-02-numbers-d03",
+      "type": "translate",
+      "prompt_en": "seven",
+      "canonical_dutch": "zeven",
+      "expected_english": "seven",
+      "audio_voice_id": "AZnzlk1XvdvUeBnXmlld",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-02-numbers-d04",
+      "type": "translate",
+      "prompt_en": "ten",
+      "canonical_dutch": "tien",
+      "expected_english": "ten",
+      "audio_voice_id": "AZnzlk1XvdvUeBnXmlld",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-02-numbers-d05",
+      "type": "translate",
+      "prompt_en": "twelve",
+      "canonical_dutch": "twaalf",
+      "expected_english": "twelve",
+      "audio_voice_id": "ErXwobaYiN019PkySvjV",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-02-numbers-d06",
+      "type": "translate",
+      "prompt_en": "twenty",
+      "canonical_dutch": "twintig",
+      "expected_english": "twenty",
+      "audio_voice_id": "ErXwobaYiN019PkySvjV",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-02-numbers-d07",
+      "type": "translate",
+      "prompt_en": "twenty-one",
+      "canonical_dutch": "eenentwintig",
+      "expected_english": "twenty-one",
+      "audio_voice_id": "EXAVITQu4vr4xnSDxMaL",
+      "hints": ["een", "twintig"],
+      "options": null
+    },
+    {
+      "slug": "a1-02-numbers-d08",
+      "type": "translate",
+      "prompt_en": "fifty",
+      "canonical_dutch": "vijftig",
+      "expected_english": "fifty",
+      "audio_voice_id": "EXAVITQu4vr4xnSDxMaL",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-02-numbers-d09",
+      "type": "translate",
+      "prompt_en": "one hundred",
+      "canonical_dutch": "honderd",
+      "expected_english": "one hundred",
+      "audio_voice_id": "pNInz6obpgDQGcFmaJgB",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-02-numbers-d10",
+      "type": "multipleChoice",
+      "prompt_en": "Which is forty-five?",
+      "canonical_dutch": "vijfenveertig",
+      "expected_english": "forty-five",
+      "audio_voice_id": "pNInz6obpgDQGcFmaJgB",
+      "hints": [],
+      "options": ["vijfenveertig", "vierenvijftig", "vijftig", "veertien"]
+    },
+    {
+      "slug": "a1-02-numbers-d11",
+      "type": "multipleChoice",
+      "prompt_en": "Which is thirty-three?",
+      "canonical_dutch": "drieëndertig",
+      "expected_english": "thirty-three",
+      "audio_voice_id": "VR6AewLTigWG4xSOukaG",
+      "hints": [],
+      "options": ["drieëndertig", "drieendertig", "drieëntwintig", "dertien"]
+    },
+    {
+      "slug": "a1-02-numbers-d12",
+      "type": "multipleChoice",
+      "prompt_en": "Which is sixty-nine?",
+      "canonical_dutch": "negenenzestig",
+      "expected_english": "sixty-nine",
+      "audio_voice_id": "VR6AewLTigWG4xSOukaG",
+      "hints": [],
+      "options": ["negenenzestig", "zesennegentig", "zestienennegen", "zestig"]
+    },
+    {
+      "slug": "a1-02-numbers-d13",
+      "type": "fillBlank",
+      "prompt_en": "Fill in: 14 = ___",
+      "canonical_dutch": "veertien",
+      "expected_english": "fourteen",
+      "audio_voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-02-numbers-d14",
+      "type": "speak",
+      "prompt_en": "Say in Dutch: I am thirty-two years old.",
+      "canonical_dutch": "Ik ben tweeëndertig jaar oud.",
+      "expected_english": "I am thirty-two years old.",
+      "audio_voice_id": "AZnzlk1XvdvUeBnXmlld",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-02-numbers-d15",
+      "type": "speak",
+      "prompt_en": "Count from one to ten in Dutch.",
+      "canonical_dutch": "een twee drie vier vijf zes zeven acht negen tien",
+      "expected_english": "one two three four five six seven eight nine ten",
+      "audio_voice_id": "EXAVITQu4vr4xnSDxMaL",
+      "hints": [],
+      "options": null
+    }
+  ]
+}

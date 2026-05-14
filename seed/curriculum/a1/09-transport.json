@@ -1,0 +1,163 @@
+{
+  "unit": {
+    "slug": "a1-unit-09-transport",
+    "title_nl": "Vervoer",
+    "title_en": "Transport",
+    "description": "Bike, train, bus, walking. Moving around the Netherlands.",
+    "cefr_level": "A1",
+    "order": 9,
+    "grammar_concept_slug": null
+  },
+  "drills": [
+    {
+      "slug": "a1-09-transport-d01",
+      "type": "translate",
+      "prompt_en": "bike",
+      "canonical_dutch": "fiets",
+      "expected_english": "bike",
+      "audio_voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-09-transport-d02",
+      "type": "translate",
+      "prompt_en": "train",
+      "canonical_dutch": "trein",
+      "expected_english": "train",
+      "audio_voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-09-transport-d03",
+      "type": "translate",
+      "prompt_en": "bus",
+      "canonical_dutch": "bus",
+      "expected_english": "bus",
+      "audio_voice_id": "AZnzlk1XvdvUeBnXmlld",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-09-transport-d04",
+      "type": "translate",
+      "prompt_en": "car",
+      "canonical_dutch": "auto",
+      "expected_english": "car",
+      "audio_voice_id": "AZnzlk1XvdvUeBnXmlld",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-09-transport-d05",
+      "type": "translate",
+      "prompt_en": "tram",
+      "canonical_dutch": "tram",
+      "expected_english": "tram",
+      "audio_voice_id": "ErXwobaYiN019PkySvjV",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-09-transport-d06",
+      "type": "translate",
+      "prompt_en": "I go by bike.",
+      "canonical_dutch": "Ik ga met de fiets.",
+      "expected_english": "I go by bike.",
+      "audio_voice_id": "ErXwobaYiN019PkySvjV",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-09-transport-d07",
+      "type": "translate",
+      "prompt_en": "I take the train.",
+      "canonical_dutch": "Ik neem de trein.",
+      "expected_english": "I take the train.",
+      "audio_voice_id": "EXAVITQu4vr4xnSDxMaL",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-09-transport-d08",
+      "type": "translate",
+      "prompt_en": "The bus is late.",
+      "canonical_dutch": "De bus is te laat.",
+      "expected_english": "The bus is late.",
+      "audio_voice_id": "EXAVITQu4vr4xnSDxMaL",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-09-transport-d09",
+      "type": "multipleChoice",
+      "prompt_en": "Choose: How do you get to work?",
+      "canonical_dutch": "Hoe ga je naar je werk?",
+      "expected_english": "How do you get to work?",
+      "audio_voice_id": "pNInz6obpgDQGcFmaJgB",
+      "hints": [],
+      "options": ["Hoe ga je naar je werk?", "Wat ga je werk?", "Hoe ben je werk?", "Hoe komt jij werk?"]
+    },
+    {
+      "slug": "a1-09-transport-d10",
+      "type": "multipleChoice",
+      "prompt_en": "Choose: One ticket to Amsterdam, please.",
+      "canonical_dutch": "Eén kaartje naar Amsterdam, alstublieft.",
+      "expected_english": "One ticket to Amsterdam, please.",
+      "audio_voice_id": "pNInz6obpgDQGcFmaJgB",
+      "hints": [],
+      "options": ["Eén kaartje naar Amsterdam, alstublieft.", "Een kaart aan Amsterdam graag.", "Een ticket Amsterdam alstublieft.", "Een naar Amsterdam reis."]
+    },
+    {
+      "slug": "a1-09-transport-d11",
+      "type": "multipleChoice",
+      "prompt_en": "Choose: The station is on the right.",
+      "canonical_dutch": "Het station is aan de rechterkant.",
+      "expected_english": "The station is on the right.",
+      "audio_voice_id": "VR6AewLTigWG4xSOukaG",
+      "hints": [],
+      "options": ["Het station is aan de rechterkant.", "Station rechts is.", "Het station op rechts is.", "Aan rechts is station."]
+    },
+    {
+      "slug": "a1-09-transport-d12",
+      "type": "fillBlank",
+      "prompt_en": "Fill in the blank: Ik ga met de ___ naar werk. (bike)",
+      "canonical_dutch": "fiets",
+      "expected_english": "bike",
+      "audio_voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-09-transport-d13",
+      "type": "fillBlank",
+      "prompt_en": "Fill in the blank: De ___ vertrekt om acht uur. (train)",
+      "canonical_dutch": "trein",
+      "expected_english": "train",
+      "audio_voice_id": "AZnzlk1XvdvUeBnXmlld",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-09-transport-d14",
+      "type": "speak",
+      "prompt_en": "Say in Dutch: I cycle to school.",
+      "canonical_dutch": "Ik fiets naar school.",
+      "expected_english": "I cycle to school.",
+      "audio_voice_id": "ErXwobaYiN019PkySvjV",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "a1-09-transport-d15",
+      "type": "speak",
+      "prompt_en": "Say in Dutch: Does this bus go to the centre?",
+      "canonical_dutch": "Gaat deze bus naar het centrum?",
+      "expected_english": "Does this bus go to the centre?",
+      "audio_voice_id": "EXAVITQu4vr4xnSDxMaL",
+      "hints": [],
+      "options": null
+    }
+  ]
+}
