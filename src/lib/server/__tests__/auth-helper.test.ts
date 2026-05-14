@@ -150,6 +150,36 @@ describe("requireUserClerkId / E2E header bypass", () => {
   });
 });
 
+describe("tryGetUserClerkId (non-throwing variant)", () => {
+  beforeEach(() => {
+    authMock.mockReset();
+    ctxMock.mockReset();
+    getRequestHeaderMock.mockReset();
+    getRequestHeaderMock.mockReturnValue(undefined);
+  });
+
+  it("returns the real Clerk userId when auth() resolves one", async () => {
+    ctxMock.mockReturnValue({ env: {}, ctx: {} });
+    authMock.mockResolvedValue({ userId: "user_real_landing" });
+    const { tryGetUserClerkId } = await loadHelper();
+    await expect(tryGetUserClerkId()).resolves.toBe("user_real_landing");
+  });
+
+  it("returns the seed id when the DEV_BYPASS_AUTH bypass is active", async () => {
+    ctxMock.mockReturnValue({ env: { DEV_BYPASS_AUTH: "true" }, ctx: {} });
+    const { tryGetUserClerkId, DEV_BYPASS_CLERK_ID } = await loadHelper();
+    await expect(tryGetUserClerkId()).resolves.toBe(DEV_BYPASS_CLERK_ID);
+    expect(authMock).not.toHaveBeenCalled();
+  });
+
+  it("returns null when neither bypass nor a real session is present (does not throw)", async () => {
+    ctxMock.mockReturnValue({ env: {}, ctx: {} });
+    authMock.mockResolvedValue({ userId: null });
+    const { tryGetUserClerkId } = await loadHelper();
+    await expect(tryGetUserClerkId()).resolves.toBeNull();
+  });
+});
+
 describe("requireUserClerkId / production path", () => {
   beforeEach(() => {
     authMock.mockReset();

@@ -36,17 +36,15 @@ export const DEV_BYPASS_CLERK_ID = "seed_ronan";
 export const E2E_BYPASS_HEADER = "x-lekkertaal-e2e-bypass";
 
 /**
- * Resolve the current user's Clerk id, or throw a redirect to `/sign-in`.
+ * Resolve the current user's Clerk id, or `null` if not authenticated.
  *
- * In Vite dev mode (only), two shortcuts are honoured:
- *   - `DEV_BYPASS_AUTH=true` in `.dev.vars` returns the seed user id.
- *   - `x-lekkertaal-e2e-bypass: <E2E_BYPASS_TOKEN>` header returns the seed
- *     user id (e2e playwright path).
- *
- * In every other build (prod worker, preview, prod build of dev) the dev
- * branch is dead-code-eliminated and `auth()` is called.
+ * Non-throwing variant of `requireUserClerkId`. Same dev/e2e bypass logic;
+ * returns `null` instead of throwing a redirect when there is no session.
+ * Use this for loaders that want to *probe* auth state without forcing a
+ * redirect (e.g. the public landing route deciding whether to auto-forward
+ * an already-signed-in user to `/app/path`).
  */
-export async function requireUserClerkId(): Promise<string> {
+export async function tryGetUserClerkId(): Promise<string | null> {
   if (import.meta.env.DEV) {
     const ctx = getWorkerContext();
     const fromCtx = ctx?.env.DEV_BYPASS_AUTH === "true";
@@ -73,6 +71,22 @@ export async function requireUserClerkId(): Promise<string> {
     }
   }
   const a = await auth();
-  if (!a.userId) throw redirect({ to: "/sign-in" });
-  return a.userId;
+  return a.userId ?? null;
+}
+
+/**
+ * Resolve the current user's Clerk id, or throw a redirect to `/sign-in`.
+ *
+ * In Vite dev mode (only), two shortcuts are honoured:
+ *   - `DEV_BYPASS_AUTH=true` in `.dev.vars` returns the seed user id.
+ *   - `x-lekkertaal-e2e-bypass: <E2E_BYPASS_TOKEN>` header returns the seed
+ *     user id (e2e playwright path).
+ *
+ * In every other build (prod worker, preview, prod build of dev) the dev
+ * branch is dead-code-eliminated and `auth()` is called.
+ */
+export async function requireUserClerkId(): Promise<string> {
+  const id = await tryGetUserClerkId();
+  if (!id) throw redirect({ to: "/sign-in" });
+  return id;
 }
