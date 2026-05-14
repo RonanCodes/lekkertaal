@@ -13,10 +13,10 @@
  */
 import Database from "better-sqlite3";
 import { drizzle, type BetterSQLite3Database } from "drizzle-orm/better-sqlite3";
-import type { DrizzleD1Database } from "drizzle-orm/d1";
 import { readdirSync, readFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import * as schema from "../../../db/schema";
+import type { DB } from "../../../db/client";
 
 export type TestDb = BetterSQLite3Database<typeof schema> & {
   $sqlite: Database.Database;
@@ -54,7 +54,7 @@ export function makeTestDb(): TestDb {
     }
   }
 
-  const drz = drizzle(sqlite, { schema }) as TestDb;
+  const drz = drizzle(sqlite, { schema }) as unknown as TestDb;
   drz.$sqlite = sqlite;
   return drz;
 }
@@ -64,8 +64,8 @@ export function makeTestDb(): TestDb {
  * production server fns expect. Safe at runtime because both drivers expose
  * the same Drizzle query-builder surface for the operations under test.
  */
-export function asD1(drz: TestDb): DrizzleD1Database {
-  return drz as unknown as DrizzleD1Database;
+export function asD1(drz: TestDb): DB {
+  return drz as unknown as DB;
 }
 
 /**

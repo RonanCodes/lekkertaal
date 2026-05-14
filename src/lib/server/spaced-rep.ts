@@ -17,7 +17,7 @@
  */
 import { createServerFn } from "@tanstack/react-start";
 import { db } from "../../db/client";
-import type { DrizzleD1Database } from "drizzle-orm/d1";
+import type { DB } from "../../db/client";
 import { users, spacedRepQueue } from "../../db/schema";
 import { and, asc, eq, lte, sql, desc } from "drizzle-orm";
 import { requireWorkerContext } from "../../entry.server";
@@ -57,7 +57,7 @@ async function currentUserId(drz: ReturnType<typeof db>): Promise<number> {
 
 /** Insert or upsert one review-queue row, respecting the per-user cap. */
 async function upsertQueueRow(
-  drz: DrizzleD1Database,
+  drz: DB,
   row: {
     userId: number;
     itemType: string;
@@ -128,7 +128,7 @@ async function upsertQueueRow(
 
 /** Called from gradeRoleplaySession after errors are inserted. */
 export async function enqueueRoleplayErrors(
-  drz: DrizzleD1Database,
+  drz: DB,
   userId: number,
   errors: Array<{
     sessionId: number;
@@ -158,7 +158,7 @@ export async function enqueueRoleplayErrors(
 
 /** Called from recordDrillResult when a learner answers incorrectly. */
 export async function enqueueDrillMistake(
-  drz: DrizzleD1Database,
+  drz: DB,
   userId: number,
   exerciseId: number,
   payload: Record<string, unknown>,

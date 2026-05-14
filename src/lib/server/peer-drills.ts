@@ -20,7 +20,7 @@
  * `in_app` rows directly.
  */
 import { and, eq, or, sql } from "drizzle-orm";
-import type { DrizzleD1Database } from "drizzle-orm/d1";
+import type { DB } from "../../db/client";
 import { friendships, notificationLog, peerDrills, users } from "../../db/schema";
 
 export type PeerDrillStatus = "pending" | "completed" | "skipped";
@@ -56,7 +56,7 @@ export type InboxEntry = {
  * PeerDrillError("not_friends") otherwise.
  */
 async function requireAcceptedFriendship(
-  drz: DrizzleD1Database,
+  drz: DB,
   a: number,
   b: number,
 ): Promise<void> {
@@ -83,7 +83,7 @@ async function requireAcceptedFriendship(
  * Trims the prompt; rejects empty strings to keep the inbox clean.
  */
 export async function sendPeerDrill(
-  drz: DrizzleD1Database,
+  drz: DB,
   fromUserId: number,
   toUserId: number,
   prompt: string,
@@ -127,7 +127,7 @@ export async function sendPeerDrill(
  * `from` display name for cheap UI rendering.
  */
 export async function listInbox(
-  drz: DrizzleD1Database,
+  drz: DB,
   userId: number,
 ): Promise<InboxEntry[]> {
   const rows = await drz
@@ -163,7 +163,7 @@ export async function listInbox(
  * stamps `completed_at`, and queues an in-app notification to the sender.
  */
 export async function submitPeerDrill(
-  drz: DrizzleD1Database,
+  drz: DB,
   drillId: number,
   recipientId: number,
   answer: string,

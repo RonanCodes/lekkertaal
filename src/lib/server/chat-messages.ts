@@ -25,13 +25,13 @@
  * of truth.
  */
 import { asc, eq } from "drizzle-orm";
-import type { DrizzleD1Database } from "drizzle-orm/d1";
+import type { DB } from "../../db/client";
 import { chatMessages, roleplaySessions } from "../../db/schema";
 import { redactText, summariseMatches } from "./redaction-middleware";
 import { log } from "../logger";
 import type { UIMessage } from "ai";
 
-type Drz = DrizzleD1Database<Record<string, unknown>>;
+type Drz = DB;
 
 export type PersistedMessage = {
   id: string; // client_message_id

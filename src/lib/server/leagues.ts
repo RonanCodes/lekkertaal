@@ -29,7 +29,7 @@
  * `dryRun` mode: returns the planned moves without writing. Used for the
  * first prod run.
  */
-import type { DrizzleD1Database } from "drizzle-orm/d1";
+import type { DB } from "../../db/client";
 import { and, eq, sql } from "drizzle-orm";
 import { leagues, xpEvents } from "../../db/schema";
 
@@ -149,7 +149,7 @@ export function rankTier(
  * UTC days. Used by the feature gate.
  */
 export async function countActiveUsersLastWeek(
-  drz: DrizzleD1Database,
+  drz: DB,
   now: Date = new Date(),
 ): Promise<number> {
   const since = new Date(now);
@@ -171,7 +171,7 @@ export async function countActiveUsersLastWeek(
  * cause a permanent drift.
  */
 export async function refreshWeeklyXp(
-  drz: DrizzleD1Database,
+  drz: DB,
   weekStartDate: string,
 ): Promise<void> {
   const weekEnd = addDays(weekStartDate, 7); // exclusive
@@ -212,7 +212,7 @@ export async function refreshWeeklyXp(
  * Returns a result describing the plan + counts.
  */
 export async function runWeeklyLeagueRoll(
-  drz: DrizzleD1Database,
+  drz: DB,
   options: { now?: Date; dryRun?: boolean } = {},
 ): Promise<LeagueRollResult> {
   const now = options.now ?? new Date();
@@ -336,7 +336,7 @@ export async function runWeeklyLeagueRoll(
  * user's first week before the next Monday roll).
  */
 export async function getCurrentLeagueForUser(
-  drz: DrizzleD1Database,
+  drz: DB,
   userId: number,
   now: Date = new Date(),
 ): Promise<{ tier: number; weeklyXp: number; weekStartDate: string } | null> {

@@ -18,7 +18,7 @@
  *    daily_completions hour-of-day. Best-effort: we approximate using ISO
  *    creation timestamp's UTC hour (no per-user TZ math in v0).
  */
-import type { DrizzleD1Database } from "drizzle-orm/d1";
+import type { DB } from "../../db/client";
 import {
   users,
   badges,
@@ -46,7 +46,7 @@ export type AwardedBadge = {
 };
 
 export async function awardBadgesIfEligible(
-  drz: DrizzleD1Database,
+  drz: DB,
   userId: number,
 ): Promise<AwardedBadge[]> {
   const me = await drz.select().from(users).where(eq(users.id, userId)).limit(1);
@@ -87,7 +87,7 @@ export async function awardBadgesIfEligible(
 }
 
 async function checkRule(
-  drz: DrizzleD1Database,
+  drz: DB,
   userId: number,
   user: typeof users.$inferSelect,
   rule: BadgeRule,
@@ -194,7 +194,7 @@ export const PROFILE_BADGE_SUMMARY_LIMIT = 30;
 
 /** Read all badges (locked + unlocked) for the profile grid. */
 export async function getProfileBadges(
-  drz: DrizzleD1Database,
+  drz: DB,
   userId: number,
 ): Promise<
   Array<{

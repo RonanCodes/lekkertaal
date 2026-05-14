@@ -22,7 +22,7 @@
  * The cron-based midnight reset (acceptance #6) lives in entry.server.ts
  * scheduled() and is wired by the existing 0 * * * * cron.
  */
-import type { DrizzleD1Database } from "drizzle-orm/d1";
+import type { DB } from "../../db/client";
 import {
   users,
   xpEvents,
@@ -65,7 +65,7 @@ function yesterdayUtc(): string {
  * notify users that their freeze was consumed.
  */
 export async function bumpStreakIfFirstToday(
-  drz: DrizzleD1Database,
+  drz: DB,
   userId: number,
 ): Promise<{
   streakDays: number;
@@ -135,7 +135,7 @@ export async function bumpStreakIfFirstToday(
 
 /** Upsert today's daily_completions row, accumulating xp/lessons/drills. */
 export async function upsertDailyCompletion(
-  drz: DrizzleD1Database,
+  drz: DB,
   userId: number,
   delta: { xp?: number; lessons?: number; drills?: number; freezeUsed?: boolean },
 ): Promise<void> {
@@ -175,7 +175,7 @@ export async function upsertDailyCompletion(
  * touch the streak (because the user did some practice today).
  */
 export async function awardLessonComplete(
-  drz: DrizzleD1Database,
+  drz: DB,
   userId: number,
   lessonId: number,
   alreadyDone: boolean,
@@ -243,7 +243,7 @@ export async function awardLessonComplete(
  * the flat-rate coin grant on a passing attempt and updates daily/streak.
  */
 export async function awardRoleplayComplete(
-  drz: DrizzleD1Database,
+  drz: DB,
   userId: number,
   sessionId: number,
   passed: boolean,
@@ -309,7 +309,7 @@ export async function awardRoleplayComplete(
  * Called from entry.server.ts scheduled(). The 0 * * * * cron runs every
  * hour so this can be cheap; we only mutate users who actually need it.
  */
-export async function resetStaleStreaks(drz: DrizzleD1Database): Promise<number> {
+export async function resetStaleStreaks(drz: DB): Promise<number> {
   const yesterday = yesterdayUtc();
   // Find candidates: anyone with streakDays > 0 whose last active is NOT
   // today and NOT yesterday (so they missed at least one full day).

@@ -29,12 +29,12 @@
 import { tool } from "ai";
 import { z } from "zod";
 import { eq } from "drizzle-orm";
-import type { DrizzleD1Database } from "drizzle-orm/d1";
+import type { DB } from "../../db/client";
 import { vocab, roleplayErrors } from "../../db/schema";
 import { log } from "../logger";
 
 export type RoleplayToolDeps = {
-  drz: DrizzleD1Database;
+  drz: DB;
   userId: number;
   sessionId: number | null;
 };

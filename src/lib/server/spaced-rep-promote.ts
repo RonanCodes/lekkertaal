@@ -33,7 +33,7 @@
  * individual mistakes.
  */
 import { streamText, stepCountIs, tool, type LanguageModel } from "ai";
-import type { DrizzleD1Database } from "drizzle-orm/d1";
+import type { DB } from "../../db/client";
 import { and, eq } from "drizzle-orm";
 import { z } from "zod";
 import { spacedRepQueue } from "../../db/schema";
@@ -111,7 +111,7 @@ function addDays(iso: string, days: number): string {
  * agent run; the agent is prompted to call once per concept.
  */
 export async function applyPromoteOrDemote(
-  drz: DrizzleD1Database,
+  drz: DB,
   userId: number,
   call: PromoteToolCall,
   sessionId: number,
@@ -253,7 +253,7 @@ Decide the 1-3 concepts to promote or demote. Call the tool once per concept.`;
  */
 export async function promoteFromRoleplay(
   model: LanguageModel,
-  drz: DrizzleD1Database,
+  drz: DB,
   input: PromoteFromRoleplayInput,
 ): Promise<PromoteFromRoleplayResult> {
   const { system, prompt } = buildPromotePrompt(input);

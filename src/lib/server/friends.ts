@@ -23,7 +23,7 @@
  *     (re-invites allowed after decline).
  */
 import { and, eq, or, sql } from "drizzle-orm";
-import type { DrizzleD1Database } from "drizzle-orm/d1";
+import type { DB } from "../../db/client";
 import { friendships, users } from "../../db/schema";
 
 export type FriendshipStatus = "pending" | "accepted" | "declined";
@@ -65,7 +65,7 @@ export type PendingRequestEntry = {
  * caller's numeric id once and pass it into the helpers below.
  */
 export async function getUserIdByClerkId(
-  drz: DrizzleD1Database,
+  drz: DB,
   clerkId: string,
 ): Promise<number | null> {
   const rows = await drz
@@ -81,7 +81,7 @@ export async function getUserIdByClerkId(
  * unknown.
  */
 export async function findUserByDisplayName(
-  drz: DrizzleD1Database,
+  drz: DB,
   displayName: string,
 ): Promise<{ id: number; displayName: string } | null> {
   const rows = await drz
@@ -96,7 +96,7 @@ export async function findUserByDisplayName(
  * Find any existing friendship row between two users, in either direction.
  */
 async function findExistingFriendship(
-  drz: DrizzleD1Database,
+  drz: DB,
   a: number,
   b: number,
 ): Promise<typeof friendships.$inferSelect | null> {
@@ -122,7 +122,7 @@ async function findExistingFriendship(
  * "re-invite after decline" path).
  */
 export async function requestFriendship(
-  drz: DrizzleD1Database,
+  drz: DB,
   requesterId: number,
   addresseeUsername: string,
 ): Promise<{ friendshipId: number; status: FriendshipStatus; createdFresh: boolean }> {
@@ -170,7 +170,7 @@ export async function requestFriendship(
  * Respond to a pending request. Only the addressee can accept or decline.
  */
 export async function respondToFriendship(
-  drz: DrizzleD1Database,
+  drz: DB,
   responderId: number,
   friendshipId: number,
   action: "accept" | "decline",
@@ -200,7 +200,7 @@ export async function respondToFriendship(
  * connected via an `accepted` row in EITHER direction.
  */
 export async function listFriends(
-  drz: DrizzleD1Database,
+  drz: DB,
   userId: number,
 ): Promise<FriendListEntry[]> {
   // Two halves: (a) rows where I am the requester → friend is the addressee,
@@ -266,7 +266,7 @@ export async function listFriends(
  * arises.
  */
 export async function listPendingRequests(
-  drz: DrizzleD1Database,
+  drz: DB,
   userId: number,
 ): Promise<PendingRequestEntry[]> {
   const rows = await drz

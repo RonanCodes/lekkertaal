@@ -35,6 +35,7 @@
     "@ai-sdk/anthropic": "^3.0.77",
     "@ai-sdk/google": "^3.0.73",
     "@ai-sdk/openai": "^3.0.63",
+    "@ai-sdk/provider": "^3.0.10",
     "@ai-sdk/react": "^3.0.184",
     "@clerk/backend": "^3.4.7",
     "@clerk/tanstack-react-start": "^1.2.3",
