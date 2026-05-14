@@ -71,7 +71,6 @@ test.describe("Speak drill flow", () => {
     // Strip MediaRecorder before any drill component mounts so the SpeakDrill
     // takes the upload-only branch. The fallback is what the spec stresses.
     await page.addInitScript(() => {
-      // @ts-expect-error: force the feature-detect path.
       delete (window as unknown as { MediaRecorder?: unknown }).MediaRecorder;
     });
 

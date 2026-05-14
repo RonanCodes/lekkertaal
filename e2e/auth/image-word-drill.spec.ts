@@ -80,6 +80,7 @@ test.describe("Image-word drill (AI-SDK-7)", () => {
     }
 
     test.skip(imageDrill === null, "No image-word drill in this lesson. Seed not loaded.");
+    if (imageDrill === null) return;
 
     await expect(imageDrill).toBeVisible();
 
