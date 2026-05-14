@@ -12,6 +12,13 @@ export default defineConfig({
   resolve: {
     alias: {
       "#": resolve(__dirname, "src"),
+      // `cloudflare:workers` is a virtual module provided by the workerd
+      // runtime; it doesn't exist in node, so vitest can't resolve it.
+      // `src/entry.server.ts` dynamic-imports it inside an `import.meta.env.DEV`
+      // gate to bootstrap a dev env fallback (ADR 0007). For unit tests we
+      // alias it to an empty stub; the bootstrap returns silently when
+      // `cfWorkers.env` is undefined.
+      "cloudflare:workers": resolve(__dirname, "src/test-stubs/cloudflare-workers.ts"),
     },
   },
   test: {

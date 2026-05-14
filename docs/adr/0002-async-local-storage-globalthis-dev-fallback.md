@@ -1,6 +1,6 @@
 # 0002 — AsyncLocalStorage with `globalThis` fallback in dev mode
 
-**Status:** Accepted
+**Status:** Accepted (dev half extended by [ADR 0007](./0007-vite-dev-env-bootstrap.md))
 **Date:** 2026-05-14
 
 ## Context
@@ -28,3 +28,6 @@ Keep AsyncLocalStorage as the production pattern. For dev mode only, add a `glob
 - `src/entry.server.ts` for `requireWorkerContext` + `setDevEnvFallback` + `readDevEnvFallback`
 - `src/lib/server/auth-helper.ts` for the canonical consumer
 - TanStack Start v6 RPC bridge is the underlying constraint
+- [ADR 0007](./0007-vite-dev-env-bootstrap.md) extends this with an
+  eager `wrangler.getPlatformProxy` bootstrap so the fallback is populated
+  even for Vite-SSR route loaders that bypass the worker fetch path.
