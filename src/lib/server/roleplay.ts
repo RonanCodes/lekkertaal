@@ -23,6 +23,7 @@ import { awardRoleplayComplete } from "./gamification";
 import { awardBadgesIfEligible } from "./badges";
 import { log } from "../logger";
 import { requireUserClerkId } from "./auth-helper";
+import { ensureUserRow } from "./ensure-user-row";
 import { emitAiCall, buildAiCallPayload } from "../ai-telemetry";
 import { redactText, summariseMatches } from "./redaction-middleware";
 import { loadChatMessages } from "./chat-messages";
@@ -40,8 +41,7 @@ export const getScenario = createServerFn({ method: "GET" })
     const { env } = requireWorkerContext();
     const drz = db(env.DB);
 
-    const me = await drz.select().from(users).where(eq(users.clerkId, userId)).limit(1);
-    if (!me[0]) throw new Error("User row missing");
+    const me = [await ensureUserRow(userId, drz, env)];
 
     const scenarioRow = await drz
       .select()
@@ -87,8 +87,7 @@ export const startRoleplaySession = createServerFn({ method: "POST" })
     const { env } = requireWorkerContext();
     const drz = db(env.DB);
 
-    const me = await drz.select().from(users).where(eq(users.clerkId, userId)).limit(1);
-    if (!me[0]) throw new Error("User row missing");
+    const me = [await ensureUserRow(userId, drz, env)];
 
     // Re-use an open session if one exists for this user+scenario (incomplete).
     const open = await drz
@@ -134,8 +133,7 @@ export const getRoleplayHistory = createServerFn({ method: "GET", strict: false 
     const { env } = requireWorkerContext();
     const drz = db(env.DB);
 
-    const me = await drz.select().from(users).where(eq(users.clerkId, userId)).limit(1);
-    if (!me[0]) throw new Error("User row missing");
+    const me = [await ensureUserRow(userId, drz, env)];
 
     // Reuse the open session for this user+scenario, or insert a fresh one.
     // Mirrors startRoleplaySession but rolled into a single round-trip so
@@ -181,8 +179,7 @@ export const finishRoleplaySession = createServerFn({ method: "POST" })
     const { env } = requireWorkerContext();
     const drz = db(env.DB);
 
-    const me = await drz.select().from(users).where(eq(users.clerkId, userId)).limit(1);
-    if (!me[0]) throw new Error("User row missing");
+    const me = [await ensureUserRow(userId, drz, env)];
 
     // Ownership check
     const sess = await drz
@@ -326,11 +323,7 @@ export const gradeRoleplaySession = createServerFn({ method: "POST" })
     }
 
     const drz = db(env.DB);
-    const me = await drz.select().from(users).where(eq(users.clerkId, userId)).limit(1);
-    if (!me[0]) {
-      log.error("gradeRoleplaySession: user row missing", { clerkId: userId });
-      throw new Error("User row missing");
-    }
+    const me = [await ensureUserRow(userId, drz, env)];
     log.debug("gradeRoleplaySession: start", { sessionId: data.sessionId, userId: me[0].id });
 
     const sessRow = await drz
@@ -642,8 +635,7 @@ export const getScorecard = createServerFn({ method: "GET" })
     const { env } = requireWorkerContext();
     const drz = db(env.DB);
 
-    const me = await drz.select().from(users).where(eq(users.clerkId, userId)).limit(1);
-    if (!me[0]) throw new Error("User row missing");
+    const me = [await ensureUserRow(userId, drz, env)];
 
     const scenarioRow = await drz
       .select()

@@ -14,11 +14,10 @@ import { createFileRoute } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { useState } from "react";
 import { db } from "../db/client";
-import { users } from "../db/schema";
-import { eq } from "drizzle-orm";
 import { requireWorkerContext } from "../entry.server";
 import { requireUserClerkId } from "../lib/server/auth-helper";
-import { getUserIdByClerkId, listFriends } from "../lib/server/friends";
+import { ensureUserRow } from "../lib/server/ensure-user-row";
+import { listFriends } from "../lib/server/friends";
 import { listInbox  } from "../lib/server/peer-drills";
 import type {InboxEntry} from "../lib/server/peer-drills";
 import { AppShell } from "../components/AppShell";
@@ -27,10 +26,9 @@ const loadPeer = createServerFn({ method: "GET" }).handler(async () => {
   const clerkId = await requireUserClerkId();
   const { env } = requireWorkerContext();
   const drz = db(env.DB);
-  const me = await drz.select().from(users).where(eq(users.clerkId, clerkId)).limit(1);
-  if (!me[0]) throw new Error("User row missing");
-  const userId = await getUserIdByClerkId(drz, clerkId);
-  if (!userId) throw new Error("User row missing");
+  // ensureUserRow guarantees a row exists; subsequent lookups can trust it.
+  const me = [await ensureUserRow(clerkId, drz, env)];
+  const userId = me[0].id;
   const [friends, drills] = await Promise.all([
     listFriends(drz, userId),
     listInbox(drz, userId),

@@ -4,11 +4,12 @@ import type { UIMessage } from "ai";
 import { createAnthropic } from "@ai-sdk/anthropic";
 import { auth } from "@clerk/tanstack-react-start/server";
 import { db } from "../db/client";
-import { users, scenarios, roleplaySessions } from "../db/schema";
+import { scenarios, roleplaySessions } from "../db/schema";
 import { eq, and, isNull, desc } from "drizzle-orm";
 import { requireWorkerContext } from "../entry.server";
 import { emitAiCall, buildAiCallPayload } from "../lib/ai-telemetry";
 import { buildRoleplaySystem } from "../lib/server/roleplay-system-prompt";
+import { ensureUserRow } from "../lib/server/ensure-user-row";
 import { buildRoleplayTools } from "../lib/server/roleplay-tools";
 import { log } from "../lib/logger";
 import {
@@ -63,8 +64,7 @@ export const Route = createFileRoute("/api/roleplay/$slug/stream")({
         }
 
         const drz = db(env.DB);
-        const me = await drz.select().from(users).where(eq(users.clerkId, a.userId)).limit(1);
-        if (!me[0]) return new Response("User row missing", { status: 500 });
+        const me = [await ensureUserRow(a.userId, drz, env)];
 
         const scenarioRow = await drz
           .select()

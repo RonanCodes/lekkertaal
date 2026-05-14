@@ -1,9 +1,10 @@
 import { createServerFn } from "@tanstack/react-start";
 import { db } from "../../db/client";
-import { users, units, userUnitProgress } from "../../db/schema";
+import { units, userUnitProgress } from "../../db/schema";
 import { eq, asc } from "drizzle-orm";
 import { requireWorkerContext } from "../../entry.server";
 import { requireUserClerkId } from "./auth-helper";
+import { ensureUserRow } from "./ensure-user-row";
 import { listQuestsForUser, seedQuestsForUser } from "./daily-quests";
 import type { QuestKind } from "./daily-quests";
 
@@ -35,8 +36,7 @@ export const getPath = createServerFn({ method: "GET" }).handler(async () => {
   const userId = await requireUserClerkId();
   const { env } = requireWorkerContext();
   const drz = db(env.DB);
-  const me = await drz.select().from(users).where(eq(users.clerkId, userId)).limit(1);
-  if (!me[0]) throw new Error("User row missing");
+  const me = [await ensureUserRow(userId, drz, env)];
 
   const levelUnits = await drz
     .select()

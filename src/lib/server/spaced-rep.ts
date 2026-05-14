@@ -18,10 +18,11 @@
 import { createServerFn } from "@tanstack/react-start";
 import { db } from "../../db/client";
 import type { DB } from "../../db/client";
-import { users, spacedRepQueue } from "../../db/schema";
+import { spacedRepQueue } from "../../db/schema";
 import { and, asc, eq, lte, sql, desc } from "drizzle-orm";
 import { requireWorkerContext } from "../../entry.server";
 import { requireUserClerkId } from "./auth-helper";
+import { ensureUserRow } from "./ensure-user-row";
 
 const MAX_ACTIVE_REVIEWS = 10;
 const DUE_BATCH = 3;
@@ -50,9 +51,9 @@ function addDays(iso: string, days: number): string {
 /** Read current user id (clerkId -> users.id) or throw redirect. */
 async function currentUserId(drz: ReturnType<typeof db>): Promise<number> {
   const userId = await requireUserClerkId();
-  const me = await drz.select().from(users).where(eq(users.clerkId, userId)).limit(1);
-  if (!me[0]) throw new Error("User row missing");
-  return me[0].id;
+  const { env } = requireWorkerContext();
+  const me = await ensureUserRow(userId, drz, env);
+  return me.id;
 }
 
 /** Insert or upsert one review-queue row, respecting the per-user cap. */

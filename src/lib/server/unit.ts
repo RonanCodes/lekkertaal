@@ -1,7 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { db } from "../../db/client";
 import {
-  users,
   units,
   lessons,
   vocab,
@@ -12,6 +11,7 @@ import {
 import { eq, asc, inArray, and } from "drizzle-orm";
 import { requireWorkerContext } from "../../entry.server";
 import { requireUserClerkId } from "./auth-helper";
+import { ensureUserRow } from "./ensure-user-row";
 
 export const getUnitDetail = createServerFn({ method: "GET" })
   .inputValidator((input: { slug: string }) => input)
@@ -20,8 +20,7 @@ export const getUnitDetail = createServerFn({ method: "GET" })
     const { env } = requireWorkerContext();
     const drz = db(env.DB);
 
-    const me = await drz.select().from(users).where(eq(users.clerkId, userId)).limit(1);
-    if (!me[0]) throw new Error("User row missing");
+    const me = [await ensureUserRow(userId, drz, env)];
 
     const unitRow = await drz.select().from(units).where(eq(units.slug, data.slug)).limit(1);
     if (!unitRow[0]) throw new Error("Unit not found");

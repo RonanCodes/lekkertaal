@@ -1,9 +1,9 @@
 import { createServerFn } from "@tanstack/react-start";
 import { db } from "../../db/client";
-import { users, pushSubscriptions } from "../../db/schema";
-import { eq } from "drizzle-orm";
+import { pushSubscriptions } from "../../db/schema";
 import { requireWorkerContext } from "../../entry.server";
 import { requireUserClerkId } from "./auth-helper";
+import { ensureUserRow } from "./ensure-user-row";
 
 export const savePushSubscription = createServerFn({ method: "POST" })
   .inputValidator(
@@ -18,8 +18,7 @@ export const savePushSubscription = createServerFn({ method: "POST" })
     const userId = await requireUserClerkId();
     const { env } = requireWorkerContext();
     const drz = db(env.DB);
-    const me = await drz.select().from(users).where(eq(users.clerkId, userId)).limit(1);
-    if (!me[0]) throw new Error("User row missing");
+    const me = [await ensureUserRow(userId, drz, env)];
     try {
       await drz.insert(pushSubscriptions).values({
         userId: me[0].id,

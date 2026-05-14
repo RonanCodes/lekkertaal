@@ -1,11 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { db } from "../db/client";
-import { users } from "../db/schema";
-import { eq } from "drizzle-orm";
 import { useState } from "react";
 import { requireWorkerContext } from "../entry.server";
 import { requireUserClerkId } from "../lib/server/auth-helper";
+import { ensureUserRow } from "../lib/server/ensure-user-row";
 import { getProfileBadges } from "../lib/server/badges";
 import { getCurrentLeagueForUser, tierMeta } from "../lib/server/leagues";
 import { resetMyData } from "../lib/server/user";
@@ -20,8 +19,7 @@ const getOwnProfile = createServerFn({ method: "GET" }).handler(async () => {
   const clerkId = await requireUserClerkId();
   const { env } = requireWorkerContext();
   const drz = db(env.DB);
-  const me = await drz.select().from(users).where(eq(users.clerkId, clerkId)).limit(1);
-  if (!me[0]) throw new Error("User row missing");
+  const me = [await ensureUserRow(clerkId, drz, env)];
   const badges = await getProfileBadges(drz, me[0].id);
   const league = await getCurrentLeagueForUser(drz, me[0].id);
   return {

@@ -5,6 +5,7 @@ import { users } from "../db/schema";
 import { eq } from "drizzle-orm";
 import { requireWorkerContext } from "../entry.server";
 import { requireUserClerkId } from "../lib/server/auth-helper";
+import { ensureUserRow } from "../lib/server/ensure-user-row";
 import { getProfileBadges } from "../lib/server/badges";
 import { AppShell } from "../components/AppShell";
 
@@ -22,8 +23,7 @@ const getPublicProfile = createServerFn({ method: "GET" })
     const { env } = requireWorkerContext();
     const drz = db(env.DB);
 
-    const me = await drz.select().from(users).where(eq(users.clerkId, clerkId)).limit(1);
-    if (!me[0]) throw new Error("User row missing");
+    const me = [await ensureUserRow(clerkId, drz, env)];
 
     const target = await drz
       .select()

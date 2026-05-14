@@ -19,6 +19,7 @@ import { leagues, users, xpEvents } from "../../db/schema";
 import { desc, eq, sql } from "drizzle-orm";
 import { requireWorkerContext } from "../../entry.server";
 import { requireUserClerkId } from "./auth-helper";
+import { ensureUserRow } from "./ensure-user-row";
 import { listFriends } from "./friends";
 import { utcMondayOnOrBefore } from "./leagues";
 
@@ -105,9 +106,7 @@ export const getLeaderboard = createServerFn({ method: "GET" })
     const { env } = requireWorkerContext();
     const drz = db(env.DB);
 
-    const me = await drz.select().from(users).where(eq(users.clerkId, userId)).limit(1);
-    if (!me[0]) throw new Error("User row missing");
-
+    const me = [await ensureUserRow(userId, drz, env)];
     const meRow = me[0];
     const since = windowStartIso(data.window);
 
@@ -265,8 +264,11 @@ export async function getFriendsLeaderboardForUser(
   userId: number,
   windowName: LeaderboardWindow,
 ): Promise<FriendsLeaderboardResult> {
+  // Internal helper: caller has already resolved a numeric userId, so missing
+  // here is a real invariant violation, not a fresh-signup case. The lazy
+  // upsert lives at the auth boundary (see `ensure-user-row.ts`).
   const me = await drz.select().from(users).where(eq(users.id, userId)).limit(1);
-  if (!me[0]) throw new Error("User row missing");
+  if (!me[0]) throw new Error(`getFriendsLeaderboardForUser: no users row for id=${userId}`);
   const meRow = me[0];
 
   const friends = await listFriends(drz, userId);
@@ -364,13 +366,7 @@ export const getFriendsLeaderboard = createServerFn({ method: "GET" })
     const { env } = requireWorkerContext();
     const drz = db(env.DB);
 
-    const meRows = await drz
-      .select()
-      .from(users)
-      .where(eq(users.clerkId, clerkId))
-      .limit(1);
-    if (!meRows[0]) throw new Error("User row missing");
-    const meRow = meRows[0];
+    const meRow = await ensureUserRow(clerkId, drz, env);
 
     const result = await getFriendsLeaderboardForUser(drz, meRow.id, data.window);
 
