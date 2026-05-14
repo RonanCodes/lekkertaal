@@ -16,7 +16,7 @@
  */
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { execSync } from "node:child_process";
-import { resolve, join } from "node:path";
+import { resolve } from "node:path";
 
 const args = process.argv.slice(2);
 const REMOTE = args.includes("--remote");

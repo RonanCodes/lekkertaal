@@ -21,7 +21,8 @@ import {
   submitPeerDrill,
 } from "../peer-drills";
 import { friendships, notificationLog, peerDrills } from "../../../db/schema";
-import { makeTestDb, asD1, type TestDb } from "./test-db";
+import { makeTestDb, asD1  } from "./test-db";
+import type {TestDb} from "./test-db";
 
 function seedNamedUser(drz: TestDb, displayName: string): number {
   const result = drz.$sqlite

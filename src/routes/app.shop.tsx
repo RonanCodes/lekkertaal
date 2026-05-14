@@ -1,6 +1,7 @@
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { useState } from "react";
-import { getShop, buyItem, type ShopItem } from "../lib/server/shop";
+import { getShop, buyItem  } from "../lib/server/shop";
+import type {ShopItem} from "../lib/server/shop";
 import { AppShell } from "../components/AppShell";
 
 export const Route = createFileRoute("/app/shop")({

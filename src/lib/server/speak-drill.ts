@@ -13,9 +13,8 @@
  *   4. If XP was awarded, bump users.xpTotal + xp_events + daily-quest speak
  *      progress + daily-quest xp progress.
  */
-import type { DrizzleD1Database } from "drizzle-orm/d1";
-import { and, eq } from "drizzle-orm";
-import { sql } from "drizzle-orm";
+import type { DB } from "../../db/client";
+import { and, eq, sql  } from "drizzle-orm";
 import { speakDrillAttempts, users, xpEvents } from "../../db/schema";
 import { bumpQuestProgress } from "./daily-quests";
 
@@ -39,7 +38,7 @@ export type RecordSpeakAttemptResult = {
 };
 
 export async function recordSpeakAttempt(
-  drz: DrizzleD1Database,
+  drz: DB,
   args: RecordSpeakAttemptArgs,
 ): Promise<RecordSpeakAttemptResult> {
   const { userId, drillId, transcript, audioKey } = args;

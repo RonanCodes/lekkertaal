@@ -38,7 +38,7 @@ export const Route = createFileRoute("/api/tts")({
         // Cache hit?
         const cached = await env.TTS_CACHE.get(key);
         if (cached) {
-          return new Response(cached.body, {
+          return new Response(cached.body as unknown as BodyInit, {
             status: 200,
             headers: {
               "content-type": "audio/mpeg",

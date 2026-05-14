@@ -425,7 +425,7 @@ async function main() {
         example_sentence_nl: v.example_sentence_nl ?? null,
         example_sentence_en: v.example_sentence_en ?? null,
         source_image_path: `notepad photos/${f}`,
-        cefr_level: (v.cefr_level || "A2") as "A1" | "A2" | "B1",
+        cefr_level: (v.cefr_level || "A2"),
       });
     }
     if (processed % 10 === 0) console.log(`  [progress] ${processed}/${photoFiles.length} photos, ${vocab.length} unique vocab items`);

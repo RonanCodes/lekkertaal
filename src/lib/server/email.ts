@@ -12,7 +12,7 @@
  * notification_log keeps both crons idempotent — we never double-send the
  * same (user, kind, date).
  */
-import type { DrizzleD1Database } from "drizzle-orm/d1";
+import type { DB } from "../../db/client";
 import type { WorkerEnv } from "../../entry.server";
 import {
   users,
@@ -53,7 +53,7 @@ export async function sendEmail(
 }
 
 async function alreadySent(
-  drz: DrizzleD1Database,
+  drz: DB,
   userId: number,
   kind: string,
   sinceIso: string,
@@ -74,7 +74,7 @@ async function alreadySent(
 }
 
 async function logSend(
-  drz: DrizzleD1Database,
+  drz: DB,
   userId: number,
   kind: string,
   ok: boolean,
@@ -93,7 +93,7 @@ async function logSend(
 // ============================================================================
 
 export async function runWeeklyDigestCron(
-  drz: DrizzleD1Database,
+  drz: DB,
   env: WorkerEnv,
 ): Promise<{ targeted: number; sent: number }> {
   if (!env.RESEND_API_KEY) return { targeted: 0, sent: 0 };
@@ -210,7 +210,7 @@ function renderWeeklyDigest(d: {
 // ============================================================================
 
 export async function runStreakRecoveryCron(
-  drz: DrizzleD1Database,
+  drz: DB,
   env: WorkerEnv,
 ): Promise<{ targeted: number; sent: number }> {
   if (!env.RESEND_API_KEY) return { targeted: 0, sent: 0 };

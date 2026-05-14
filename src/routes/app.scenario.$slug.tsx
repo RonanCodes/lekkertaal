@@ -1,14 +1,16 @@
 import { createFileRoute, notFound, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useChat } from "@ai-sdk/react";
-import { DefaultChatTransport, type UIMessage } from "ai";
+import { DefaultChatTransport  } from "ai";
+import type {UIMessage} from "ai";
 import {
   getScenario,
   getRoleplayHistory,
   finishRoleplaySession,
-  gradeRoleplaySession,
-  type RoleplayTranscriptEntry,
+  gradeRoleplaySession
+  
 } from "../lib/server/roleplay";
+import type {RoleplayTranscriptEntry} from "../lib/server/roleplay";
 import { AppShell } from "../components/AppShell";
 
 const MAX_USER_TURNS = 8;
@@ -47,13 +49,13 @@ function ScenarioChatPage() {
   // refresh mid-conversation resumes the transcript intact). Otherwise
   // fall back to the NPC's scripted opening line.
   const initialMessages = useMemo<UIMessage[]>(() => {
-    if (history.messages.length > 0) return history.messages as UIMessage[];
+    if (history.messages.length > 0) return history.messages;
     return [
       {
         id: "opening",
         role: "assistant",
         parts: [{ type: "text", text: scenario.openingNl }],
-      } as UIMessage,
+      },
     ];
   }, [history.messages, scenario.openingNl]);
 
@@ -90,7 +92,7 @@ function ScenarioChatPage() {
     if (!sessionId || ended) return;
     setEnded(true);
     const transcript: RoleplayTranscriptEntry[] = messages.map((m) => ({
-      role: m.role as "user" | "assistant" | "system",
+      role: m.role,
       content: extractText(m),
       ts: new Date().toISOString(),
     }));

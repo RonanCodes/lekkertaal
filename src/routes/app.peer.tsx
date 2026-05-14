@@ -10,9 +10,8 @@
  * Uses Route loader to fetch initial inbox + friends; client-side state takes
  * over after sends/submits to give an immediate response without a full nav.
  */
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
-import { redirect } from "@tanstack/react-router";
 import { auth } from "@clerk/tanstack-react-start/server";
 import { useState } from "react";
 import { db } from "../db/client";
@@ -20,7 +19,8 @@ import { users } from "../db/schema";
 import { eq } from "drizzle-orm";
 import { requireWorkerContext } from "../entry.server";
 import { getUserIdByClerkId, listFriends } from "../lib/server/friends";
-import { listInbox, type InboxEntry } from "../lib/server/peer-drills";
+import { listInbox  } from "../lib/server/peer-drills";
+import type {InboxEntry} from "../lib/server/peer-drills";
 import { AppShell } from "../components/AppShell";
 
 const loadPeer = createServerFn({ method: "GET" }).handler(async () => {

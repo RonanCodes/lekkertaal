@@ -8,14 +8,14 @@
  * No-ops cleanly when VAPID secrets aren't configured yet, so the cron can
  * roll out before the operator generates and uploads keys.
  */
-import type { DrizzleD1Database } from "drizzle-orm/d1";
+import type { DB } from "../../db/client";
 import type { WorkerEnv } from "../../entry.server";
 import { users, dailyCompletions } from "../../db/schema";
 import { and, eq, sql } from "drizzle-orm";
 import { sendPushToUser } from "./web-push";
 
 export async function runDailyPushCron(
-  drz: DrizzleD1Database,
+  drz: DB,
   env: WorkerEnv,
 ): Promise<{ targeted: number; sent: number }> {
   if (!env.VAPID_PUBLIC || !env.VAPID_PRIVATE || !env.VAPID_SUBJECT) {

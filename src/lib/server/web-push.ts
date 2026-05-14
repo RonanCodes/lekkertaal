@@ -20,7 +20,7 @@
  * Stale subscriptions (HTTP 404/410) are deleted by the caller via the
  * returned `staleEndpoints` array.
  */
-import type { DrizzleD1Database } from "drizzle-orm/d1";
+import type { DB } from "../../db/client";
 import { pushSubscriptions } from "../../db/schema";
 import { eq } from "drizzle-orm";
 
@@ -81,7 +81,7 @@ export async function sendPushToEndpoint(
  * the cron can prune stale rows.
  */
 export async function sendPushToUser(
-  drz: DrizzleD1Database,
+  drz: DB,
   env: WebPushEnv,
   userId: number,
   options?: Parameters<typeof sendPushToEndpoint>[2],
@@ -167,7 +167,7 @@ async function importVapidPrivateKey(base64Url: string): Promise<CryptoKey> {
   const pkcs8 = buildEcPkcs8(d);
   return await crypto.subtle.importKey(
     "pkcs8",
-    pkcs8,
+    pkcs8.buffer.slice(pkcs8.byteOffset, pkcs8.byteOffset + pkcs8.byteLength) as ArrayBuffer,
     { name: "ECDSA", namedCurve: "P-256" },
     false,
     ["sign"],

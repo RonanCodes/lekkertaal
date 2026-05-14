@@ -13,7 +13,7 @@
  * delta, even when they're outside the top 50.
  */
 import { createServerFn } from "@tanstack/react-start";
-import type { DrizzleD1Database } from "drizzle-orm/d1";
+import type { DB } from "../../db/client";
 import { db } from "../../db/client";
 import { leagues, users, xpEvents } from "../../db/schema";
 import { desc, eq, sql } from "drizzle-orm";
@@ -66,7 +66,7 @@ function levelForXp(xp: number): "Bronze" | "Silver" | "Gold" | "Platinum" {
  * many users we render.
  */
 async function getCurrentLeagueTiers(
-  drz: DrizzleD1Database,
+  drz: DB,
   userIds: number[],
 ): Promise<Map<number, number>> {
   const out = new Map<number, number>();
@@ -261,7 +261,7 @@ export const getLeaderboard = createServerFn({ method: "GET" })
  * O(friends) queries which is fine for the small launch group.
  */
 export async function getFriendsLeaderboardForUser(
-  drz: DrizzleD1Database,
+  drz: DB,
   userId: number,
   windowName: LeaderboardWindow,
 ): Promise<FriendsLeaderboardResult> {

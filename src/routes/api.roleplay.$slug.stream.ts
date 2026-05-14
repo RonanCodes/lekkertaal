@@ -142,7 +142,7 @@ export const Route = createFileRoute("/api/roleplay/$slug/stream")({
             sessionId,
             userId: me[0].id,
             clientMessageId: latestUser.id,
-            parts: latestUser.parts as Array<{ type: string; text?: string }>,
+            parts: latestUser.parts,
           });
         }
 
@@ -272,12 +272,12 @@ export const Route = createFileRoute("/api/roleplay/$slug/stream")({
             // for the client — the user already received the tokens.
             try {
               await appendAssistantMessage(drz, {
-                sessionId: sessionId!,
+                sessionId: sessionId,
                 userId: me[0].id,
                 clientMessageId: responseMessage.id,
                 parts: uiMessageTextParts(responseMessage),
               });
-              await syncTranscriptColumn(drz, sessionId!);
+              await syncTranscriptColumn(drz, sessionId);
             } catch (err) {
               log.error("roleplay persist assistant failed", {
                 sessionId,

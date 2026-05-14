@@ -32,11 +32,12 @@ import { AsyncLocalStorage } from "node:async_hooks";
 import {
   configure,
   getConsoleSink,
-  getLogger,
-  type LogLevel,
-  type LogRecord,
-  type Sink,
+  getLogger
+  
+  
+  
 } from "@logtape/logtape";
+import type {LogLevel, LogRecord, Sink} from "@logtape/logtape";
 import { getSentrySink } from "@logtape/sentry";
 
 const VALID_LEVELS: ReadonlyArray<LogLevel> = [

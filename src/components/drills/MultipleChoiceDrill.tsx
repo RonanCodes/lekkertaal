@@ -48,7 +48,7 @@ export function MultipleChoiceDrill({
     const raw = parseField<unknown>(drill.answer);
     if (typeof raw === "string") return raw;
     if (raw && typeof raw === "object" && "text" in raw)
-      return String((raw as { text: unknown }).text);
+      return String((raw).text);
     return null;
   }, [drill.answer]);
 

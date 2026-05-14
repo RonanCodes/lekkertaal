@@ -28,13 +28,14 @@
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "dev:bypass-auth": "bash scripts/dev-bypass-auth.sh",
-    "quality": "pnpm test && pnpm build",
+    "quality": "pnpm typecheck && pnpm lint && pnpm test && pnpm build",
     "quality:full": "pnpm typecheck && pnpm lint && pnpm test && pnpm build"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^3.0.77",
     "@ai-sdk/google": "^3.0.73",
     "@ai-sdk/openai": "^3.0.63",
+    "@ai-sdk/provider": "^3.0.10",
     "@ai-sdk/react": "^3.0.184",
     "@clerk/backend": "^3.4.7",
     "@clerk/tanstack-react-start": "^1.2.3",
@@ -83,6 +84,7 @@
     "better-sqlite3": "^12.10.0",
     "drizzle-kit": "^0.31.10",
     "eslint": "^9.20.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
     "husky": "^9.1.7",
     "jsdom": "^28.1.0",
     "lint-staged": "^17.0.4",
@@ -91,6 +93,7 @@
     "prettier-plugin-tailwindcss": "^0.8.0",
     "tsx": "^4.21.0",
     "typescript": "^6.0.2",
+    "typescript-eslint": "^8.59.3",
     "vite": "^8.0.0",
     "vitest": "^4.1.5",
     "wrangler": "^4.70.0"

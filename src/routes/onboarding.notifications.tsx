@@ -61,13 +61,13 @@ function NotificationsPage() {
     } else {
       setPushStatus("blocked");
     }
-    navigate({ to: "/app/path" as never });
+    navigate({ to: "/app/path" });
   }
 
   async function skip() {
     setSubmitting(true);
     await setReminderPrefs({ data: { hour, enabled: false, timezone } });
-    navigate({ to: "/app/path" as never });
+    navigate({ to: "/app/path" });
   }
 
   return (

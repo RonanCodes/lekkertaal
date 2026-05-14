@@ -17,7 +17,8 @@ import {
   exercises,
   dailyQuests,
 } from "../../../db/schema";
-import { asD1, makeTestDb, seedUser, type TestDb } from "./test-db";
+import { asD1, makeTestDb, seedUser  } from "./test-db";
+import type {TestDb} from "./test-db";
 import {
   recordSpeakAttempt,
   SPEAK_XP_REWARD,

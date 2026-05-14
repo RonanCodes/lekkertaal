@@ -56,7 +56,7 @@ export function tokeniseForScoring(input: string): string[] {
     .toLowerCase()
     .normalize("NFKC")
     // Strip terminal + internal punctuation that Whisper tends to add.
-    .replace(/[.,!?;:"'()\[\]{}]/g, "")
+    .replace(/[.,!?;:"'()[\]{}]/g, "")
     .split(/\s+/)
     .filter((t) => t.length > 0);
 }

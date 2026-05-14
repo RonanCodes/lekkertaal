@@ -12,7 +12,7 @@
  *
  * Whisper accepts audio/webm; we forward the raw bytes the client uploaded.
  */
-import type { DrizzleD1Database } from "drizzle-orm/d1";
+import type { DB } from "../../db/client";
 import { transcripts } from "../../db/schema";
 import { log } from "../logger";
 
@@ -91,7 +91,7 @@ export type InsertTranscriptArgs = {
  * Persist a transcript row. Returns the inserted row id.
  */
 export async function insertTranscript(
-  drz: DrizzleD1Database,
+  drz: DB,
   args: InsertTranscriptArgs,
 ): Promise<number> {
   const rows = await drz

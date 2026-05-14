@@ -29,7 +29,7 @@ function OnboardingPage() {
     const level = scoreToLevel(score);
     await setCefrLevel({ data: { level, placementScore: score } });
     await unlockStartingUnit();
-    navigate({ to: "/onboarding/notifications" as never });
+    navigate({ to: "/onboarding/notifications" });
   }
 
   return (

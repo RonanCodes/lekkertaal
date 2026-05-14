@@ -50,7 +50,7 @@ function ReviewCard({
   card: ReviewCardPayload;
   onMark: (c: ReviewCardPayload, correct: boolean) => void;
 }) {
-  const p = (card.payload ?? {}) as Record<string, unknown>;
+  const p = (card.payload ?? {});
   const incorrect = typeof p.incorrect === "string" ? p.incorrect : null;
   const correction = typeof p.correction === "string" ? p.correction : null;
   const explanation =

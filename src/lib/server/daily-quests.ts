@@ -18,7 +18,7 @@
  * Local-date is computed via `Intl.DateTimeFormat` with the user's tz so
  * cron output respects the offset stored on `users.timezone`.
  */
-import type { DrizzleD1Database } from "drizzle-orm/d1";
+import type { DB } from "../../db/client";
 import { and, eq, sql } from "drizzle-orm";
 import { dailyQuests, users, xpEvents, coinEvents } from "../../db/schema";
 
@@ -131,7 +131,7 @@ export function chooseQuestsForToday(
  * Returns the number of NEW rows actually written (0 when same-day rerun).
  */
 export async function seedQuestsForUser(
-  drz: DrizzleD1Database,
+  drz: DB,
   userId: number,
   timezone: string,
   now: Date = new Date(),
@@ -169,7 +169,7 @@ export async function seedQuestsForUser(
  * count 0. Errors per-user do not stop the loop.
  */
 export async function runDailyQuestsCron(
-  drz: DrizzleD1Database,
+  drz: DB,
   now: Date = new Date(),
 ): Promise<{ seeded: number; scanned: number }> {
   const allUsers = await drz
@@ -197,7 +197,7 @@ export async function runDailyQuestsCron(
  * the user has to press the button.
  */
 export async function bumpQuestProgress(
-  drz: DrizzleD1Database,
+  drz: DB,
   userId: number,
   kind: QuestKind,
   delta: number,
@@ -241,7 +241,7 @@ export async function bumpQuestProgress(
  * order is stable across renders.
  */
 export async function listQuestsForUser(
-  drz: DrizzleD1Database,
+  drz: DB,
   userId: number,
   timezone: string,
   now: Date = new Date(),
@@ -291,7 +291,7 @@ export async function listQuestsForUser(
  * quest is missing, unowned, not completed, or already claimed.
  */
 export async function claimQuest(
-  drz: DrizzleD1Database,
+  drz: DB,
   userId: number,
   questId: number,
   now: Date = new Date(),

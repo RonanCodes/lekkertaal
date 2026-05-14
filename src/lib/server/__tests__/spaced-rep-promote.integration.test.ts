@@ -64,8 +64,8 @@ function makeToolCallingStubModel(opts: {
     ): Promise<LanguageModelV3GenerateResult> {
       return {
         content: [{ type: "text", text: finalText }],
-        finishReason: "stop",
-        usage: { inputTokens: 1, outputTokens: 1, totalTokens: 2 },
+        finishReason: { unified: "stop", raw: "stop" },
+        usage: { inputTokens: { total: 1, noCache: 1, cacheRead: undefined, cacheWrite: undefined }, outputTokens: { total: 1, text: 1, reasoning: undefined } },
         warnings: [],
       };
     },
@@ -96,8 +96,8 @@ function makeToolCallingStubModel(opts: {
           controller.enqueue({ type: "text-end", id: `t${callCount}` });
           controller.enqueue({
             type: "finish",
-            finishReason: toolCallsThisStep.length > 0 ? "tool-calls" : "stop",
-            usage: { inputTokens: 10, outputTokens: 5, totalTokens: 15 },
+            finishReason: { unified: toolCallsThisStep.length > 0 ? "tool-calls" : "stop", raw: undefined },
+            usage: { inputTokens: { total: 10, noCache: 10, cacheRead: undefined, cacheWrite: undefined }, outputTokens: { total: 5, text: 5, reasoning: undefined } },
           });
           controller.close();
         },

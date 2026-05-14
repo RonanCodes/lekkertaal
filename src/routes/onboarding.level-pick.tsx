@@ -12,7 +12,7 @@ function LevelPickPage() {
     setSubmitting(level);
     await setCefrLevel({ data: { level } });
     await unlockStartingUnit();
-    navigate({ to: "/onboarding/notifications" as never });
+    navigate({ to: "/onboarding/notifications" });
   }
 
   return (

@@ -24,8 +24,9 @@ import {
   executeFlagSuspectedError,
   executeLookupVocab,
 } from "../roleplay-tools";
-import { roleplayErrors, roleplaySessions, scenarios, users, vocab } from "../../../db/schema";
-import { makeTestDb, asD1, type TestDb } from "./test-db";
+import { roleplayErrors } from "../../../db/schema";
+import { makeTestDb, asD1  } from "./test-db";
+import type {TestDb} from "./test-db";
 
 function seedScenario(drz: TestDb, slug = "bij-de-bakker"): number {
   const result = drz.$sqlite
