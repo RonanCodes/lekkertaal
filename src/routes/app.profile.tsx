@@ -3,10 +3,12 @@ import { createServerFn } from "@tanstack/react-start";
 import { db } from "../db/client";
 import { users } from "../db/schema";
 import { eq } from "drizzle-orm";
+import { useState } from "react";
 import { requireWorkerContext } from "../entry.server";
 import { requireUserClerkId } from "../lib/server/auth-helper";
 import { getProfileBadges } from "../lib/server/badges";
 import { getCurrentLeagueForUser, tierMeta } from "../lib/server/leagues";
+import { resetMyData } from "../lib/server/user";
 import { AppShell } from "../components/AppShell";
 
 /**
@@ -123,7 +125,118 @@ function ProfilePage() {
             ))}
           </ul>
         </section>
+
+        <ResetMyDataSection />
       </div>
     </AppShell>
+  );
+}
+
+/**
+ * "Reset my learning data" panel.
+ *
+ * Two-step confirm: click the button → inline modal-style confirmation card
+ * → "Yes, reset everything". On confirm, fires the `resetMyData` server-fn,
+ * waits for the response, then hard-navigates to `/app/path` so the loader
+ * re-runs against the cleared DB state and the path page shows zero XP /
+ * no streak / unit 1 active.
+ */
+function ResetMyDataSection() {
+  const [stage, setStage] = useState<"idle" | "confirm" | "running" | "error">("idle");
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+  async function onConfirm() {
+    setStage("running");
+    setErrorMsg(null);
+    try {
+      await resetMyData();
+      // Hard navigate so /app/path loader re-runs and (via getPath) reseeds
+      // the starting unit row in user_unit_progress.
+      window.location.href = "/app/path";
+    } catch (err) {
+      setStage("error");
+      setErrorMsg(err instanceof Error ? err.message : "Unknown error");
+    }
+  }
+
+  return (
+    <section
+      data-testid="reset-my-data-section"
+      className="rounded-2xl border border-red-200 bg-red-50 p-5"
+    >
+      <h2 className="text-sm font-semibold uppercase tracking-wide text-red-700">
+        Danger zone
+      </h2>
+      <p className="mt-2 text-sm text-red-900">
+        Wipe your XP, streak, lessons completed, drill attempts, friends, peer drills,
+        and quest history. Your account stays signed in.
+      </p>
+
+      {stage === "idle" && (
+        <button
+          type="button"
+          onClick={() => setStage("confirm")}
+          className="mt-3 rounded-xl bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700"
+          data-testid="reset-my-data-button"
+        >
+          Reset my learning data
+        </button>
+      )}
+
+      {stage === "confirm" && (
+        <div
+          role="dialog"
+          aria-labelledby="reset-confirm-title"
+          className="mt-3 rounded-xl border border-red-300 bg-white p-4"
+          data-testid="reset-my-data-confirm"
+        >
+          <h3 id="reset-confirm-title" className="text-base font-semibold text-red-800">
+            Are you sure?
+          </h3>
+          <p className="mt-1 text-sm text-neutral-700">
+            This will permanently clear your XP, streak, lessons completed, drill attempts,
+            friends, peer drills, and quest history. Your account stays (you stay signed in).
+            Continue?
+          </p>
+          <div className="mt-3 flex gap-2">
+            <button
+              type="button"
+              onClick={onConfirm}
+              className="rounded-xl bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700"
+              data-testid="reset-my-data-confirm-yes"
+            >
+              Yes, reset everything
+            </button>
+            <button
+              type="button"
+              onClick={() => setStage("idle")}
+              className="rounded-xl border border-neutral-300 bg-white px-4 py-2 text-sm font-semibold text-neutral-700 hover:bg-neutral-50"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
+
+      {stage === "running" && (
+        <p className="mt-3 text-sm text-red-900" data-testid="reset-my-data-running">
+          Resetting...
+        </p>
+      )}
+
+      {stage === "error" && (
+        <div className="mt-3 rounded-xl border border-red-300 bg-white p-3" data-testid="reset-my-data-error">
+          <p className="text-sm font-semibold text-red-800">Reset failed</p>
+          {errorMsg && <p className="mt-1 text-xs text-red-700">{errorMsg}</p>}
+          <button
+            type="button"
+            onClick={() => setStage("idle")}
+            className="mt-2 text-xs underline"
+          >
+            Dismiss
+          </button>
+        </div>
+      )}
+    </section>
   );
 }
