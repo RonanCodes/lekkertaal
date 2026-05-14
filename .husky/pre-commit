@@ -1,2 +1,3 @@
-# Placeholder. Ralph US-002 wires lint-staged + quality checks once vitest config is fixed.
+# Placeholder. Pre-push gate handles full quality checks (typecheck + lint + test + build).
+# Pre-commit is intentionally empty to keep `git commit` fast.
 exit 0
