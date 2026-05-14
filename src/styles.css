@@ -37,6 +37,38 @@
   --radius-pill: 9999px;
 }
 
+/* ============================================================
+ * Semantic surface tokens.
+ * Default to the light palette; the dark-mode block at the
+ * bottom of this file flips them under prefers-color-scheme: dark.
+ * Component CSS (`.card`, etc.) reads these so dark mode "just works".
+ * ============================================================ */
+:root {
+  --surface-page: #FFF8EE;          /* body bg */
+  --surface-app: #FFFBF3;           /* app shell wash */
+  --surface-card: #FFFFFF;          /* card / panel bg */
+  --surface-card-alt: #FAF5EC;      /* second-level fill (drill pool, etc.) */
+  --surface-input: #FFFFFF;
+  --surface-hover: #F4ECDE;
+  --surface-banner: #FFE5D2;        /* soft orange banners */
+  --surface-banner-blue: #D6E7F5;
+  --surface-banner-amber: #FEF3C7;
+  --surface-banner-red: #FEE2E2;
+  --surface-banner-green: #DCFCE7;
+  --surface-banner-sky: #E0F2FE;
+
+  --text-strong: #1A1410;
+  --text-body: #3F2F22;
+  --text-soft: #5C4A3A;
+  --text-muted: #8C7867;
+  --text-faint: #B5A595;
+  --text-on-banner: #4A2A05;
+
+  --line-soft: #ECDCC2;             /* default borders */
+  --line-strong: #D9C39E;
+}
+
+
 * { box-sizing: border-box; }
 html, body, #app { min-height: 100%; }
 body {
@@ -137,12 +169,155 @@ h1, h2, h3, h4, h5, h6 {
 .chip-blue { background: var(--color-brand-blue-soft); color: var(--color-brand-blue-dark); }
 .chip-pink { background: var(--color-brand-pink-soft); color: #B83A6E; }
 
+/* ============================================================
+ * Dark mode.
+ *
+ * Strategy: flip the semantic surface tokens declared in :root,
+ * then override the small set of Tailwind utility classes that
+ * the components reach for directly (bg-white, bg-neutral-*,
+ * text-neutral-*, border-neutral-*, plus the soft tinted banner
+ * shades). This lets us dark-themeify the whole app without
+ * touching every component.
+ *
+ * Three tiers in order:
+ *  1. Token flip on :root
+ *  2. Hand-rolled component classes (.card, .btn-3d-ghost, etc.)
+ *  3. Global Tailwind utility overrides
+ *
+ * Tier 3 is intentionally narrow: it only retunes neutrals and
+ * the very lightest tints. Brand-tinted utilities (bg-orange-500,
+ * text-orange-600 on actionable buttons / links) are left intact
+ * so primary CTAs read correctly in both schemes.
+ * ============================================================ */
 @media (prefers-color-scheme: dark) {
-  body { background-color: var(--color-paper-dark); color: var(--color-paper); }
-  h1, h2, h3, h4, h5, h6 { color: var(--color-paper); }
-  .card {
-    background: #2A2420;
-    border-color: color-mix(in srgb, var(--color-brand-orange) 20%, transparent);
+  :root {
+    --surface-page: #14110E;
+    --surface-app: #1B1714;
+    --surface-card: #2A2420;
+    --surface-card-alt: #221C18;
+    --surface-input: #2A2420;
+    --surface-hover: #34291F;
+    --surface-banner: #3A2916;
+    --surface-banner-blue: #1A2C3D;
+    --surface-banner-amber: #3D2E16;
+    --surface-banner-red: #3D1F1F;
+    --surface-banner-green: #1F3A22;
+    --surface-banner-sky: #1A2A38;
+
+    --text-strong: #F8F2E5;
+    --text-body: #ECE3D2;
+    --text-soft: #C9BCA5;
+    --text-muted: #9C8E78;
+    --text-faint: #6B5F4F;
+    --text-on-banner: #FFE5D2;
+
+    --line-soft: #3C322A;
+    --line-strong: #5C4A3A;
   }
-  .btn-3d-ghost { background: #2A2420; color: var(--color-paper); }
+
+  body {
+    background-color: var(--surface-page);
+    color: var(--text-body);
+  }
+  h1, h2, h3, h4, h5, h6 { color: var(--text-strong); }
+
+  .card {
+    background: var(--surface-card);
+    border-color: var(--line-soft);
+    box-shadow:
+      0 1px 0 0 rgba(0,0,0,0.4),
+      0 8px 24px -8px rgba(0,0,0,0.5);
+  }
+
+  .btn-3d-ghost {
+    background: var(--surface-card);
+    color: var(--text-strong);
+    border-color: var(--line-strong);
+    box-shadow: 0 4px 0 0 var(--line-strong);
+  }
+  .btn-3d-ghost:hover {
+    background: var(--surface-hover);
+    box-shadow: 0 5px 0 0 var(--line-strong);
+  }
+  .btn-3d-ghost:active {
+    box-shadow: 0 1px 0 0 var(--line-strong);
+  }
+
+  .chip {
+    background: var(--surface-banner);
+    color: var(--text-on-banner);
+  }
+  .chip-blue {
+    background: var(--surface-banner-blue);
+    color: #BDD7EE;
+  }
+  .chip-pink {
+    background: #3D1F2C;
+    color: #FFB8CE;
+  }
+
+  /* ---- Tailwind utility overrides ---- */
+
+  /* Backgrounds */
+  .bg-white { background-color: var(--surface-card) !important; }
+  .bg-white\/95 { background-color: color-mix(in srgb, var(--surface-card) 95%, transparent) !important; }
+  .bg-white\/90 { background-color: color-mix(in srgb, var(--surface-card) 90%, transparent) !important; }
+  .bg-neutral-50 { background-color: var(--surface-card-alt) !important; }
+  .bg-neutral-100 { background-color: var(--surface-hover) !important; }
+  .bg-neutral-200 { background-color: var(--line-soft) !important; }
+  .bg-neutral-300 { background-color: var(--line-strong) !important; }
+
+  /* Soft tinted banners */
+  .bg-orange-50 { background-color: var(--surface-banner) !important; }
+  .bg-orange-50\/30 { background-color: color-mix(in srgb, var(--surface-banner) 30%, transparent) !important; }
+  .bg-blue-50 { background-color: var(--surface-banner-blue) !important; }
+  .bg-amber-50 { background-color: var(--surface-banner-amber) !important; }
+  .bg-amber-50\/40 { background-color: color-mix(in srgb, var(--surface-banner-amber) 40%, transparent) !important; }
+  .bg-red-50 { background-color: var(--surface-banner-red) !important; }
+  .bg-green-50 { background-color: var(--surface-banner-green) !important; }
+  .bg-emerald-50 { background-color: var(--surface-banner-green) !important; }
+  .bg-sky-50 { background-color: var(--surface-banner-sky) !important; }
+  .bg-amber-100 { background-color: #4A3A1F !important; }
+  .bg-orange-100 { background-color: #4A2F18 !important; }
+  .bg-sky-100 { background-color: #1F3548 !important; }
+
+  /* Text colours */
+  .text-neutral-900 { color: var(--text-strong) !important; }
+  .text-neutral-800 { color: var(--text-strong) !important; }
+  .text-neutral-700 { color: var(--text-body) !important; }
+  .text-neutral-600 { color: var(--text-soft) !important; }
+  .text-neutral-500 { color: var(--text-muted) !important; }
+  .text-neutral-400 { color: var(--text-faint) !important; }
+  .text-neutral-300 { color: var(--text-faint) !important; }
+
+  /* Borders */
+  .border-neutral-200 { border-color: var(--line-soft) !important; }
+  .border-neutral-300 { border-color: var(--line-strong) !important; }
+  .border-orange-200 { border-color: #5C3A1A !important; }
+  .border-amber-200 { border-color: #5C4520 !important; }
+  .border-red-200 { border-color: #5C2828 !important; }
+  .border-red-300 { border-color: #7A3535 !important; }
+  .border-blue-200 { border-color: #2A4660 !important; }
+
+  /* Rings (used as 1px borders in shadow form) */
+  .ring-orange-200 {
+    --tw-ring-color: #5C3A1A !important;
+  }
+  .ring-amber-200 {
+    --tw-ring-color: #5C4520 !important;
+  }
+  .ring-neutral-200 {
+    --tw-ring-color: var(--line-soft) !important;
+  }
+  .ring-amber-300 {
+    --tw-ring-color: #7A5828 !important;
+  }
+
+  /* Brand-tint text used on dark surfaces in light mode → keep readable */
+  .text-amber-900 { color: #FFE5B4 !important; }
+  .text-amber-800 { color: #FFD89A !important; }
+  .text-sky-700 { color: #BDD7EE !important; }
+  .text-orange-700 { color: #FFB47A !important; }
+  .text-red-700 { color: #FFA8A8 !important; }
 }
+
