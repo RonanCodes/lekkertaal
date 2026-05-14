@@ -10,27 +10,26 @@
  * Uses Route loader to fetch initial inbox + friends; client-side state takes
  * over after sends/submits to give an immediate response without a full nav.
  */
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
-import { auth } from "@clerk/tanstack-react-start/server";
 import { useState } from "react";
 import { db } from "../db/client";
 import { users } from "../db/schema";
 import { eq } from "drizzle-orm";
 import { requireWorkerContext } from "../entry.server";
+import { requireUserClerkId } from "../lib/server/auth-helper";
 import { getUserIdByClerkId, listFriends } from "../lib/server/friends";
 import { listInbox  } from "../lib/server/peer-drills";
 import type {InboxEntry} from "../lib/server/peer-drills";
 import { AppShell } from "../components/AppShell";
 
 const loadPeer = createServerFn({ method: "GET" }).handler(async () => {
-  const a = await auth();
-  if (!a.userId) throw redirect({ to: "/sign-in" });
+  const clerkId = await requireUserClerkId();
   const { env } = requireWorkerContext();
   const drz = db(env.DB);
-  const me = await drz.select().from(users).where(eq(users.clerkId, a.userId)).limit(1);
+  const me = await drz.select().from(users).where(eq(users.clerkId, clerkId)).limit(1);
   if (!me[0]) throw new Error("User row missing");
-  const userId = await getUserIdByClerkId(drz, a.userId);
+  const userId = await getUserIdByClerkId(drz, clerkId);
   if (!userId) throw new Error("User row missing");
   const [friends, drills] = await Promise.all([
     listFriends(drz, userId),
