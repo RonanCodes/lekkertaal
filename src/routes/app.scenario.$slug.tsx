@@ -147,6 +147,10 @@ function ScenarioChatPage() {
               role={m.role}
               text={extractText(m)}
               voiceId={scenario.npcVoiceId}
+              onWordClick={(word) => {
+                if (status === "submitted" || status === "streaming" || ended) return;
+                void sendMessage({ text: `Wat betekent "${word}"?` });
+              }}
             />
           ))}
           {(status === "submitted" || status === "streaming") && (
@@ -195,10 +199,12 @@ function ChatBubble({
   role,
   text,
   voiceId,
+  onWordClick,
 }: {
   role: string;
   text: string;
   voiceId: string | null;
+  onWordClick?: (word: string) => void;
 }) {
   const isUser = role === "user";
   return (
@@ -210,12 +216,55 @@ function ChatBubble({
             : "bg-white text-neutral-900 ring-1 ring-neutral-200"
         }`}
       >
-        <p className="whitespace-pre-wrap leading-relaxed">{text}</p>
+        <p className="whitespace-pre-wrap leading-relaxed">
+          {isUser || !onWordClick ? text : <ClickableDutchWords text={text} onWordClick={onWordClick} />}
+        </p>
         {!isUser && text && (
           <SpeakButton text={text} voiceId={voiceId} />
         )}
       </div>
     </div>
+  );
+}
+
+/**
+ * Render an assistant message with each Dutch word as a click affordance.
+ * Clicking a word fires a user message that asks the NPC for the meaning,
+ * which Claude resolves by calling the `lookupVocab` tool server-side.
+ *
+ * Splitting strategy: walk a regex over the text and rebuild as a mix of
+ * <span> and <button> nodes. Whitespace and punctuation pass through as
+ * plain text so the original spacing stays intact.
+ */
+function ClickableDutchWords({
+  text,
+  onWordClick,
+}: {
+  text: string;
+  onWordClick: (word: string) => void;
+}) {
+  // Words: any run of letters (incl. Dutch diacritics) plus optional inner
+  // apostrophes. Everything else is treated as a separator.
+  const tokens = text.split(/([A-Za-zÀ-ÿ]+(?:['’][A-Za-zÀ-ÿ]+)?)/);
+  return (
+    <>
+      {tokens.map((tok, i) => {
+        if (!tok) return null;
+        const isWord = /^[A-Za-zÀ-ÿ]+(?:['’][A-Za-zÀ-ÿ]+)?$/.test(tok);
+        if (!isWord) return <span key={i}>{tok}</span>;
+        return (
+          <button
+            key={i}
+            type="button"
+            onClick={() => onWordClick(tok)}
+            className="cursor-pointer underline decoration-dotted decoration-neutral-300 underline-offset-2 hover:bg-orange-50 hover:decoration-orange-400 focus:bg-orange-50 focus:outline-none focus:ring-1 focus:ring-orange-300"
+            aria-label={`Look up "${tok}"`}
+          >
+            {tok}
+          </button>
+        );
+      })}
+    </>
   );
 }
 

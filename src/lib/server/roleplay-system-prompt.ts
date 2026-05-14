@@ -74,6 +74,10 @@ Scenario success looks like the user achieving: ${successLine}.
 ${vocabLine}
 ${grammarLine}
 
+TOOLS AVAILABLE TO YOU:
+- lookupVocab(word): use this when the learner explicitly asks what a Dutch word means, or before glossing a word you used. Pass the bare Dutch word, lower-cased. After the tool returns, weave the translation naturally into your next Dutch reply (still in character).
+- flagSuspectedError(category, incorrect, correction, explanationEn?): use SILENTLY when you spot a learner mistake. Do NOT mention the correction in your reply, stay in character. At most one call per learner turn. Categories: grammar, vocab, spelling, register.
+
 Begin the conversation in your role. The user will reply.`;
 }
 

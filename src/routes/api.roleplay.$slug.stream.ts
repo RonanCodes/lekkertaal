@@ -1,14 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { streamText, convertToModelMessages } from "ai";
+import { streamText, convertToModelMessages, stepCountIs } from "ai";
 import type { UIMessage } from "ai";
 import { createAnthropic } from "@ai-sdk/anthropic";
 import { auth } from "@clerk/tanstack-react-start/server";
 import { db } from "../db/client";
-import { users, scenarios } from "../db/schema";
-import { eq } from "drizzle-orm";
+import { users, scenarios, roleplaySessions } from "../db/schema";
+import { eq, and, isNull, desc } from "drizzle-orm";
 import { requireWorkerContext } from "../entry.server";
 import { emitAiCall, buildAiCallPayload } from "../lib/ai-telemetry";
 import { buildRoleplaySystem } from "../lib/server/roleplay-system-prompt";
+import { buildRoleplayTools } from "../lib/server/roleplay-tools";
 import { log } from "../lib/logger";
 
 /**
@@ -58,6 +59,30 @@ export const Route = createFileRoute("/api/roleplay/$slug/stream")({
 
         const body = (await request.json()) as { messages: UIMessage[] };
 
+        // Find the in-flight session for this user+scenario so tool calls
+        // (flagSuspectedError) can attribute rows to the right session row.
+        // Falls back to `null` if the client never called startRoleplaySession
+        // (e.g. dev-time curl), in which case flagSuspectedError no-ops.
+        const openSession = await drz
+          .select({ id: roleplaySessions.id })
+          .from(roleplaySessions)
+          .where(
+            and(
+              eq(roleplaySessions.userId, me[0].id),
+              eq(roleplaySessions.scenarioId, s.id),
+              isNull(roleplaySessions.completedAt),
+            ),
+          )
+          .orderBy(desc(roleplaySessions.startedAt))
+          .limit(1);
+        const activeSessionId = openSession[0]?.id ?? null;
+
+        const tools = buildRoleplayTools({
+          drz,
+          userId: me[0].id,
+          sessionId: activeSessionId,
+        });
+
         const systemMessages = buildRoleplaySystem({
           npcName: s.npcName,
           npcPersona: s.npcPersona,
@@ -84,6 +109,11 @@ export const Route = createFileRoute("/api/roleplay/$slug/stream")({
           messages: await convertToModelMessages(body.messages),
           temperature: 0.7,
           abortSignal: request.signal,
+          tools,
+          // Allow at most two model steps (one tool round-trip) per turn so
+          // a stuck tool-call loop cannot run away. lookupVocab → narrate, or
+          // flagSuspectedError → continue in character.
+          stopWhen: stepCountIs(2),
           experimental_telemetry: {
             isEnabled: true,
             functionId,
