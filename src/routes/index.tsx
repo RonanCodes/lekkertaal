@@ -1,7 +1,36 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createServerFn } from "@tanstack/react-start";
 import { useAuth } from "@clerk/tanstack-react-start";
+import { tryGetUserClerkId } from "../lib/server/auth-helper";
 
-export const Route = createFileRoute("/")({ component: Home });
+/**
+ * Server-only auth probe used by the landing loader. Wrapped in
+ * `createServerFn` so the server-only helper (and its `entry.server`
+ * dependency) never reaches the client bundle.
+ */
+const probeAuth = createServerFn({ method: "GET" }).handler(async () => {
+  return { signedIn: (await tryGetUserClerkId()) !== null };
+});
+
+export const Route = createFileRoute("/")({
+  /**
+   * Server-side auth probe. If the visitor has a real Clerk session OR the
+   * dev/e2e bypass is active, skip the landing and forward straight to the
+   * app. Signed-out visitors fall through to render `<Home>`.
+   *
+   * `LandingCtas` below still client-side-detects auth as a fallback for
+   * the rare case where the server-side check missed (slow Clerk hydration,
+   * loader re-run after sign-in without a fresh navigation, etc.).
+   */
+  loader: async () => {
+    const { signedIn } = await probeAuth();
+    if (signedIn) {
+      throw redirect({ to: "/app/path" });
+    }
+    return null;
+  },
+  component: Home,
+});
 
 function Home() {
   return (
