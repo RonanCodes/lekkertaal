@@ -18,6 +18,7 @@ import { db } from "./db/client";
 import { resetStaleStreaks } from "./lib/server/gamification";
 import { runDailyPushCron } from "./lib/server/cron-push";
 import { runWeeklyDigestCron, runStreakRecoveryCron } from "./lib/server/email";
+import { configureLogger, withRequestLogContext, log } from "./lib/logger";
 
 export type WorkerEnv = {
   DB: D1Database;
@@ -33,6 +34,8 @@ export type WorkerEnv = {
   SENTRY_DSN?: string;
   POSTHOG_PROJECT_KEY?: string;
   POSTHOG_INGEST_HOST?: string;
+  /** Logtape minimum level. Default 'info'. Override to 'debug' for verbose. */
+  LOG_LEVEL?: string;
   VAPID_PUBLIC?: string;
   VAPID_PRIVATE?: string;
   VAPID_SUBJECT?: string;
@@ -85,8 +88,12 @@ const baseFetch = createStartHandler(defaultStreamHandler);
 export default {
   async fetch(request: Request, env: WorkerEnv, ctx: ExecutionContext): Promise<Response> {
     setDevEnvFallback(env, ctx);
+    configureLogger({ env });
     return await requestStore.run({ env, ctx }, async () => {
-      return await baseFetch(request);
+      return await withRequestLogContext(request, async () => {
+        log.debug("request received", { method: request.method, url: request.url });
+        return await baseFetch(request);
+      });
     });
   },
 
@@ -94,38 +101,39 @@ export default {
     // Cron handler. The 0 * * * * trigger runs hourly. Story-specific
     // schedulers register here; each is wrapped so a single failure doesn't
     // skip the rest.
+    configureLogger({ env });
     await requestStore.run({ env, ctx }, async () => {
       // US-020: reset stale streaks (consume freezes when available).
       try {
         const reset = await resetStaleStreaks(db(env.DB));
         if (reset > 0) {
-          console.log(`[cron] reset ${reset} stale streak(s)`);
+          log.info("cron: streaks reset", { count: reset });
         }
       } catch (err) {
-        console.error("[cron] resetStaleStreaks failed:", err);
+        log.error("cron: resetStaleStreaks failed", { err });
       }
       // US-027: daily-nag web push (matches reminder_hour to current UTC hour).
       try {
         const r = await runDailyPushCron(db(env.DB), env);
         if (r.targeted > 0) {
-          console.log(`[cron] daily push: targeted=${r.targeted} sent=${r.sent}`);
+          log.info("cron: daily push", { targeted: r.targeted, sent: r.sent });
         }
       } catch (err) {
-        console.error("[cron] runDailyPushCron failed:", err);
+        log.error("cron: runDailyPushCron failed", { err });
       }
       // US-028: weekly digest (Sun 10:00 UTC, gated inside the fn).
       try {
         const r = await runWeeklyDigestCron(db(env.DB), env);
-        if (r.sent > 0) console.log(`[cron] weekly digest sent=${r.sent}`);
+        if (r.sent > 0) log.info("cron: weekly digest", { sent: r.sent });
       } catch (err) {
-        console.error("[cron] runWeeklyDigestCron failed:", err);
+        log.error("cron: runWeeklyDigestCron failed", { err });
       }
       // US-028: streak recovery (daily; idempotent via notification_log).
       try {
         const r = await runStreakRecoveryCron(db(env.DB), env);
-        if (r.sent > 0) console.log(`[cron] streak recovery sent=${r.sent}`);
+        if (r.sent > 0) log.info("cron: streak recovery", { sent: r.sent });
       } catch (err) {
-        console.error("[cron] runStreakRecoveryCron failed:", err);
+        log.error("cron: runStreakRecoveryCron failed", { err });
       }
     });
   },
