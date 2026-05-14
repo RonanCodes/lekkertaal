@@ -50,9 +50,16 @@ export type WorkerEnv = {
   /**
    * Opt-in localhost dev bypass for Clerk auth. Only respected when
    * `import.meta.env.DEV === true`. MUST NEVER be set to `"true"` in
-   * `wrangler.jsonc` vars — production safety. See `src/lib/server/auth-helper.ts`.
+   * `wrangler.jsonc` vars (production safety). See `src/lib/server/auth-helper.ts`.
    */
   DEV_BYPASS_AUTH?: string;
+  /**
+   * E2E playwright shared-secret. When `import.meta.env.DEV === true` AND
+   * the request has header `x-lekkertaal-e2e-bypass` matching this value,
+   * `requireUserClerkId()` returns the seed user `seed_ronan` without
+   * calling Clerk. Dead-code-eliminated in production builds.
+   */
+  E2E_BYPASS_TOKEN?: string;
 };
 
 const requestStore = new AsyncLocalStorage<{ env: WorkerEnv; ctx: ExecutionContext }>();
