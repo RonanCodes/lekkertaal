@@ -26,6 +26,32 @@ export type DrillType =
   | "speak"
   | "image_word";
 
+/**
+ * DB rows store drill `type` in hyphen-form (`match-pairs`, `translation-typing`,
+ * `fill-in-the-blank`, `multiple-choice`, `word-ordering`, `image-word`,
+ * `listening-mc`) because the seed loader writes them verbatim. The renderer
+ * and DrillType union use underscore-form. Normalise once at the server
+ * boundary so every dispatch site sees the canonical underscore type.
+ *
+ * Without this, drills load from the DB with hyphens, miss every `switch`
+ * case in DrillRenderer, and fall through to the "UNSUPPORTED DRILL" panel
+ * (issue #114).
+ */
+const DRILL_TYPE_HYPHEN_TO_UNDERSCORE: Record<string, DrillType> = {
+  "match-pairs": "match_pairs",
+  "multiple-choice": "multiple_choice",
+  "listening-mc": "listening_mc",
+  "translation-typing": "translation_typing",
+  "fill-blank": "fill_blank",
+  "fill-in-the-blank": "fill_blank",
+  "word-ordering": "word_ordering",
+  "image-word": "image_word",
+};
+
+function normaliseDrillType(raw: string): DrillType {
+  return DRILL_TYPE_HYPHEN_TO_UNDERSCORE[raw] ?? (raw as DrillType);
+}
+
 export type LessonPayload = {
   user: {
     displayName: string;
@@ -128,7 +154,7 @@ export const getLesson = createServerFn({ method: "GET", strict: false })
       drills: drillRows.map((d) => ({
         id: d.id,
         slug: d.slug,
-        type: d.type as DrillType,
+        type: normaliseDrillType(d.type),
         promptNl: d.promptNl,
         promptEn: d.promptEn,
         // Re-serialise to JSON strings so the payload stays plain-serializable
