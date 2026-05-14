@@ -245,5 +245,305 @@
     "estimated_minutes": 5,
     "xp_reward": 100,
     "badge_unlock": "a2-complete"
+  },
+  {
+    "slug": "b1-opinion-debate-coffee",
+    "unit_slug": "b1-unit-01-opinions",
+    "title_nl": "Discussie over thuiswerken",
+    "title_en": "Debate about working from home",
+    "difficulty": "B1",
+    "npc_name": "Sander",
+    "npc_persona": "Collega die graag debatteert. Stelt scherpe tegenvragen en duwt je om je mening te onderbouwen.",
+    "npc_voice_id": "ErXwobaYiN019PkySvjV",
+    "opening_nl": "Ik vind dat iedereen weer fulltime naar kantoor moet. Ben je het met me eens?",
+    "must_use_vocab": [
+      "naar mijn mening",
+      "het eens",
+      "voordeel",
+      "nadeel"
+    ],
+    "must_use_grammar": [],
+    "success_criteria": [
+      "Geeft een duidelijke mening met onderbouwing",
+      "Gebruikt minstens twee voorbeelden",
+      "Reageert op het tegenargument"
+    ],
+    "failure_modes": [
+      "Geen argument geven",
+      "Direct toegeven zonder reactie"
+    ],
+    "estimated_minutes": 7,
+    "xp_reward": 150,
+    "badge_unlock": null
+  },
+  {
+    "slug": "b1-conditionals-travel-plans",
+    "unit_slug": "b1-unit-02-conditionals",
+    "title_nl": "Als-dan reisplannen",
+    "title_en": "Travel plans with if-then",
+    "difficulty": "B1",
+    "npc_name": "Lotte",
+    "npc_persona": "Vriendin die een weekendje weg plant en alle wat-als scenario's wil doorpraten.",
+    "npc_voice_id": "EXAVITQu4vr4xnSDxMaL",
+    "opening_nl": "Stel, het regent het hele weekend. Wat doen we dan?",
+    "must_use_vocab": [
+      "als",
+      "dan",
+      "zou",
+      "misschien"
+    ],
+    "must_use_grammar": [],
+    "success_criteria": [
+      "Gebruikt minstens drie als-dan constructies",
+      "Geeft een alternatief plan",
+      "Stelt zelf een hypothetische vraag terug"
+    ],
+    "failure_modes": [
+      "Alleen ja/nee antwoorden",
+      "Geen voorwaardelijke zin gebruiken"
+    ],
+    "estimated_minutes": 7,
+    "xp_reward": 150,
+    "badge_unlock": null
+  },
+  {
+    "slug": "b1-past-tense-weekend-recap",
+    "unit_slug": "b1-unit-03-past-tense",
+    "title_nl": "Weekend navertellen",
+    "title_en": "Recounting the weekend",
+    "difficulty": "B1",
+    "npc_name": "Anouk",
+    "npc_persona": "Collega bij de koffiemachine. Wil precies horen wat je gedaan hebt en stelt vervolgvragen.",
+    "npc_voice_id": "21m00Tcm4TlvDq8ikWAM",
+    "opening_nl": "Goedemorgen! Vertel eens, hoe was je weekend?",
+    "must_use_vocab": [
+      "gisteren",
+      "vorige week",
+      "ben geweest",
+      "heb gedaan"
+    ],
+    "must_use_grammar": [],
+    "success_criteria": [
+      "Gebruikt minstens drie perfectum-vormen",
+      "Vertelt over minstens twee activiteiten",
+      "Stelt een wedervraag in de verleden tijd"
+    ],
+    "failure_modes": [
+      "Alleen tegenwoordige tijd",
+      "Geen wedervraag"
+    ],
+    "estimated_minutes": 7,
+    "xp_reward": 150,
+    "badge_unlock": null
+  },
+  {
+    "slug": "b1-future-tense-life-plans",
+    "unit_slug": "b1-unit-04-future-tense",
+    "title_nl": "Toekomstplannen bespreken",
+    "title_en": "Discussing future plans",
+    "difficulty": "B1",
+    "npc_name": "Mehmet",
+    "npc_persona": "Goede vriend, nieuwsgierig naar je plannen voor de komende jaren.",
+    "npc_voice_id": "pNInz6obpgDQGcFmaJgB",
+    "opening_nl": "Waar zie jij jezelf over vijf jaar?",
+    "must_use_vocab": [
+      "over",
+      "jaar",
+      "ga",
+      "zal"
+    ],
+    "must_use_grammar": [],
+    "success_criteria": [
+      "Beschrijft minstens twee toekomstplannen",
+      "Gebruikt zowel gaan-vorm als zullen-vorm",
+      "Stelt een wedervraag over zijn plannen"
+    ],
+    "failure_modes": [
+      "Geen toekomstige tijd gebruiken",
+      "Te kort antwoord"
+    ],
+    "estimated_minutes": 7,
+    "xp_reward": 150,
+    "badge_unlock": null
+  },
+  {
+    "slug": "b1-comparing-apartments",
+    "unit_slug": "b1-unit-05-comparatives-superlatives",
+    "title_nl": "Appartementen vergelijken",
+    "title_en": "Comparing apartments",
+    "difficulty": "B1",
+    "npc_name": "Eva",
+    "npc_persona": "Makelaar die je twee appartementen laat zien en je vraagt om ze te vergelijken.",
+    "npc_voice_id": "AZnzlk1XvdvUeBnXmlld",
+    "opening_nl": "U heeft beide appartementen gezien. Wat vindt u het beste?",
+    "must_use_vocab": [
+      "groter",
+      "kleiner",
+      "duurder",
+      "het beste"
+    ],
+    "must_use_grammar": [],
+    "success_criteria": [
+      "Gebruikt minstens drie vergrotende trappen",
+      "Gebruikt minstens één overtreffende trap",
+      "Geeft een duidelijke voorkeur met reden"
+    ],
+    "failure_modes": [
+      "Geen vergelijking maken",
+      "Geen voorkeur uitspreken"
+    ],
+    "estimated_minutes": 7,
+    "xp_reward": 150,
+    "badge_unlock": null
+  },
+  {
+    "slug": "b1-modal-permission-request",
+    "unit_slug": "b1-unit-06-modal-verbs",
+    "title_nl": "Vrije dag aanvragen",
+    "title_en": "Requesting a day off",
+    "difficulty": "B1",
+    "npc_name": "Dr. de Vries",
+    "npc_persona": "Strikte maar redelijke leidinggevende. Wil weten waarom je vrij wilt en wat je geregeld hebt.",
+    "npc_voice_id": "VR6AewLTigWG4xSOukaG",
+    "opening_nl": "Ja, kom binnen. U wilde mij spreken?",
+    "must_use_vocab": [
+      "kan",
+      "mag",
+      "moet",
+      "zou willen"
+    ],
+    "must_use_grammar": [],
+    "success_criteria": [
+      "Gebruikt minstens drie verschillende modale werkwoorden",
+      "Geeft een duidelijke reden",
+      "Beleefde u-vorm gebruiken"
+    ],
+    "failure_modes": [
+      "Te direct, geen modaal werkwoord",
+      "Je-vorm tegen leidinggevende"
+    ],
+    "estimated_minutes": 7,
+    "xp_reward": 150,
+    "badge_unlock": null
+  },
+  {
+    "slug": "b1-job-interview",
+    "unit_slug": "b1-unit-07-work-careers",
+    "title_nl": "Sollicitatiegesprek",
+    "title_en": "Job interview",
+    "difficulty": "B1",
+    "npc_name": "Anouk",
+    "npc_persona": "HR-manager. Vriendelijk maar professioneel. Stelt standaard sollicitatievragen.",
+    "npc_voice_id": "21m00Tcm4TlvDq8ikWAM",
+    "opening_nl": "Welkom! Vertel eens iets over uzelf en waarom u hier solliciteert.",
+    "must_use_vocab": [
+      "ervaring",
+      "vaardigheden",
+      "motivatie",
+      "team"
+    ],
+    "must_use_grammar": [],
+    "success_criteria": [
+      "Beschrijft eigen ervaring",
+      "Noemt minstens twee vaardigheden",
+      "Stelt zelf een vraag aan het einde"
+    ],
+    "failure_modes": [
+      "Geen voorbeelden geven",
+      "Geen eigen vraag stellen"
+    ],
+    "estimated_minutes": 10,
+    "xp_reward": 200,
+    "badge_unlock": null
+  },
+  {
+    "slug": "b1-news-discussion",
+    "unit_slug": "b1-unit-08-news-media",
+    "title_nl": "Nieuws bespreken",
+    "title_en": "Discussing the news",
+    "difficulty": "B1",
+    "npc_name": "Sander",
+    "npc_persona": "Vriend die graag over actualiteiten praat. Heeft een sterke mening en wil van jou ook horen.",
+    "npc_voice_id": "ErXwobaYiN019PkySvjV",
+    "opening_nl": "Heb je het nieuws van vanochtend gezien? Wat vind je ervan?",
+    "must_use_vocab": [
+      "nieuws",
+      "artikel",
+      "volgens",
+      "media"
+    ],
+    "must_use_grammar": [],
+    "success_criteria": [
+      "Geeft samenvatting van een nieuwsbericht",
+      "Geeft eigen mening met argument",
+      "Vraagt zijn mening terug"
+    ],
+    "failure_modes": [
+      "Alleen feiten herhalen zonder mening",
+      "Geen wedervraag"
+    ],
+    "estimated_minutes": 8,
+    "xp_reward": 150,
+    "badge_unlock": null
+  },
+  {
+    "slug": "b1-environment-debate",
+    "unit_slug": "b1-unit-09-environment",
+    "title_nl": "Duurzaam wonen",
+    "title_en": "Sustainable living",
+    "difficulty": "B1",
+    "npc_name": "Lotte",
+    "npc_persona": "Klimaatactivist. Enthousiast en goed geïnformeerd. Vraagt door op wat jij zelf doet.",
+    "npc_voice_id": "EXAVITQu4vr4xnSDxMaL",
+    "opening_nl": "Wat doe jij zelf om duurzamer te leven?",
+    "must_use_vocab": [
+      "milieu",
+      "duurzaam",
+      "energie",
+      "afval"
+    ],
+    "must_use_grammar": [],
+    "success_criteria": [
+      "Beschrijft minstens twee duurzame gewoontes",
+      "Noemt één moeilijkheid",
+      "Stelt een vraag terug over wat zij doet"
+    ],
+    "failure_modes": [
+      "Alleen algemeenheden zonder eigen voorbeeld",
+      "Geen wedervraag"
+    ],
+    "estimated_minutes": 8,
+    "xp_reward": 150,
+    "badge_unlock": null
+  },
+  {
+    "slug": "b1-doctor-visit-detailed",
+    "unit_slug": "b1-unit-10-health-body",
+    "title_nl": "Uitgebreid doktersbezoek",
+    "title_en": "Detailed doctor visit",
+    "difficulty": "B1",
+    "npc_name": "Dr. de Vries",
+    "npc_persona": "Huisarts die je al een paar keer eerder gezien heeft. Vraagt door op je symptomen en je levensstijl.",
+    "npc_voice_id": "VR6AewLTigWG4xSOukaG",
+    "opening_nl": "Goedemiddag. Vertel eens, waar heeft u last van?",
+    "must_use_vocab": [
+      "pijn",
+      "klachten",
+      "al",
+      "sinds"
+    ],
+    "must_use_grammar": [],
+    "success_criteria": [
+      "Beschrijft minstens twee symptomen",
+      "Vertelt hoe lang het al duurt",
+      "Stelt minstens één eigen vraag"
+    ],
+    "failure_modes": [
+      "Te kort antwoord",
+      "Geen eigen vraag"
+    ],
+    "estimated_minutes": 8,
+    "xp_reward": 200,
+    "badge_unlock": null
   }
 ]

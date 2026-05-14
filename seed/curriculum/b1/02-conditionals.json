@@ -1,0 +1,178 @@
+{
+  "unit": {
+    "slug": "b1-unit-02-conditionals",
+    "title_nl": "Voorwaardelijke zinnen",
+    "title_en": "Conditional sentences",
+    "description": "Als-dan zinnen, hypothetische situaties, en voorwaardelijke wijs met zou.",
+    "cefr_level": "B1",
+    "order": 2,
+    "grammar_concept_slug": null
+  },
+  "drills": [
+    {
+      "slug": "b1-02-conditionals-d01",
+      "type": "translate",
+      "prompt_en": "If it rains, I will stay home.",
+      "canonical_dutch": "Als het regent, blijf ik thuis.",
+      "expected_english": "If it rains, I will stay home.",
+      "audio_voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "hints": ["als", "blijven"],
+      "options": null
+    },
+    {
+      "slug": "b1-02-conditionals-d02",
+      "type": "translate",
+      "prompt_en": "If I had more time, I would learn Dutch faster.",
+      "canonical_dutch": "Als ik meer tijd had, zou ik sneller Nederlands leren.",
+      "expected_english": "If I had more time, I would learn Dutch faster.",
+      "audio_voice_id": "EXAVITQu4vr4xnSDxMaL",
+      "hints": ["zou", "sneller"],
+      "options": null
+    },
+    {
+      "slug": "b1-02-conditionals-d03",
+      "type": "translate",
+      "prompt_en": "If I were you, I would say no.",
+      "canonical_dutch": "Als ik jou was, zou ik nee zeggen.",
+      "expected_english": "If I were you, I would say no.",
+      "audio_voice_id": "ErXwobaYiN019PkySvjV",
+      "hints": ["als ik jou was"],
+      "options": null
+    },
+    {
+      "slug": "b1-02-conditionals-d04",
+      "type": "translate",
+      "prompt_en": "I would go to the party if I were not so tired.",
+      "canonical_dutch": "Ik zou naar het feest gaan als ik niet zo moe was.",
+      "expected_english": "I would go to the party if I were not so tired.",
+      "audio_voice_id": "AZnzlk1XvdvUeBnXmlld",
+      "hints": ["feest", "moe"],
+      "options": null
+    },
+    {
+      "slug": "b1-02-conditionals-d05",
+      "type": "translate",
+      "prompt_en": "If we had known that earlier, we would have left sooner.",
+      "canonical_dutch": "Als we dat eerder hadden geweten, waren we eerder vertrokken.",
+      "expected_english": "If we had known that earlier, we would have left sooner.",
+      "audio_voice_id": "VR6AewLTigWG4xSOukaG",
+      "hints": ["geweten", "vertrokken"],
+      "options": null
+    },
+    {
+      "slug": "b1-02-conditionals-d06",
+      "type": "multipleChoice",
+      "prompt_en": "Choose the correct translation of: If you call me, I will come.",
+      "canonical_dutch": "Als je me belt, kom ik.",
+      "expected_english": "If you call me, I will come.",
+      "audio_voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "hints": [],
+      "options": [
+        "Als je me belt, kom ik.",
+        "Als jij belt me, ik kom.",
+        "Wanneer mij bellen, ik kom.",
+        "Indien je belt mij, ik kom."
+      ]
+    },
+    {
+      "slug": "b1-02-conditionals-d07",
+      "type": "multipleChoice",
+      "prompt_en": "Choose the correct translation of: If I won the lottery, I would buy a house.",
+      "canonical_dutch": "Als ik de loterij won, zou ik een huis kopen.",
+      "expected_english": "If I won the lottery, I would buy a house.",
+      "audio_voice_id": "EXAVITQu4vr4xnSDxMaL",
+      "hints": [],
+      "options": [
+        "Als ik de loterij won, zou ik een huis kopen.",
+        "Als ik win loterij, ik koop huis.",
+        "Wanneer loterij win, ik zou huis koopt.",
+        "Indien ik loterij wint, koop ik huis."
+      ]
+    },
+    {
+      "slug": "b1-02-conditionals-d08",
+      "type": "multipleChoice",
+      "prompt_en": "Choose the correct translation of: What would you do if you lost your job?",
+      "canonical_dutch": "Wat zou je doen als je je baan kwijtraakte?",
+      "expected_english": "What would you do if you lost your job?",
+      "audio_voice_id": "ErXwobaYiN019PkySvjV",
+      "hints": [],
+      "options": [
+        "Wat zou je doen als je je baan kwijtraakte?",
+        "Wat doe je als je baan verliest?",
+        "Wat zou jij doe wanneer baan verlies?",
+        "Wat als baan kwijt, je zou doen?"
+      ]
+    },
+    {
+      "slug": "b1-02-conditionals-d09",
+      "type": "fillBlank",
+      "prompt_en": "Fill in the blank: ___ het mooi weer is, gaan we fietsen.",
+      "canonical_dutch": "Als",
+      "expected_english": "If",
+      "audio_voice_id": "AZnzlk1XvdvUeBnXmlld",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "b1-02-conditionals-d10",
+      "type": "fillBlank",
+      "prompt_en": "Fill in the blank: Ik ___ graag op vakantie gaan als ik geld had.",
+      "canonical_dutch": "zou",
+      "expected_english": "would",
+      "audio_voice_id": "VR6AewLTigWG4xSOukaG",
+      "hints": ["zullen"],
+      "options": null
+    },
+    {
+      "slug": "b1-02-conditionals-d11",
+      "type": "fillBlank",
+      "prompt_en": "Fill in the blank: Als ik jou ___, zou ik die kans pakken.",
+      "canonical_dutch": "was",
+      "expected_english": "were",
+      "audio_voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "hints": ["zijn"],
+      "options": null
+    },
+    {
+      "slug": "b1-02-conditionals-d12",
+      "type": "speak",
+      "prompt_en": "Say in Dutch: If it is sunny tomorrow, we will go to the beach.",
+      "canonical_dutch": "Als het morgen zonnig is, gaan we naar het strand.",
+      "expected_english": "If it is sunny tomorrow, we will go to the beach.",
+      "audio_voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "b1-02-conditionals-d13",
+      "type": "speak",
+      "prompt_en": "Say in Dutch: If I had a car, I would drive to work.",
+      "canonical_dutch": "Als ik een auto had, zou ik naar het werk rijden.",
+      "expected_english": "If I had a car, I would drive to work.",
+      "audio_voice_id": "EXAVITQu4vr4xnSDxMaL",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "b1-02-conditionals-d14",
+      "type": "speak",
+      "prompt_en": "Say in Dutch: If you were here, you would understand it better.",
+      "canonical_dutch": "Als je hier was, zou je het beter begrijpen.",
+      "expected_english": "If you were here, you would understand it better.",
+      "audio_voice_id": "ErXwobaYiN019PkySvjV",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "b1-02-conditionals-d15",
+      "type": "speak",
+      "prompt_en": "Say in Dutch: If I had known, I would have helped.",
+      "canonical_dutch": "Als ik het had geweten, had ik geholpen.",
+      "expected_english": "If I had known, I would have helped.",
+      "audio_voice_id": "AZnzlk1XvdvUeBnXmlld",
+      "hints": [],
+      "options": null
+    }
+  ]
+}

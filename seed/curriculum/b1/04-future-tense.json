@@ -1,0 +1,178 @@
+{
+  "unit": {
+    "slug": "b1-unit-04-future-tense",
+    "title_nl": "Toekomende tijd",
+    "title_en": "Future tense",
+    "description": "Plannen, voorspellingen en beloftes uitdrukken met zullen, gaan en de presens.",
+    "cefr_level": "B1",
+    "order": 4,
+    "grammar_concept_slug": null
+  },
+  "drills": [
+    {
+      "slug": "b1-04-future-tense-d01",
+      "type": "translate",
+      "prompt_en": "Tomorrow I am going to the dentist.",
+      "canonical_dutch": "Morgen ga ik naar de tandarts.",
+      "expected_english": "Tomorrow I am going to the dentist.",
+      "audio_voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "hints": ["morgen", "tandarts"],
+      "options": null
+    },
+    {
+      "slug": "b1-04-future-tense-d02",
+      "type": "translate",
+      "prompt_en": "Next week we will start a new project.",
+      "canonical_dutch": "Volgende week beginnen we aan een nieuw project.",
+      "expected_english": "Next week we will start a new project.",
+      "audio_voice_id": "EXAVITQu4vr4xnSDxMaL",
+      "hints": ["volgende week", "beginnen"],
+      "options": null
+    },
+    {
+      "slug": "b1-04-future-tense-d03",
+      "type": "translate",
+      "prompt_en": "I will call you later.",
+      "canonical_dutch": "Ik zal je later bellen.",
+      "expected_english": "I will call you later.",
+      "audio_voice_id": "ErXwobaYiN019PkySvjV",
+      "hints": ["zullen", "later"],
+      "options": null
+    },
+    {
+      "slug": "b1-04-future-tense-d04",
+      "type": "translate",
+      "prompt_en": "It is going to rain this afternoon.",
+      "canonical_dutch": "Het gaat vanmiddag regenen.",
+      "expected_english": "It is going to rain this afternoon.",
+      "audio_voice_id": "AZnzlk1XvdvUeBnXmlld",
+      "hints": ["vanmiddag"],
+      "options": null
+    },
+    {
+      "slug": "b1-04-future-tense-d05",
+      "type": "translate",
+      "prompt_en": "In five years I want to live abroad.",
+      "canonical_dutch": "Over vijf jaar wil ik in het buitenland wonen.",
+      "expected_english": "In five years I want to live abroad.",
+      "audio_voice_id": "VR6AewLTigWG4xSOukaG",
+      "hints": ["buitenland"],
+      "options": null
+    },
+    {
+      "slug": "b1-04-future-tense-d06",
+      "type": "multipleChoice",
+      "prompt_en": "Choose the correct translation of: We are going to celebrate her birthday on Saturday.",
+      "canonical_dutch": "We gaan zaterdag haar verjaardag vieren.",
+      "expected_english": "We are going to celebrate her birthday on Saturday.",
+      "audio_voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "hints": [],
+      "options": [
+        "We gaan zaterdag haar verjaardag vieren.",
+        "We zullen zaterdag haar verjaardag.",
+        "Wij vieren zaterdag is verjaardag.",
+        "Zaterdag we gaan haar verjaardag."
+      ]
+    },
+    {
+      "slug": "b1-04-future-tense-d07",
+      "type": "multipleChoice",
+      "prompt_en": "Choose the correct translation of: I will help you when I am free.",
+      "canonical_dutch": "Ik help je wel als ik vrij ben.",
+      "expected_english": "I will help you when I am free.",
+      "audio_voice_id": "EXAVITQu4vr4xnSDxMaL",
+      "hints": [],
+      "options": [
+        "Ik help je wel als ik vrij ben.",
+        "Ik zal helpen wanneer vrij.",
+        "Ik ga helpen jou ben vrij.",
+        "Als ik vrij, ik helpt jou."
+      ]
+    },
+    {
+      "slug": "b1-04-future-tense-d08",
+      "type": "multipleChoice",
+      "prompt_en": "Choose the correct translation of: They will arrive at eight.",
+      "canonical_dutch": "Zij komen om acht uur aan.",
+      "expected_english": "They will arrive at eight.",
+      "audio_voice_id": "ErXwobaYiN019PkySvjV",
+      "hints": [],
+      "options": [
+        "Zij komen om acht uur aan.",
+        "Zij gaan acht uur aankomen.",
+        "Zij aankomen acht uur.",
+        "Om acht uur zij komen."
+      ]
+    },
+    {
+      "slug": "b1-04-future-tense-d09",
+      "type": "fillBlank",
+      "prompt_en": "Fill in the blank: Ik ___ morgen vroeg opstaan.",
+      "canonical_dutch": "ga",
+      "expected_english": "am going to",
+      "audio_voice_id": "AZnzlk1XvdvUeBnXmlld",
+      "hints": ["gaan"],
+      "options": null
+    },
+    {
+      "slug": "b1-04-future-tense-d10",
+      "type": "fillBlank",
+      "prompt_en": "Fill in the blank: Wij ___ volgend jaar trouwen.",
+      "canonical_dutch": "zullen",
+      "expected_english": "will",
+      "audio_voice_id": "VR6AewLTigWG4xSOukaG",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "b1-04-future-tense-d11",
+      "type": "fillBlank",
+      "prompt_en": "Fill in the blank: ___ vakantie ga ik naar Italië.",
+      "canonical_dutch": "Volgende",
+      "expected_english": "Next",
+      "audio_voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "b1-04-future-tense-d12",
+      "type": "speak",
+      "prompt_en": "Say in Dutch: Tomorrow I am going to work from home.",
+      "canonical_dutch": "Morgen ga ik thuiswerken.",
+      "expected_english": "Tomorrow I am going to work from home.",
+      "audio_voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "b1-04-future-tense-d13",
+      "type": "speak",
+      "prompt_en": "Say in Dutch: We will see each other next weekend.",
+      "canonical_dutch": "We zien elkaar volgend weekend.",
+      "expected_english": "We will see each other next weekend.",
+      "audio_voice_id": "EXAVITQu4vr4xnSDxMaL",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "b1-04-future-tense-d14",
+      "type": "speak",
+      "prompt_en": "Say in Dutch: I promise that I will be on time.",
+      "canonical_dutch": "Ik beloof dat ik op tijd ben.",
+      "expected_english": "I promise that I will be on time.",
+      "audio_voice_id": "ErXwobaYiN019PkySvjV",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "b1-04-future-tense-d15",
+      "type": "speak",
+      "prompt_en": "Say in Dutch: In ten years I hope to have my own company.",
+      "canonical_dutch": "Over tien jaar hoop ik mijn eigen bedrijf te hebben.",
+      "expected_english": "In ten years I hope to have my own company.",
+      "audio_voice_id": "AZnzlk1XvdvUeBnXmlld",
+      "hints": [],
+      "options": null
+    }
+  ]
+}

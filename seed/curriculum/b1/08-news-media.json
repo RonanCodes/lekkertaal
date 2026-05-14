@@ -1,0 +1,178 @@
+{
+  "unit": {
+    "slug": "b1-unit-08-news-media",
+    "title_nl": "Nieuws en media",
+    "title_en": "News and media",
+    "description": "Praten over actualiteiten, kranten, sociale media en je informatiebronnen.",
+    "cefr_level": "B1",
+    "order": 8,
+    "grammar_concept_slug": null
+  },
+  "drills": [
+    {
+      "slug": "b1-08-news-d01",
+      "type": "translate",
+      "prompt_en": "I read the news every morning.",
+      "canonical_dutch": "Ik lees elke ochtend het nieuws.",
+      "expected_english": "I read the news every morning.",
+      "audio_voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "hints": ["nieuws"],
+      "options": null
+    },
+    {
+      "slug": "b1-08-news-d02",
+      "type": "translate",
+      "prompt_en": "There was a big article in the newspaper.",
+      "canonical_dutch": "Er stond een groot artikel in de krant.",
+      "expected_english": "There was a big article in the newspaper.",
+      "audio_voice_id": "EXAVITQu4vr4xnSDxMaL",
+      "hints": ["artikel", "krant"],
+      "options": null
+    },
+    {
+      "slug": "b1-08-news-d03",
+      "type": "translate",
+      "prompt_en": "I do not believe everything I see on social media.",
+      "canonical_dutch": "Ik geloof niet alles wat ik op sociale media zie.",
+      "expected_english": "I do not believe everything I see on social media.",
+      "audio_voice_id": "ErXwobaYiN019PkySvjV",
+      "hints": ["geloven"],
+      "options": null
+    },
+    {
+      "slug": "b1-08-news-d04",
+      "type": "translate",
+      "prompt_en": "The news about the elections was on every channel.",
+      "canonical_dutch": "Het nieuws over de verkiezingen stond op elke zender.",
+      "expected_english": "The news about the elections was on every channel.",
+      "audio_voice_id": "AZnzlk1XvdvUeBnXmlld",
+      "hints": ["verkiezingen", "zender"],
+      "options": null
+    },
+    {
+      "slug": "b1-08-news-d05",
+      "type": "translate",
+      "prompt_en": "Many young people get their news from podcasts.",
+      "canonical_dutch": "Veel jongeren halen hun nieuws uit podcasts.",
+      "expected_english": "Many young people get their news from podcasts.",
+      "audio_voice_id": "VR6AewLTigWG4xSOukaG",
+      "hints": ["jongeren"],
+      "options": null
+    },
+    {
+      "slug": "b1-08-news-d06",
+      "type": "multipleChoice",
+      "prompt_en": "Choose the correct translation of: Did you watch the news yesterday?",
+      "canonical_dutch": "Heb je gisteren het nieuws gekeken?",
+      "expected_english": "Did you watch the news yesterday?",
+      "audio_voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "hints": [],
+      "options": [
+        "Heb je gisteren het nieuws gekeken?",
+        "Was je nieuws kijk gisteren?",
+        "Jij gisteren nieuws keken?",
+        "Heb je het nieuws kijken gisteren?"
+      ]
+    },
+    {
+      "slug": "b1-08-news-d07",
+      "type": "multipleChoice",
+      "prompt_en": "Choose the correct translation of: According to the journalist, the situation is serious.",
+      "canonical_dutch": "Volgens de journalist is de situatie ernstig.",
+      "expected_english": "According to the journalist, the situation is serious.",
+      "audio_voice_id": "EXAVITQu4vr4xnSDxMaL",
+      "hints": [],
+      "options": [
+        "Volgens de journalist is de situatie ernstig.",
+        "Vanwege journalist situatie is erg.",
+        "De journalist zegt situatie ernstig is.",
+        "Volgens journalist serieuze situatie."
+      ]
+    },
+    {
+      "slug": "b1-08-news-d08",
+      "type": "multipleChoice",
+      "prompt_en": "Choose the correct translation of: I prefer reading newspapers over watching television.",
+      "canonical_dutch": "Ik lees liever kranten dan dat ik televisie kijk.",
+      "expected_english": "I prefer reading newspapers over watching television.",
+      "audio_voice_id": "ErXwobaYiN019PkySvjV",
+      "hints": [],
+      "options": [
+        "Ik lees liever kranten dan dat ik televisie kijk.",
+        "Ik liever kranten lees televisie kijken.",
+        "Krant lezen ik prefer over televisie.",
+        "Ik graag kranten dan televisie."
+      ]
+    },
+    {
+      "slug": "b1-08-news-d09",
+      "type": "fillBlank",
+      "prompt_en": "Fill in the blank: Het ___ van acht uur begint zo.",
+      "canonical_dutch": "nieuws",
+      "expected_english": "news",
+      "audio_voice_id": "AZnzlk1XvdvUeBnXmlld",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "b1-08-news-d10",
+      "type": "fillBlank",
+      "prompt_en": "Fill in the blank: Hij is een bekende ___ bij de NOS.",
+      "canonical_dutch": "journalist",
+      "expected_english": "journalist",
+      "audio_voice_id": "VR6AewLTigWG4xSOukaG",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "b1-08-news-d11",
+      "type": "fillBlank",
+      "prompt_en": "Fill in the blank: Ik volg het nieuws via ___ apps op mijn telefoon.",
+      "canonical_dutch": "verschillende",
+      "expected_english": "various",
+      "audio_voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "b1-08-news-d12",
+      "type": "speak",
+      "prompt_en": "Say in Dutch: I think there is too much fake news online.",
+      "canonical_dutch": "Ik vind dat er te veel nepnieuws online staat.",
+      "expected_english": "I think there is too much fake news online.",
+      "audio_voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "b1-08-news-d13",
+      "type": "speak",
+      "prompt_en": "Say in Dutch: I usually listen to the radio while I drive.",
+      "canonical_dutch": "Ik luister meestal naar de radio terwijl ik rijd.",
+      "expected_english": "I usually listen to the radio while I drive.",
+      "audio_voice_id": "EXAVITQu4vr4xnSDxMaL",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "b1-08-news-d14",
+      "type": "speak",
+      "prompt_en": "Say in Dutch: This article gives a balanced view of the discussion.",
+      "canonical_dutch": "Dit artikel geeft een evenwichtig beeld van de discussie.",
+      "expected_english": "This article gives a balanced view of the discussion.",
+      "audio_voice_id": "ErXwobaYiN019PkySvjV",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "b1-08-news-d15",
+      "type": "speak",
+      "prompt_en": "Say in Dutch: Social media has changed how we get our news.",
+      "canonical_dutch": "Sociale media heeft veranderd hoe we ons nieuws krijgen.",
+      "expected_english": "Social media has changed how we get our news.",
+      "audio_voice_id": "AZnzlk1XvdvUeBnXmlld",
+      "hints": [],
+      "options": null
+    }
+  ]
+}

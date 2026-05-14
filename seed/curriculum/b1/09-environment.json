@@ -1,0 +1,178 @@
+{
+  "unit": {
+    "slug": "b1-unit-09-environment",
+    "title_nl": "Milieu en duurzaamheid",
+    "title_en": "Environment and sustainability",
+    "description": "Klimaatverandering, recyclen, duurzaam reizen en groen wonen.",
+    "cefr_level": "B1",
+    "order": 9,
+    "grammar_concept_slug": null
+  },
+  "drills": [
+    {
+      "slug": "b1-09-environment-d01",
+      "type": "translate",
+      "prompt_en": "We have to take better care of the environment.",
+      "canonical_dutch": "We moeten beter voor het milieu zorgen.",
+      "expected_english": "We have to take better care of the environment.",
+      "audio_voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "hints": ["milieu", "zorgen"],
+      "options": null
+    },
+    {
+      "slug": "b1-09-environment-d02",
+      "type": "translate",
+      "prompt_en": "Climate change is a serious problem.",
+      "canonical_dutch": "Klimaatverandering is een ernstig probleem.",
+      "expected_english": "Climate change is a serious problem.",
+      "audio_voice_id": "EXAVITQu4vr4xnSDxMaL",
+      "hints": ["klimaatverandering"],
+      "options": null
+    },
+    {
+      "slug": "b1-09-environment-d03",
+      "type": "translate",
+      "prompt_en": "I cycle to work instead of driving.",
+      "canonical_dutch": "Ik fiets naar mijn werk in plaats van te rijden.",
+      "expected_english": "I cycle to work instead of driving.",
+      "audio_voice_id": "ErXwobaYiN019PkySvjV",
+      "hints": ["in plaats van"],
+      "options": null
+    },
+    {
+      "slug": "b1-09-environment-d04",
+      "type": "translate",
+      "prompt_en": "We separate our waste at home.",
+      "canonical_dutch": "We scheiden ons afval thuis.",
+      "expected_english": "We separate our waste at home.",
+      "audio_voice_id": "AZnzlk1XvdvUeBnXmlld",
+      "hints": ["afval", "scheiden"],
+      "options": null
+    },
+    {
+      "slug": "b1-09-environment-d05",
+      "type": "translate",
+      "prompt_en": "Solar panels save a lot of energy.",
+      "canonical_dutch": "Zonnepanelen besparen veel energie.",
+      "expected_english": "Solar panels save a lot of energy.",
+      "audio_voice_id": "VR6AewLTigWG4xSOukaG",
+      "hints": ["zonnepanelen", "energie"],
+      "options": null
+    },
+    {
+      "slug": "b1-09-environment-d06",
+      "type": "multipleChoice",
+      "prompt_en": "Choose the correct translation of: Plastic pollution is bad for the ocean.",
+      "canonical_dutch": "Plastic vervuiling is slecht voor de oceaan.",
+      "expected_english": "Plastic pollution is bad for the ocean.",
+      "audio_voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "hints": [],
+      "options": [
+        "Plastic vervuiling is slecht voor de oceaan.",
+        "Plastic is vies voor zee water.",
+        "De oceaan plastic is niet goed.",
+        "Slecht plastic voor oceaan staat."
+      ]
+    },
+    {
+      "slug": "b1-09-environment-d07",
+      "type": "multipleChoice",
+      "prompt_en": "Choose the correct translation of: We should eat less meat.",
+      "canonical_dutch": "We zouden minder vlees moeten eten.",
+      "expected_english": "We should eat less meat.",
+      "audio_voice_id": "EXAVITQu4vr4xnSDxMaL",
+      "hints": [],
+      "options": [
+        "We zouden minder vlees moeten eten.",
+        "We minder vlees eten moet.",
+        "Wij eten weinig vlees zou.",
+        "We zullen minder vlees gegeten."
+      ]
+    },
+    {
+      "slug": "b1-09-environment-d08",
+      "type": "multipleChoice",
+      "prompt_en": "Choose the correct translation of: The government must invest in green energy.",
+      "canonical_dutch": "De overheid moet investeren in groene energie.",
+      "expected_english": "The government must invest in green energy.",
+      "audio_voice_id": "ErXwobaYiN019PkySvjV",
+      "hints": [],
+      "options": [
+        "De overheid moet investeren in groene energie.",
+        "Overheid moeten investeer groen energie.",
+        "Regering moet groen energie investeren in.",
+        "De overheid investeren groen energie zal."
+      ]
+    },
+    {
+      "slug": "b1-09-environment-d09",
+      "type": "fillBlank",
+      "prompt_en": "Fill in the blank: Het ___ wordt elk jaar warmer.",
+      "canonical_dutch": "klimaat",
+      "expected_english": "climate",
+      "audio_voice_id": "AZnzlk1XvdvUeBnXmlld",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "b1-09-environment-d10",
+      "type": "fillBlank",
+      "prompt_en": "Fill in the blank: Ik gebruik een herbruikbare ___ voor mijn koffie.",
+      "canonical_dutch": "beker",
+      "expected_english": "cup",
+      "audio_voice_id": "VR6AewLTigWG4xSOukaG",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "b1-09-environment-d11",
+      "type": "fillBlank",
+      "prompt_en": "Fill in the blank: We doen ons best om afval te ___.",
+      "canonical_dutch": "verminderen",
+      "expected_english": "reduce",
+      "audio_voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "b1-09-environment-d12",
+      "type": "speak",
+      "prompt_en": "Say in Dutch: Renewable energy is the future.",
+      "canonical_dutch": "Hernieuwbare energie is de toekomst.",
+      "expected_english": "Renewable energy is the future.",
+      "audio_voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "b1-09-environment-d13",
+      "type": "speak",
+      "prompt_en": "Say in Dutch: Everyone can do something to help the planet.",
+      "canonical_dutch": "Iedereen kan iets doen om de planeet te helpen.",
+      "expected_english": "Everyone can do something to help the planet.",
+      "audio_voice_id": "EXAVITQu4vr4xnSDxMaL",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "b1-09-environment-d14",
+      "type": "speak",
+      "prompt_en": "Say in Dutch: I try to use public transport more often.",
+      "canonical_dutch": "Ik probeer vaker het openbaar vervoer te gebruiken.",
+      "expected_english": "I try to use public transport more often.",
+      "audio_voice_id": "ErXwobaYiN019PkySvjV",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "b1-09-environment-d15",
+      "type": "speak",
+      "prompt_en": "Say in Dutch: If we do nothing, the consequences will be huge.",
+      "canonical_dutch": "Als we niets doen, zullen de gevolgen enorm zijn.",
+      "expected_english": "If we do nothing, the consequences will be huge.",
+      "audio_voice_id": "AZnzlk1XvdvUeBnXmlld",
+      "hints": [],
+      "options": null
+    }
+  ]
+}

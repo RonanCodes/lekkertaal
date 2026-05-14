@@ -1,0 +1,178 @@
+{
+  "unit": {
+    "slug": "b1-unit-05-comparatives-superlatives",
+    "title_nl": "Vergrotende en overtreffende trap",
+    "title_en": "Comparatives and superlatives",
+    "description": "Dingen vergelijken: groter dan, het grootst, even snel als.",
+    "cefr_level": "B1",
+    "order": 5,
+    "grammar_concept_slug": null
+  },
+  "drills": [
+    {
+      "slug": "b1-05-comp-sup-d01",
+      "type": "translate",
+      "prompt_en": "This book is better than the previous one.",
+      "canonical_dutch": "Dit boek is beter dan het vorige.",
+      "expected_english": "This book is better than the previous one.",
+      "audio_voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "hints": ["beter dan"],
+      "options": null
+    },
+    {
+      "slug": "b1-05-comp-sup-d02",
+      "type": "translate",
+      "prompt_en": "Amsterdam is the largest city in the Netherlands.",
+      "canonical_dutch": "Amsterdam is de grootste stad van Nederland.",
+      "expected_english": "Amsterdam is the largest city in the Netherlands.",
+      "audio_voice_id": "EXAVITQu4vr4xnSDxMaL",
+      "hints": ["grootste"],
+      "options": null
+    },
+    {
+      "slug": "b1-05-comp-sup-d03",
+      "type": "translate",
+      "prompt_en": "She is just as tall as her brother.",
+      "canonical_dutch": "Zij is even lang als haar broer.",
+      "expected_english": "She is just as tall as her brother.",
+      "audio_voice_id": "ErXwobaYiN019PkySvjV",
+      "hints": ["even ... als"],
+      "options": null
+    },
+    {
+      "slug": "b1-05-comp-sup-d04",
+      "type": "translate",
+      "prompt_en": "Today is the warmest day of the year.",
+      "canonical_dutch": "Vandaag is de warmste dag van het jaar.",
+      "expected_english": "Today is the warmest day of the year.",
+      "audio_voice_id": "AZnzlk1XvdvUeBnXmlld",
+      "hints": ["warmste"],
+      "options": null
+    },
+    {
+      "slug": "b1-05-comp-sup-d05",
+      "type": "translate",
+      "prompt_en": "The train is faster than the bus.",
+      "canonical_dutch": "De trein is sneller dan de bus.",
+      "expected_english": "The train is faster than the bus.",
+      "audio_voice_id": "VR6AewLTigWG4xSOukaG",
+      "hints": ["sneller dan"],
+      "options": null
+    },
+    {
+      "slug": "b1-05-comp-sup-d06",
+      "type": "multipleChoice",
+      "prompt_en": "Choose the correct translation of: My new car is much more expensive than the old one.",
+      "canonical_dutch": "Mijn nieuwe auto is veel duurder dan de oude.",
+      "expected_english": "My new car is much more expensive than the old one.",
+      "audio_voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "hints": [],
+      "options": [
+        "Mijn nieuwe auto is veel duurder dan de oude.",
+        "Mijn auto nieuw veel duur de oude.",
+        "Mijn nieuwste auto duurst de oude.",
+        "Veel duurder mijn nieuwe oude auto."
+      ]
+    },
+    {
+      "slug": "b1-05-comp-sup-d07",
+      "type": "multipleChoice",
+      "prompt_en": "Choose the correct translation of: This is the best restaurant in town.",
+      "canonical_dutch": "Dit is het beste restaurant in de stad.",
+      "expected_english": "This is the best restaurant in town.",
+      "audio_voice_id": "EXAVITQu4vr4xnSDxMaL",
+      "hints": [],
+      "options": [
+        "Dit is het beste restaurant in de stad.",
+        "Dit is restaurant beter stad.",
+        "Het is beste restaurant van stad.",
+        "Beste in stad dit restaurant."
+      ]
+    },
+    {
+      "slug": "b1-05-comp-sup-d08",
+      "type": "multipleChoice",
+      "prompt_en": "Choose the correct translation of: The weather today is worse than yesterday.",
+      "canonical_dutch": "Het weer is vandaag slechter dan gisteren.",
+      "expected_english": "The weather today is worse than yesterday.",
+      "audio_voice_id": "ErXwobaYiN019PkySvjV",
+      "hints": [],
+      "options": [
+        "Het weer is vandaag slechter dan gisteren.",
+        "Het weer slecht vandaag gisteren.",
+        "Vandaag weer slechtste gisteren dan.",
+        "Het weer is slecht vandaag dan gisteren."
+      ]
+    },
+    {
+      "slug": "b1-05-comp-sup-d09",
+      "type": "fillBlank",
+      "prompt_en": "Fill in the blank: Mijn fiets is ___ dan jouw fiets.",
+      "canonical_dutch": "duurder",
+      "expected_english": "more expensive",
+      "audio_voice_id": "AZnzlk1XvdvUeBnXmlld",
+      "hints": ["duur"],
+      "options": null
+    },
+    {
+      "slug": "b1-05-comp-sup-d10",
+      "type": "fillBlank",
+      "prompt_en": "Fill in the blank: Hij is de ___ leerling van de klas.",
+      "canonical_dutch": "slimste",
+      "expected_english": "smartest",
+      "audio_voice_id": "VR6AewLTigWG4xSOukaG",
+      "hints": ["slim"],
+      "options": null
+    },
+    {
+      "slug": "b1-05-comp-sup-d11",
+      "type": "fillBlank",
+      "prompt_en": "Fill in the blank: Anna loopt even snel ___ Tom.",
+      "canonical_dutch": "als",
+      "expected_english": "as",
+      "audio_voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "b1-05-comp-sup-d12",
+      "type": "speak",
+      "prompt_en": "Say in Dutch: This is the most interesting book I have ever read.",
+      "canonical_dutch": "Dit is het interessantste boek dat ik ooit heb gelezen.",
+      "expected_english": "This is the most interesting book I have ever read.",
+      "audio_voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "b1-05-comp-sup-d13",
+      "type": "speak",
+      "prompt_en": "Say in Dutch: My sister is older than I am.",
+      "canonical_dutch": "Mijn zus is ouder dan ik.",
+      "expected_english": "My sister is older than I am.",
+      "audio_voice_id": "EXAVITQu4vr4xnSDxMaL",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "b1-05-comp-sup-d14",
+      "type": "speak",
+      "prompt_en": "Say in Dutch: Cycling is healthier than driving a car.",
+      "canonical_dutch": "Fietsen is gezonder dan autorijden.",
+      "expected_english": "Cycling is healthier than driving a car.",
+      "audio_voice_id": "ErXwobaYiN019PkySvjV",
+      "hints": [],
+      "options": null
+    },
+    {
+      "slug": "b1-05-comp-sup-d15",
+      "type": "speak",
+      "prompt_en": "Say in Dutch: This is the cheapest option that we have.",
+      "canonical_dutch": "Dit is de goedkoopste optie die we hebben.",
+      "expected_english": "This is the cheapest option that we have.",
+      "audio_voice_id": "AZnzlk1XvdvUeBnXmlld",
+      "hints": [],
+      "options": null
+    }
+  ]
+}
