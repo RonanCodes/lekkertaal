@@ -1,11 +1,11 @@
-import { createFileRoute, Link, redirect  } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
-import { auth } from "@clerk/tanstack-react-start/server";
 import { z } from "zod";
 import { db } from "../db/client";
 import { users } from "../db/schema";
 import { desc, asc, eq } from "drizzle-orm";
 import { requireWorkerContext } from "../entry.server";
+import { requireUserClerkId } from "../lib/server/auth-helper";
 import { AppShell } from "../components/AppShell";
 
 const sortSchema = z.object({
@@ -27,11 +27,10 @@ const listUsers = createServerFn({ method: "GET" })
     (input: { sort: "xp" | "streak" | "level" | "joined"; page: number }) => input,
   )
   .handler(async ({ data }) => {
-    const a = await auth();
-    if (!a.userId) throw redirect({ to: "/sign-in" });
+    const clerkId = await requireUserClerkId();
     const { env } = requireWorkerContext();
     const drz = db(env.DB);
-    const me = await drz.select().from(users).where(eq(users.clerkId, a.userId)).limit(1);
+    const me = await drz.select().from(users).where(eq(users.clerkId, clerkId)).limit(1);
     if (!me[0]) throw new Error("User row missing");
 
     // Sort: level reuses xp ordering since level is derived from xp.

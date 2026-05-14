@@ -1,20 +1,19 @@
-import { createFileRoute, useRouter, redirect  } from "@tanstack/react-router";
+import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
-import { auth } from "@clerk/tanstack-react-start/server";
 import { useState } from "react";
 import { db } from "../db/client";
 import { users } from "../db/schema";
 import { eq } from "drizzle-orm";
 import { requireWorkerContext } from "../entry.server";
+import { requireUserClerkId } from "../lib/server/auth-helper";
 import { AppShell } from "../components/AppShell";
 import { Stroop } from "../components/Stroop";
 
 const getSettings = createServerFn({ method: "GET" }).handler(async () => {
-  const a = await auth();
-  if (!a.userId) throw redirect({ to: "/sign-in" });
+  const clerkId = await requireUserClerkId();
   const { env } = requireWorkerContext();
   const drz = db(env.DB);
-  const me = await drz.select().from(users).where(eq(users.clerkId, a.userId)).limit(1);
+  const me = await drz.select().from(users).where(eq(users.clerkId, clerkId)).limit(1);
   if (!me[0]) throw new Error("User row missing");
   return {
     user: {
@@ -44,8 +43,7 @@ const updateSettings = createServerFn({ method: "POST" })
     }) => input,
   )
   .handler(async ({ data }) => {
-    const a = await auth();
-    if (!a.userId) throw redirect({ to: "/sign-in" });
+    const clerkId = await requireUserClerkId();
     const { env } = requireWorkerContext();
     const drz = db(env.DB);
     const patch: Record<string, unknown> = {};
@@ -55,7 +53,7 @@ const updateSettings = createServerFn({ method: "POST" })
     if (typeof data.reminderHour === "number") patch.reminderHour = data.reminderHour;
     if (typeof data.isPublic === "boolean") patch.isPublic = data.isPublic;
     if (Object.keys(patch).length > 0) {
-      await drz.update(users).set(patch).where(eq(users.clerkId, a.userId));
+      await drz.update(users).set(patch).where(eq(users.clerkId, clerkId));
     }
     return { ok: true as const };
   });

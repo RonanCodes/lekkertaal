@@ -1,25 +1,24 @@
-import { createFileRoute, redirect  } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
-import { auth } from "@clerk/tanstack-react-start/server";
 import { db } from "../db/client";
 import { users } from "../db/schema";
 import { eq } from "drizzle-orm";
 import { requireWorkerContext } from "../entry.server";
+import { requireUserClerkId } from "../lib/server/auth-helper";
 import { getProfileBadges } from "../lib/server/badges";
 import { getCurrentLeagueForUser, tierMeta } from "../lib/server/leagues";
 import { AppShell } from "../components/AppShell";
 
 /**
- * Owner profile view — the signed-in user's own profile. The PUBLIC version
+ * Owner profile view, the signed-in user's own profile. The PUBLIC version
  * at /app/profile/$displayName lands in US-025; for now this is enough to
  * render the badges grid (US-023 acceptance #5).
  */
 const getOwnProfile = createServerFn({ method: "GET" }).handler(async () => {
-  const a = await auth();
-  if (!a.userId) throw redirect({ to: "/sign-in" });
+  const clerkId = await requireUserClerkId();
   const { env } = requireWorkerContext();
   const drz = db(env.DB);
-  const me = await drz.select().from(users).where(eq(users.clerkId, a.userId)).limit(1);
+  const me = await drz.select().from(users).where(eq(users.clerkId, clerkId)).limit(1);
   if (!me[0]) throw new Error("User row missing");
   const badges = await getProfileBadges(drz, me[0].id);
   const league = await getCurrentLeagueForUser(drz, me[0].id);
