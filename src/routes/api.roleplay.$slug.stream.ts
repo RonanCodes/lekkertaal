@@ -6,6 +6,7 @@ import { db } from "../db/client";
 import { users, scenarios } from "../db/schema";
 import { eq } from "drizzle-orm";
 import { requireWorkerContext } from "../entry.server";
+import { emitAiCall, buildAiCallPayload } from "../lib/ai-telemetry";
 
 /**
  * Roleplay streaming endpoint.
@@ -28,7 +29,7 @@ export const Route = createFileRoute("/api/roleplay/$slug/stream")({
           return new Response("Not signed in", { status: 401 });
         }
 
-        const { env } = requireWorkerContext();
+        const { env, ctx } = requireWorkerContext();
         if (!env.ANTHROPIC_API_KEY) {
           return new Response("ANTHROPIC_API_KEY not configured", { status: 500 });
         }
@@ -63,11 +64,48 @@ export const Route = createFileRoute("/api/roleplay/$slug/stream")({
         // Workers; createAnthropic({ apiKey }) is the explicit form.
         const anthropic = createAnthropic({ apiKey: env.ANTHROPIC_API_KEY });
 
+        const modelId = "claude-haiku-4-5";
+        const functionId = "roleplay.stream";
+        const startedAt = Date.now();
+
         const result = streamText({
-          model: anthropic("claude-haiku-4-5"),
+          model: anthropic(modelId),
           system: systemPrompt,
           messages: convertToModelMessages(body.messages),
           temperature: 0.7,
+          abortSignal: request.signal,
+          experimental_telemetry: {
+            isEnabled: true,
+            functionId,
+            metadata: {
+              userId: a.userId,
+              scenarioSlug: params.slug,
+            },
+          },
+          onFinish: ({ usage, finishReason }) => {
+            const payload = buildAiCallPayload({
+              functionId,
+              model: modelId,
+              startedAt,
+              usage,
+              finishReason,
+              userId: a.userId,
+              scenarioSlug: params.slug,
+            });
+            emitAiCall(payload, env, ctx);
+          },
+          onError: ({ error }) => {
+            const payload = buildAiCallPayload({
+              functionId,
+              model: modelId,
+              startedAt,
+              finishReason: "error",
+              userId: a.userId,
+              scenarioSlug: params.slug,
+              extra: { error: String(error) },
+            });
+            emitAiCall(payload, env, ctx);
+          },
         });
 
         return result.toUIMessageStreamResponse();

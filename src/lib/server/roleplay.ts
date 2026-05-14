@@ -21,6 +21,7 @@ import { awardRoleplayComplete } from "./gamification";
 import { awardBadgesIfEligible } from "./badges";
 import { log } from "../logger";
 import { requireUserClerkId } from "./auth-helper";
+import { emitAiCall, buildAiCallPayload } from "../ai-telemetry";
 
 export type RoleplayTranscriptEntry = {
   role: "user" | "assistant" | "system";
@@ -177,7 +178,7 @@ export const gradeRoleplaySession = createServerFn({ method: "POST" })
   .inputValidator((input: { sessionId: number }) => input)
   .handler(async ({ data }) => {
     const userId = await requireUserClerkId();
-    const { env } = requireWorkerContext();
+    const { env, ctx } = requireWorkerContext();
     if (!env.ANTHROPIC_API_KEY) {
       log.error("gradeRoleplaySession: ANTHROPIC_API_KEY missing", { sessionId: data.sessionId });
       throw new Error("ANTHROPIC_API_KEY not configured");
@@ -238,14 +239,20 @@ export const gradeRoleplaySession = createServerFn({ method: "POST" })
       .map((t) => `${t.role === "user" ? "Learner" : s.npcName}: ${t.content}`)
       .join("\n");
 
-    const { object: rubric } = await generateObject({
-      model: anthropic("claude-sonnet-4-5"),
-      schema: RubricSchema,
-      system: `You are a Dutch language teacher grading a CEFR ${s.difficulty} roleplay conversation.
+    const gradeModelId = "claude-sonnet-4-5";
+    const gradeFunctionId = "roleplay.grade";
+    const gradeStartedAt = Date.now();
+
+    let gradeResult: Awaited<ReturnType<typeof generateObject<typeof RubricSchema>>>;
+    try {
+      gradeResult = await generateObject({
+        model: anthropic(gradeModelId),
+        schema: RubricSchema,
+        system: `You are a Dutch language teacher grading a CEFR ${s.difficulty} roleplay conversation.
 The learner had to: ${(s.successCriteria ?? []).join("; ") || "complete a natural conversation"}.
 Score on five rubrics (1-5 each), give actionable feedback in English, and list specific Dutch errors with corrections.
 Be encouraging. A 3 is a passing CEFR ${s.difficulty} performance, 4 is strong, 5 is exceptional.`,
-      prompt: `Scenario: ${s.titleNl} (${s.titleEn})
+        prompt: `Scenario: ${s.titleNl} (${s.titleEn})
 NPC: ${s.npcName} — ${s.npcPersona}
 Must-use vocab: ${(s.mustUseVocab ?? []).join(", ") || "(none)"}
 Must-use grammar: ${(s.mustUseGrammar ?? []).join(", ") || "(none)"}
@@ -254,7 +261,49 @@ Transcript:
 ${transcriptLines}
 
 Grade the learner's Dutch. Return the rubric scores, a short English feedback paragraph (2-4 sentences), and a list of specific errors with corrections.`,
-    });
+        experimental_telemetry: {
+          isEnabled: true,
+          functionId: gradeFunctionId,
+          metadata: {
+            userId,
+            scenarioSlug: s.slug,
+            sessionId: data.sessionId,
+          },
+        },
+      });
+    } catch (err) {
+      emitAiCall(
+        buildAiCallPayload({
+          functionId: gradeFunctionId,
+          model: gradeModelId,
+          startedAt: gradeStartedAt,
+          finishReason: "error",
+          userId,
+          scenarioSlug: s.slug,
+          extra: { sessionId: data.sessionId, error: String(err) },
+        }),
+        env,
+        ctx,
+      );
+      throw err;
+    }
+
+    emitAiCall(
+      buildAiCallPayload({
+        functionId: gradeFunctionId,
+        model: gradeModelId,
+        startedAt: gradeStartedAt,
+        usage: gradeResult.usage,
+        finishReason: gradeResult.finishReason,
+        userId,
+        scenarioSlug: s.slug,
+        extra: { sessionId: data.sessionId },
+      }),
+      env,
+      ctx,
+    );
+
+    const rubric = gradeResult.object;
 
     const avg =
       (rubric.grammar +
