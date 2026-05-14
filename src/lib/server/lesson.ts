@@ -24,7 +24,8 @@ export type DrillType =
   | "listening_mc"
   | "translation_typing"
   | "fill_blank"
-  | "word_ordering";
+  | "word_ordering"
+  | "speak";
 
 export type LessonPayload = {
   user: {

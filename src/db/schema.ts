@@ -321,6 +321,43 @@ export const transcripts = sqliteTable(
   }),
 );
 
+/**
+ * Speak-drill attempt log (P2-STT-3 #56).
+ *
+ * One row per scored speak-drill attempt. Records the score, transcript, and
+ * R2 audio key for the clip. `passed` is a denormalised boolean (score >= 80)
+ * so the daily-quests speak-progress query can index a single column instead
+ * of recomputing per-row.
+ *
+ * The unique (userId, drillId, passed=true) constraint is enforced at the
+ * application layer (not as a DB constraint) so a learner can retry a drill
+ * many times without inflating their XP. The route awards XP only on the
+ * first passing attempt for each (userId, drillId) pair; subsequent retries
+ * are logged for analytics but yield no XP.
+ */
+export const speakDrillAttempts = sqliteTable(
+  "speak_drill_attempts",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    userId: integer("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    drillId: integer("drill_id")
+      .notNull()
+      .references(() => exercises.id, { onDelete: "cascade" }),
+    score: integer("score").notNull(),
+    passed: integer("passed", { mode: "boolean" }).notNull(),
+    transcript: text("transcript").notNull(),
+    audioKey: text("audio_key"),
+    xpAwarded: integer("xp_awarded").default(0).notNull(),
+    createdAt: text("created_at").default(sql`CURRENT_TIMESTAMP`).notNull(),
+  },
+  (t) => ({
+    byUser: index("idx_speak_attempts_user").on(t.userId, t.createdAt),
+    byUserDrill: index("idx_speak_attempts_user_drill").on(t.userId, t.drillId),
+  }),
+);
+
 // ============================================================================
 // SPACED REPETITION (SM-2)
 // ============================================================================
@@ -668,3 +705,5 @@ export type PeerDrill = typeof peerDrills.$inferSelect;
 export type NewPeerDrill = typeof peerDrills.$inferInsert;
 export type League = typeof leagues.$inferSelect;
 export type NewLeague = typeof leagues.$inferInsert;
+export type SpeakDrillAttempt = typeof speakDrillAttempts.$inferSelect;
+export type NewSpeakDrillAttempt = typeof speakDrillAttempts.$inferInsert;
