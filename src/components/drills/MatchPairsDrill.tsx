@@ -7,28 +7,41 @@ import type { DrillProps } from "./DrillRenderer";
 type Pair = { nl: string; en: string };
 
 /**
- * Match Pairs drill (US-010).
+ * Match Pairs drill (US-010, issue #114).
  *
- * Data shape (drill.options):
- *   [{ nl: "huis", en: "house" }, { nl: "boom", en: "tree" }, ...]
+ * Data shape: an array of `{ nl, en }` pairs. Seeded rows put the array in
+ * the `answer` column (not `options`), so read `answer` first and fall back
+ * to `options` for forward-compat with any future seed shape.
  *
- * UI: 4 NL tiles + 4 EN tiles in shuffled positions. Tap NL → highlight, tap
- * EN → confirm match (green flash + remove pair) or reject (red flash + shake).
- * Drill completes when all 4 pairs are matched, then onSubmit(true) fires.
+ * UI: NL tiles on the left + EN tiles on the right, both shuffled. Tap NL →
+ * highlight, tap EN → confirm match (green flash + remove pair) or reject
+ * (red flash + shake). Drill completes when all pairs are matched, then
+ * onSubmit(true) fires.
  */
 export function MatchPairsDrill({ drill, onSubmit }: DrillProps) {
-  // Parse pairs from drill.options. Fall back to a sample if data is malformed
-  // so the player never crashes.
+  // Parse pairs from drill.answer (canonical seed column) with drill.options
+  // as fallback. Filter to well-formed { nl, en } entries so a malformed row
+  // can't crash the player.
   const pairs = useMemo<Pair[]>(() => {
-    const parsed = parseField<Pair[]>(drill.options);
-    if (Array.isArray(parsed) && parsed.length > 0) return parsed.slice(0, 4);
+    const fromAnswer = parseField<Pair[]>(drill.answer);
+    const fromOptions = parseField<Pair[]>(drill.options);
+    const raw: Pair[] =
+      Array.isArray(fromAnswer) && fromAnswer.length > 0
+        ? fromAnswer
+        : Array.isArray(fromOptions)
+          ? fromOptions
+          : [];
+    const clean = raw.filter(
+      (p) => p && typeof p.nl === "string" && typeof p.en === "string",
+    );
+    if (clean.length > 0) return clean.slice(0, 4);
     return [
       { nl: "huis", en: "house" },
       { nl: "boom", en: "tree" },
       { nl: "boek", en: "book" },
       { nl: "tafel", en: "table" },
     ];
-  }, [drill.options]);
+  }, [drill.answer, drill.options]);
 
   // Stable tile lists with their indexes (so duplicates would still work).
   const initialNl = useMemo(
@@ -116,7 +129,7 @@ export function MatchPairsDrill({ drill, onSubmit }: DrillProps) {
       promptLabel="Match pairs"
       prompt={drill.promptEn ?? "Match the Dutch words to their English meanings"}
     >
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-2 gap-3" data-testid="match-pairs-drill">
         <div className="space-y-2">
           {visibleNl.map((t, i) => {
             const isSelected = selectedNl === t.idx;
@@ -126,6 +139,7 @@ export function MatchPairsDrill({ drill, onSubmit }: DrillProps) {
             return (
               <button
                 key={t.key}
+                data-testid={`match-pairs-nl-${t.idx}`}
                 onClick={() => pickNl(t.idx)}
                 className={`flex w-full items-center justify-between rounded-2xl border-2 px-3 py-3 text-left text-base font-semibold transition-all ${
                   isCorrect
@@ -153,6 +167,7 @@ export function MatchPairsDrill({ drill, onSubmit }: DrillProps) {
             return (
               <button
                 key={t.key}
+                data-testid={`match-pairs-en-${t.idx}`}
                 onClick={() => pickEn(t.idx)}
                 disabled={selectedNl == null}
                 className={`w-full rounded-2xl border-2 px-3 py-3 text-base font-semibold transition-all disabled:opacity-50 ${
