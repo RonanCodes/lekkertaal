@@ -33,3 +33,14 @@ VITE_CLERK_PUBLISHABLE_KEY=pk_test_REPLACE_ME
 # CLERK_TEST_USER_FIRST_NAME=Test
 # CLERK_TEST_USER_LAST_NAME=Clerk
 # CLERK_TEST_USER_PASSWORD=
+
+# E2E playwright bypass shared-secret. Generate via `openssl rand -hex 32`.
+# When `import.meta.env.DEV` is true AND a request includes header
+# `x-lekkertaal-e2e-bypass: <this value>`, the server auth-helper returns
+# the fixed seed user `seed_ronan` without invoking Clerk. Statically
+# dead-code-eliminated in production builds because the branch is gated on
+# `import.meta.env.DEV` (Vite replaces it with `false` at build time).
+# Must ALSO be set as a wrangler secret in prod for prod-pointed e2e runs:
+#   wrangler secret put E2E_BYPASS_TOKEN
+# See ADR 0006.
+# E2E_BYPASS_TOKEN=
