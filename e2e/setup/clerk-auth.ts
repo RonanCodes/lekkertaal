@@ -79,7 +79,13 @@ export async function signInAsTestUser(page: Page): Promise<void> {
     );
   }
   await ensureClerkSetup();
-  // Sign-in helper requires being on a page that loads Clerk first.
-  await page.goto("/");
+  // Attach the testing token at the CONTEXT level BEFORE the first navigation
+  // so it covers every request Clerk makes. (Pure page-level attachment
+  // misses the dev-browser handshake.)
+  await setupClerkTestingToken({ context: page.context() });
+  // Navigate to /sign-in (not "/") so <SignIn/> mounts and the Clerk SDK
+  // loads. The landing page only ships <SignedIn/> sentinels and never
+  // triggers Clerk to bootstrap.
+  await page.goto("/sign-in");
   await clerk.signIn({ page, emailAddress: TEST_USER_EMAIL });
 }
