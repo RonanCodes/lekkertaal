@@ -17,6 +17,8 @@ import { generateObject } from "ai";
 import { createAnthropic } from "@ai-sdk/anthropic";
 import { z } from "zod";
 import { enqueueRoleplayErrors } from "./spaced-rep";
+import { promoteFromRoleplay } from "./spaced-rep-promote";
+import { models } from "../models";
 import { awardRoleplayComplete } from "./gamification";
 import { awardBadgesIfEligible } from "./badges";
 import { log } from "../logger";
@@ -416,6 +418,43 @@ Grade the learner's Dutch. Return the rubric scores, a short English feedback pa
             explanationEn: e.explanationEn,
           })),
         );
+      }
+
+      // US-049 / AI-SDK-5: agentic spaced-rep promotion. Ask the model to
+      // look at the rubric + transcript and pick 1-3 concepts to promote
+      // or demote in the learner's queue (separate row family from the
+      // per-error rows enqueued above; itemType = "concept"). Best-effort:
+      // failure here must not block grading, so we swallow + log.
+      try {
+        const promoteResult = await promoteFromRoleplay(models.primary, drz, {
+          userId: me[0].id,
+          sessionId: sess.id,
+          scenarioSlug: s.slug,
+          rubric: {
+            grammar: rubric.grammar,
+            vocabulary: rubric.vocabulary,
+            taskCompletion: rubric.taskCompletion,
+            fluency: rubric.fluency,
+            politeness: rubric.politeness,
+          },
+          feedbackEn: rubric.feedbackEn,
+          errors: rubric.errors,
+          transcript: (sess.transcript ?? []).map((t) => ({
+            role: t.role,
+            content: t.content,
+          })),
+        });
+        log.info("roleplay.promote.done", {
+          sessionId: sess.id,
+          userId: me[0].id,
+          toolCalls: promoteResult.toolCalls.length,
+        });
+      } catch (err) {
+        log.warn("roleplay.promote.failed", {
+          sessionId: sess.id,
+          userId: me[0].id,
+          error: String(err),
+        });
       }
 
       // Award XP at the user level on best-attempt improvement only.
