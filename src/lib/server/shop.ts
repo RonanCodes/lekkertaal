@@ -19,6 +19,7 @@ import { users, coinEvents } from "../../db/schema";
 import { eq } from "drizzle-orm";
 import { requireWorkerContext } from "../../entry.server";
 import { requireUserClerkId } from "./auth-helper";
+import { ensureUserRow } from "./ensure-user-row";
 
 export type ShopItemId = "streak_freeze" | "hint_pack";
 
@@ -51,8 +52,7 @@ export const getShop = createServerFn({ method: "GET" }).handler(async () => {
   const userId = await requireUserClerkId();
   const { env } = requireWorkerContext();
   const drz = db(env.DB);
-  const me = await drz.select().from(users).where(eq(users.clerkId, userId)).limit(1);
-  if (!me[0]) throw new Error("User row missing");
+  const me = [await ensureUserRow(userId, drz, env)];
 
   return {
     user: {
@@ -74,8 +74,7 @@ export const buyItem = createServerFn({ method: "POST" })
     const { env } = requireWorkerContext();
     const drz = db(env.DB);
 
-    const me = await drz.select().from(users).where(eq(users.clerkId, userId)).limit(1);
-    if (!me[0]) throw new Error("User row missing");
+    const me = [await ensureUserRow(userId, drz, env)];
 
     const item = SHOP_CATALOGUE.find((i) => i.id === data.itemId);
     if (!item) throw new Error("Unknown shop item");

@@ -9,6 +9,7 @@ import { eq, and } from "drizzle-orm";
 import { requireWorkerContext } from "../../entry.server";
 import { DEV_BYPASS_CLERK_ID, requireUserClerkId, tryGetUserClerkId } from "./auth-helper";
 import { resetUserData } from "./reset-user-data";
+import { ensureUserRow } from "./ensure-user-row";
 
 /**
  * SSR-friendly auth probe used by the root route loader.
@@ -47,8 +48,10 @@ export const getMe = createServerFn({ method: "GET" }).handler(async () => {
   const clerkId = await requireUserClerkId();
   const { env } = requireWorkerContext();
   const drz = db(env.DB);
-  const rows = await drz.select().from(users).where(eq(users.clerkId, clerkId)).limit(1);
-  return rows[0] ?? null;
+  // Lazy upsert: any signed-in Clerk user gets a D1 row on first touch even
+  // if the webhook has not delivered yet. See `ensure-user-row.ts`.
+  const row = await ensureUserRow(clerkId, drz, env);
+  return row;
 });
 
 export const setCefrLevel = createServerFn({ method: "POST" })
@@ -98,13 +101,8 @@ export const resetMyData = createServerFn({ method: "POST" }).handler(async () =
   const clerkId = await requireUserClerkId();
   const { env } = requireWorkerContext();
   const drz = db(env.DB);
-  const me = await drz
-    .select({ id: users.id })
-    .from(users)
-    .where(eq(users.clerkId, clerkId))
-    .limit(1);
-  if (!me[0]) throw new Error("User row missing");
-  const result = await resetUserData(drz, me[0].id);
+  const meRow = await ensureUserRow(clerkId, drz, env);
+  const result = await resetUserData(drz, meRow.id);
   return { ok: true, cleared: result.cleared };
 });
 
@@ -113,23 +111,22 @@ export const unlockStartingUnit = createServerFn({ method: "POST" }).handler(asy
   const clerkId = await requireUserClerkId();
   const { env } = requireWorkerContext();
   const drz = db(env.DB);
-  const me = await drz.select().from(users).where(eq(users.clerkId, clerkId)).limit(1);
-  if (!me[0]) throw new Error("User row missing");
+  const me = await ensureUserRow(clerkId, drz, env);
   const firstUnit = await drz
     .select()
     .from(units)
-    .where(eq(units.cefrLevel, me[0].cefrLevel))
+    .where(eq(units.cefrLevel, me.cefrLevel))
     .orderBy(units.order)
     .limit(1);
   if (!firstUnit[0]) return { ok: false, reason: "no units" };
   const existing = await drz
     .select()
     .from(userUnitProgress)
-    .where(and(eq(userUnitProgress.userId, me[0].id), eq(userUnitProgress.unitId, firstUnit[0].id)))
+    .where(and(eq(userUnitProgress.userId, me.id), eq(userUnitProgress.unitId, firstUnit[0].id)))
     .limit(1);
   if (existing.length === 0) {
     await drz.insert(userUnitProgress).values({
-      userId: me[0].id,
+      userId: me.id,
       unitId: firstUnit[0].id,
       status: "unlocked",
       startedAt: new Date().toISOString(),

@@ -6,6 +6,7 @@ import { users } from "../db/schema";
 import { desc, asc, eq } from "drizzle-orm";
 import { requireWorkerContext } from "../entry.server";
 import { requireUserClerkId } from "../lib/server/auth-helper";
+import { ensureUserRow } from "../lib/server/ensure-user-row";
 import { AppShell } from "../components/AppShell";
 
 const sortSchema = z.object({
@@ -30,8 +31,7 @@ const listUsers = createServerFn({ method: "GET" })
     const clerkId = await requireUserClerkId();
     const { env } = requireWorkerContext();
     const drz = db(env.DB);
-    const me = await drz.select().from(users).where(eq(users.clerkId, clerkId)).limit(1);
-    if (!me[0]) throw new Error("User row missing");
+    const me = [await ensureUserRow(clerkId, drz, env)];
 
     // Sort: level reuses xp ordering since level is derived from xp.
     const orderColumn =

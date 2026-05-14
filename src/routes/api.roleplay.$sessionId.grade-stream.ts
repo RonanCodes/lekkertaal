@@ -4,7 +4,7 @@ import { createAnthropic } from "@ai-sdk/anthropic";
 import { auth } from "@clerk/tanstack-react-start/server";
 import { eq, and } from "drizzle-orm";
 import { db } from "../db/client";
-import { users, scenarios, roleplaySessions } from "../db/schema";
+import { scenarios, roleplaySessions } from "../db/schema";
 import { requireWorkerContext } from "../entry.server";
 import {
   RubricSchema,
@@ -13,6 +13,7 @@ import {
   
 } from "../lib/server/roleplay";
 import type {RoleplayRubric} from "../lib/server/roleplay";
+import { ensureUserRow } from "../lib/server/ensure-user-row";
 import { awardBadgesIfEligible } from "./../lib/server/badges";
 import { emitAiCall, buildAiCallPayload } from "../lib/ai-telemetry";
 import { log } from "../lib/logger";
@@ -57,12 +58,7 @@ export const Route = createFileRoute("/api/roleplay/$sessionId/grade-stream")({
         }
 
         const drz = db(env.DB);
-        const me = await drz
-          .select()
-          .from(users)
-          .where(eq(users.clerkId, a.userId))
-          .limit(1);
-        if (!me[0]) return new Response("User row missing", { status: 500 });
+        const me = [await ensureUserRow(a.userId, drz, env)];
 
         const sessRow = await drz
           .select()

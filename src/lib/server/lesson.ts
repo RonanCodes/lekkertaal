@@ -1,7 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { db } from "../../db/client";
 import {
-  users,
   lessons,
   exercises,
   units,
@@ -15,6 +14,7 @@ import { enqueueDrillMistake } from "./spaced-rep";
 import { awardLessonComplete } from "./gamification";
 import { awardBadgesIfEligible } from "./badges";
 import { requireUserClerkId } from "./auth-helper";
+import { ensureUserRow } from "./ensure-user-row";
 
 export type DrillType =
   | "match_pairs"
@@ -99,8 +99,7 @@ export const getLesson = createServerFn({ method: "GET", strict: false })
     const { env } = requireWorkerContext();
     const drz = db(env.DB);
 
-    const me = await drz.select().from(users).where(eq(users.clerkId, userId)).limit(1);
-    if (!me[0]) throw new Error("User row missing");
+    const me = [await ensureUserRow(userId, drz, env)];
 
     const lessonRow = await drz
       .select()
@@ -182,8 +181,7 @@ export const recordDrillResult = createServerFn({ method: "POST" })
     const userId = await requireUserClerkId();
     const { env } = requireWorkerContext();
     const drz = db(env.DB);
-    const me = await drz.select().from(users).where(eq(users.clerkId, userId)).limit(1);
-    if (!me[0]) throw new Error("User row missing");
+    const me = [await ensureUserRow(userId, drz, env)];
 
     if (!data.correct) {
       // US-019: route through the cap-aware SM-2 helper so a flurry of wrong
@@ -203,8 +201,7 @@ export const completeLesson = createServerFn({ method: "POST" })
     const userId = await requireUserClerkId();
     const { env } = requireWorkerContext();
     const drz = db(env.DB);
-    const me = await drz.select().from(users).where(eq(users.clerkId, userId)).limit(1);
-    if (!me[0]) throw new Error("User row missing");
+    const me = [await ensureUserRow(userId, drz, env)];
 
     const lessonRow = await drz
       .select()
