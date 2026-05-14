@@ -19,6 +19,14 @@
     {
       "binding": "TTS_CACHE",
       "bucket_name": "lekkertaal-tts"
+    },
+    {
+      // AI-SDK-7: image-input vocab drills. Stores PNGs generated via
+      // `/ro:generate-image` (Nano Banana 2). The bucket should be fronted
+      // by a public custom domain (e.g. images.lekkertaal.dev) so the React
+      // drill component can <img src> directly without a Worker proxy.
+      "binding": "IMAGES",
+      "bucket_name": "lekkertaal-images"
     }
   ],
   "triggers": {

@@ -18,6 +18,7 @@
     "seed:ingest": "tsx scripts/seed-ingest.ts",
     "seed:load": "tsx scripts/seed-load.ts",
     "seed:users": "tsx scripts/seed-users.ts",
+    "seed:image-drills": "tsx scripts/seed-image-drills.ts",
     "db:generate": "drizzle-kit generate",
     "db:push:local": "wrangler d1 migrations apply lekkertaal_db --local",
     "db:push:remote": "wrangler d1 migrations apply lekkertaal_db --remote",

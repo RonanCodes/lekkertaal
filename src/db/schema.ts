@@ -127,6 +127,12 @@ export const exercises = sqliteTable(
     hints: text("hints", { mode: "json" }).$type<string[]>(),
     sourceRef: text("source_ref"),
     audioUrl: text("audio_url"),
+    /**
+     * Public R2 URL of an image associated with this drill. Populated for
+     * `image_word` drills (AI-SDK-7): R2-hosted picture of a noun the learner
+     * has to name in Dutch. Null for non-visual drills.
+     */
+    imageUrl: text("image_url"),
   },
   (t) => ({
     byLesson: index("idx_exercises_lesson").on(t.lessonId),

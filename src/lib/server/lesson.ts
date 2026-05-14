@@ -25,7 +25,8 @@ export type DrillType =
   | "translation_typing"
   | "fill_blank"
   | "word_ordering"
-  | "speak";
+  | "speak"
+  | "image_word";
 
 export type LessonPayload = {
   user: {
@@ -64,6 +65,7 @@ export type DrillPayload = {
   answer: string | null;
   hints: string[] | null;
   audioUrl: string | null;
+  imageUrl: string | null;
 };
 
 export const getLesson = createServerFn({ method: "GET" })
@@ -137,6 +139,7 @@ export const getLesson = createServerFn({ method: "GET" })
         answer: d.answer == null ? null : JSON.stringify(d.answer),
         hints: d.hints,
         audioUrl: d.audioUrl,
+        imageUrl: d.imageUrl,
       })),
       reviews: reviewRows.map((r) => ({
         id: r.id,

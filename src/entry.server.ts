@@ -25,6 +25,12 @@ import { configureLogger, withRequestLogContext, log } from "./lib/logger";
 export type WorkerEnv = {
   DB: D1Database;
   TTS_CACHE: R2Bucket;
+  /**
+   * R2 bucket for image-input drill assets (AI-SDK-7). Holds the PNGs that
+   * back `image_word` drills. Read-mostly: writes happen offline via
+   * `wrangler r2 object put`, runtime code only ever reads.
+   */
+  IMAGES: R2Bucket;
   CLERK_SECRET_KEY: string;
   VITE_CLERK_PUBLISHABLE_KEY: string;
   ANTHROPIC_API_KEY?: string;
