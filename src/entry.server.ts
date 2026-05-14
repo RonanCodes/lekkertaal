@@ -47,15 +47,35 @@ export type WorkerEnv = {
 const requestStore = new AsyncLocalStorage<{ env: WorkerEnv; ctx: ExecutionContext }>();
 
 /**
+ * Dev-only fallback: the AsyncLocalStorage scope is sometimes lost across
+ * TanStack Start's server-function RPC dispatch in Vite dev mode (likely a
+ * separate microtask chain). To keep dev usable, we cache the most recent
+ * env binding on globalThis and use it as a fallback. NEVER used in production
+ * because the prod worker runs each request in its own isolate and the
+ * AsyncLocalStorage is reliable there.
+ */
+type DevEnvCache = { env: WorkerEnv; ctx: ExecutionContext } | null;
+const DEV_ENV_KEY = "__lekkertaal_dev_env__";
+function setDevEnvFallback(env: WorkerEnv, ctx: ExecutionContext): void {
+  if (import.meta.env.DEV) {
+    (globalThis as Record<string, unknown>)[DEV_ENV_KEY] = { env, ctx };
+  }
+}
+function readDevEnvFallback(): DevEnvCache {
+  if (!import.meta.env.DEV) return null;
+  return ((globalThis as Record<string, unknown>)[DEV_ENV_KEY] as DevEnvCache) ?? null;
+}
+
+/**
  * Read the current CF Worker env + execution context from inside a route
  * handler. Returns null when called outside a request scope (e.g. SSR build).
  */
 export function getWorkerContext(): { env: WorkerEnv; ctx: ExecutionContext } | null {
-  return requestStore.getStore() ?? null;
+  return requestStore.getStore() ?? readDevEnvFallback();
 }
 
 export function requireWorkerContext(): { env: WorkerEnv; ctx: ExecutionContext } {
-  const c = requestStore.getStore();
+  const c = requestStore.getStore() ?? readDevEnvFallback();
   if (!c) throw new Error("Worker context not available — only callable inside a request handler.");
   return c;
 }
@@ -64,6 +84,7 @@ const baseFetch = createStartHandler(defaultStreamHandler);
 
 export default {
   async fetch(request: Request, env: WorkerEnv, ctx: ExecutionContext): Promise<Response> {
+    setDevEnvFallback(env, ctx);
     return await requestStore.run({ env, ctx }, async () => {
       return await baseFetch(request);
     });

@@ -5,7 +5,7 @@ export const Route = createFileRoute("/")({ component: Home });
 function Home() {
   return (
     <main className="mx-auto max-w-3xl px-6 py-16 text-center">
-      <div className="mb-6 text-8xl">🥨</div>
+      <div className="mb-6 text-8xl">🧇</div>
 
       <h1 className="text-6xl font-extrabold tracking-tight">
         <span style={{ color: "var(--color-brand-orange)" }}>Lekker</span>
