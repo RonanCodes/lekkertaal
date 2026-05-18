@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
+import { Flame } from "lucide-react";
 import { db } from "../db/client";
 import { users } from "../db/schema";
 import { desc, asc, eq } from "drizzle-orm";
@@ -148,8 +149,9 @@ function UsersDirectoryPage() {
                 <span className="hidden text-xs text-neutral-500 sm:inline">
                   {r.cefrLevel}
                 </span>
-                <span className="hidden text-xs text-neutral-500 sm:inline">
-                  🔥 {r.streakDays}
+                <span className="hidden items-center gap-1 text-xs text-neutral-500 sm:inline-flex">
+                  <Flame size={12} className="text-orange-500" aria-hidden />
+                  {r.streakDays}
                 </span>
                 <span className="w-20 text-right font-semibold tabular-nums text-orange-600">
                   {r.xpTotal.toLocaleString()} XP

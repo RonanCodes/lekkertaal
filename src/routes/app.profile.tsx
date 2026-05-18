@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
+import { Flame, Zap } from "lucide-react";
 import { db } from "../db/client";
 import { useState } from "react";
 import { requireWorkerContext } from "../entry.server";
@@ -68,9 +69,9 @@ function ProfilePage() {
             <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-neutral-600">
               <span>CEFR {user.cefrLevel}</span>
               <span>·</span>
-              <span>🔥 {user.streakDays}</span>
+              <span className="inline-flex items-center gap-1"><Flame size={14} className="text-orange-500" aria-hidden />{user.streakDays}</span>
               <span>·</span>
-              <span>⚡ {user.xpTotal} XP</span>
+              <span className="inline-flex items-center gap-1"><Zap size={14} className="text-yellow-500" aria-hidden />{user.xpTotal} XP</span>
               {league && (
                 <>
                   <span>·</span>

@@ -1,5 +1,7 @@
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { useState } from "react";
+import { Coins, Lightbulb, Snowflake } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import { getShop, buyItem  } from "../lib/server/shop";
 import type {ShopItem} from "../lib/server/shop";
 import { AppShell } from "../components/AppShell";
@@ -22,7 +24,7 @@ function ShopPage() {
     setMessage(null);
     try {
       const res = await buyItem({ data: { itemId: item.id } });
-      setMessage(`Bought ${item.titleEn}! New balance: ${res.newBalance} 🪙`);
+      setMessage(`Bought ${item.titleEn}! New balance: ${res.newBalance} coins`);
       router.invalidate();
     } catch (err) {
       setMessage(
@@ -45,13 +47,14 @@ function ShopPage() {
 
         {/* Balances */}
         <div className="grid grid-cols-3 gap-3">
-          <BalanceCard label="Coins" value={user.coinsBalance} emoji="🪙" highlight />
+          <BalanceCard label="Coins" value={user.coinsBalance} Icon={Coins} iconClassName="text-amber-500" highlight />
           <BalanceCard
             label="Streak freezes"
             value={user.streakFreezesBalance}
-            emoji="❄️"
+            Icon={Snowflake}
+            iconClassName="text-sky-500"
           />
-          <BalanceCard label="Hints" value={user.hintsBalance} emoji="💡" />
+          <BalanceCard label="Hints" value={user.hintsBalance} Icon={Lightbulb} iconClassName="text-yellow-500" />
         </div>
 
         {/* Catalogue */}
@@ -78,7 +81,12 @@ function ShopPage() {
                   className="rounded-lg bg-orange-600 px-4 py-2 text-sm font-semibold text-white hover:bg-orange-700 disabled:cursor-not-allowed disabled:bg-neutral-300"
                   aria-label={`Buy ${item.titleEn} for ${item.costCoins} coins`}
                 >
-                  {isPending ? "..." : `${item.costCoins} 🪙`}
+                  {isPending ? "..." : (
+                    <span className="inline-flex items-center gap-1">
+                      {item.costCoins}
+                      <Coins size={14} className="text-amber-200" aria-hidden />
+                    </span>
+                  )}
                 </button>
               </li>
             );
@@ -98,12 +106,14 @@ function ShopPage() {
 function BalanceCard({
   label,
   value,
-  emoji,
+  Icon,
+  iconClassName,
   highlight,
 }: {
   label: string;
   value: number;
-  emoji: string;
+  Icon: LucideIcon;
+  iconClassName?: string;
   highlight?: boolean;
 }) {
   return (
@@ -114,8 +124,10 @@ function BalanceCard({
           : "border-neutral-200 bg-white"
       }`}
     >
-      <div className="text-2xl">{emoji}</div>
-      <div className="text-xl font-bold">{value}</div>
+      <div className="flex justify-center">
+        <Icon size={28} className={iconClassName} aria-hidden />
+      </div>
+      <div className="mt-1 text-xl font-bold">{value}</div>
       <div className="text-xs uppercase tracking-wide text-neutral-500">{label}</div>
     </div>
   );

@@ -1,5 +1,6 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { useState } from "react";
+import { Lock } from "lucide-react";
 import { getUnitDetail } from "../lib/server/unit";
 import { AppShell } from "../components/AppShell";
 
@@ -218,7 +219,7 @@ function UnitDetailPage() {
                   Start
                 </a>
               ) : (
-                <div className="text-2xl">🔒</div>
+                <Lock size={28} className="text-neutral-400" aria-label="Locked" />
               )}
             </div>
             {!bossFight.unlocked && (

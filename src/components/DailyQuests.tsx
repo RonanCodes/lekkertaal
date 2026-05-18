@@ -1,20 +1,36 @@
 import { useState } from "react";
+import { Link } from "@tanstack/react-router";
+import { BookOpen, Flame, Mic, Sparkles } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import type { PathQuest } from "../lib/server/path";
 
 /**
  * Daily quests ribbon (P2-CON-3).
  *
- * Shows up to 3 quests for today with progress bars. The claim button on a
- * row enables when `progress >= target` and is not yet claimed. Clicking
- * POSTs to /api/daily-quests/claim and optimistically marks the row claimed
- * so the user sees their bonus immediately; on server failure we revert.
+ * Three quests for today with progress bars. Each row links to an activity
+ * that advances the quest (lessons → /app/path, speak → /app/peer, etc.) so
+ * the tap-to-do flow is obvious. The claim button enables when
+ * progress >= target and is not yet claimed; clicking POSTs to
+ * /api/daily-quests/claim and optimistically marks the row claimed.
  */
 
-const KIND_EMOJI: Record<PathQuest["kind"], string> = {
-  xp: "🌟",
-  lessons: "📚",
-  streak: "🔥",
-  speak: "🎙️",
+const KIND_ICON: Record<PathQuest["kind"], LucideIcon> = {
+  xp: Sparkles,
+  lessons: BookOpen,
+  streak: Flame,
+  speak: Mic,
+};
+
+/**
+ * Map each quest kind to the activity that advances it. Lessons / xp / streak
+ * all funnel into the path page where the user picks a lesson; speak quests
+ * route to peer drills (the only surface that records speak attempts today).
+ */
+const KIND_HREF: Record<PathQuest["kind"], string> = {
+  xp: "/app/path",
+  lessons: "/app/path",
+  streak: "/app/path",
+  speak: "/app/peer",
 };
 
 export function DailyQuests({ initial }: { initial: PathQuest[] }) {
@@ -29,7 +45,6 @@ export function DailyQuests({ initial }: { initial: PathQuest[] }) {
     if (quest.progress < quest.target) return;
 
     setClaiming(quest.id);
-    // Optimistic update.
     setQuests((prev) =>
       prev.map((q) => (q.id === quest.id ? { ...q, claimed: true } : q)),
     );
@@ -41,7 +56,6 @@ export function DailyQuests({ initial }: { initial: PathQuest[] }) {
         body: JSON.stringify({ questId: quest.id }),
       });
       if (!res.ok) {
-        // Revert on failure.
         setQuests((prev) =>
           prev.map((q) => (q.id === quest.id ? { ...q, claimed: false } : q)),
         );
@@ -97,6 +111,8 @@ function QuestRow({
     : canClaim
       ? `Claim +${quest.bonusXp} XP`
       : `${quest.progress} / ${quest.target}`;
+  const Icon = KIND_ICON[quest.kind];
+  const href = KIND_HREF[quest.kind];
 
   return (
     <li
@@ -106,17 +122,19 @@ function QuestRow({
       className="rounded-lg bg-white p-3 ring-1 ring-orange-200"
     >
       <div className="flex items-center justify-between gap-3">
-        <div className="flex min-w-0 items-center gap-2">
-          <span className="text-lg" aria-hidden="true">
-            {KIND_EMOJI[quest.kind]}
-          </span>
+        <Link
+          to={href}
+          className="group flex min-w-0 flex-1 items-center gap-2 rounded-md p-1 -m-1 transition-colors hover:bg-orange-50"
+          aria-label={`Open activity for ${quest.titleEn}`}
+        >
+          <Icon size={20} aria-hidden className="shrink-0 text-orange-700" />
           <div className="min-w-0">
-            <div className="truncate text-sm font-medium text-neutral-800">
+            <div className="truncate text-sm font-medium text-neutral-800 group-hover:text-orange-700">
               {quest.titleEn}
             </div>
             <div className="truncate text-xs text-neutral-500">{quest.titleNl}</div>
           </div>
-        </div>
+        </Link>
         <button
           type="button"
           aria-label={`claim quest ${quest.kind}`}

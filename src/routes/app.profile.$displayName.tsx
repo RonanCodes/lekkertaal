@@ -1,5 +1,6 @@
 import { createFileRoute, notFound, Link } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
+import { Flame, Zap } from "lucide-react";
 import { db } from "../db/client";
 import { users } from "../db/schema";
 import { eq } from "drizzle-orm";
@@ -96,9 +97,9 @@ function PublicProfilePage() {
             <div className="mt-1 flex items-center gap-3 text-sm text-neutral-600">
               <span>CEFR {profile.cefrLevel}</span>
               <span>·</span>
-              <span>🔥 {profile.streakDays}</span>
+              <span className="inline-flex items-center gap-1"><Flame size={14} className="text-orange-500" aria-hidden />{profile.streakDays}</span>
               <span>·</span>
-              <span>⚡ {profile.xpTotal} XP</span>
+              <span className="inline-flex items-center gap-1"><Zap size={14} className="text-yellow-500" aria-hidden />{profile.xpTotal} XP</span>
             </div>
           </div>
           {profile.isSelf && (

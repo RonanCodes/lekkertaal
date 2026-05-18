@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { z } from "zod";
+import { Flame } from "lucide-react";
 import { getLeaderboard, getFriendsLeaderboard } from "../lib/server/leaderboard";
 import type {
   LeaderboardRow,
@@ -224,8 +225,9 @@ function Row({ row, isMe }: { row: LeaderboardRow; isMe: boolean }) {
           {tierMeta(row.leagueTier).name}
         </span>
       )}
-      <span className="hidden text-xs text-neutral-500 sm:inline">
-        🔥 {row.streakDays}
+      <span className="hidden items-center gap-1 text-xs text-neutral-500 sm:inline-flex">
+        <Flame size={12} className="text-orange-500" aria-hidden />
+        {row.streakDays}
       </span>
       <span className="w-16 text-right font-bold tabular-nums text-orange-600">
         {row.windowXp.toLocaleString()} XP
