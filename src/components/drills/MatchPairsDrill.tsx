@@ -3,44 +3,61 @@ import { DrillFrame } from "./DrillFrame";
 import { Speaker } from "./Speaker";
 import { parseField } from "./DrillRenderer";
 import type { DrillProps } from "./DrillRenderer";
+import { recordVocabPairResult } from "../../lib/server/lesson";
 
 type Pair = { nl: string; en: string };
 
+const PAIRS_PER_ROUND = 4;
+
 /**
- * Match Pairs drill (US-010, issue #114).
+ * Match Pairs drill.
  *
- * Data shape: an array of `{ nl, en }` pairs. Seeded rows put the array in
- * the `answer` column (not `options`), so read `answer` first and fall back
- * to `options` for forward-compat with any future seed shape.
+ * Resolution order for the 4 pairs shown:
+ *  1. If a unit-wide `vocabPool` is passed and has more than the drill's own
+ *     pair count, sample 4 random pairs from the pool. Re-sampled each mount
+ *     so a replayed lesson shows different words.
+ *  2. Otherwise, fall back to the drill's own `answer` JSON (legacy shape).
  *
- * UI: NL tiles on the left + EN tiles on the right, both shuffled. Tap NL →
- * highlight, tap EN → confirm match (green flash + remove pair) or reject
- * (red flash + shake). Drill completes when all pairs are matched, then
- * onSubmit(true) fires.
+ * Per-pair correctness is reported back via `recordVocabPairResult`. Wrong
+ * pairs land in spaced_rep_queue under `itemType: "vocab_pair"` so they
+ * come back as reviews. The whole-drill `onSubmit(true)` fires once at the
+ * end so the lesson player advances.
  */
-export function MatchPairsDrill({ drill, onSubmit }: DrillProps) {
-  // Parse pairs from drill.answer (canonical seed column) with drill.options
-  // as fallback. Filter to well-formed { nl, en } entries so a malformed row
-  // can't crash the player.
+export function MatchPairsDrill({ drill, onSubmit, vocabPool }: DrillProps) {
   const pairs = useMemo<Pair[]>(() => {
     const fromAnswer = parseField<Pair[]>(drill.answer);
     const fromOptions = parseField<Pair[]>(drill.options);
-    const raw: Pair[] =
+    const ownPairs: Pair[] =
       Array.isArray(fromAnswer) && fromAnswer.length > 0
         ? fromAnswer
         : Array.isArray(fromOptions)
           ? fromOptions
           : [];
-    const clean = raw.filter(
+    const ownClean = ownPairs.filter(
       (p) => p && typeof p.nl === "string" && typeof p.en === "string",
     );
-    if (clean.length > 0) return clean.slice(0, 4);
+
+    const poolClean = Array.isArray(vocabPool)
+      ? vocabPool.filter(
+          (p) => p && typeof p.nl === "string" && typeof p.en === "string",
+        )
+      : [];
+
+    if (poolClean.length >= PAIRS_PER_ROUND) {
+      return sampleN(poolClean, PAIRS_PER_ROUND);
+    }
+    if (ownClean.length > 0) return ownClean.slice(0, PAIRS_PER_ROUND);
     return [
       { nl: "huis", en: "house" },
       { nl: "boom", en: "tree" },
       { nl: "boek", en: "book" },
       { nl: "tafel", en: "table" },
     ];
+    // We intentionally do NOT depend on `vocabPool` identity beyond the
+    // initial render — re-sampling on every prop change would reset the user
+    // mid-round. A page-level remount (via `key={drill.id}`) gives them a
+    // fresh sample next time.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [drill.answer, drill.options]);
 
   // Stable tile lists with their indexes (so duplicates would still work).
@@ -96,6 +113,17 @@ export function MatchPairsDrill({ drill, onSubmit }: DrillProps) {
     if (selectedNl == null) return;
     if (selectedNl === pairIdx) {
       setFlash({ kind: "correct", nlIdx: selectedNl, enIdx: pairIdx });
+      const matched = pairs[pairIdx];
+      if (matched) {
+        void recordVocabPairResult({
+          data: {
+            nl: matched.nl,
+            en: matched.en,
+            correct: true,
+            exerciseId: drill.id,
+          },
+        }).catch(() => {});
+      }
       setTimeout(() => {
         setMatchedIdx((s) => new Set(s).add(pairIdx));
         setSelectedNl(null);
@@ -103,6 +131,17 @@ export function MatchPairsDrill({ drill, onSubmit }: DrillProps) {
       }, 250);
     } else {
       setFlash({ kind: "wrong", nlIdx: selectedNl, enIdx: pairIdx });
+      const missed = pairs[selectedNl];
+      if (missed) {
+        void recordVocabPairResult({
+          data: {
+            nl: missed.nl,
+            en: missed.en,
+            correct: false,
+            exerciseId: drill.id,
+          },
+        }).catch(() => {});
+      }
       setTimeout(() => {
         setFlash(null);
         setSelectedNl(null);
@@ -222,6 +261,10 @@ export function MatchPairsDrill({ drill, onSubmit }: DrillProps) {
       `}</style>
     </DrillFrame>
   );
+}
+
+function sampleN<T>(arr: T[], n: number): T[] {
+  return shuffle(arr).slice(0, n);
 }
 
 function shuffle<T>(arr: T[]): T[] {

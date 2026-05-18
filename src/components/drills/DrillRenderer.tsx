@@ -11,6 +11,13 @@ import type { DrillPayload } from "../../lib/server/lesson";
 export type DrillProps = {
   drill: DrillPayload;
   onSubmit: (correct: boolean, userAnswer?: string) => void;
+  /**
+   * Unit-wide vocab pool for match-pairs drills. Only consumed by
+   * MatchPairsDrill; other drill types ignore it. Passed via DrillRenderer
+   * because routing the pool through context would over-share state that
+   * only one drill type cares about.
+   */
+  vocabPool?: Array<{ nl: string; en: string }>;
 };
 
 /**
@@ -32,10 +39,10 @@ export function parseField<T>(raw: string | null): T | null {
  * type; until they land the fallback "coming soon" panel auto-marks correct
  * and advances so the player itself is testable.
  */
-export function DrillRenderer({ drill, onSubmit }: DrillProps) {
+export function DrillRenderer({ drill, onSubmit, vocabPool }: DrillProps) {
   switch (drill.type) {
     case "match_pairs":
-      return <MatchPairsDrill drill={drill} onSubmit={onSubmit} />;
+      return <MatchPairsDrill drill={drill} onSubmit={onSubmit} vocabPool={vocabPool} />;
     case "multiple_choice":
       return <MultipleChoiceDrill drill={drill} onSubmit={onSubmit} mode="text" />;
     case "listening_mc":

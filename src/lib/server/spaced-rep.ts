@@ -157,6 +157,29 @@ export async function enqueueRoleplayErrors(
   }
 }
 
+/**
+ * Called from recordVocabPairResult when a learner misses a single pair in a
+ * match-pairs drill. Tracks per-word correctness instead of per-drill, so the
+ * specific pair (huis/house, gezellig/cozy, ...) gets resurfaced rather than
+ * the whole drill.
+ */
+export async function enqueueVocabPairMistake(
+  drz: DB,
+  userId: number,
+  pair: { nl: string; en: string; exerciseId: number | null },
+): Promise<void> {
+  await upsertQueueRow(drz, {
+    userId,
+    itemType: "vocab_pair",
+    itemKey: `${pair.nl.toLowerCase()}|${pair.en.toLowerCase()}`,
+    payload: {
+      nl: pair.nl,
+      en: pair.en,
+      exerciseId: pair.exerciseId,
+    },
+  });
+}
+
 /** Called from recordDrillResult when a learner answers incorrectly. */
 export async function enqueueDrillMistake(
   drz: DB,

@@ -10,7 +10,7 @@ import {
 } from "../../db/schema";
 import { eq, and, asc, lte, sql  } from "drizzle-orm";
 import { requireWorkerContext } from "../../entry.server";
-import { enqueueDrillMistake } from "./spaced-rep";
+import { enqueueDrillMistake, enqueueVocabPairMistake } from "./spaced-rep";
 import { awardLessonComplete } from "./gamification";
 import { awardBadgesIfEligible } from "./badges";
 import { requireUserClerkId } from "./auth-helper";
@@ -70,6 +70,13 @@ export type LessonPayload = {
   };
   drills: Array<DrillPayload>;
   reviews: Array<ReviewCardPayload>;
+  /**
+   * Every unique `{nl, en}` pair from all match-pairs exercises in the lesson's
+   * unit. Match-pairs drills sample 4 random pairs from this pool each render,
+   * so a lesson replayed twice does not show the same 4 words. Falls back to
+   * the drill's own `answer` JSON if the pool is too small.
+   */
+  vocabPool: Array<{ nl: string; en: string }>;
 };
 
 export type ReviewCardPayload = {
@@ -119,6 +126,23 @@ export const getLesson = createServerFn({ method: "GET", strict: false })
       .from(exercises)
       .where(eq(exercises.lessonId, data.lessonId))
       .orderBy(asc(exercises.id));
+
+    // Build the unit-level vocab pool from every match-pairs exercise in this
+    // lesson's unit. This is the source MatchPairsDrill samples 4 pairs from
+    // on each render, so the same lesson replayed twice shows a different set
+    // of words. Stays scoped to the unit so the topical fit (verbs, food,
+    // greetings) is preserved. Exercises join to units via lessons.
+    const unitPairRows = await drz
+      .select({ answer: exercises.answer })
+      .from(exercises)
+      .innerJoin(lessons, eq(lessons.id, exercises.lessonId))
+      .where(
+        and(
+          eq(lessons.unitId, lessonRow[0].unitId),
+          eq(exercises.type, "match-pairs"),
+        ),
+      );
+    const vocabPool = extractVocabPool(unitPairRows.map((r) => r.answer));
 
     // US-019: surface up to 3 due review cards before the new content.
     const now = new Date().toISOString();
@@ -170,8 +194,50 @@ export const getLesson = createServerFn({ method: "GET", strict: false })
         itemKey: r.itemKey,
         payload: r.payload ?? null,
       })),
+      vocabPool,
     };
   });
+
+/**
+ * Flatten every match-pairs `answer` JSON blob into one de-duplicated list of
+ * `{nl, en}` pairs. Drills store `answer` as either an already-parsed array
+ * (Drizzle's json mode) or a JSON string, so probe for both shapes. Pairs are
+ * keyed by `<nl>|<en>` lowercased so two drills that share "huis | house"
+ * don't both appear in the pool.
+ */
+export function extractVocabPool(
+  rawAnswers: ReadonlyArray<unknown>,
+): Array<{ nl: string; en: string }> {
+  const seen = new Set<string>();
+  const out: Array<{ nl: string; en: string }> = [];
+  for (const raw of rawAnswers) {
+    const parsed = parseAnswer(raw);
+    if (!Array.isArray(parsed)) continue;
+    for (const entry of parsed) {
+      if (!entry || typeof entry !== "object") continue;
+      const nl = (entry as Record<string, unknown>).nl;
+      const en = (entry as Record<string, unknown>).en;
+      if (typeof nl !== "string" || typeof en !== "string") continue;
+      const key = `${nl.toLowerCase()}|${en.toLowerCase()}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      out.push({ nl, en });
+    }
+  }
+  return out;
+}
+
+function parseAnswer(raw: unknown): unknown {
+  if (raw == null) return null;
+  if (typeof raw === "string") {
+    try {
+      return JSON.parse(raw);
+    } catch {
+      return null;
+    }
+  }
+  return raw;
+}
 
 export const recordDrillResult = createServerFn({ method: "POST" })
   .inputValidator(
@@ -188,6 +254,32 @@ export const recordDrillResult = createServerFn({ method: "POST" })
       // drill answers doesn't blow past the 10-item active-review cap.
       await enqueueDrillMistake(drz, me[0].id, data.exerciseId, {
         lastUserAnswer: data.userAnswer ?? null,
+      });
+    }
+    return { ok: true };
+  });
+
+/**
+ * Per-pair result for a match-pairs drill. Wrong pairs land in the spaced-rep
+ * queue under `itemType: "vocab_pair"` so they come back in the user's next
+ * review. Correct pairs are a no-op for v1: promotion happens via the
+ * existing `/api/reviews` SM-2 path.
+ */
+export const recordVocabPairResult = createServerFn({ method: "POST" })
+  .inputValidator(
+    (input: { nl: string; en: string; correct: boolean; exerciseId?: number }) => input,
+  )
+  .handler(async ({ data }) => {
+    const userId = await requireUserClerkId();
+    const { env } = requireWorkerContext();
+    const drz = db(env.DB);
+    const me = [await ensureUserRow(userId, drz, env)];
+
+    if (!data.correct) {
+      await enqueueVocabPairMistake(drz, me[0].id, {
+        nl: data.nl,
+        en: data.en,
+        exerciseId: data.exerciseId ?? null,
       });
     }
     return { ok: true };
