@@ -107,5 +107,6 @@
       "unrs-resolver",
       "workerd"
     ]
-  }
+  },
+  "packageManager": "pnpm@11.1.3"
 }
