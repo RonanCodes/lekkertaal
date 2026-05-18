@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Lock } from "lucide-react";
 import { getUnitDetail } from "../lib/server/unit";
 import { AppShell } from "../components/AppShell";
+import { Speaker } from "../components/drills/Speaker";
 
 export const Route = createFileRoute("/app/unit/$slug")({
   loader: async ({ params }) => {
@@ -119,10 +120,13 @@ function UnitDetailPage() {
             {vocabPreview.map((v) => (
               <div
                 key={v.id}
-                className="rounded-xl border border-neutral-200 bg-white p-3 shadow-sm"
+                className="flex items-center justify-between gap-2 rounded-xl border border-neutral-200 bg-white p-3 shadow-sm"
               >
-                <div className="font-semibold">{v.nl}</div>
-                <div className="text-xs text-neutral-500">{v.en}</div>
+                <div className="min-w-0 flex-1">
+                  <div className="truncate font-semibold">{v.nl}</div>
+                  <div className="truncate text-xs text-neutral-500">{v.en}</div>
+                </div>
+                <Speaker text={v.nl} size="sm" />
               </div>
             ))}
           </div>
@@ -154,8 +158,13 @@ function UnitDetailPage() {
                   key={v.id}
                   className="rounded-xl border border-neutral-200 bg-white p-3"
                 >
-                  <div className="font-semibold">{v.nl}</div>
-                  <div className="text-xs text-neutral-500">{v.en}</div>
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="min-w-0 flex-1">
+                      <div className="truncate font-semibold">{v.nl}</div>
+                      <div className="truncate text-xs text-neutral-500">{v.en}</div>
+                    </div>
+                    <Speaker text={v.nl} size="sm" />
+                  </div>
                   {v.exampleSentenceNl && (
                     <div className="mt-1 text-xs italic text-neutral-600">
                       &ldquo;{v.exampleSentenceNl}&rdquo;
