@@ -62,9 +62,20 @@ export function MatchPairsDrill({ drill, onSubmit }: DrillProps) {
   const [matchedIdx, setMatchedIdx] = useState<Set<number>>(new Set());
   const submittedRef = useRef(false);
 
-  // Keyboard nav: arrow keys cycle focus, Enter confirms.
+  // Keyboard nav: arrow keys cycle focus, Enter confirms. Desktop-only — on
+  // touch devices the focus ring looks like a stuck selection and ArrowUp/Down
+  // would steal page scroll without giving anything back.
   const [focusCol, setFocusCol] = useState<"nl" | "en">("nl");
   const [focusPos, setFocusPos] = useState(0);
+  const [kbdEnabled, setKbdEnabled] = useState(false);
+  useEffect(() => {
+    if (typeof window === "undefined" || !window.matchMedia) return;
+    const mq = window.matchMedia("(pointer: fine)");
+    const apply = () => setKbdEnabled(mq.matches);
+    apply();
+    mq.addEventListener("change", apply);
+    return () => mq.removeEventListener("change", apply);
+  }, []);
 
   useEffect(() => {
     if (matchedIdx.size === pairs.length && !submittedRef.current) {
@@ -100,17 +111,29 @@ export function MatchPairsDrill({ drill, onSubmit }: DrillProps) {
   };
 
   useEffect(() => {
+    if (!kbdEnabled) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "ArrowLeft") setFocusCol("nl");
-      else if (e.key === "ArrowRight") setFocusCol("en");
-      else if (e.key === "ArrowUp")
+      const target = e.target as HTMLElement | null;
+      if (target && (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable)) {
+        return;
+      }
+      if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        setFocusCol("nl");
+      } else if (e.key === "ArrowRight") {
+        e.preventDefault();
+        setFocusCol("en");
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
         setFocusPos((p) => Math.max(0, p - 1));
-      else if (e.key === "ArrowDown")
+      } else if (e.key === "ArrowDown") {
+        e.preventDefault();
         setFocusPos((p) => Math.min(pairs.length - 1, p + 1));
-      else if (e.key === "Enter") {
+      } else if (e.key === "Enter") {
         const arr = focusCol === "nl" ? nlTiles : enTiles;
         const tile = arr[focusPos];
         if (!tile) return;
+        e.preventDefault();
         if (focusCol === "nl") pickNl(tile.idx);
         else pickEn(tile.idx);
       }
@@ -118,7 +141,7 @@ export function MatchPairsDrill({ drill, onSubmit }: DrillProps) {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [focusCol, focusPos, nlTiles, enTiles, selectedNl]);
+  }, [kbdEnabled, focusCol, focusPos, nlTiles, enTiles, selectedNl]);
 
   // Sort tiles so matched ones drop out, unmatched stay visible.
   const visibleNl = nlTiles.filter((t) => !matchedIdx.has(t.idx));
@@ -135,7 +158,7 @@ export function MatchPairsDrill({ drill, onSubmit }: DrillProps) {
             const isSelected = selectedNl === t.idx;
             const isWrong = flash?.kind === "wrong" && flash.nlIdx === t.idx;
             const isCorrect = flash?.kind === "correct" && flash.nlIdx === t.idx;
-            const isFocused = focusCol === "nl" && focusPos === i;
+            const isFocused = kbdEnabled && focusCol === "nl" && focusPos === i;
             return (
               <button
                 key={t.key}
@@ -163,7 +186,7 @@ export function MatchPairsDrill({ drill, onSubmit }: DrillProps) {
           {visibleEn.map((t, i) => {
             const isWrong = flash?.kind === "wrong" && flash.enIdx === t.idx;
             const isCorrect = flash?.kind === "correct" && flash.enIdx === t.idx;
-            const isFocused = focusCol === "en" && focusPos === i;
+            const isFocused = kbdEnabled && focusCol === "en" && focusPos === i;
             return (
               <button
                 key={t.key}
@@ -187,7 +210,8 @@ export function MatchPairsDrill({ drill, onSubmit }: DrillProps) {
         </div>
       </div>
       <p className="mt-3 text-xs text-neutral-500">
-        Tap a Dutch word, then its English translation. Use ←/→ to switch columns, ↑/↓ to move, Enter to pick.
+        Tap a Dutch word, then its English translation.
+        {kbdEnabled && " Use ←/→ to switch columns, ↑/↓ to move, Enter to pick."}
       </p>
       <style>{`
         @keyframes shake {

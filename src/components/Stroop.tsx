@@ -95,10 +95,6 @@ function StroopSvg({ state }: { state: StroopState }) {
           <stop offset="0" stopColor="#f8d49a" />
           <stop offset="1" stopColor="#b87333" />
         </radialGradient>
-        <linearGradient id="stroopCaramel" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#a05a18" />
-          <stop offset="1" stopColor="#6b3d10" />
-        </linearGradient>
         <pattern
           id="waffleGrid"
           x="0"
@@ -115,9 +111,6 @@ function StroopSvg({ state }: { state: StroopState }) {
       {/* Outer waffle (top) */}
       <circle cx="100" cy="100" r="88" fill="url(#stroopBody)" />
       <circle cx="100" cy="100" r="86" fill="url(#waffleGrid)" />
-
-      {/* Caramel center band */}
-      <ellipse cx="100" cy="100" rx="78" ry="10" fill="url(#stroopCaramel)" opacity="0.85" />
 
       {/* Eyes */}
       <g>
