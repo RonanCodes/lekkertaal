@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { createHash } from "node:crypto";
 import { requireWorkerContext } from "../entry.server";
 
 /**
@@ -8,17 +9,27 @@ import { requireWorkerContext } from "../entry.server";
  *
  * Cache key: tts/<voice_id>/<sha256(text)>.mp3
  *
- * Hit: stream the cached audio/mpeg from R2 (no upstream cost).
- * Miss: call ElevenLabs, store the response in R2, then stream it.
+ * Resolution order:
+ *  1. R2 cache hit → stream cached audio.
+ *  2. Single-word lookup → try Wikimedia Commons (`Nl-<word>.ogg` auto-
+ *     transcoded MP3 sibling at a deterministic md5 URL). Free, CC-BY-SA,
+ *     human-recorded native speakers. 100% A1-B1 single-word coverage in
+ *     practice (verified 2026-05-19, see research/dutch-tts-and-dictionary-apis).
+ *  3. ElevenLabs (`eleven_multilingual_v2`). Good sentence-level synth.
+ *  4. OpenAI fallback (`gpt-4o-mini-tts` / alloy).
  *
- * Fallback: if ELEVENLABS_API_KEY is unset OR ElevenLabs returns 5xx, fall
- * back to OpenAI TTS (alloy voice by default) so the UI never silently
- * fails. The fallback still gets cached by the same key.
+ * The Commons step is skipped (and we go straight to synth) for any text
+ * that contains whitespace, digits, or punctuation — Wiktionary entries
+ * are per-word, so multi-word strings don't have a stable Commons URL.
+ *
+ * Whatever upstream answers gets stored under the same cache key, so the
+ * next call for the same text is a CDN-fast R2 hit regardless of source.
  */
 const DEFAULT_VOICE = "21m00Tcm4TlvDq8ikWAM"; // Rachel (the seed default)
 const ELEVENLABS_MODEL = "eleven_multilingual_v2";
 const OPENAI_MODEL = "gpt-4o-mini-tts";
 const OPENAI_FALLBACK_VOICE = "alloy";
+const COMMONS_UA = "lekkertaal/0.1 (admin@simplicitylabs.io)";
 
 export const Route = createFileRoute("/api/tts")({
   server: {
@@ -35,7 +46,6 @@ export const Route = createFileRoute("/api/tts")({
         const hash = await sha256Hex(`${voice}::${text}`);
         const key = `tts/${voice}/${hash}.mp3`;
 
-        // Cache hit?
         const cached = await env.TTS_CACHE.get(key);
         if (cached) {
           return new Response(cached.body as unknown as BodyInit, {
@@ -48,11 +58,20 @@ export const Route = createFileRoute("/api/tts")({
           });
         }
 
-        // Miss → call ElevenLabs, then OpenAI as a fallback.
         let audio: ArrayBuffer | null = null;
-        let provider = "elevenlabs";
+        let provider: "wikimedia" | "elevenlabs" | "openai" = "elevenlabs";
 
-        if (env.ELEVENLABS_API_KEY) {
+        // 1. Wikimedia Commons (single Dutch word only)
+        if (isSingleDutchWord(text)) {
+          const commonsAudio = await fetchCommons(text);
+          if (commonsAudio) {
+            audio = commonsAudio;
+            provider = "wikimedia";
+          }
+        }
+
+        // 2. ElevenLabs
+        if (!audio && env.ELEVENLABS_API_KEY) {
           try {
             const r = await fetch(
               `https://api.elevenlabs.io/v1/text-to-speech/${encodeURIComponent(voice)}`,
@@ -66,17 +85,13 @@ export const Route = createFileRoute("/api/tts")({
                 body: JSON.stringify({
                   text,
                   model_id: ELEVENLABS_MODEL,
-                  voice_settings: {
-                    stability: 0.5,
-                    similarity_boost: 0.75,
-                  },
+                  voice_settings: { stability: 0.5, similarity_boost: 0.75 },
                 }),
               },
             );
             if (r.ok) {
               audio = await r.arrayBuffer();
             } else if (r.status < 500) {
-              // 4xx is our fault (bad voice id, malformed body, etc.) — surface it.
               const body = await r.text();
               return new Response(`ElevenLabs error: ${body.slice(0, 500)}`, {
                 status: r.status,
@@ -87,6 +102,7 @@ export const Route = createFileRoute("/api/tts")({
           }
         }
 
+        // 3. OpenAI
         if (!audio && env.OPENAI_API_KEY) {
           provider = "openai";
           try {
@@ -120,8 +136,6 @@ export const Route = createFileRoute("/api/tts")({
           return new Response("No TTS provider available", { status: 502 });
         }
 
-        // Store the result for next time. Best-effort: even if R2 write fails
-        // we still return the audio to the caller.
         try {
           await env.TTS_CACHE.put(key, audio, {
             httpMetadata: { contentType: "audio/mpeg" },
@@ -145,10 +159,39 @@ export const Route = createFileRoute("/api/tts")({
   },
 });
 
+/**
+ * Wiktionary's Dutch audio uploads to Wikimedia Commons follow the convention
+ * `Nl-<word>.ogg`. The hosting URL is computable from md5 of the filename, and
+ * a transcoded MP3 sibling exists at a deterministic path — so we can fetch
+ * without a single MediaWiki API call. Returns null on 404 (no recording for
+ * this word) or any error so the caller can fall through to synth.
+ */
+async function fetchCommons(word: string): Promise<ArrayBuffer | null> {
+  const filename = `Nl-${word.toLowerCase()}.ogg`;
+  const hash = md5Hex(filename);
+  const mp3Url = `https://upload.wikimedia.org/wikipedia/commons/transcoded/${hash[0]}/${hash.slice(0, 2)}/${filename}/${filename}.mp3`;
+  try {
+    const r = await fetch(mp3Url, { headers: { "user-agent": COMMONS_UA } });
+    if (!r.ok) return null;
+    return await r.arrayBuffer();
+  } catch (err) {
+    console.error("[tts] wikimedia fetch failed:", err);
+    return null;
+  }
+}
+
+function isSingleDutchWord(text: string): boolean {
+  return /^[a-zëïéèáàóòúù]{1,40}$/i.test(text);
+}
+
 async function sha256Hex(input: string): Promise<string> {
   const buf = new TextEncoder().encode(input);
   const digest = await crypto.subtle.digest("SHA-256", buf);
   return [...new Uint8Array(digest)]
     .map((b) => b.toString(16).padStart(2, "0"))
     .join("");
+}
+
+function md5Hex(input: string): string {
+  return createHash("md5").update(input).digest("hex");
 }

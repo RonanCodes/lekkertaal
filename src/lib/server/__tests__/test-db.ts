@@ -79,6 +79,7 @@ export function seedUser(
     clerkId: string;
     email: string;
     displayName: string;
+    timezone: string;
     streakDays: number;
     streakFreezesBalance: number;
     streakLastActiveDate: string | null;
@@ -86,15 +87,20 @@ export function seedUser(
 ): number {
   const clerkId = overrides.clerkId ?? `clerk_${Math.random().toString(36).slice(2)}`;
   const displayName = overrides.displayName ?? `user_${Math.random().toString(36).slice(2, 8)}`;
+  // Default to UTC so quest-related tests that hardcode `todayInTz("UTC")`
+  // stay green around midnight-CEST. Schema default is Europe/Amsterdam, but
+  // tests do not need that surface area.
+  const timezone = overrides.timezone ?? "UTC";
   const result = drz.$sqlite
     .prepare(
-      `INSERT INTO users (clerk_id, email, display_name, streak_days, streak_freezes_balance, streak_last_active_date)
-       VALUES (?, ?, ?, ?, ?, ?)`,
+      `INSERT INTO users (clerk_id, email, display_name, timezone, streak_days, streak_freezes_balance, streak_last_active_date)
+       VALUES (?, ?, ?, ?, ?, ?, ?)`,
     )
     .run(
       clerkId,
       overrides.email ?? null,
       displayName,
+      timezone,
       overrides.streakDays ?? 0,
       overrides.streakFreezesBalance ?? 0,
       overrides.streakLastActiveDate ?? null,

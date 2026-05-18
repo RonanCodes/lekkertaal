@@ -1,11 +1,19 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { getPath } from "../lib/server/path";
+import { getWordOfTheDay } from "../lib/server/wordOfDay";
 import { AppShell } from "../components/AppShell";
 import { Stroop } from "../components/Stroop";
 import { DailyQuests } from "../components/DailyQuests";
+import { WordOfTheDay } from "../components/WordOfTheDay";
 
 export const Route = createFileRoute("/app/path")({
-  loader: async () => await getPath(),
+  loader: async () => {
+    const [path, wordOfDay] = await Promise.all([
+      getPath(),
+      getWordOfTheDay(),
+    ]);
+    return { ...path, wordOfDay };
+  },
   component: PathPage,
 });
 
@@ -26,6 +34,8 @@ function PathPage() {
       </div>
 
       <DailyQuests initial={data.quests} />
+
+      <WordOfTheDay data={data.wordOfDay} />
 
       <ol className="space-y-4">
         {data.path.map((u, i) => {

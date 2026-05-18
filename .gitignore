@@ -21,3 +21,4 @@ test-results
 playwright-report
 playwright/.cache
 .swarm/
+.ronan-skills-llm-wiki.local.json
