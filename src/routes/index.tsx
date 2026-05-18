@@ -1,6 +1,7 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { useAuth } from "@clerk/tanstack-react-start";
+import { BookOpen, Flame, MessageCircle } from "lucide-react";
 import { tryGetUserClerkId } from "../lib/server/auth-helper";
 
 /**
@@ -60,21 +61,21 @@ function Home() {
 
       <div className="mt-16 grid grid-cols-1 gap-6 text-left sm:grid-cols-3">
         <div className="card">
-          <div className="text-3xl">📚</div>
+          <BookOpen size={32} className="text-orange-500" aria-hidden />
           <h3 className="mt-2 text-lg">Daily drills</h3>
           <p className="mt-1 text-sm" style={{ color: "var(--color-ink-soft)" }}>
             Vocab, grammar, listening. 5 minutes a day keeps your streak alive.
           </p>
         </div>
         <div className="card">
-          <div className="text-3xl">💬</div>
+          <MessageCircle size={32} className="text-orange-500" aria-hidden />
           <h3 className="mt-2 text-lg">AI roleplay</h3>
           <p className="mt-1 text-sm" style={{ color: "var(--color-ink-soft)" }}>
             Practice ordering coffee, work standups, the doctor's office, with an AI tutor.
           </p>
         </div>
         <div className="card">
-          <div className="text-3xl">🔥</div>
+          <Flame size={32} className="text-orange-500" aria-hidden />
           <h3 className="mt-2 text-lg">Streaks &amp; XP</h3>
           <p className="mt-1 text-sm" style={{ color: "var(--color-ink-soft)" }}>
             Streak freezes, coins, badges, leaderboards. Habit-first, hassle-free.

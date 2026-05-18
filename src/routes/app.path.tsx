@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { CheckCircle2, Circle, Lock, Play } from "lucide-react";
 import { getPath } from "../lib/server/path";
 import { getWordOfTheDay } from "../lib/server/wordOfDay";
 import { AppShell } from "../components/AppShell";
@@ -63,7 +64,15 @@ function PathPage() {
                   <div className="text-sm text-neutral-600">{u.titleEn}</div>
                 </div>
                 <div className="text-2xl">
-                  {isCompleted ? "✅" : isInProgress ? "🟠" : isLocked ? "🔒" : "🟡"}
+                  {isCompleted ? (
+                    <CheckCircle2 size={28} className="text-emerald-500" aria-label="Completed" />
+                  ) : isInProgress ? (
+                    <Play size={28} className="text-orange-500" aria-label="In progress" />
+                  ) : isLocked ? (
+                    <Lock size={28} className="text-neutral-400" aria-label="Locked" />
+                  ) : (
+                    <Circle size={28} className="text-orange-400" aria-label="Unlocked" />
+                  )}
                 </div>
               </div>
               {!isLocked && (

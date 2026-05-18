@@ -1,17 +1,19 @@
 import type { ReactNode } from "react";
+import { Coins, Flame, Map, Snowflake, Target, Zap } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import { NotificationBell } from "./NotificationBell";
 
 type NavItem = {
   href: string;
   label: string;
-  icon: string;
+  Icon: LucideIcon;
   /** Path prefixes that should mark the link active. */
   matches: string[];
 };
 
 const NAV_ITEMS: NavItem[] = [
-  { href: "/app/path", label: "Path", icon: "🛤️", matches: ["/app/path"] },
-  { href: "/app/peer", label: "Peer drills", icon: "🎯", matches: ["/app/peer"] },
+  { href: "/app/path", label: "Path", Icon: Map, matches: ["/app/path"] },
+  { href: "/app/peer", label: "Peer drills", Icon: Target, matches: ["/app/peer"] },
 ];
 
 function isActive(item: NavItem, pathname: string): boolean {
@@ -70,7 +72,7 @@ export function AppShell({
                         : "text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900")
                     }
                   >
-                    <span aria-hidden>{item.icon}</span>
+                    <item.Icon size={16} aria-hidden />
                     <span>{item.label}</span>
                   </a>
                 );
@@ -89,24 +91,30 @@ export function AppShell({
               aria-label="streak"
               className="inline-flex items-center gap-1"
             >
-              🔥 {user.streakDays}
+              <Flame size={16} className="text-orange-500" aria-hidden />
+              {user.streakDays}
               {freezes > 0 && (
                 <span
-                  className="ml-0.5 rounded-full bg-sky-100 px-1.5 text-xs font-semibold text-sky-700"
+                  className="ml-0.5 inline-flex items-center gap-0.5 rounded-full bg-sky-100 px-1.5 text-xs font-semibold text-sky-700"
                   aria-label={`${freezes} streak freezes available`}
                 >
-                  ❄️{freezes}
+                  <Snowflake size={12} aria-hidden />
+                  {freezes}
                 </span>
               )}
             </span>
-            <span title="Total XP" aria-label="xp">⚡ {user.xpTotal}</span>
+            <span title="Total XP" aria-label="xp" className="inline-flex items-center gap-1">
+              <Zap size={16} className="text-yellow-500" aria-hidden />
+              {user.xpTotal}
+            </span>
             <a
               href="/app/shop"
               title="Coins (tap to open shop)"
               aria-label="coins"
-              className="hover:text-orange-600"
+              className="inline-flex items-center gap-1 hover:text-orange-600"
             >
-              🪙 {user.coinsBalance}
+              <Coins size={16} className="text-amber-500" aria-hidden />
+              {user.coinsBalance}
             </a>
             <NotificationBell />
             <span className="hidden text-neutral-500 sm:inline">{user.displayName}</span>
@@ -130,7 +138,7 @@ export function AppShell({
                     : "text-neutral-600 hover:bg-neutral-100")
                 }
               >
-                <span aria-hidden>{item.icon}</span>
+                <item.Icon size={14} aria-hidden />
                 <span>{item.label}</span>
               </a>
             );
