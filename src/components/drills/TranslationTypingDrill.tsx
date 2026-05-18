@@ -70,7 +70,18 @@ export function TranslationTypingDrill({ drill, onSubmit }: DrillProps) {
       promptLabel="Translate to Dutch"
       prompt={drill.promptEn ?? "Translate this sentence"}
     >
-      <div className="space-y-3">
+      {/*
+        `data-canonical-answer` is an e2e-only hook. The translation_typing
+        drill grades against multiple accepted canonicals (joined by `|`), but
+        Playwright specs only need the first one to compute an exact-match
+        path. Kept attribute-only — never rendered visually — so it has no
+        runtime cost and no risk of leaking the answer to learners.
+      */}
+      <div
+        className="space-y-3"
+        data-testid="translation-typing-drill"
+        data-canonical-answer={canonicals.join("|")}
+      >
         <input
           type="text"
           autoFocus
@@ -86,6 +97,7 @@ export function TranslationTypingDrill({ drill, onSubmit }: DrillProps) {
           }}
           placeholder="Type the Dutch translation..."
           disabled={submitted}
+          data-testid="translation-typing-input"
           className={`w-full rounded-2xl border-2 px-4 py-3 text-lg font-semibold outline-none transition-all ${
             submitted
               ? correct
@@ -109,6 +121,7 @@ export function TranslationTypingDrill({ drill, onSubmit }: DrillProps) {
             type="button"
             onClick={submit}
             disabled={submitted || value.trim().length === 0}
+            data-testid="translation-typing-submit"
             className="rounded-full bg-orange-500 px-5 py-2 text-sm font-semibold text-white hover:bg-orange-600 disabled:opacity-50"
           >
             Check
@@ -116,7 +129,10 @@ export function TranslationTypingDrill({ drill, onSubmit }: DrillProps) {
         </div>
 
         {submitted && (
-          <div className="rounded-2xl border-2 border-neutral-200 bg-neutral-50 p-3 text-sm">
+          <div
+            className="rounded-2xl border-2 border-neutral-200 bg-neutral-50 p-3 text-sm"
+            data-testid="translation-typing-feedback"
+          >
             <div className="mb-1 text-xs uppercase tracking-wide text-neutral-500">
               {correct ? "Your answer" : "You wrote"}
             </div>
@@ -128,20 +144,29 @@ export function TranslationTypingDrill({ drill, onSubmit }: DrillProps) {
                 <div className="mt-2 text-xs uppercase tracking-wide text-neutral-500">
                   Canonical
                 </div>
-                <div className="flex items-center gap-2 font-semibold text-neutral-800">
+                <div
+                  className="flex items-center gap-2 font-semibold text-neutral-800"
+                  data-testid="translation-typing-canonical"
+                >
                   <span>{canonical}</span>
                   <Speaker text={canonical} size="sm" />
                 </div>
               </>
             )}
             {correct && (
-              <div className="mt-2 flex items-center gap-2 text-xs text-neutral-500">
+              <div
+                className="mt-2 flex items-center gap-2 text-xs text-neutral-500"
+                data-testid="translation-typing-canonical"
+              >
                 Canonical: <span>{canonical}</span>
                 <Speaker text={canonical} size="sm" />
               </div>
             )}
             {nearMiss && (
-              <div className="mt-2 text-xs italic text-emerald-700">
+              <div
+                className="mt-2 text-xs italic text-emerald-700"
+                data-testid="translation-typing-close-enough"
+              >
                 Close enough — counted as correct.
               </div>
             )}

@@ -48,14 +48,28 @@ function ShopPage() {
 
         {/* Balances */}
         <div className="grid grid-cols-3 gap-3">
-          <BalanceCard label="Coins" value={user.coinsBalance} Icon={Coins} iconClassName="text-amber-500" highlight />
+          <BalanceCard
+            label="Coins"
+            balanceKey="coins"
+            value={user.coinsBalance}
+            Icon={Coins}
+            iconClassName="text-amber-500"
+            highlight
+          />
           <BalanceCard
             label="Streak freezes"
+            balanceKey="streak-freezes"
             value={user.streakFreezesBalance}
             Icon={Snowflake}
             iconClassName="text-sky-500"
           />
-          <BalanceCard label="Hints" value={user.hintsBalance} Icon={Lightbulb} iconClassName="text-yellow-500" />
+          <BalanceCard
+            label="Hints"
+            balanceKey="hints"
+            value={user.hintsBalance}
+            Icon={Lightbulb}
+            iconClassName="text-yellow-500"
+          />
         </div>
 
         {/* Catalogue */}
@@ -72,6 +86,7 @@ function ShopPage() {
                 <div
                   className="flex h-12 w-12 items-center justify-center rounded-xl bg-neutral-100 text-neutral-700"
                   data-icon-name={item.iconName}
+                  data-testid="shop-item-icon"
                   aria-hidden
                 >
                   <ItemIcon size={28} />
@@ -111,12 +126,14 @@ function ShopPage() {
 
 function BalanceCard({
   label,
+  balanceKey,
   value,
   Icon,
   iconClassName,
   highlight,
 }: {
   label: string;
+  balanceKey: "coins" | "streak-freezes" | "hints";
   value: number;
   Icon: LucideIcon;
   iconClassName?: string;
@@ -124,6 +141,8 @@ function BalanceCard({
 }) {
   return (
     <div
+      data-testid="shop-balance-card"
+      data-balance-label={balanceKey}
       className={`rounded-2xl border p-3 text-center ${
         highlight
           ? "border-orange-300 bg-orange-50"
