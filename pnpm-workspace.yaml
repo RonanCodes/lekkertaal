@@ -1,0 +1,16 @@
+allowBuilds:
+  '@sentry/cli': true
+  '@clerk/shared': true
+  '@swc/core': true
+  better-sqlite3: true
+  core-js: true
+  cypress: true
+  esbuild: true
+  msw: true
+  playwright: true
+  protobufjs: true
+  puppeteer: true
+  sharp: true
+  sqlite3: true
+  unrs-resolver: true
+  workerd: true
