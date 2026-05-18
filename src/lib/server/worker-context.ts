@@ -47,7 +47,14 @@ export type WorkerEnv = {
   ANTHROPIC_API_KEY?: string;
   OPENAI_API_KEY?: string;
   GOOGLE_GENERATIVE_AI_API_KEY?: string;
+  /**
+   * @deprecated Kept available behind a flag while Lekkertaal runs on the
+   * Wikimedia Commons → OpenAI free path. Set `ELEVENLABS_ENABLED="true"` in
+   * `wrangler.jsonc` vars to re-enable as a synth fallback for misses /
+   * multi-word strings.
+   */
   ELEVENLABS_API_KEY?: string;
+  ELEVENLABS_ENABLED?: string;
   RESEND_API_KEY?: string;
   CLERK_WEBHOOK_SECRET?: string;
   SENTRY_DSN?: string;

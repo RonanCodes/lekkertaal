@@ -15,8 +15,12 @@ import { requireWorkerContext } from "../entry.server";
  *     transcoded MP3 sibling at a deterministic md5 URL). Free, CC-BY-SA,
  *     human-recorded native speakers. 100% A1-B1 single-word coverage in
  *     practice (verified 2026-05-19, see research/dutch-tts-and-dictionary-apis).
- *  3. ElevenLabs (`eleven_multilingual_v2`). Good sentence-level synth.
- *  4. OpenAI fallback (`gpt-4o-mini-tts` / alloy).
+ *  3. ElevenLabs (`eleven_multilingual_v2`) — DEPRECATED, only invoked when
+ *     `ELEVENLABS_ENABLED="true"` is set in wrangler vars. The free Commons
+ *     + OpenAI stack covers the curriculum and avoids the per-character spend.
+ *     Kept in code so it can be flipped back on if sentence-level
+ *     expressiveness becomes a priority again.
+ *  4. OpenAI (`gpt-4o-mini-tts` / alloy) — the active synth fallback.
  *
  * The Commons step is skipped (and we go straight to synth) for any text
  * that contains whitespace, digits, or punctuation — Wiktionary entries
@@ -59,7 +63,8 @@ export const Route = createFileRoute("/api/tts")({
         }
 
         let audio: ArrayBuffer | null = null;
-        let provider: "wikimedia" | "elevenlabs" | "openai" = "elevenlabs";
+        let provider: "wikimedia" | "elevenlabs" | "openai" = "openai";
+        const elevenlabsEnabled = env.ELEVENLABS_ENABLED === "true";
 
         // 1. Wikimedia Commons (single Dutch word only)
         if (isSingleDutchWord(text)) {
@@ -70,8 +75,8 @@ export const Route = createFileRoute("/api/tts")({
           }
         }
 
-        // 2. ElevenLabs
-        if (!audio && env.ELEVENLABS_API_KEY) {
+        // 2. ElevenLabs (deprecated, opt-in via ELEVENLABS_ENABLED="true")
+        if (!audio && elevenlabsEnabled && env.ELEVENLABS_API_KEY) {
           try {
             const r = await fetch(
               `https://api.elevenlabs.io/v1/text-to-speech/${encodeURIComponent(voice)}`,
@@ -91,6 +96,7 @@ export const Route = createFileRoute("/api/tts")({
             );
             if (r.ok) {
               audio = await r.arrayBuffer();
+              provider = "elevenlabs";
             } else if (r.status < 500) {
               const body = await r.text();
               return new Response(`ElevenLabs error: ${body.slice(0, 500)}`, {
