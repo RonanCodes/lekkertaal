@@ -98,15 +98,5 @@
     "vitest": "^4.1.5",
     "wrangler": "^4.70.0"
   },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "@swc/core",
-      "better-sqlite3",
-      "esbuild",
-      "sharp",
-      "unrs-resolver",
-      "workerd"
-    ]
-  },
   "packageManager": "pnpm@11.1.3"
 }

@@ -1,0 +1,16 @@
+onlyBuiltDependencies:
+  - "@sentry/cli"
+  - better-sqlite3
+  - core-js
+  - cypress
+  - esbuild
+  - msw
+  - playwright
+  - protobufjs
+  - puppeteer
+  - sharp
+  - sqlite3
+  - unrs-resolver
+  - workerd
+  - "@swc/core"
+
