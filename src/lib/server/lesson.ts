@@ -24,7 +24,8 @@ export type DrillType =
   | "fill_blank"
   | "word_ordering"
   | "speak"
-  | "image_word";
+  | "image_word"
+  | "flashcard";
 
 /**
  * DB rows store drill `type` in hyphen-form (`match-pairs`, `translation-typing`,
@@ -97,6 +98,13 @@ export type DrillPayload = {
   hints: string[] | null;
   audioUrl: string | null;
   imageUrl: string | null;
+  /**
+   * Set true for drills synthesized at the loader level (e.g. flashcards
+   * sampled from the unit vocab pool, no row in the `exercises` table).
+   * The lesson player skips `recordDrillResult` for synthetic drills so we
+   * don't create dangling spaced_rep_queue rows under fake exercise ids.
+   */
+  isSynthetic?: boolean;
 };
 
 export const getLesson = createServerFn({ method: "GET", strict: false })
@@ -174,20 +182,23 @@ export const getLesson = createServerFn({ method: "GET", strict: false })
         xpReward: lessonRow[0].xpReward,
         unitSlug: unitRow[0]?.slug ?? "",
       },
-      drills: drillRows.map((d) => ({
-        id: d.id,
-        slug: d.slug,
-        type: normaliseDrillType(d.type),
-        promptNl: d.promptNl,
-        promptEn: d.promptEn,
-        // Re-serialise to JSON strings so the payload stays plain-serializable
-        // for TanStack Start's transport. The client parses per-drill.
-        options: d.options == null ? null : JSON.stringify(d.options),
-        answer: d.answer == null ? null : JSON.stringify(d.answer),
-        hints: d.hints,
-        audioUrl: d.audioUrl,
-        imageUrl: d.imageUrl,
-      })),
+      drills: [
+        ...drillRows.map((d) => ({
+          id: d.id,
+          slug: d.slug,
+          type: normaliseDrillType(d.type),
+          promptNl: d.promptNl,
+          promptEn: d.promptEn,
+          // Re-serialise to JSON strings so the payload stays plain-serializable
+          // for TanStack Start's transport. The client parses per-drill.
+          options: d.options == null ? null : JSON.stringify(d.options),
+          answer: d.answer == null ? null : JSON.stringify(d.answer),
+          hints: d.hints,
+          audioUrl: d.audioUrl,
+          imageUrl: d.imageUrl,
+        })),
+        ...buildFlashcardTail(vocabPool, lessonRow[0].id),
+      ],
       reviews: reviewRows.map((r) => ({
         id: r.id,
         itemType: r.itemType,
@@ -197,6 +208,48 @@ export const getLesson = createServerFn({ method: "GET", strict: false })
       vocabPool,
     };
   });
+
+const FLASHCARD_TAIL_COUNT = 4;
+
+/**
+ * Synthesize a small batch of flashcard drills at the end of a lesson, drawn
+ * from the unit vocab pool. Each card is a `{nl, en}` pair the learner has
+ * already seen (or can derive) earlier in the lesson; the flashcard surface
+ * uses binary self-grading to feed `recordVocabPairResult`. Sampled fresh on
+ * every getLesson call so a replayed lesson surfaces different cards.
+ *
+ * Returns an empty list when the pool is too thin to sample; the lesson then
+ * looks unchanged (no awkward "0 flashcards" placeholder).
+ */
+export function buildFlashcardTail(
+  pool: ReadonlyArray<{ nl: string; en: string }>,
+  lessonId: number,
+): DrillPayload[] {
+  if (pool.length < FLASHCARD_TAIL_COUNT) return [];
+  const sampled = sampleRandom(pool, FLASHCARD_TAIL_COUNT);
+  return sampled.map((p, i) => ({
+    id: -1_000_000 - lessonId * 100 - i, // negative + lesson-scoped so no collision with real ids
+    slug: `synthetic-flashcard-${lessonId}-${i}`,
+    type: "flashcard",
+    promptNl: null,
+    promptEn: "Do you remember this word?",
+    options: null,
+    answer: JSON.stringify(p),
+    hints: null,
+    audioUrl: null,
+    imageUrl: null,
+    isSynthetic: true,
+  }));
+}
+
+function sampleRandom<T>(arr: ReadonlyArray<T>, n: number): T[] {
+  const copy = [...arr];
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy.slice(0, n);
+}
 
 /**
  * Flatten every match-pairs `answer` JSON blob into one de-duplicated list of
