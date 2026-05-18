@@ -57,9 +57,14 @@ function LessonPlayerPage() {
     else setIncorrectCount((c) => c + 1);
 
     // Fire-and-forget — wrong answers get queued for spaced repetition.
-    void recordDrillResult({
-      data: { exerciseId: drill.id, correct, userAnswer },
-    }).catch(() => {});
+    // Synthetic drills (flashcards sampled from the vocab pool) have no row
+    // in the `exercises` table; they call `recordVocabPairResult` themselves
+    // for per-pair tracking, so skip the per-exercise enqueue here.
+    if (!drill.isSynthetic) {
+      void recordDrillResult({
+        data: { exerciseId: drill.id, correct, userAnswer },
+      }).catch(() => {});
+    }
   };
 
   const next = async () => {
