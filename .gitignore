@@ -27,6 +27,6 @@ playwright/.cache
 # Local-factory artefacts (Ralph / planner-worker / night-shift, etc).
 # See ~/Dev/ronan-skills/skills/ralph/SKILL.md § "Run artefacts (the canonical shape)".
 # patterns.md and *.session.md stay tracked; everything else under .ralph/ is ephemeral.
-.ralph/sessions/
+.ralph/sessions/*/
 .ralph/*.progress.txt
 .ralph/.gitignore-policy
