@@ -8,10 +8,13 @@ import {
   getRoleplayHistory,
   finishRoleplaySession,
   gradeRoleplaySession
-  
+
 } from "../lib/server/roleplay";
 import type {RoleplayTranscriptEntry} from "../lib/server/roleplay";
 import { AppShell } from "../components/AppShell";
+import { Info } from "lucide-react";
+import { log } from "../lib/logger";
+import { UNAVAILABLE_TOOLTIP } from "../components/drills/Speaker";
 
 const MAX_USER_TURNS = 8;
 const END_KEYWORDS = ["klaar", "done", "einde"];
@@ -283,9 +286,11 @@ function ClickableDutchWords({
 
 function SpeakButton({ text, voiceId }: { text: string; voiceId: string | null }) {
   const [playing, setPlaying] = useState(false);
+  const [unavailable, setUnavailable] = useState(!voiceId);
+  const [tooltipOpen, setTooltipOpen] = useState(false);
 
   async function speak() {
-    if (playing) return;
+    if (playing || unavailable) return;
     setPlaying(true);
     try {
       // The TTS proxy endpoint lives in US-029 (server-side ElevenLabs cache).
@@ -295,12 +300,45 @@ function SpeakButton({ text, voiceId }: { text: string; voiceId: string | null }
       }`;
       const audio = new Audio(url);
       audio.onended = () => setPlaying(false);
-      audio.onerror = () => setPlaying(false);
+      audio.onerror = () => {
+        log.warn("scenario tts audio load failed", { text, voiceId });
+        setPlaying(false);
+        setUnavailable(true);
+      };
       await audio.play();
     } catch (err) {
-      console.error("[scenario] tts play failed:", err);
+      log.warn("scenario tts play() threw", { text, voiceId, err: String(err) });
       setPlaying(false);
+      setUnavailable(true);
     }
+  }
+
+  if (unavailable) {
+    return (
+      <span className="relative mt-1 inline-flex items-center">
+        <button
+          type="button"
+          onClick={() => setTooltipOpen((v) => !v)}
+          aria-label={UNAVAILABLE_TOOLTIP}
+          aria-describedby="scenario-speaker-unavailable-tooltip"
+          data-testid="scenario-speaker-unavailable"
+          className="inline-flex items-center gap-1 text-xs text-neutral-400 hover:text-neutral-500"
+        >
+          <Info size={13} aria-hidden />
+          <span>geen audio</span>
+        </button>
+        <span
+          id="scenario-speaker-unavailable-tooltip"
+          role="tooltip"
+          data-testid="scenario-speaker-unavailable-tooltip"
+          className={`pointer-events-none absolute bottom-full left-1/2 mb-1 -translate-x-1/2 whitespace-nowrap rounded bg-neutral-800 px-2 py-1 text-xs text-white transition-opacity ${
+            tooltipOpen ? "opacity-100" : "opacity-0"
+          }`}
+        >
+          {UNAVAILABLE_TOOLTIP}
+        </span>
+      </span>
+    );
   }
 
   return (

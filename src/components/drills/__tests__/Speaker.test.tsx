@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import { Speaker } from "../Speaker";
+import { Speaker, UNAVAILABLE_TOOLTIP } from "../Speaker";
 
 /**
  * jsdom doesn't implement HTMLMediaElement playback. We stub the global
@@ -88,5 +88,96 @@ describe("Speaker", () => {
     const slow = screen.getByTestId("speaker-play-slow");
     expect(slow).toBeInTheDocument();
     expect(slow.getAttribute("aria-label")).toBe("Play slowly");
+  });
+
+  // --- unavailable state ---
+
+  it("renders Info icon (not play button) when text is empty", () => {
+    render(<Speaker text="" />);
+    const unavailableBtn = screen.getByTestId("speaker-unavailable");
+    expect(unavailableBtn).toBeInTheDocument();
+    expect(unavailableBtn).toHaveAttribute("aria-label", UNAVAILABLE_TOOLTIP);
+    // The main play button and slow button are NOT rendered.
+    expect(screen.queryByTestId("speaker-play")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("speaker-play-slow")).not.toBeInTheDocument();
+  });
+
+  it("data-state is 'unavailable' when text is empty", () => {
+    render(<Speaker text="" />);
+    const wrapper = screen.getByTestId("speaker");
+    expect(wrapper).toHaveAttribute("data-state", "unavailable");
+  });
+
+  it("renders Info icon when fetch rejects (play() throws)", async () => {
+    // Override the FakeAudioCtor from beforeEach so play() rejects.
+    class ErrorAudioCtor {
+      src = "";
+      playbackRate = 1;
+      onended: (() => void) | null = null;
+      onerror: (() => void) | null = null;
+      onplay: (() => void) | null = null;
+      play = vi.fn().mockRejectedValue(new Error("network error"));
+      constructor() {
+        audios.push(this);
+      }
+    }
+    (globalThis as unknown as { Audio: unknown }).Audio = ErrorAudioCtor;
+
+    render(<Speaker text="hallo" />);
+    const main = screen.getByTestId("speaker-play");
+    fireEvent.click(main);
+
+    await waitFor(() =>
+      expect(screen.getByTestId("speaker")).toHaveAttribute("data-state", "unavailable"),
+    );
+    expect(screen.getByTestId("speaker-unavailable")).toBeInTheDocument();
+  });
+
+  it("renders Info icon when onerror fires (non-2xx response)", async () => {
+    // Override so play() resolves but onerror fires immediately after.
+    class OnerrorAudioCtor {
+      src = "";
+      playbackRate = 1;
+      onended: (() => void) | null = null;
+      onerror: (() => void) | null = null;
+      onplay: (() => void) | null = null;
+      play = vi.fn().mockImplementation(() => {
+        // Simulate the browser firing onerror after the src fails to load.
+        setTimeout(() => this.onerror?.(), 0);
+        return Promise.resolve();
+      });
+      constructor() {
+        audios.push(this);
+      }
+    }
+    (globalThis as unknown as { Audio: unknown }).Audio = OnerrorAudioCtor;
+
+    render(<Speaker text="hallo" />);
+    const main = screen.getByTestId("speaker-play");
+    fireEvent.click(main);
+
+    await waitFor(() =>
+      expect(screen.getByTestId("speaker")).toHaveAttribute("data-state", "unavailable"),
+    );
+    expect(screen.getByTestId("speaker-unavailable")).toBeInTheDocument();
+  });
+
+  it("tooltip is not visible by default in unavailable state", () => {
+    render(<Speaker text="" />);
+    const tooltip = screen.getByTestId("speaker-unavailable-tooltip");
+    // The tooltip has opacity-0 by default (toggle on tap).
+    expect(tooltip).toHaveClass("opacity-0");
+  });
+
+  it("toggles tooltip visibility on click in unavailable state", () => {
+    render(<Speaker text="" />);
+    const btn = screen.getByTestId("speaker-unavailable");
+    const tooltip = screen.getByTestId("speaker-unavailable-tooltip");
+
+    expect(tooltip).toHaveClass("opacity-0");
+    fireEvent.click(btn);
+    expect(tooltip).toHaveClass("opacity-100");
+    fireEvent.click(btn);
+    expect(tooltip).toHaveClass("opacity-0");
   });
 });
