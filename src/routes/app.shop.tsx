@@ -5,6 +5,7 @@ import type { LucideIcon } from "lucide-react";
 import { getShop, buyItem  } from "../lib/server/shop";
 import type {ShopItem} from "../lib/server/shop";
 import { AppShell } from "../components/AppShell";
+import { resolveShopIcon } from "../lib/shop-icons";
 
 export const Route = createFileRoute("/app/shop")({
   loader: async () => await getShop(),
@@ -62,13 +63,18 @@ function ShopPage() {
           {items.map((item) => {
             const canAfford = user.coinsBalance >= item.costCoins;
             const isPending = pendingId === item.id;
+            const ItemIcon = resolveShopIcon(item.iconName);
             return (
               <li
                 key={item.id}
                 className="flex items-center gap-4 rounded-2xl border border-neutral-200 bg-white p-4"
               >
-                <div className="text-3xl" aria-hidden>
-                  {item.emoji}
+                <div
+                  className="flex h-12 w-12 items-center justify-center rounded-xl bg-neutral-100 text-neutral-700"
+                  data-icon-name={item.iconName}
+                  aria-hidden
+                >
+                  <ItemIcon size={28} />
                 </div>
                 <div className="min-w-0 flex-1">
                   <div className="font-semibold text-neutral-900">{item.titleEn}</div>
