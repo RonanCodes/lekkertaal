@@ -23,12 +23,25 @@ import { ensureUserRow } from "./ensure-user-row";
 
 export type ShopItemId = "streak_freeze" | "hint_pack";
 
+/**
+ * Shop item shape.
+ *
+ * `iconName` is the Lucide component name (e.g. "Snowflake", "Lightbulb") the
+ * client looks up in a static map. We keep `emoji` around as a fallback /
+ * debug aid for now; a follow-up PR will drop it once the Lucide swap is
+ * verified clean in production. See US-010 (#137).
+ *
+ * Shop items currently live in-memory (no `shop_items` table). When the
+ * catalogue moves to D1 the `iconName` field will become a real column and
+ * this type will be inferred from the table.
+ */
 export type ShopItem = {
   id: ShopItemId;
   titleEn: string;
   description: string;
   costCoins: number;
   emoji: string;
+  iconName: string;
 };
 
 export const SHOP_CATALOGUE: ShopItem[] = [
@@ -38,6 +51,7 @@ export const SHOP_CATALOGUE: ShopItem[] = [
     description: "Auto-saves your streak the next time you miss a day.",
     costCoins: 50,
     emoji: "❄️",
+    iconName: "Snowflake",
   },
   {
     id: "hint_pack",
@@ -45,6 +59,7 @@ export const SHOP_CATALOGUE: ShopItem[] = [
     description: "One free hint to unstick a hard drill.",
     costCoins: 10,
     emoji: "💡",
+    iconName: "Lightbulb",
   },
 ];
 
