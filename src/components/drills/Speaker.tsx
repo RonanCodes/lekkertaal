@@ -61,8 +61,10 @@ export function Speaker({
     size === "sm" ? "h-7 w-7" : size === "lg" ? "h-12 w-12" : "h-9 w-9";
   const iconSize = size === "sm" ? 14 : size === "lg" ? 22 : 18;
   // Slow button is always one step smaller so it doesn't compete visually.
+  // Icon fills ~70% of the button so the Turtle shape is actually recognizable
+  // at small sizes (at 12px the shell + head detail collapsed into a blob).
   const slowSizeClass = size === "lg" ? "h-9 w-9" : size === "md" ? "h-7 w-7" : "h-6 w-6";
-  const slowIconSize = size === "lg" ? 16 : size === "md" ? 12 : 11;
+  const slowIconSize = size === "lg" ? 22 : size === "md" ? 18 : 15;
 
   const play = async (rate = 1) => {
     if (state === "playing" || state === "loading" || state === "unavailable") return;
