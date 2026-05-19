@@ -1,8 +1,9 @@
 import { useMemo, useState } from "react";
-import { DrillFrame, gradeText } from "./DrillFrame";
+import { DrillFrame, normaliseAnswer } from "./DrillFrame";
 import { Speaker } from "./Speaker";
 import { parseField } from "./DrillRenderer";
 import type { DrillProps } from "./DrillRenderer";
+import { levenshtein } from "../../lib/server/levenshtein";
 
 /**
  * Translation typing drill (US-012). EN sentence → user types NL.
@@ -11,7 +12,13 @@ import type { DrillProps } from "./DrillRenderer";
  *   promptEn : "I am going to school"
  *   answer   : "Ik ga naar school"     // string OR ["Ik ga naar school", "Ik ga naar de school"]
  *
- * Grading: case-insensitive, punctuation-tolerant, Levenshtein distance ≤ 1.
+ * Grading (US-132): case-insensitive, punctuation-tolerant via `normaliseAnswer`,
+ * Levenshtein distance ≤ 3 against the closest accepted canonical. Sentences
+ * are longer than single words so we use a looser tolerance than the
+ * single-word listening-spell drill (which sticks at ≤ 1). When the answer
+ * is correct but not exact (distance 1–3), a "Close enough" hint surfaces
+ * alongside the canonical so the learner sees the polished form.
+ *
  * Hint (5 coins): reveals first 2 letters. Coin deduction is a stub until
  * US-021 lands the wallet.
  */
@@ -27,14 +34,23 @@ export function TranslationTypingDrill({ drill, onSubmit }: DrillProps) {
   const [value, setValue] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [correct, setCorrect] = useState(false);
+  const [nearMiss, setNearMiss] = useState(false);
   const [shaking, setShaking] = useState(false);
   const [hintUsed, setHintUsed] = useState(false);
 
   const submit = () => {
     if (submitted || value.trim().length === 0) return;
-    const isCorrect = canonicals.some((c) => gradeText(value, c));
+    const userNorm = normaliseAnswer(value);
+    const distances = canonicals.map((c) => {
+      const cNorm = normaliseAnswer(c);
+      return userNorm === cNorm ? 0 : levenshtein(userNorm, cNorm);
+    });
+    const bestDistance = distances.length === 0 ? Infinity : Math.min(...distances);
+    const isCorrect = bestDistance <= 3;
+    const isNearMiss = isCorrect && bestDistance > 0;
     setSubmitted(true);
     setCorrect(isCorrect);
+    setNearMiss(isNearMiss);
     if (!isCorrect) {
       setShaking(true);
       setTimeout(() => setShaking(false), 250);
@@ -122,6 +138,11 @@ export function TranslationTypingDrill({ drill, onSubmit }: DrillProps) {
               <div className="mt-2 flex items-center gap-2 text-xs text-neutral-500">
                 Canonical: <span>{canonical}</span>
                 <Speaker text={canonical} size="sm" />
+              </div>
+            )}
+            {nearMiss && (
+              <div className="mt-2 text-xs italic text-emerald-700">
+                Close enough — counted as correct.
               </div>
             )}
           </div>
