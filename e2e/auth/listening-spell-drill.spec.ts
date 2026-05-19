@@ -18,48 +18,12 @@
  */
 
 import { test, expect } from "@playwright/test";
-import type { Page } from "@playwright/test";
 import { isClerkTestingConfigured, signInAsTestUser } from "../setup/clerk-auth";
+import { walkToDrill } from "../setup/lesson-nav";
 
 const SKIP_REASON =
   "E2E auth bypass not configured. Set E2E_BYPASS_TOKEN locally (or as a " +
   "wrangler secret in deployed envs) to exercise the listening-spell drill.";
-
-const MAX_HOPS = 40;
-
-async function walkToListeningSpell(page: Page) {
-  await page.goto("/app/path");
-
-  const a2UnitLink = page.locator('a[href*="/app/unit/a2-unit-1"]').first();
-  if ((await a2UnitLink.count()) === 0) {
-    return null;
-  }
-  await a2UnitLink.click();
-  await page.waitForURL(/\/app\/unit\//);
-
-  const lessonLink = page.locator('a[href*="/app/lesson/"]').first();
-  if ((await lessonLink.count()) === 0) {
-    return null;
-  }
-  await lessonLink.click();
-  await page.waitForURL(/\/app\/lesson\//);
-
-  const drill = page.getByTestId("listening-spell-drill");
-  for (let i = 0; i < MAX_HOPS; i++) {
-    if ((await drill.count()) > 0) return drill;
-    const continueBtn = page.getByRole("button", { name: /continue|finish lesson/i });
-    const skipBtn = page.getByRole("button", { name: /^skip$/i });
-    if (await continueBtn.count()) {
-      await continueBtn.first().click();
-    } else if (await skipBtn.count()) {
-      await skipBtn.first().click();
-    } else {
-      break;
-    }
-    await page.waitForTimeout(150);
-  }
-  return null;
-}
 
 test.describe("Listening-spell drill (US-001)", () => {
   test.beforeEach(async ({ page }) => {
@@ -70,7 +34,10 @@ test.describe("Listening-spell drill (US-001)", () => {
   test("accepts a near-miss within Levenshtein-1 and shows canonical", async ({
     page,
   }) => {
-    const drill = await walkToListeningSpell(page);
+    const drill = await walkToDrill(page, {
+      drillTestId: "listening-spell-drill",
+      maxHops: 40,
+    });
     test.skip(drill === null, "No listening_spell drill found in this lesson tail.");
     if (drill === null) return;
 
@@ -94,7 +61,10 @@ test.describe("Listening-spell drill (US-001)", () => {
   test("exact match shows correct feedback without the close-enough hint", async ({
     page,
   }) => {
-    const drill = await walkToListeningSpell(page);
+    const drill = await walkToDrill(page, {
+      drillTestId: "listening-spell-drill",
+      maxHops: 40,
+    });
     test.skip(drill === null, "No listening_spell drill found in this lesson tail.");
     if (drill === null) return;
 
@@ -116,7 +86,10 @@ test.describe("Listening-spell drill (US-001)", () => {
     test.skip(word.length === 0, "Canonical reveal was empty; can't compute exact-match path.");
 
     // Reload by walking the path again — re-mount the drill from scratch.
-    const drill2 = await walkToListeningSpell(page);
+    const drill2 = await walkToDrill(page, {
+      drillTestId: "listening-spell-drill",
+      maxHops: 40,
+    });
     test.skip(drill2 === null, "Second walk failed to reach listening_spell drill.");
     if (drill2 === null) return;
 

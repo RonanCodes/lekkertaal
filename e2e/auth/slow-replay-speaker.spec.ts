@@ -15,51 +15,12 @@
  */
 
 import { test, expect } from "@playwright/test";
-import type { Page } from "@playwright/test";
 import { isClerkTestingConfigured, signInAsTestUser } from "../setup/clerk-auth";
+import { walkToDrill } from "../setup/lesson-nav";
 
 const SKIP_REASON =
   "E2E auth bypass not configured. Set E2E_BYPASS_TOKEN locally (or as a " +
   "wrangler secret in deployed envs) to exercise the Speaker slow-replay.";
-
-const MAX_HOPS = 40;
-
-async function walkUntilSpeakerVisible(page: Page) {
-  await page.goto("/app/path");
-
-  const a2UnitLink = page.locator('a[href*="/app/unit/a2-unit-1"]').first();
-  if ((await a2UnitLink.count()) === 0) {
-    return null;
-  }
-  await a2UnitLink.click();
-  await page.waitForURL(/\/app\/unit\//);
-
-  const lessonLink = page.locator('a[href*="/app/lesson/"]').first();
-  if ((await lessonLink.count()) === 0) {
-    return null;
-  }
-  await lessonLink.click();
-  await page.waitForURL(/\/app\/lesson\//);
-
-  // The Speaker is reused across many drill types (match_pairs, listening_spell,
-  // flashcards, etc.). Walk through the lesson hopping past each drill until
-  // a Speaker wrapper is rendered.
-  const speaker = page.getByTestId("speaker").first();
-  for (let i = 0; i < MAX_HOPS; i++) {
-    if ((await speaker.count()) > 0) return speaker;
-    const continueBtn = page.getByRole("button", { name: /continue|finish lesson/i });
-    const skipBtn = page.getByRole("button", { name: /^skip$/i });
-    if (await continueBtn.count()) {
-      await continueBtn.first().click();
-    } else if (await skipBtn.count()) {
-      await skipBtn.first().click();
-    } else {
-      break;
-    }
-    await page.waitForTimeout(150);
-  }
-  return null;
-}
 
 test.describe("Speaker slow-replay (US-007)", () => {
   test.beforeEach(async ({ page }) => {
@@ -68,7 +29,7 @@ test.describe("Speaker slow-replay (US-007)", () => {
   });
 
   test("desktop: both main and Turtle buttons visible", async ({ page }) => {
-    const speaker = await walkUntilSpeakerVisible(page);
+    const speaker = await walkToDrill(page, { drillTestId: "speaker" });
     test.skip(speaker === null, "No Speaker found in this lesson.");
     if (speaker === null) return;
 
@@ -85,7 +46,7 @@ test.describe("Speaker slow-replay (US-007)", () => {
   });
 
   test("desktop: clicking Turtle sets playbackRate to 0.5", async ({ page }) => {
-    const speaker = await walkUntilSpeakerVisible(page);
+    const speaker = await walkToDrill(page, { drillTestId: "speaker" });
     test.skip(speaker === null, "No Speaker found in this lesson.");
     if (speaker === null) return;
 
@@ -121,7 +82,7 @@ test.describe("Speaker slow-replay (US-007)", () => {
     // below when the media query still reports pointer:fine. The mobile
     // long-press path is exercised by unit tests on the Speaker component.
 
-    const speaker = await walkUntilSpeakerVisible(page);
+    const speaker = await walkToDrill(page, { drillTestId: "speaker" });
     test.skip(speaker === null, "No Speaker found in this lesson.");
     if (speaker === null) return;
 

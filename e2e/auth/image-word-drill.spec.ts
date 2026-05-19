@@ -17,6 +17,7 @@
 
 import { test, expect } from "@playwright/test";
 import { isClerkTestingConfigured, signInAsTestUser } from "../setup/clerk-auth";
+import { walkToDrill } from "../setup/lesson-nav";
 
 const skipReason =
   "Clerk testing env missing. Set CLERK_SECRET_KEY, VITE_CLERK_PUBLISHABLE_KEY, " +
@@ -31,53 +32,13 @@ test.describe("Image-word drill (AI-SDK-7)", () => {
   test("renders the image, accepts the canonical Dutch noun, shows correct feedback", async ({
     page,
   }) => {
-    // Navigate to the learning path and look for any unit that contains an
-    // image-word drill. The seed slug pattern is `image-word-<noun>`; we
-    // search by data-testid rather than slug so the test stays robust if
-    // the curriculum wiring changes.
-    await page.goto("/app/path");
-
     // The unit/lesson where image-word drills get seeded is the A2 unit-1
-    // slot (see scripts/seed-image-drills.ts). Walk there and into its
-    // first lesson.
-    const a2UnitLink = page
-      .locator('a[href*="/app/unit/a2-unit-1"]')
-      .first();
-
-    const hasUnit = await a2UnitLink.count();
-    test.skip(hasUnit === 0, "No A2 unit-1 link in path — image drill seed not present.");
-
-    await a2UnitLink.click();
-    await page.waitForURL(/\/app\/unit\//);
-
-    const lessonLink = page.locator('a[href*="/app/lesson/"]').first();
-    test.skip((await lessonLink.count()) === 0, "Unit page has no lesson links.");
-    await lessonLink.click();
-    await page.waitForURL(/\/app\/lesson\//);
-
-    // Skip past non-image drills until an image-word drill renders, or
-    // give up after 12 hops (lesson length cap).
-    let imageDrill = null;
-    for (let i = 0; i < 12; i++) {
-      const img = page.getByTestId("image-word-drill-image");
-      if ((await img.count()) > 0) {
-        imageDrill = img;
-        break;
-      }
-      // The lesson player auto-advances on the fallback "Skip" button for
-      // unsupported types and on the green "Continue" button for normal
-      // drills. Try Continue first, fall back to Skip.
-      const continueBtn = page.getByRole("button", { name: /continue|finish lesson/i });
-      const skipBtn = page.getByRole("button", { name: /^skip$/i });
-      if (await continueBtn.count()) {
-        await continueBtn.first().click();
-      } else if (await skipBtn.count()) {
-        await skipBtn.first().click();
-      } else {
-        break;
-      }
-      await page.waitForTimeout(150);
-    }
+    // slot (see scripts/seed-image-drills.ts). Walk there and skip past
+    // non-image drills until an image-word drill renders.
+    const imageDrill = await walkToDrill(page, {
+      drillTestId: "image-word-drill-image",
+      maxHops: 12,
+    });
 
     test.skip(imageDrill === null, "No image-word drill in this lesson. Seed not loaded.");
     if (imageDrill === null) return;

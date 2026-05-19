@@ -16,42 +16,12 @@
  */
 
 import { test, expect } from "@playwright/test";
-import type { Page } from "@playwright/test";
 import { isClerkTestingConfigured, signInAsTestUser } from "../setup/clerk-auth";
+import { walkToDrill } from "../setup/lesson-nav";
 
 const SKIP_REASON =
   "E2E auth bypass not configured. Set E2E_BYPASS_TOKEN locally (or as a " +
   "wrangler secret in deployed envs) to exercise the picture-choice drill.";
-
-const MAX_HOPS = 40;
-
-async function walkToPictureChoice(page: Page) {
-  await page.goto("/app/path");
-  const a2UnitLink = page.locator('a[href*="/app/unit/a2-unit-1"]').first();
-  if ((await a2UnitLink.count()) === 0) return null;
-  await a2UnitLink.click();
-  await page.waitForURL(/\/app\/unit\//);
-  const lessonLink = page.locator('a[href*="/app/lesson/"]').first();
-  if ((await lessonLink.count()) === 0) return null;
-  await lessonLink.click();
-  await page.waitForURL(/\/app\/lesson\//);
-
-  const grid = page.getByTestId("picture-choice-grid");
-  for (let i = 0; i < MAX_HOPS; i++) {
-    if ((await grid.count()) > 0) return grid;
-    const continueBtn = page.getByRole("button", { name: /continue|finish lesson/i });
-    const skipBtn = page.getByRole("button", { name: /^skip$/i });
-    if (await continueBtn.count()) {
-      await continueBtn.first().click();
-    } else if (await skipBtn.count()) {
-      await skipBtn.first().click();
-    } else {
-      break;
-    }
-    await page.waitForTimeout(150);
-  }
-  return null;
-}
 
 test.describe("Picture-choice drill (US-004)", () => {
   test.beforeEach(async ({ page }) => {
@@ -60,7 +30,7 @@ test.describe("Picture-choice drill (US-004)", () => {
   });
 
   test("renders 4 tiles and advances on a correct pick", async ({ page }) => {
-    const grid = await walkToPictureChoice(page);
+    const grid = await walkToDrill(page, { drillTestId: "picture-choice-grid" });
     test.skip(grid === null, "No picture_choice drill found — pool may be too thin.");
     if (grid === null) return;
 
@@ -83,7 +53,7 @@ test.describe("Picture-choice drill (US-004)", () => {
   });
 
   test("wrong pick flashes red and reveals the correct tile", async ({ page }) => {
-    const grid = await walkToPictureChoice(page);
+    const grid = await walkToDrill(page, { drillTestId: "picture-choice-grid" });
     test.skip(grid === null, "No picture_choice drill found — pool may be too thin.");
     if (grid === null) return;
 
