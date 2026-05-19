@@ -23,3 +23,10 @@ playwright/.cache
 .swarm/
 .ronan-skills-llm-wiki.local.json
 .claude/repo-mode
+
+# Local-factory artefacts (Ralph / planner-worker / night-shift, etc).
+# See ~/Dev/ronan-skills/skills/ralph/SKILL.md § "Run artefacts (the canonical shape)".
+# patterns.md and *.session.md stay tracked; everything else under .ralph/ is ephemeral.
+.ralph/sessions/
+.ralph/*.progress.txt
+.ralph/.gitignore-policy
