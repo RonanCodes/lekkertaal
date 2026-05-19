@@ -6671,5 +6671,27 @@
     "answer": "Zie de presentatie als een “introductie van jezelf” aan nieuwe collega’s.",
     "hints": [],
     "source_ref": "whatsapp-passage-0"
+  },
+  {
+    "slug": "word-bank-a2-unit-1-koffie",
+    "unit_slug": "a2-unit-1-werkwoorden-hebben-zijn",
+    "type": "word-bank",
+    "prompt_nl": null,
+    "prompt_en": "Translate: \"I want a coffee\"",
+    "options": null,
+    "answer": "ik wil een koffie",
+    "hints": [],
+    "source_ref": "us-002-word-bank-sample"
+  },
+  {
+    "slug": "word-bank-a2-unit-1-supermarkt",
+    "unit_slug": "a2-unit-1-werkwoorden-hebben-zijn",
+    "type": "word-bank",
+    "prompt_nl": null,
+    "prompt_en": "Translate: \"I go to the supermarket\"",
+    "options": null,
+    "answer": "ik ga naar de supermarkt",
+    "hints": [],
+    "source_ref": "us-002-word-bank-sample"
   }
 ]

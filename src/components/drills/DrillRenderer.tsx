@@ -3,6 +3,7 @@ import { MultipleChoiceDrill } from "./MultipleChoiceDrill";
 import { TranslationTypingDrill } from "./TranslationTypingDrill";
 import { FillBlankDrill } from "./FillBlankDrill";
 import { WordOrderingDrill } from "./WordOrderingDrill";
+import { WordBankDrill } from "./WordBankDrill";
 import { SpeakDrill } from "./SpeakDrill";
 import { ImageWordDrill } from "./ImageWordDrill";
 import { FlashcardDrill } from "./FlashcardDrill";
@@ -55,6 +56,8 @@ export function DrillRenderer({ drill, onSubmit, vocabPool }: DrillProps) {
       return <FillBlankDrill drill={drill} onSubmit={onSubmit} />;
     case "word_ordering":
       return <WordOrderingDrill drill={drill} onSubmit={onSubmit} />;
+    case "word_bank":
+      return <WordBankDrill drill={drill} onSubmit={onSubmit} vocabPool={vocabPool} />;
     case "speak":
       return <SpeakDrill drill={drill} onSubmit={onSubmit} />;
     case "image_word":

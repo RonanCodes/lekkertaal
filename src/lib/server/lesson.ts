@@ -24,6 +24,7 @@ export type DrillType =
   | "translation_typing"
   | "fill_blank"
   | "word_ordering"
+  | "word_bank"
   | "speak"
   | "image_word"
   | "flashcard"
@@ -48,6 +49,7 @@ const DRILL_TYPE_HYPHEN_TO_UNDERSCORE: Record<string, DrillType> = {
   "fill-blank": "fill_blank",
   "fill-in-the-blank": "fill_blank",
   "word-ordering": "word_ordering",
+  "word-bank": "word_bank",
   "image-word": "image_word",
 };
 
