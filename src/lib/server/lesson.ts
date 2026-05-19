@@ -213,28 +213,38 @@ export const getLesson = createServerFn({ method: "GET", strict: false })
     // audio URL, sources). Only words that have been through the enrich-vocab
     // script will have data; absent entries are fine — components degrade
     // gracefully. Keyed by lowercased nl for O(1) lookup in drill components.
+    //
+    // D1 / SQLite caps SQLITE_MAX_VARIABLE_NUMBER at 100 placeholders per
+    // query, so we chunk the `IN (?, ?, ...)` list into batches well under
+    // that cap. Larger units (e.g. A2 imperfectum) ship vocab pools of
+    // 100+ unique words and a single inArray() blew past the limit
+    // (regression PR #165 → fixed here).
     const vocabEnrichedMap: Record<string, VocabEnriched> = {};
     if (vocabPool.length > 0) {
       const nlWords = [...new Set(vocabPool.map((p) => p.nl.toLowerCase()))];
-      const enrichedRows = await drz
-        .select({
-          nl: vocab.nl,
-          ipa: vocab.ipa,
-          gender: vocab.gender,
-          audioUrl: vocab.audioUrl,
-          wordType: vocab.wordType,
-          sources: vocab.sources,
-        })
-        .from(vocab)
-        .where(inArray(vocab.nl, nlWords));
-      for (const row of enrichedRows) {
-        vocabEnrichedMap[row.nl.toLowerCase()] = {
-          ipa: row.ipa ?? null,
-          gender: (row.gender as "de" | "het" | null) ?? null,
-          audioUrl: row.audioUrl ?? null,
-          wordType: (row.wordType as VocabEnriched["wordType"]) ?? null,
-          sources: row.sources ?? null,
-        };
+      const VOCAB_ENRICH_CHUNK = 80;
+      for (let i = 0; i < nlWords.length; i += VOCAB_ENRICH_CHUNK) {
+        const batch = nlWords.slice(i, i + VOCAB_ENRICH_CHUNK);
+        const enrichedRows = await drz
+          .select({
+            nl: vocab.nl,
+            ipa: vocab.ipa,
+            gender: vocab.gender,
+            audioUrl: vocab.audioUrl,
+            wordType: vocab.wordType,
+            sources: vocab.sources,
+          })
+          .from(vocab)
+          .where(inArray(vocab.nl, batch));
+        for (const row of enrichedRows) {
+          vocabEnrichedMap[row.nl.toLowerCase()] = {
+            ipa: row.ipa ?? null,
+            gender: (row.gender as "de" | "het" | null) ?? null,
+            audioUrl: row.audioUrl ?? null,
+            wordType: (row.wordType as VocabEnriched["wordType"]) ?? null,
+            sources: row.sources ?? null,
+          };
+        }
       }
     }
 
