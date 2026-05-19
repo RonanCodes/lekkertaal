@@ -6717,5 +6717,137 @@
     "hints": [],
     "source_ref": "us-004-picture-choice-sample",
     "image_url": "https://images.lekkertaal.dev/vocab/kat.png"
+  },
+  {
+    "slug": "dialogue-reply-hoe-gaat-het",
+    "unit_slug": "a2-unit-1-werkwoorden-hebben-zijn",
+    "type": "dialogue-reply",
+    "prompt_nl": null,
+    "prompt_en": "Pick the best reply",
+    "options": null,
+    "answer": "{\"dialogue\":[{\"speaker\":\"A\",\"line\":\"Hoi, hoe gaat het?\"},{\"speaker\":\"B\",\"line\":\"...\"}],\"options\":[{\"text\":\"Het gaat goed, dank je. En met jou?\",\"correct\":true},{\"text\":\"Ik woon in Utrecht.\",\"correct\":false},{\"text\":\"Tot morgen!\",\"correct\":false}]}",
+    "hints": [],
+    "source_ref": "us-005-dialogue-reply-sample"
+  },
+  {
+    "slug": "dialogue-reply-cafe-bestelling",
+    "unit_slug": "a2-unit-1-werkwoorden-hebben-zijn",
+    "type": "dialogue-reply",
+    "prompt_nl": null,
+    "prompt_en": "Pick the best reply",
+    "options": null,
+    "answer": "{\"dialogue\":[{\"speaker\":\"Ober\",\"line\":\"Wat wilt u drinken?\"},{\"speaker\":\"U\",\"line\":\"...\"}],\"options\":[{\"text\":\"Een kopje koffie, alstublieft.\",\"correct\":true,\"explanation\":\"'Alstublieft' is the polite form when ordering from a stranger.\"},{\"text\":\"Ik ben Pieter.\",\"correct\":false},{\"text\":\"Het regent vandaag.\",\"correct\":false}]}",
+    "hints": [],
+    "source_ref": "us-005-dialogue-reply-sample"
+  },
+  {
+    "slug": "dialogue-reply-bedankt",
+    "unit_slug": "a2-unit-1-werkwoorden-hebben-zijn",
+    "type": "dialogue-reply",
+    "prompt_nl": null,
+    "prompt_en": "Pick the best reply",
+    "options": null,
+    "answer": "{\"dialogue\":[{\"speaker\":\"A\",\"line\":\"Bedankt voor je hulp!\"},{\"speaker\":\"B\",\"line\":\"...\"}],\"options\":[{\"text\":\"Geen dank.\",\"correct\":true,\"explanation\":\"'Geen dank' (no thanks owed) is the natural Dutch 'you're welcome'.\"},{\"text\":\"Dat klopt niet.\",\"correct\":false},{\"text\":\"Ik weet het niet.\",\"correct\":false}]}",
+    "hints": [],
+    "source_ref": "us-005-dialogue-reply-sample"
+  },
+  {
+    "slug": "dialogue-reply-hoe-laat",
+    "unit_slug": "a2-unit-1-werkwoorden-hebben-zijn",
+    "type": "dialogue-reply",
+    "prompt_nl": null,
+    "prompt_en": "Pick the best reply",
+    "options": null,
+    "answer": "{\"dialogue\":[{\"speaker\":\"A\",\"line\":\"Hoe laat is het?\"},{\"speaker\":\"B\",\"line\":\"...\"}],\"options\":[{\"text\":\"Het is half drie.\",\"correct\":true},{\"text\":\"Ik kom uit Belgie.\",\"correct\":false},{\"text\":\"De winkel is dicht.\",\"correct\":false}]}",
+    "hints": [],
+    "source_ref": "us-005-dialogue-reply-sample"
+  },
+  {
+    "slug": "dialogue-reply-station",
+    "unit_slug": "a2-unit-1-werkwoorden-hebben-zijn",
+    "type": "dialogue-reply",
+    "prompt_nl": null,
+    "prompt_en": "Pick the best reply",
+    "options": null,
+    "answer": "{\"dialogue\":[{\"speaker\":\"Toerist\",\"line\":\"Pardon, waar is het station?\"},{\"speaker\":\"Inwoner\",\"line\":\"...\"}],\"options\":[{\"text\":\"Rechtdoor en dan links.\",\"correct\":true,\"explanation\":\"Dutch directions stack with 'en dan' (and then): straight on, and then left.\"},{\"text\":\"Mijn naam is Karel.\",\"correct\":false},{\"text\":\"Ja, lekker.\",\"correct\":false}]}",
+    "hints": [],
+    "source_ref": "us-005-dialogue-reply-sample"
+  },
+  {
+    "slug": "dialogue-reply-weer",
+    "unit_slug": "a2-unit-1-werkwoorden-hebben-zijn",
+    "type": "dialogue-reply",
+    "prompt_nl": null,
+    "prompt_en": "Pick the best reply",
+    "options": null,
+    "answer": "{\"dialogue\":[{\"speaker\":\"A\",\"line\":\"Wat een mooi weer vandaag!\"},{\"speaker\":\"B\",\"line\":\"...\"}],\"options\":[{\"text\":\"Ja, heerlijk zonnig.\",\"correct\":true},{\"text\":\"Ik heb een fiets.\",\"correct\":false},{\"text\":\"Mijn broer is ziek.\",\"correct\":false}]}",
+    "hints": [],
+    "source_ref": "us-005-dialogue-reply-sample"
+  },
+  {
+    "slug": "dialogue-reply-koffie",
+    "unit_slug": "a2-unit-1-werkwoorden-hebben-zijn",
+    "type": "dialogue-reply",
+    "prompt_nl": null,
+    "prompt_en": "Pick the best reply",
+    "options": null,
+    "answer": "{\"dialogue\":[{\"speaker\":\"A\",\"line\":\"Wil je koffie of thee?\"},{\"speaker\":\"B\",\"line\":\"...\"}],\"options\":[{\"text\":\"Koffie, graag.\",\"correct\":true,\"explanation\":\"'Graag' (gladly) softens a request into a polite yes-please.\"},{\"text\":\"Acht uur.\",\"correct\":false},{\"text\":\"In de keuken.\",\"correct\":false}]}",
+    "hints": [],
+    "source_ref": "us-005-dialogue-reply-sample"
+  },
+  {
+    "slug": "dialogue-reply-waar-woon-je",
+    "unit_slug": "a2-unit-1-werkwoorden-hebben-zijn",
+    "type": "dialogue-reply",
+    "prompt_nl": null,
+    "prompt_en": "Pick the best reply",
+    "options": null,
+    "answer": "{\"dialogue\":[{\"speaker\":\"A\",\"line\":\"Waar woon je?\"},{\"speaker\":\"B\",\"line\":\"...\"}],\"options\":[{\"text\":\"Ik woon in Amsterdam.\",\"correct\":true},{\"text\":\"Het is donderdag.\",\"correct\":false},{\"text\":\"Twee broodjes, alstublieft.\",\"correct\":false}]}",
+    "hints": [],
+    "source_ref": "us-005-dialogue-reply-sample"
+  },
+  {
+    "slug": "dialogue-reply-tot-ziens",
+    "unit_slug": "a2-unit-1-werkwoorden-hebben-zijn",
+    "type": "dialogue-reply",
+    "prompt_nl": null,
+    "prompt_en": "Pick the best reply",
+    "options": null,
+    "answer": "{\"dialogue\":[{\"speaker\":\"A\",\"line\":\"Tot ziens!\"},{\"speaker\":\"B\",\"line\":\"...\"}],\"options\":[{\"text\":\"Tot ziens, fijne dag!\",\"correct\":true},{\"text\":\"Goedemorgen.\",\"correct\":false},{\"text\":\"Ik heb honger.\",\"correct\":false}]}",
+    "hints": [],
+    "source_ref": "us-005-dialogue-reply-sample"
+  },
+  {
+    "slug": "dialogue-reply-rekening",
+    "unit_slug": "a2-unit-1-werkwoorden-hebben-zijn",
+    "type": "dialogue-reply",
+    "prompt_nl": null,
+    "prompt_en": "Pick the best reply",
+    "options": null,
+    "answer": "{\"dialogue\":[{\"speaker\":\"Ober\",\"line\":\"Wilt u de rekening?\"},{\"speaker\":\"Gast\",\"line\":\"...\"}],\"options\":[{\"text\":\"Ja, graag.\",\"correct\":true},{\"text\":\"Ik kan niet zwemmen.\",\"correct\":false},{\"text\":\"De trein is laat.\",\"correct\":false}]}",
+    "hints": [],
+    "source_ref": "us-005-dialogue-reply-sample"
+  },
+  {
+    "slug": "dialogue-reply-naam",
+    "unit_slug": "a2-unit-1-werkwoorden-hebben-zijn",
+    "type": "dialogue-reply",
+    "prompt_nl": null,
+    "prompt_en": "Pick the best reply",
+    "options": null,
+    "answer": "{\"dialogue\":[{\"speaker\":\"A\",\"line\":\"Hoe heet je?\"},{\"speaker\":\"B\",\"line\":\"...\"}],\"options\":[{\"text\":\"Ik heet Sanne.\",\"correct\":true,\"explanation\":\"'Heten' (to be called) takes 'Ik heet ...' for self-introductions, not 'Ik ben ...'.\"},{\"text\":\"Ik ben moe.\",\"correct\":false},{\"text\":\"Het is koud.\",\"correct\":false}]}",
+    "hints": [],
+    "source_ref": "us-005-dialogue-reply-sample"
+  },
+  {
+    "slug": "dialogue-reply-trein",
+    "unit_slug": "a2-unit-1-werkwoorden-hebben-zijn",
+    "type": "dialogue-reply",
+    "prompt_nl": null,
+    "prompt_en": "Pick the best reply",
+    "options": null,
+    "answer": "{\"dialogue\":[{\"speaker\":\"A\",\"line\":\"Gaat de trein om negen uur?\"},{\"speaker\":\"B\",\"line\":\"...\"}],\"options\":[{\"text\":\"Nee, om half tien.\",\"correct\":true},{\"text\":\"Een glas water.\",\"correct\":false},{\"text\":\"Mijn hond heet Max.\",\"correct\":false}]}",
+    "hints": [],
+    "source_ref": "us-005-dialogue-reply-sample"
   }
 ]
