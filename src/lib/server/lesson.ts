@@ -28,7 +28,8 @@ export type DrillType =
   | "speak"
   | "image_word"
   | "flashcard"
-  | "listening_spell";
+  | "listening_spell"
+  | "picture_choice";
 
 /**
  * DB rows store drill `type` in hyphen-form (`match-pairs`, `translation-typing`,
@@ -51,6 +52,7 @@ const DRILL_TYPE_HYPHEN_TO_UNDERSCORE: Record<string, DrillType> = {
   "word-ordering": "word_ordering",
   "word-bank": "word_bank",
   "image-word": "image_word",
+  "picture-choice": "picture_choice",
 };
 
 function normaliseDrillType(raw: string): DrillType {
@@ -82,6 +84,14 @@ export type LessonPayload = {
    * the drill's own `answer` JSON if the pool is too small.
    */
   vocabPool: Array<{ nl: string; en: string }>;
+  /**
+   * Every unique `{nl, en, imageUrl}` triple harvested from `image-word`
+   * exercises in the lesson's unit. Picture-choice drills use this as the
+   * distractor pool: pick 3 random tiles that aren't the correct answer.
+   * When the pool has fewer than 4 entries, the picture-choice drill renders
+   * a skip-frame rather than punishing the learner for missing seed content.
+   */
+  imagePool: Array<{ nl: string; en: string; imageUrl: string }>;
 };
 
 export type ReviewCardPayload = {
@@ -156,6 +166,26 @@ export const getLesson = createServerFn({ method: "GET", strict: false })
       );
     const vocabPool = extractVocabPool(unitPairRows.map((r) => r.answer));
 
+    // Build the unit-level image pool from every image-word exercise in this
+    // lesson's unit. Picture-choice drills sample 3 distractors from this
+    // pool so a learner sees fresh wrong-tiles each replay. We keep it
+    // unit-scoped (not lesson-scoped) so even a unit's earliest lesson has
+    // enough images to fill a 4-up grid.
+    const unitImageRows = await drz
+      .select({
+        answer: exercises.answer,
+        imageUrl: exercises.imageUrl,
+      })
+      .from(exercises)
+      .innerJoin(lessons, eq(lessons.id, exercises.lessonId))
+      .where(
+        and(
+          eq(lessons.unitId, lessonRow[0].unitId),
+          eq(exercises.type, "image-word"),
+        ),
+      );
+    const imagePool = extractImagePool(unitImageRows);
+
     // US-019: surface up to 3 due review cards before the new content.
     const now = new Date().toISOString();
     const reviewRows = await drz
@@ -214,6 +244,7 @@ export const getLesson = createServerFn({ method: "GET", strict: false })
         payload: r.payload ?? null,
       })),
       vocabPool,
+      imagePool,
     };
   });
 
@@ -370,6 +401,62 @@ function sampleRandom<T>(arr: ReadonlyArray<T>, n: number): T[] {
  * keyed by `<nl>|<en>` lowercased so two drills that share "huis | house"
  * don't both appear in the pool.
  */
+/**
+ * Build the image pool from `image-word` exercise rows. Each row carries an
+ * `answer` (Dutch noun, or an array of acceptable Dutch surface forms) and
+ * an `imageUrl` (R2 URL). We pick the first answer entry as the canonical
+ * Dutch noun, skip rows without an imageUrl, and dedupe by lowercased nl.
+ *
+ * English meaning isn't reliably present on `image-word` rows, so the EN
+ * field comes back as an empty string. Picture-choice doesn't surface EN
+ * anyway — it shows the Dutch headword + 4 images.
+ */
+export function extractImagePool(
+  rows: ReadonlyArray<{ answer: unknown; imageUrl: string | null }>,
+): Array<{ nl: string; en: string; imageUrl: string }> {
+  const seen = new Set<string>();
+  const out: Array<{ nl: string; en: string; imageUrl: string }> = [];
+  for (const row of rows) {
+    if (!row.imageUrl) continue;
+    const nl = extractFirstNoun(row.answer);
+    if (!nl) continue;
+    const key = nl.toLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push({ nl, en: "", imageUrl: row.imageUrl });
+  }
+  return out;
+}
+
+/**
+ * Pull the canonical Dutch noun out of an image-word `answer` payload. The
+ * column stores either a bare string ("huis") or a JSON-encoded array of
+ * acceptable surface forms (`["kat","de kat"]`). We probe both shapes plus
+ * the already-parsed array (drizzle json mode would return) and return the
+ * first non-empty string we find. Anything else returns null.
+ */
+function extractFirstNoun(raw: unknown): string | null {
+  if (typeof raw === "string") {
+    // Try JSON first — a stringified array like `["kat","de kat"]` should
+    // resolve to the first element. If JSON parse fails the column is a
+    // bare noun like "huis" and we use it directly.
+    try {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed) && parsed.length > 0 && typeof parsed[0] === "string") {
+        return parsed[0];
+      }
+      if (typeof parsed === "string") return parsed;
+    } catch {
+      // Bare string column — fall through and use it as-is.
+    }
+    return raw.length > 0 ? raw : null;
+  }
+  if (Array.isArray(raw) && raw.length > 0 && typeof raw[0] === "string") {
+    return raw[0];
+  }
+  return null;
+}
+
 export function extractVocabPool(
   rawAnswers: ReadonlyArray<unknown>,
 ): Array<{ nl: string; en: string }> {

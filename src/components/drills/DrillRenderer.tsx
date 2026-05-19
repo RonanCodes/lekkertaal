@@ -8,6 +8,7 @@ import { SpeakDrill } from "./SpeakDrill";
 import { ImageWordDrill } from "./ImageWordDrill";
 import { FlashcardDrill } from "./FlashcardDrill";
 import { ListeningSpellDrill } from "./ListeningSpellDrill";
+import { PictureChoiceDrill } from "./PictureChoiceDrill";
 import { DrillFrame } from "./DrillFrame";
 import type { DrillPayload } from "../../lib/server/lesson";
 
@@ -21,6 +22,13 @@ export type DrillProps = {
    * only one drill type cares about.
    */
   vocabPool?: Array<{ nl: string; en: string }>;
+  /**
+   * Unit-wide image pool for `picture_choice` drills. Each entry has an
+   * `imageUrl` plus the Dutch noun it depicts; PictureChoiceDrill picks 3
+   * distractors from this pool (excluding the correct tile). Other drill
+   * types ignore it.
+   */
+  imagePool?: Array<{ nl: string; en: string; imageUrl: string }>;
 };
 
 /**
@@ -42,7 +50,7 @@ export function parseField<T>(raw: string | null): T | null {
  * type; until they land the fallback "coming soon" panel auto-marks correct
  * and advances so the player itself is testable.
  */
-export function DrillRenderer({ drill, onSubmit, vocabPool }: DrillProps) {
+export function DrillRenderer({ drill, onSubmit, vocabPool, imagePool }: DrillProps) {
   switch (drill.type) {
     case "match_pairs":
       return <MatchPairsDrill drill={drill} onSubmit={onSubmit} vocabPool={vocabPool} />;
@@ -66,6 +74,8 @@ export function DrillRenderer({ drill, onSubmit, vocabPool }: DrillProps) {
       return <FlashcardDrill drill={drill} onSubmit={onSubmit} />;
     case "listening_spell":
       return <ListeningSpellDrill drill={drill} onSubmit={onSubmit} />;
+    case "picture_choice":
+      return <PictureChoiceDrill drill={drill} onSubmit={onSubmit} imagePool={imagePool} />;
     default:
       return (
         <DrillFrame promptLabel="Unsupported drill" prompt={`Type: ${drill.type}`}>
