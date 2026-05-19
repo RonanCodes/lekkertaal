@@ -6849,5 +6849,115 @@
     "answer": "{\"dialogue\":[{\"speaker\":\"A\",\"line\":\"Gaat de trein om negen uur?\"},{\"speaker\":\"B\",\"line\":\"...\"}],\"options\":[{\"text\":\"Nee, om half tien.\",\"correct\":true},{\"text\":\"Een glas water.\",\"correct\":false},{\"text\":\"Mijn hond heet Max.\",\"correct\":false}]}",
     "hints": [],
     "source_ref": "us-005-dialogue-reply-sample"
+  },
+  {
+    "slug": "conj-pres-hebben",
+    "unit_slug": "a2-unit-1-werkwoorden-hebben-zijn",
+    "type": "conjugation",
+    "prompt_nl": null,
+    "prompt_en": "Conjugate hebben in present tense",
+    "options": null,
+    "answer": "{\"infinitive\": \"hebben\", \"tense\": \"present\", \"forms\": {\"ik\": \"heb\", \"jij\": \"hebt\", \"hij_zij\": \"heeft\", \"wij\": \"hebben\", \"jullie\": \"hebben\", \"zij\": \"hebben\"}}",
+    "hints": [],
+    "source_ref": "us-136-conjugation-drill"
+  },
+  {
+    "slug": "conj-pres-zijn",
+    "unit_slug": "a2-unit-1-werkwoorden-hebben-zijn",
+    "type": "conjugation",
+    "prompt_nl": null,
+    "prompt_en": "Conjugate zijn in present tense",
+    "options": null,
+    "answer": "{\"infinitive\": \"zijn\", \"tense\": \"present\", \"forms\": {\"ik\": \"ben\", \"jij\": \"bent\", \"hij_zij\": \"is\", \"wij\": \"zijn\", \"jullie\": \"zijn\", \"zij\": \"zijn\"}}",
+    "hints": [],
+    "source_ref": "us-136-conjugation-drill"
+  },
+  {
+    "slug": "conj-pres-gaan",
+    "unit_slug": "a2-unit-1-werkwoorden-hebben-zijn",
+    "type": "conjugation",
+    "prompt_nl": null,
+    "prompt_en": "Conjugate gaan in present tense",
+    "options": null,
+    "answer": "{\"infinitive\": \"gaan\", \"tense\": \"present\", \"forms\": {\"ik\": \"ga\", \"jij\": \"gaat\", \"hij_zij\": \"gaat\", \"wij\": \"gaan\", \"jullie\": \"gaan\", \"zij\": \"gaan\"}}",
+    "hints": [],
+    "source_ref": "us-136-conjugation-drill"
+  },
+  {
+    "slug": "conj-pres-doen",
+    "unit_slug": "a2-unit-1-werkwoorden-hebben-zijn",
+    "type": "conjugation",
+    "prompt_nl": null,
+    "prompt_en": "Conjugate doen in present tense",
+    "options": null,
+    "answer": "{\"infinitive\": \"doen\", \"tense\": \"present\", \"forms\": {\"ik\": \"doe\", \"jij\": \"doet\", \"hij_zij\": \"doet\", \"wij\": \"doen\", \"jullie\": \"doen\", \"zij\": \"doen\"}}",
+    "hints": [],
+    "source_ref": "us-136-conjugation-drill"
+  },
+  {
+    "slug": "conj-pres-zien",
+    "unit_slug": "a2-unit-1-werkwoorden-hebben-zijn",
+    "type": "conjugation",
+    "prompt_nl": null,
+    "prompt_en": "Conjugate zien in present tense",
+    "options": null,
+    "answer": "{\"infinitive\": \"zien\", \"tense\": \"present\", \"forms\": {\"ik\": \"zie\", \"jij\": \"ziet\", \"hij_zij\": \"ziet\", \"wij\": \"zien\", \"jullie\": \"zien\", \"zij\": \"zien\"}}",
+    "hints": [],
+    "source_ref": "us-136-conjugation-drill"
+  },
+  {
+    "slug": "conj-pres-kunnen",
+    "unit_slug": "a2-unit-1-werkwoorden-hebben-zijn",
+    "type": "conjugation",
+    "prompt_nl": null,
+    "prompt_en": "Conjugate kunnen in present tense",
+    "options": null,
+    "answer": "{\"infinitive\": \"kunnen\", \"tense\": \"present\", \"forms\": {\"ik\": \"kan\", \"jij\": \"kunt\", \"hij_zij\": \"kan\", \"wij\": \"kunnen\", \"jullie\": \"kunnen\", \"zij\": \"kunnen\"}}",
+    "hints": [],
+    "source_ref": "us-136-conjugation-drill"
+  },
+  {
+    "slug": "conj-pres-willen",
+    "unit_slug": "a2-unit-1-werkwoorden-hebben-zijn",
+    "type": "conjugation",
+    "prompt_nl": null,
+    "prompt_en": "Conjugate willen in present tense",
+    "options": null,
+    "answer": "{\"infinitive\": \"willen\", \"tense\": \"present\", \"forms\": {\"ik\": \"wil\", \"jij\": \"wilt\", \"hij_zij\": \"wil\", \"wij\": \"willen\", \"jullie\": \"willen\", \"zij\": \"willen\"}}",
+    "hints": [],
+    "source_ref": "us-136-conjugation-drill"
+  },
+  {
+    "slug": "conj-pres-moeten",
+    "unit_slug": "a2-unit-1-werkwoorden-hebben-zijn",
+    "type": "conjugation",
+    "prompt_nl": null,
+    "prompt_en": "Conjugate moeten in present tense",
+    "options": null,
+    "answer": "{\"infinitive\": \"moeten\", \"tense\": \"present\", \"forms\": {\"ik\": \"moet\", \"jij\": \"moet\", \"hij_zij\": \"moet\", \"wij\": \"moeten\", \"jullie\": \"moeten\", \"zij\": \"moeten\"}}",
+    "hints": [],
+    "source_ref": "us-136-conjugation-drill"
+  },
+  {
+    "slug": "conj-pres-mogen",
+    "unit_slug": "a2-unit-1-werkwoorden-hebben-zijn",
+    "type": "conjugation",
+    "prompt_nl": null,
+    "prompt_en": "Conjugate mogen in present tense",
+    "options": null,
+    "answer": "{\"infinitive\": \"mogen\", \"tense\": \"present\", \"forms\": {\"ik\": \"mag\", \"jij\": \"mag\", \"hij_zij\": \"mag\", \"wij\": \"mogen\", \"jullie\": \"mogen\", \"zij\": \"mogen\"}}",
+    "hints": [],
+    "source_ref": "us-136-conjugation-drill"
+  },
+  {
+    "slug": "conj-pres-weten",
+    "unit_slug": "a2-unit-1-werkwoorden-hebben-zijn",
+    "type": "conjugation",
+    "prompt_nl": null,
+    "prompt_en": "Conjugate weten in present tense",
+    "options": null,
+    "answer": "{\"infinitive\": \"weten\", \"tense\": \"present\", \"forms\": {\"ik\": \"weet\", \"jij\": \"weet\", \"hij_zij\": \"weet\", \"wij\": \"weten\", \"jullie\": \"weten\", \"zij\": \"weten\"}}",
+    "hints": [],
+    "source_ref": "us-136-conjugation-drill"
   }
 ]
