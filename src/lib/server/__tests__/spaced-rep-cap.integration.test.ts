@@ -79,4 +79,39 @@ describe("spaced-rep cap (US-008: 200 active rows, <50ms read)", () => {
       expect(row.itemType).toBe("vocab_pair");
     }
   });
+
+  it("admits the 200th unique pair (cap is 200, not 199)", async () => {
+    // Seed 199 distinct rows, confirm the 200th unique insert lands without
+    // being immediately evicted. Catches a fence-post regression where the
+    // cap accidentally triggers on `>= 199` instead of `>= 200`.
+    for (let i = 0; i < 199; i++) {
+      await enqueueVocabPairMistake(asD1(drz), userId, {
+        nl: `cap-nl-${i}`,
+        en: `cap-en-${i}`,
+        exerciseId: i,
+      });
+    }
+    let count = drz.$sqlite
+      .prepare("SELECT COUNT(*) AS c FROM spaced_rep_queue WHERE user_id = ?")
+      .get(userId) as { c: number };
+    expect(count.c).toBe(199);
+
+    await enqueueVocabPairMistake(asD1(drz), userId, {
+      nl: "cap-nl-final",
+      en: "cap-en-final",
+      exerciseId: 9999,
+    });
+
+    count = drz.$sqlite
+      .prepare("SELECT COUNT(*) AS c FROM spaced_rep_queue WHERE user_id = ?")
+      .get(userId) as { c: number };
+    expect(count.c).toBe(200);
+
+    const present = drz.$sqlite
+      .prepare(
+        "SELECT 1 FROM spaced_rep_queue WHERE user_id = ? AND item_key = ?",
+      )
+      .get(userId, "cap-nl-final|cap-en-final");
+    expect(present).toBeTruthy();
+  });
 });

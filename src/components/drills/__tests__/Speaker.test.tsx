@@ -85,7 +85,7 @@ describe("Speaker", () => {
 
   it("renders the slow button as a Turtle (separate from the main control)", () => {
     render(<Speaker text="hallo" />);
-    const slow = screen.getByTestId("speaker-slow");
+    const slow = screen.getByTestId("speaker-play-slow");
     expect(slow).toBeInTheDocument();
     expect(slow.getAttribute("aria-label")).toBe("Play slowly");
   });
