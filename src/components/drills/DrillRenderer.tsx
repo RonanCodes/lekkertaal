@@ -12,7 +12,7 @@ import { PictureChoiceDrill } from "./PictureChoiceDrill";
 import { DialogueReplyDrill } from "./DialogueReplyDrill";
 import { ConjugationDrill } from "./ConjugationDrill";
 import { DrillFrame } from "./DrillFrame";
-import type { DrillPayload } from "../../lib/server/lesson";
+import type { DrillPayload, VocabEnriched } from "../../lib/server/lesson";
 
 export type DrillProps = {
   drill: DrillPayload;
@@ -31,6 +31,12 @@ export type DrillProps = {
    * types ignore it.
    */
   imagePool?: Array<{ nl: string; en: string; imageUrl: string }>;
+  /**
+   * Enriched vocab data keyed by lowercased Dutch word. Consumed by
+   * FlashcardDrill and MatchPairsDrill to render IPA, gender chips, and
+   * source attribution. Other drill types ignore it.
+   */
+  vocabEnrichedMap?: Record<string, VocabEnriched>;
 };
 
 /**
@@ -52,10 +58,10 @@ export function parseField<T>(raw: string | null): T | null {
  * type; until they land the fallback "coming soon" panel auto-marks correct
  * and advances so the player itself is testable.
  */
-export function DrillRenderer({ drill, onSubmit, vocabPool, imagePool }: DrillProps) {
+export function DrillRenderer({ drill, onSubmit, vocabPool, imagePool, vocabEnrichedMap }: DrillProps) {
   switch (drill.type) {
     case "match_pairs":
-      return <MatchPairsDrill drill={drill} onSubmit={onSubmit} vocabPool={vocabPool} />;
+      return <MatchPairsDrill drill={drill} onSubmit={onSubmit} vocabPool={vocabPool} vocabEnrichedMap={vocabEnrichedMap} />;
     case "multiple_choice":
       return <MultipleChoiceDrill drill={drill} onSubmit={onSubmit} mode="text" />;
     case "listening_mc":
@@ -73,7 +79,7 @@ export function DrillRenderer({ drill, onSubmit, vocabPool, imagePool }: DrillPr
     case "image_word":
       return <ImageWordDrill drill={drill} onSubmit={onSubmit} />;
     case "flashcard":
-      return <FlashcardDrill drill={drill} onSubmit={onSubmit} />;
+      return <FlashcardDrill drill={drill} onSubmit={onSubmit} vocabEnrichedMap={vocabEnrichedMap} />;
     case "listening_spell":
       return <ListeningSpellDrill drill={drill} onSubmit={onSubmit} />;
     case "picture_choice":

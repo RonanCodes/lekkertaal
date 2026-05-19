@@ -1,6 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { createHash } from "node:crypto";
 import { requireWorkerContext } from "../entry.server";
+import { eq } from "drizzle-orm";
+import { vocab } from "../db/schema";
+import { db } from "../db/client";
 
 /**
  * Text-to-speech proxy with R2 cache.
@@ -11,16 +14,18 @@ import { requireWorkerContext } from "../entry.server";
  *
  * Resolution order:
  *  1. R2 cache hit → stream cached audio.
- *  2. Single-word lookup → try Wikimedia Commons (`Nl-<word>.ogg` auto-
+ *  2. Single-word lookup → check vocab.audioUrl (pre-enriched Wikimedia URL).
+ *     Saves a round-trip for words already enriched by the enrich-vocab script.
+ *  3. Single-word lookup → try Wikimedia Commons (`Nl-<word>.ogg` auto-
  *     transcoded MP3 sibling at a deterministic md5 URL). Free, CC-BY-SA,
  *     human-recorded native speakers. 100% A1-B1 single-word coverage in
  *     practice (verified 2026-05-19, see research/dutch-tts-and-dictionary-apis).
- *  3. ElevenLabs (`eleven_multilingual_v2`) — DEPRECATED, only invoked when
+ *  4. ElevenLabs (`eleven_multilingual_v2`) — DEPRECATED, only invoked when
  *     `ELEVENLABS_ENABLED="true"` is set in wrangler vars. The free Commons
  *     + OpenAI stack covers the curriculum and avoids the per-character spend.
  *     Kept in code so it can be flipped back on if sentence-level
  *     expressiveness becomes a priority again.
- *  4. OpenAI (`gpt-4o-mini-tts` / alloy) — the active synth fallback.
+ *  5. OpenAI (`gpt-4o-mini-tts` / alloy) — the active synth fallback.
  *
  * The Commons step is skipped (and we go straight to synth) for any text
  * that contains whitespace, digits, or punctuation — Wiktionary entries
@@ -66,8 +71,27 @@ export const Route = createFileRoute("/api/tts")({
         let provider: "wikimedia" | "elevenlabs" | "openai" = "openai";
         const elevenlabsEnabled = env.ELEVENLABS_ENABLED === "true";
 
-        // 1. Wikimedia Commons (single Dutch word only)
+        // 1. vocab.audioUrl — pre-enriched Wikimedia URL (single word only).
+        //    Avoids a HEAD probe when we already know the Commons URL.
         if (isSingleDutchWord(text)) {
+          const drz = db(env.DB);
+          const row = await drz
+            .select({ audioUrl: vocab.audioUrl })
+            .from(vocab)
+            .where(eq(vocab.nl, text.toLowerCase()))
+            .limit(1)
+            .then((rows) => rows[0] ?? null);
+          if (row?.audioUrl) {
+            const r = await fetch(row.audioUrl, { headers: { "user-agent": COMMONS_UA } });
+            if (r.ok) {
+              audio = await r.arrayBuffer();
+              provider = "wikimedia";
+            }
+          }
+        }
+
+        // 2. Wikimedia Commons (single Dutch word only, falls through if no pre-enriched URL)
+        if (!audio && isSingleDutchWord(text)) {
           const commonsAudio = await fetchCommons(text);
           if (commonsAudio) {
             audio = commonsAudio;
@@ -75,7 +99,7 @@ export const Route = createFileRoute("/api/tts")({
           }
         }
 
-        // 2. ElevenLabs (deprecated, opt-in via ELEVENLABS_ENABLED="true")
+        // 3. ElevenLabs (deprecated, opt-in via ELEVENLABS_ENABLED="true")
         if (!audio && elevenlabsEnabled && env.ELEVENLABS_API_KEY) {
           try {
             const r = await fetch(
@@ -108,7 +132,7 @@ export const Route = createFileRoute("/api/tts")({
           }
         }
 
-        // 3. OpenAI
+        // 4. OpenAI
         if (!audio && env.OPENAI_API_KEY) {
           provider = "openai";
           try {

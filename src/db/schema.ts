@@ -161,12 +161,40 @@ export const vocab = sqliteTable(
     exampleSentenceEn: text("example_sentence_en"),
     sourceImagePath: text("source_image_path"),
     cefrLevel: text("cefr_level").default("A2").notNull(),
+    /** IPA pronunciation string, e.g. `/ˈbroːt/`. Populated by enrich-vocab script. */
+    ipa: text("ipa"),
+    /** Grammatical gender for Dutch nouns: `de` | `het`. Null for non-nouns. */
+    gender: text("gender"),
+    /** Wikimedia Commons MP3 URL for native-speaker audio. Checked first by /api/tts. */
+    audioUrl: text("audio_url"),
+    /** Coarse word type: `noun` | `verb` | `adjective` | `adverb` | `other`. */
+    wordType: text("word_type"),
+    /** Unix ms timestamp set when the enrich-vocab script last ran on this entry. */
+    enrichedAt: integer("enriched_at"),
+    /**
+     * Per-field provenance map. Keys are field names; values are source labels:
+     * `wiktionary | wikimedia | tatoeba | manual`.
+     * Fields absent from the map are assumed hand-authored.
+     */
+    sources: text("sources", { mode: "json" }).$type<Partial<Record<VocabField, VocabSource>>>(),
   },
   (t) => ({
     byNl: index("idx_vocab_nl").on(t.nl),
     uniqPair: uniqueIndex("idx_vocab_nl_en").on(t.nl, t.en),
   }),
 );
+
+/** Fields that can carry source attribution in the `sources` JSON column. */
+export type VocabField =
+  | "ipa"
+  | "gender"
+  | "audioUrl"
+  | "wordType"
+  | "exampleSentenceNl"
+  | "exampleSentenceEn";
+
+/** Closed set of upstream sources for vocab enrichment. */
+export type VocabSource = "wiktionary" | "wikimedia" | "tatoeba" | "manual";
 
 export const scenarios = sqliteTable(
   "scenarios",

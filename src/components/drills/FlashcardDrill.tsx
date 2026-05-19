@@ -5,6 +5,7 @@ import { Speaker } from "./Speaker";
 import { parseField } from "./DrillRenderer";
 import type { DrillProps } from "./DrillRenderer";
 import { recordVocabPairResult } from "../../lib/server/lesson";
+import { VocabSourceAttribution } from "../VocabSourceAttribution";
 
 type Pair = { nl: string; en: string };
 
@@ -26,7 +27,7 @@ type Pair = { nl: string; en: string };
  * has no row in the `exercises` table — the lesson player skips that call
  * via the `drill.isSynthetic` flag.
  */
-export function FlashcardDrill({ drill, onSubmit }: DrillProps) {
+export function FlashcardDrill({ drill, onSubmit, vocabEnrichedMap }: DrillProps) {
   const pair = parseField<Pair>(drill.answer);
   const [revealed, setRevealed] = useState(false);
 
@@ -44,6 +45,8 @@ export function FlashcardDrill({ drill, onSubmit }: DrillProps) {
     );
   }
 
+  const enriched = vocabEnrichedMap?.[pair.nl.toLowerCase()];
+
   const grade = (knewIt: boolean) => {
     void recordVocabPairResult({
       data: { nl: pair.nl, en: pair.en, correct: knewIt },
@@ -60,14 +63,40 @@ export function FlashcardDrill({ drill, onSubmit }: DrillProps) {
         className="flex flex-col items-center gap-4 py-4"
         data-testid="flashcard-drill"
       >
-        <div className="flex items-center gap-3">
-          <div
-            data-testid="flashcard-headword"
-            className="text-4xl font-bold text-neutral-900 dark:text-neutral-100"
-          >
-            {pair.nl}
+        <div className="relative flex items-center gap-3">
+          <div className="flex flex-col items-center gap-0.5">
+            <div
+              data-testid="flashcard-headword"
+              className="text-4xl font-bold text-neutral-900 dark:text-neutral-100"
+            >
+              {pair.nl}
+            </div>
+            {enriched?.ipa && (
+              <div
+                data-testid="flashcard-ipa"
+                className="font-mono text-sm text-neutral-500"
+              >
+                {enriched.ipa}
+              </div>
+            )}
           </div>
           <Speaker text={pair.nl} size="md" />
+          {enriched?.gender && (
+            <span
+              data-testid="flashcard-gender"
+              className="rounded-full border border-neutral-200 bg-neutral-100 px-2 py-0.5 text-xs font-semibold text-neutral-600"
+            >
+              {enriched.gender}
+            </span>
+          )}
+          {enriched?.sources && (
+            <span className="absolute -top-2 -right-4">
+              <VocabSourceAttribution
+                word={pair.nl}
+                sources={enriched.sources}
+              />
+            </span>
+          )}
         </div>
 
         {revealed ? (
