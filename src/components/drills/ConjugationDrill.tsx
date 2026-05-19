@@ -140,6 +140,7 @@ export function ConjugationDrill({ drill, onSubmit }: DrillProps) {
               <label
                 key={key}
                 data-testid={`conjugation-cell-${key}`}
+                data-correct={cell ? (cell.correct ? "true" : "false") : undefined}
                 className={`flex flex-col gap-1 rounded-2xl border-2 bg-white p-3 transition-colors ${borderClass}`}
               >
                 <span className="text-xs uppercase tracking-wide text-neutral-500">
