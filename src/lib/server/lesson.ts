@@ -29,7 +29,8 @@ export type DrillType =
   | "image_word"
   | "flashcard"
   | "listening_spell"
-  | "picture_choice";
+  | "picture_choice"
+  | "dialogue_reply";
 
 /**
  * DB rows store drill `type` in hyphen-form (`match-pairs`, `translation-typing`,
@@ -53,6 +54,7 @@ const DRILL_TYPE_HYPHEN_TO_UNDERSCORE: Record<string, DrillType> = {
   "word-bank": "word_bank",
   "image-word": "image_word",
   "picture-choice": "picture_choice",
+  "dialogue-reply": "dialogue_reply",
 };
 
 function normaliseDrillType(raw: string): DrillType {

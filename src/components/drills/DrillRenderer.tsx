@@ -9,6 +9,7 @@ import { ImageWordDrill } from "./ImageWordDrill";
 import { FlashcardDrill } from "./FlashcardDrill";
 import { ListeningSpellDrill } from "./ListeningSpellDrill";
 import { PictureChoiceDrill } from "./PictureChoiceDrill";
+import { DialogueReplyDrill } from "./DialogueReplyDrill";
 import { DrillFrame } from "./DrillFrame";
 import type { DrillPayload } from "../../lib/server/lesson";
 
@@ -76,6 +77,8 @@ export function DrillRenderer({ drill, onSubmit, vocabPool, imagePool }: DrillPr
       return <ListeningSpellDrill drill={drill} onSubmit={onSubmit} />;
     case "picture_choice":
       return <PictureChoiceDrill drill={drill} onSubmit={onSubmit} imagePool={imagePool} />;
+    case "dialogue_reply":
+      return <DialogueReplyDrill drill={drill} onSubmit={onSubmit} />;
     default:
       return (
         <DrillFrame promptLabel="Unsupported drill" prompt={`Type: ${drill.type}`}>
