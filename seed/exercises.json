@@ -6693,5 +6693,29 @@
     "answer": "ik ga naar de supermarkt",
     "hints": [],
     "source_ref": "us-002-word-bank-sample"
+  },
+  {
+    "slug": "picture-choice-huis",
+    "unit_slug": "a2-unit-1-werkwoorden-hebben-zijn",
+    "type": "picture-choice",
+    "prompt_nl": null,
+    "prompt_en": "Tap the picture that matches the word.",
+    "options": null,
+    "answer": "{\"nl\":\"huis\",\"en\":\"house\",\"imageUrl\":\"https://images.lekkertaal.dev/vocab/huis.png\"}",
+    "hints": [],
+    "source_ref": "us-004-picture-choice-sample",
+    "image_url": "https://images.lekkertaal.dev/vocab/huis.png"
+  },
+  {
+    "slug": "picture-choice-kat",
+    "unit_slug": "a2-unit-1-werkwoorden-hebben-zijn",
+    "type": "picture-choice",
+    "prompt_nl": null,
+    "prompt_en": "Tap the picture that matches the word.",
+    "options": null,
+    "answer": "{\"nl\":\"kat\",\"en\":\"cat\",\"imageUrl\":\"https://images.lekkertaal.dev/vocab/kat.png\"}",
+    "hints": [],
+    "source_ref": "us-004-picture-choice-sample",
+    "image_url": "https://images.lekkertaal.dev/vocab/kat.png"
   }
 ]

@@ -24,7 +24,7 @@ export const Route = createFileRoute("/app/lesson/$lessonId")({
 function LessonPlayerPage() {
   const data = Route.useLoaderData();
   const navigate = useNavigate();
-  const { lesson, drills, user, reviews, vocabPool } = data;
+  const { lesson, drills, user, reviews, vocabPool, imagePool } = data;
   const sfx = useSfx(user.sfxEnabled);
 
   const [drillIdx, setDrillIdx] = useState(0);
@@ -139,7 +139,7 @@ function LessonPlayerPage() {
         {lesson.titleNl}
       </h1>
 
-      <DrillRenderer key={drill.id} drill={drill} onSubmit={handleSubmit} vocabPool={vocabPool} />
+      <DrillRenderer key={drill.id} drill={drill} onSubmit={handleSubmit} vocabPool={vocabPool} imagePool={imagePool} />
 
       {feedback && (
         <div className="mt-4 space-y-3">
