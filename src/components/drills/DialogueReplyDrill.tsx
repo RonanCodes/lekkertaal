@@ -100,7 +100,12 @@ export function DialogueReplyDrill({ drill, onSubmit }: DrillProps) {
             </div>
           ))}
         </div>
-        <div className="space-y-2">
+        <div
+          className="space-y-2"
+          data-testid="dialogue-reply-feedback"
+          data-revealed={revealed ? "true" : "false"}
+          data-picked={pickedIdx == null ? "false" : "true"}
+        >
           {shuffledOptions.map((opt, i) => {
             const isPicked = pickedIdx === i;
             const isWrongPick = isPicked && !opt.correct;

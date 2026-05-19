@@ -70,8 +70,11 @@ export function ListeningSpellDrill({ drill, onSubmit }: DrillProps) {
       promptLabel="Listening"
       prompt={drill.promptEn ?? "Listen and type what you hear"}
     >
-      <div className="space-y-4">
-        <div className="flex justify-center py-2">
+      <div className="space-y-4" data-testid="listening-spell-drill">
+        <div
+          className="flex justify-center py-2"
+          data-testid="listening-spell-speaker"
+        >
           <Speaker text={pair.nl} size="lg" ariaLabel="Play the Dutch word" />
         </div>
 
@@ -91,6 +94,7 @@ export function ListeningSpellDrill({ drill, onSubmit }: DrillProps) {
           placeholder="Type the Dutch word you heard"
           disabled={submitted}
           aria-label="Type the Dutch word you heard"
+          data-testid="listening-spell-input"
           className={`w-full rounded-2xl border-2 px-4 py-3 text-lg font-semibold outline-none transition-all ${
             submitted
               ? correct
@@ -105,6 +109,7 @@ export function ListeningSpellDrill({ drill, onSubmit }: DrillProps) {
             type="button"
             onClick={grade}
             disabled={submitted || value.trim().length === 0}
+            data-testid="listening-spell-submit"
             className="rounded-full bg-orange-500 px-5 py-2 text-sm font-semibold text-white hover:bg-orange-600 disabled:opacity-50"
           >
             Check
@@ -112,7 +117,10 @@ export function ListeningSpellDrill({ drill, onSubmit }: DrillProps) {
         </div>
 
         {submitted && (
-          <div className="rounded-2xl border-2 border-neutral-200 bg-neutral-50 p-3 text-sm">
+          <div
+            className="rounded-2xl border-2 border-neutral-200 bg-neutral-50 p-3 text-sm"
+            data-testid="listening-spell-feedback"
+          >
             <div className="mb-1 text-xs uppercase tracking-wide text-neutral-500">
               {correct ? "Correct" : "You wrote"}
             </div>
@@ -122,12 +130,18 @@ export function ListeningSpellDrill({ drill, onSubmit }: DrillProps) {
             <div className="mt-2 text-xs uppercase tracking-wide text-neutral-500">
               Canonical
             </div>
-            <div className="flex items-center gap-2 font-semibold text-neutral-800">
+            <div
+              className="flex items-center gap-2 font-semibold text-neutral-800"
+              data-testid="listening-spell-canonical"
+            >
               <span>{pair.nl}</span>
               <Speaker text={pair.nl} size="sm" />
             </div>
             {correct && distanceAfterSubmit === 1 && (
-              <div className="mt-2 text-xs italic text-emerald-700">
+              <div
+                className="mt-2 text-xs italic text-emerald-700"
+                data-testid="listening-spell-close-enough"
+              >
                 Close enough — counted as correct.
               </div>
             )}
