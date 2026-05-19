@@ -9,8 +9,13 @@ const PRECACHE = [
   "/app/path",
   "/manifest.json",
   "/favicon.ico",
-  "/logo192.png",
-  "/logo512.png",
+  "/favicon-32x32.png",
+  "/favicon-16x16.png",
+  "/apple-touch-icon.png",
+  "/icon-192-maskable.png",
+  "/icon-512-maskable.png",
+  "/mascot/stroop-192.png",
+  "/mascot/stroop-512.png",
 ];
 
 self.addEventListener("install", (event) => {
@@ -108,8 +113,8 @@ self.addEventListener("push", (event) => {
   event.waitUntil(
     self.registration.showNotification(title, {
       body,
-      icon: "/logo192.png",
-      badge: "/logo192.png",
+      icon: "/mascot/stroop-192.png",
+      badge: "/mascot/stroop-192.png",
       tag: "daily-nag",
       renotify: false,
       data: { url: "/app/path" },
