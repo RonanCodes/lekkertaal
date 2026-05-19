@@ -22,7 +22,7 @@ playwright-report
 playwright/.cache
 .swarm/
 .ronan-skills-llm-wiki.local.json
-.claude/repo-mode
+.claude/
 
 # Local-factory artefacts (Ralph / planner-worker / night-shift, etc).
 # See ~/Dev/ronan-skills/skills/ralph/SKILL.md § "Run artefacts (the canonical shape)".
@@ -30,3 +30,9 @@ playwright/.cache
 .ralph/sessions/*/
 .ralph/*.progress.txt
 .ralph/.gitignore-policy
+.completion-reports/
+
+# Night-shift artefacts: retros stay tracked under .nightshift/retros/.
+# Everything else under .nightshift/ is ephemeral wave-coordination state.
+.nightshift/state/
+.nightshift/last-retro-url.txt
