@@ -31,7 +31,7 @@ import { resolve, join } from "node:path";
 
 const args = process.argv.slice(2);
 const r2BaseArg = args.find((a) => a.startsWith("--r2-base="));
-const R2_BASE = (r2BaseArg ? r2BaseArg.split("=")[1] : "https://images.lekkertaal.dev").replace(
+const R2_BASE = (r2BaseArg ? r2BaseArg.split("=")[1] : "https://pub-7dc3882d3fb04b9796d2b3c78f56db6c.r2.dev").replace(
   /\/+$/,
   "",
 );
@@ -117,7 +117,7 @@ function exerciseFor(seed: ImageDrillSeed): ExerciseSeed {
   return {
     slug: `image-word-${seed.noun}`,
     unit_slug: "a2-unit-1-werkwoorden-hebben-zijn",
-    type: "image_word",
+    type: "image-word",
     prompt_nl: null,
     prompt_en: "Type the Dutch word for what you see",
     options: null,

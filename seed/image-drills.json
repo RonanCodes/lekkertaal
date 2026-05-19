@@ -1,0 +1,682 @@
+[
+  {
+    "slug": "image-word-kat",
+    "unit_slug": "a2-unit-1-werkwoorden-hebben-zijn",
+    "type": "image-word",
+    "prompt_nl": null,
+    "prompt_en": "Type the Dutch word for what you see",
+    "options": null,
+    "answer": [
+      "kat",
+      "de kat"
+    ],
+    "hints": [
+      "Article: de"
+    ],
+    "source_ref": "image-drills/kat",
+    "image_url": "https://pub-7dc3882d3fb04b9796d2b3c78f56db6c.r2.dev/vocab/kat.png"
+  },
+  {
+    "slug": "image-word-hond",
+    "unit_slug": "a2-unit-1-werkwoorden-hebben-zijn",
+    "type": "image-word",
+    "prompt_nl": null,
+    "prompt_en": "Type the Dutch word for what you see",
+    "options": null,
+    "answer": [
+      "hond",
+      "de hond"
+    ],
+    "hints": [
+      "Article: de"
+    ],
+    "source_ref": "image-drills/hond",
+    "image_url": "https://pub-7dc3882d3fb04b9796d2b3c78f56db6c.r2.dev/vocab/hond.png"
+  },
+  {
+    "slug": "image-word-boek",
+    "unit_slug": "a2-unit-1-werkwoorden-hebben-zijn",
+    "type": "image-word",
+    "prompt_nl": null,
+    "prompt_en": "Type the Dutch word for what you see",
+    "options": null,
+    "answer": [
+      "boek",
+      "het boek"
+    ],
+    "hints": [
+      "Article: het"
+    ],
+    "source_ref": "image-drills/boek",
+    "image_url": "https://pub-7dc3882d3fb04b9796d2b3c78f56db6c.r2.dev/vocab/boek.png"
+  },
+  {
+    "slug": "image-word-stoel",
+    "unit_slug": "a2-unit-1-werkwoorden-hebben-zijn",
+    "type": "image-word",
+    "prompt_nl": null,
+    "prompt_en": "Type the Dutch word for what you see",
+    "options": null,
+    "answer": [
+      "stoel",
+      "de stoel"
+    ],
+    "hints": [
+      "Article: de"
+    ],
+    "source_ref": "image-drills/stoel",
+    "image_url": "https://pub-7dc3882d3fb04b9796d2b3c78f56db6c.r2.dev/vocab/stoel.png"
+  },
+  {
+    "slug": "image-word-tafel",
+    "unit_slug": "a2-unit-1-werkwoorden-hebben-zijn",
+    "type": "image-word",
+    "prompt_nl": null,
+    "prompt_en": "Type the Dutch word for what you see",
+    "options": null,
+    "answer": [
+      "tafel",
+      "de tafel"
+    ],
+    "hints": [
+      "Article: de"
+    ],
+    "source_ref": "image-drills/tafel",
+    "image_url": "https://pub-7dc3882d3fb04b9796d2b3c78f56db6c.r2.dev/vocab/tafel.png"
+  },
+  {
+    "slug": "image-word-huis",
+    "unit_slug": "a2-unit-1-werkwoorden-hebben-zijn",
+    "type": "image-word",
+    "prompt_nl": null,
+    "prompt_en": "Type the Dutch word for what you see",
+    "options": null,
+    "answer": [
+      "huis",
+      "het huis"
+    ],
+    "hints": [
+      "Article: het"
+    ],
+    "source_ref": "image-drills/huis",
+    "image_url": "https://pub-7dc3882d3fb04b9796d2b3c78f56db6c.r2.dev/vocab/huis.png"
+  },
+  {
+    "slug": "image-word-auto",
+    "unit_slug": "a2-unit-1-werkwoorden-hebben-zijn",
+    "type": "image-word",
+    "prompt_nl": null,
+    "prompt_en": "Type the Dutch word for what you see",
+    "options": null,
+    "answer": [
+      "auto",
+      "de auto"
+    ],
+    "hints": [
+      "Article: de"
+    ],
+    "source_ref": "image-drills/auto",
+    "image_url": "https://pub-7dc3882d3fb04b9796d2b3c78f56db6c.r2.dev/vocab/auto.png"
+  },
+  {
+    "slug": "image-word-fiets",
+    "unit_slug": "a2-unit-1-werkwoorden-hebben-zijn",
+    "type": "image-word",
+    "prompt_nl": null,
+    "prompt_en": "Type the Dutch word for what you see",
+    "options": null,
+    "answer": [
+      "fiets",
+      "de fiets"
+    ],
+    "hints": [
+      "Article: de"
+    ],
+    "source_ref": "image-drills/fiets",
+    "image_url": "https://pub-7dc3882d3fb04b9796d2b3c78f56db6c.r2.dev/vocab/fiets.png"
+  },
+  {
+    "slug": "image-word-appel",
+    "unit_slug": "a2-unit-1-werkwoorden-hebben-zijn",
+    "type": "image-word",
+    "prompt_nl": null,
+    "prompt_en": "Type the Dutch word for what you see",
+    "options": null,
+    "answer": [
+      "appel",
+      "de appel"
+    ],
+    "hints": [
+      "Article: de"
+    ],
+    "source_ref": "image-drills/appel",
+    "image_url": "https://pub-7dc3882d3fb04b9796d2b3c78f56db6c.r2.dev/vocab/appel.png"
+  },
+  {
+    "slug": "image-word-banaan",
+    "unit_slug": "a2-unit-1-werkwoorden-hebben-zijn",
+    "type": "image-word",
+    "prompt_nl": null,
+    "prompt_en": "Type the Dutch word for what you see",
+    "options": null,
+    "answer": [
+      "banaan",
+      "de banaan"
+    ],
+    "hints": [
+      "Article: de"
+    ],
+    "source_ref": "image-drills/banaan",
+    "image_url": "https://pub-7dc3882d3fb04b9796d2b3c78f56db6c.r2.dev/vocab/banaan.png"
+  },
+  {
+    "slug": "image-word-brood",
+    "unit_slug": "a2-unit-1-werkwoorden-hebben-zijn",
+    "type": "image-word",
+    "prompt_nl": null,
+    "prompt_en": "Type the Dutch word for what you see",
+    "options": null,
+    "answer": [
+      "brood",
+      "het brood"
+    ],
+    "hints": [
+      "Article: het"
+    ],
+    "source_ref": "image-drills/brood",
+    "image_url": "https://pub-7dc3882d3fb04b9796d2b3c78f56db6c.r2.dev/vocab/brood.png"
+  },
+  {
+    "slug": "image-word-kaas",
+    "unit_slug": "a2-unit-1-werkwoorden-hebben-zijn",
+    "type": "image-word",
+    "prompt_nl": null,
+    "prompt_en": "Type the Dutch word for what you see",
+    "options": null,
+    "answer": [
+      "kaas",
+      "de kaas"
+    ],
+    "hints": [
+      "Article: de"
+    ],
+    "source_ref": "image-drills/kaas",
+    "image_url": "https://pub-7dc3882d3fb04b9796d2b3c78f56db6c.r2.dev/vocab/kaas.png"
+  },
+  {
+    "slug": "image-word-water",
+    "unit_slug": "a2-unit-1-werkwoorden-hebben-zijn",
+    "type": "image-word",
+    "prompt_nl": null,
+    "prompt_en": "Type the Dutch word for what you see",
+    "options": null,
+    "answer": [
+      "water",
+      "het water"
+    ],
+    "hints": [
+      "Article: het"
+    ],
+    "source_ref": "image-drills/water",
+    "image_url": "https://pub-7dc3882d3fb04b9796d2b3c78f56db6c.r2.dev/vocab/water.png"
+  },
+  {
+    "slug": "image-word-koffie",
+    "unit_slug": "a2-unit-1-werkwoorden-hebben-zijn",
+    "type": "image-word",
+    "prompt_nl": null,
+    "prompt_en": "Type the Dutch word for what you see",
+    "options": null,
+    "answer": [
+      "koffie",
+      "de koffie"
+    ],
+    "hints": [
+      "Article: de"
+    ],
+    "source_ref": "image-drills/koffie",
+    "image_url": "https://pub-7dc3882d3fb04b9796d2b3c78f56db6c.r2.dev/vocab/koffie.png"
+  },
+  {
+    "slug": "image-word-melk",
+    "unit_slug": "a2-unit-1-werkwoorden-hebben-zijn",
+    "type": "image-word",
+    "prompt_nl": null,
+    "prompt_en": "Type the Dutch word for what you see",
+    "options": null,
+    "answer": [
+      "melk",
+      "de melk"
+    ],
+    "hints": [
+      "Article: de"
+    ],
+    "source_ref": "image-drills/melk",
+    "image_url": "https://pub-7dc3882d3fb04b9796d2b3c78f56db6c.r2.dev/vocab/melk.png"
+  },
+  {
+    "slug": "image-word-ei",
+    "unit_slug": "a2-unit-1-werkwoorden-hebben-zijn",
+    "type": "image-word",
+    "prompt_nl": null,
+    "prompt_en": "Type the Dutch word for what you see",
+    "options": null,
+    "answer": [
+      "ei",
+      "het ei"
+    ],
+    "hints": [
+      "Article: het"
+    ],
+    "source_ref": "image-drills/ei",
+    "image_url": "https://pub-7dc3882d3fb04b9796d2b3c78f56db6c.r2.dev/vocab/ei.png"
+  },
+  {
+    "slug": "image-word-tomaat",
+    "unit_slug": "a2-unit-1-werkwoorden-hebben-zijn",
+    "type": "image-word",
+    "prompt_nl": null,
+    "prompt_en": "Type the Dutch word for what you see",
+    "options": null,
+    "answer": [
+      "tomaat",
+      "de tomaat"
+    ],
+    "hints": [
+      "Article: de"
+    ],
+    "source_ref": "image-drills/tomaat",
+    "image_url": "https://pub-7dc3882d3fb04b9796d2b3c78f56db6c.r2.dev/vocab/tomaat.png"
+  },
+  {
+    "slug": "image-word-wortel",
+    "unit_slug": "a2-unit-1-werkwoorden-hebben-zijn",
+    "type": "image-word",
+    "prompt_nl": null,
+    "prompt_en": "Type the Dutch word for what you see",
+    "options": null,
+    "answer": [
+      "wortel",
+      "de wortel"
+    ],
+    "hints": [
+      "Article: de"
+    ],
+    "source_ref": "image-drills/wortel",
+    "image_url": "https://pub-7dc3882d3fb04b9796d2b3c78f56db6c.r2.dev/vocab/wortel.png"
+  },
+  {
+    "slug": "image-word-deur",
+    "unit_slug": "a2-unit-1-werkwoorden-hebben-zijn",
+    "type": "image-word",
+    "prompt_nl": null,
+    "prompt_en": "Type the Dutch word for what you see",
+    "options": null,
+    "answer": [
+      "deur",
+      "de deur"
+    ],
+    "hints": [
+      "Article: de"
+    ],
+    "source_ref": "image-drills/deur",
+    "image_url": "https://pub-7dc3882d3fb04b9796d2b3c78f56db6c.r2.dev/vocab/deur.png"
+  },
+  {
+    "slug": "image-word-raam",
+    "unit_slug": "a2-unit-1-werkwoorden-hebben-zijn",
+    "type": "image-word",
+    "prompt_nl": null,
+    "prompt_en": "Type the Dutch word for what you see",
+    "options": null,
+    "answer": [
+      "raam",
+      "het raam"
+    ],
+    "hints": [
+      "Article: het"
+    ],
+    "source_ref": "image-drills/raam",
+    "image_url": "https://pub-7dc3882d3fb04b9796d2b3c78f56db6c.r2.dev/vocab/raam.png"
+  },
+  {
+    "slug": "image-word-trap",
+    "unit_slug": "a2-unit-1-werkwoorden-hebben-zijn",
+    "type": "image-word",
+    "prompt_nl": null,
+    "prompt_en": "Type the Dutch word for what you see",
+    "options": null,
+    "answer": [
+      "trap",
+      "de trap"
+    ],
+    "hints": [
+      "Article: de"
+    ],
+    "source_ref": "image-drills/trap",
+    "image_url": "https://pub-7dc3882d3fb04b9796d2b3c78f56db6c.r2.dev/vocab/trap.png"
+  },
+  {
+    "slug": "image-word-klok",
+    "unit_slug": "a2-unit-1-werkwoorden-hebben-zijn",
+    "type": "image-word",
+    "prompt_nl": null,
+    "prompt_en": "Type the Dutch word for what you see",
+    "options": null,
+    "answer": [
+      "klok",
+      "de klok"
+    ],
+    "hints": [
+      "Article: de"
+    ],
+    "source_ref": "image-drills/klok",
+    "image_url": "https://pub-7dc3882d3fb04b9796d2b3c78f56db6c.r2.dev/vocab/klok.png"
+  },
+  {
+    "slug": "image-word-sleutel",
+    "unit_slug": "a2-unit-1-werkwoorden-hebben-zijn",
+    "type": "image-word",
+    "prompt_nl": null,
+    "prompt_en": "Type the Dutch word for what you see",
+    "options": null,
+    "answer": [
+      "sleutel",
+      "de sleutel"
+    ],
+    "hints": [
+      "Article: de"
+    ],
+    "source_ref": "image-drills/sleutel",
+    "image_url": "https://pub-7dc3882d3fb04b9796d2b3c78f56db6c.r2.dev/vocab/sleutel.png"
+  },
+  {
+    "slug": "image-word-tas",
+    "unit_slug": "a2-unit-1-werkwoorden-hebben-zijn",
+    "type": "image-word",
+    "prompt_nl": null,
+    "prompt_en": "Type the Dutch word for what you see",
+    "options": null,
+    "answer": [
+      "tas",
+      "de tas"
+    ],
+    "hints": [
+      "Article: de"
+    ],
+    "source_ref": "image-drills/tas",
+    "image_url": "https://pub-7dc3882d3fb04b9796d2b3c78f56db6c.r2.dev/vocab/tas.png"
+  },
+  {
+    "slug": "image-word-schoen",
+    "unit_slug": "a2-unit-1-werkwoorden-hebben-zijn",
+    "type": "image-word",
+    "prompt_nl": null,
+    "prompt_en": "Type the Dutch word for what you see",
+    "options": null,
+    "answer": [
+      "schoen",
+      "de schoen"
+    ],
+    "hints": [
+      "Article: de"
+    ],
+    "source_ref": "image-drills/schoen",
+    "image_url": "https://pub-7dc3882d3fb04b9796d2b3c78f56db6c.r2.dev/vocab/schoen.png"
+  },
+  {
+    "slug": "image-word-jas",
+    "unit_slug": "a2-unit-1-werkwoorden-hebben-zijn",
+    "type": "image-word",
+    "prompt_nl": null,
+    "prompt_en": "Type the Dutch word for what you see",
+    "options": null,
+    "answer": [
+      "jas",
+      "de jas"
+    ],
+    "hints": [
+      "Article: de"
+    ],
+    "source_ref": "image-drills/jas",
+    "image_url": "https://pub-7dc3882d3fb04b9796d2b3c78f56db6c.r2.dev/vocab/jas.png"
+  },
+  {
+    "slug": "image-word-hoed",
+    "unit_slug": "a2-unit-1-werkwoorden-hebben-zijn",
+    "type": "image-word",
+    "prompt_nl": null,
+    "prompt_en": "Type the Dutch word for what you see",
+    "options": null,
+    "answer": [
+      "hoed",
+      "de hoed"
+    ],
+    "hints": [
+      "Article: de"
+    ],
+    "source_ref": "image-drills/hoed",
+    "image_url": "https://pub-7dc3882d3fb04b9796d2b3c78f56db6c.r2.dev/vocab/hoed.png"
+  },
+  {
+    "slug": "image-word-trui",
+    "unit_slug": "a2-unit-1-werkwoorden-hebben-zijn",
+    "type": "image-word",
+    "prompt_nl": null,
+    "prompt_en": "Type the Dutch word for what you see",
+    "options": null,
+    "answer": [
+      "trui",
+      "de trui"
+    ],
+    "hints": [
+      "Article: de"
+    ],
+    "source_ref": "image-drills/trui",
+    "image_url": "https://pub-7dc3882d3fb04b9796d2b3c78f56db6c.r2.dev/vocab/trui.png"
+  },
+  {
+    "slug": "image-word-broek",
+    "unit_slug": "a2-unit-1-werkwoorden-hebben-zijn",
+    "type": "image-word",
+    "prompt_nl": null,
+    "prompt_en": "Type the Dutch word for what you see",
+    "options": null,
+    "answer": [
+      "broek",
+      "de broek"
+    ],
+    "hints": [
+      "Article: de"
+    ],
+    "source_ref": "image-drills/broek",
+    "image_url": "https://pub-7dc3882d3fb04b9796d2b3c78f56db6c.r2.dev/vocab/broek.png"
+  },
+  {
+    "slug": "image-word-sok",
+    "unit_slug": "a2-unit-1-werkwoorden-hebben-zijn",
+    "type": "image-word",
+    "prompt_nl": null,
+    "prompt_en": "Type the Dutch word for what you see",
+    "options": null,
+    "answer": [
+      "sok",
+      "de sok"
+    ],
+    "hints": [
+      "Article: de"
+    ],
+    "source_ref": "image-drills/sok",
+    "image_url": "https://pub-7dc3882d3fb04b9796d2b3c78f56db6c.r2.dev/vocab/sok.png"
+  },
+  {
+    "slug": "image-word-bed",
+    "unit_slug": "a2-unit-1-werkwoorden-hebben-zijn",
+    "type": "image-word",
+    "prompt_nl": null,
+    "prompt_en": "Type the Dutch word for what you see",
+    "options": null,
+    "answer": [
+      "bed",
+      "het bed"
+    ],
+    "hints": [
+      "Article: het"
+    ],
+    "source_ref": "image-drills/bed",
+    "image_url": "https://pub-7dc3882d3fb04b9796d2b3c78f56db6c.r2.dev/vocab/bed.png"
+  },
+  {
+    "slug": "image-word-kussen",
+    "unit_slug": "a2-unit-1-werkwoorden-hebben-zijn",
+    "type": "image-word",
+    "prompt_nl": null,
+    "prompt_en": "Type the Dutch word for what you see",
+    "options": null,
+    "answer": [
+      "kussen",
+      "het kussen"
+    ],
+    "hints": [
+      "Article: het"
+    ],
+    "source_ref": "image-drills/kussen",
+    "image_url": "https://pub-7dc3882d3fb04b9796d2b3c78f56db6c.r2.dev/vocab/kussen.png"
+  },
+  {
+    "slug": "image-word-lamp",
+    "unit_slug": "a2-unit-1-werkwoorden-hebben-zijn",
+    "type": "image-word",
+    "prompt_nl": null,
+    "prompt_en": "Type the Dutch word for what you see",
+    "options": null,
+    "answer": [
+      "lamp",
+      "de lamp"
+    ],
+    "hints": [
+      "Article: de"
+    ],
+    "source_ref": "image-drills/lamp",
+    "image_url": "https://pub-7dc3882d3fb04b9796d2b3c78f56db6c.r2.dev/vocab/lamp.png"
+  },
+  {
+    "slug": "image-word-boom",
+    "unit_slug": "a2-unit-1-werkwoorden-hebben-zijn",
+    "type": "image-word",
+    "prompt_nl": null,
+    "prompt_en": "Type the Dutch word for what you see",
+    "options": null,
+    "answer": [
+      "boom",
+      "de boom"
+    ],
+    "hints": [
+      "Article: de"
+    ],
+    "source_ref": "image-drills/boom",
+    "image_url": "https://pub-7dc3882d3fb04b9796d2b3c78f56db6c.r2.dev/vocab/boom.png"
+  },
+  {
+    "slug": "image-word-bloem",
+    "unit_slug": "a2-unit-1-werkwoorden-hebben-zijn",
+    "type": "image-word",
+    "prompt_nl": null,
+    "prompt_en": "Type the Dutch word for what you see",
+    "options": null,
+    "answer": [
+      "bloem",
+      "de bloem"
+    ],
+    "hints": [
+      "Article: de"
+    ],
+    "source_ref": "image-drills/bloem",
+    "image_url": "https://pub-7dc3882d3fb04b9796d2b3c78f56db6c.r2.dev/vocab/bloem.png"
+  },
+  {
+    "slug": "image-word-regen",
+    "unit_slug": "a2-unit-1-werkwoorden-hebben-zijn",
+    "type": "image-word",
+    "prompt_nl": null,
+    "prompt_en": "Type the Dutch word for what you see",
+    "options": null,
+    "answer": [
+      "regen",
+      "de regen"
+    ],
+    "hints": [
+      "Article: de"
+    ],
+    "source_ref": "image-drills/regen",
+    "image_url": "https://pub-7dc3882d3fb04b9796d2b3c78f56db6c.r2.dev/vocab/regen.png"
+  },
+  {
+    "slug": "image-word-zon",
+    "unit_slug": "a2-unit-1-werkwoorden-hebben-zijn",
+    "type": "image-word",
+    "prompt_nl": null,
+    "prompt_en": "Type the Dutch word for what you see",
+    "options": null,
+    "answer": [
+      "zon",
+      "de zon"
+    ],
+    "hints": [
+      "Article: de"
+    ],
+    "source_ref": "image-drills/zon",
+    "image_url": "https://pub-7dc3882d3fb04b9796d2b3c78f56db6c.r2.dev/vocab/zon.png"
+  },
+  {
+    "slug": "image-word-wolk",
+    "unit_slug": "a2-unit-1-werkwoorden-hebben-zijn",
+    "type": "image-word",
+    "prompt_nl": null,
+    "prompt_en": "Type the Dutch word for what you see",
+    "options": null,
+    "answer": [
+      "wolk",
+      "de wolk"
+    ],
+    "hints": [
+      "Article: de"
+    ],
+    "source_ref": "image-drills/wolk",
+    "image_url": "https://pub-7dc3882d3fb04b9796d2b3c78f56db6c.r2.dev/vocab/wolk.png"
+  },
+  {
+    "slug": "image-word-trein",
+    "unit_slug": "a2-unit-1-werkwoorden-hebben-zijn",
+    "type": "image-word",
+    "prompt_nl": null,
+    "prompt_en": "Type the Dutch word for what you see",
+    "options": null,
+    "answer": [
+      "trein",
+      "de trein"
+    ],
+    "hints": [
+      "Article: de"
+    ],
+    "source_ref": "image-drills/trein",
+    "image_url": "https://pub-7dc3882d3fb04b9796d2b3c78f56db6c.r2.dev/vocab/trein.png"
+  },
+  {
+    "slug": "image-word-bus",
+    "unit_slug": "a2-unit-1-werkwoorden-hebben-zijn",
+    "type": "image-word",
+    "prompt_nl": null,
+    "prompt_en": "Type the Dutch word for what you see",
+    "options": null,
+    "answer": [
+      "bus",
+      "de bus"
+    ],
+    "hints": [
+      "Article: de"
+    ],
+    "source_ref": "image-drills/bus",
+    "image_url": "https://pub-7dc3882d3fb04b9796d2b3c78f56db6c.r2.dev/vocab/bus.png"
+  }
+]
