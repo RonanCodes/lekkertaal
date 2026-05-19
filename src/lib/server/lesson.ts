@@ -8,7 +8,8 @@ import {
   userUnitProgress,
   spacedRepQueue,
 } from "../../db/schema";
-import { eq, and, asc, lte, sql  } from "drizzle-orm";
+import { eq, and, asc, lte, sql, desc  } from "drizzle-orm";
+import type { DB } from "../../db/client";
 import { requireWorkerContext } from "../../entry.server";
 import { enqueueDrillMistake, enqueueVocabPairMistake } from "./spaced-rep";
 import { awardLessonComplete } from "./gamification";
@@ -197,7 +198,7 @@ export const getLesson = createServerFn({ method: "GET", strict: false })
           audioUrl: d.audioUrl,
           imageUrl: d.imageUrl,
         })),
-        ...buildFlashcardTail(vocabPool, lessonRow[0].id),
+        ...(await buildFlashcardTail(vocabPool, lessonRow[0].id, me[0].id, drz)),
       ],
       reviews: reviewRows.map((r) => ({
         id: r.id,
@@ -210,6 +211,14 @@ export const getLesson = createServerFn({ method: "GET", strict: false })
   });
 
 const FLASHCARD_TAIL_COUNT = 4;
+/**
+ * 70/30 split: of the 4 cards, up to 3 (≈75%, the closest integer match to
+ * 70%) come from the learner's due vocab_pair queue, the rest fresh from the
+ * pool. If the queue has fewer matches than the target, the shortfall is
+ * filled from the pool so we always return exactly 4 cards (or 0 if the pool
+ * is too thin to start with).
+ */
+const FLASHCARD_QUEUE_CAP = 3;
 
 /**
  * Synthesize a small batch of flashcard drills at the end of a lesson, drawn
@@ -218,15 +227,75 @@ const FLASHCARD_TAIL_COUNT = 4;
  * uses binary self-grading to feed `recordVocabPairResult`. Sampled fresh on
  * every getLesson call so a replayed lesson surfaces different cards.
  *
+ * Biasing (US-009): when the user has due `vocab_pair` rows that intersect
+ * the unit pool, up to 3 of the 4 cards are pulled from that queue (newest
+ * due first), and the remaining slots are filled fresh from the pool. With
+ * an empty queue (or no intersection) the function falls back to a uniform
+ * sample across the pool, matching the pre-bias behaviour exactly.
+ *
  * Returns an empty list when the pool is too thin to sample; the lesson then
  * looks unchanged (no awkward "0 flashcards" placeholder).
  */
-export function buildFlashcardTail(
+export async function buildFlashcardTail(
   pool: ReadonlyArray<{ nl: string; en: string }>,
   lessonId: number,
-): DrillPayload[] {
+  userId: number,
+  drz: DB,
+): Promise<DrillPayload[]> {
   if (pool.length < FLASHCARD_TAIL_COUNT) return [];
-  const sampled = sampleRandom(pool, FLASHCARD_TAIL_COUNT);
+
+  // Build a lookup keyed by lowercased `<nl>|<en>` so we can intersect the
+  // queue's itemKey directly. Storing the original-case pair lets us preserve
+  // capitalisation in the flashcard payload (the queue stores its own copy in
+  // `payload`, but the pool is the source of truth for casing in this lesson).
+  const poolByKey = new Map<string, { nl: string; en: string }>();
+  for (const p of pool) {
+    poolByKey.set(`${p.nl.toLowerCase()}|${p.en.toLowerCase()}`, p);
+  }
+
+  // Pull every due vocab_pair row for this user, newest-due first. The query
+  // is bounded by the per-user cap on the queue (MAX_ACTIVE_REVIEWS = 200) so
+  // we don't need an explicit LIMIT here; we shuffle and slice after the
+  // intersection step anyway.
+  const now = new Date().toISOString();
+  const dueRows = await drz
+    .select({ itemKey: spacedRepQueue.itemKey })
+    .from(spacedRepQueue)
+    .where(
+      and(
+        eq(spacedRepQueue.userId, userId),
+        eq(spacedRepQueue.itemType, "vocab_pair"),
+        lte(spacedRepQueue.nextReviewDate, now),
+      ),
+    )
+    .orderBy(desc(spacedRepQueue.nextReviewDate));
+
+  // Intersect: only queue rows whose pair still lives in this unit's pool
+  // count. A missed pair from a different unit (e.g. food vocab while the
+  // learner is now in greetings) is irrelevant to this lesson's flashcards.
+  const matched: Array<{ nl: string; en: string }> = [];
+  const matchedKeys = new Set<string>();
+  for (const r of dueRows) {
+    const pair = poolByKey.get(r.itemKey);
+    if (pair && !matchedKeys.has(r.itemKey)) {
+      matched.push(pair);
+      matchedKeys.add(r.itemKey);
+    }
+  }
+
+  // Take up to 3 from the queue (random order so a learner with 6 misses
+  // doesn't see the same 3 cards every replay), then fill the rest from the
+  // pool excluding pairs we just took. Empty-queue path collapses to the
+  // original uniform sample.
+  const fromQueue = sampleRandom(matched, Math.min(FLASHCARD_QUEUE_CAP, matched.length));
+  const remaining = FLASHCARD_TAIL_COUNT - fromQueue.length;
+  const takenKeys = new Set(fromQueue.map((p) => `${p.nl.toLowerCase()}|${p.en.toLowerCase()}`));
+  const poolRemaining = pool.filter(
+    (p) => !takenKeys.has(`${p.nl.toLowerCase()}|${p.en.toLowerCase()}`),
+  );
+  const fromPool = sampleRandom(poolRemaining, remaining);
+  const sampled = [...fromQueue, ...fromPool];
+
   return sampled.map((p, i) => ({
     id: -1_000_000 - lessonId * 100 - i, // negative + lesson-scoped so no collision with real ids
     slug: `synthetic-flashcard-${lessonId}-${i}`,
