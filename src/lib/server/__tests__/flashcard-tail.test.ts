@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { buildFlashcardTail } from "../lesson";
 import { spacedRepQueue } from "../../../db/schema";
 import { makeTestDb, asD1, seedUser } from "./test-db";
@@ -247,6 +247,103 @@ describe("buildFlashcardTail", () => {
         }
       }
       expect(huisCount).toBeLessThan(20);
+    });
+  });
+
+  describe("PostHog observability (issue #157)", () => {
+    const fetchMock = vi.fn();
+
+    beforeEach(() => {
+      fetchMock.mockReset();
+      fetchMock.mockResolvedValue(new Response("ok"));
+      vi.stubGlobal("fetch", fetchMock);
+    });
+
+    afterEach(() => {
+      vi.unstubAllGlobals();
+    });
+
+    it("fires flashcard_tail_sampled exactly once per buildFlashcardTail call", async () => {
+      const drz = makeTestDb();
+      const userId = seedUser(drz);
+      await buildFlashcardTail(POOL, 42, userId, asD1(drz), {
+        unitId: 7,
+        env: { POSTHOG_PROJECT_KEY: "phc_test" },
+      });
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+      const [url, init] = fetchMock.mock.calls[0] as [string, RequestInit];
+      expect(url).toMatch(/\/capture\/$/);
+      const body = JSON.parse(init.body as string);
+      expect(body.event).toBe("flashcard_tail_sampled");
+    });
+
+    it("event properties carry correct counts for pool-only path (empty queue)", async () => {
+      const drz = makeTestDb();
+      const userId = seedUser(drz);
+      await buildFlashcardTail(POOL, 43, userId, asD1(drz), {
+        unitId: 7,
+        env: { POSTHOG_PROJECT_KEY: "phc_test" },
+      });
+      const body = JSON.parse((fetchMock.mock.calls[0] as [string, RequestInit])[1].body as string);
+      expect(body.properties).toMatchObject({
+        unit_id: 7,
+        queue_rows_available: 0,
+        queue_rows_used: 0,
+        pool_rows_used: 4,
+      });
+    });
+
+    it("event properties carry correct counts for biased path (3 queue + 1 pool)", async () => {
+      const drz = makeTestDb();
+      const userId = seedUser(drz);
+      await seedDueVocabPairs(drz, userId, [POOL[0], POOL[1], POOL[2]]);
+      await buildFlashcardTail(POOL, 44, userId, asD1(drz), {
+        unitId: 7,
+        env: { POSTHOG_PROJECT_KEY: "phc_test" },
+      });
+      const body = JSON.parse((fetchMock.mock.calls[0] as [string, RequestInit])[1].body as string);
+      expect(body.properties).toMatchObject({
+        unit_id: 7,
+        queue_rows_available: 3,
+        queue_rows_used: 3,
+        pool_rows_used: 1,
+      });
+    });
+
+    it("distinct_id is a sha256 hash of userId (not raw userId)", async () => {
+      const drz = makeTestDb();
+      const userId = seedUser(drz);
+      await buildFlashcardTail(POOL, 45, userId, asD1(drz), {
+        unitId: 7,
+        env: { POSTHOG_PROJECT_KEY: "phc_test" },
+      });
+      const body = JSON.parse((fetchMock.mock.calls[0] as [string, RequestInit])[1].body as string);
+      // distinct_id must be a 64-char hex string (sha256), not the raw numeric id
+      expect(body.distinct_id).toMatch(/^[0-9a-f]{64}$/);
+      expect(body.distinct_id).not.toBe(String(userId));
+    });
+
+    it("does not fire when env is omitted", async () => {
+      const drz = makeTestDb();
+      const userId = seedUser(drz);
+      await buildFlashcardTail(POOL, 46, userId, asD1(drz));
+      expect(fetchMock).not.toHaveBeenCalled();
+    });
+
+    it("does not fire when POSTHOG_PROJECT_KEY is absent from env", async () => {
+      const drz = makeTestDb();
+      const userId = seedUser(drz);
+      await buildFlashcardTail(POOL, 47, userId, asD1(drz), { env: {} });
+      expect(fetchMock).not.toHaveBeenCalled();
+    });
+
+    it("does not fire when pool is too small (function returns early)", async () => {
+      const drz = makeTestDb();
+      const userId = seedUser(drz);
+      await buildFlashcardTail(POOL.slice(0, 3), 48, userId, asD1(drz), {
+        env: { POSTHOG_PROJECT_KEY: "phc_test" },
+      });
+      expect(fetchMock).not.toHaveBeenCalled();
     });
   });
 });

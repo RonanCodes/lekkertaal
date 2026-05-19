@@ -119,6 +119,54 @@ export function buildAiCallPayload(args: {
 }
 
 /**
+ * Fire a single PostHog capture event with arbitrary properties. Like
+ * `emitAiCall` but not coupled to the AI SDK shape — suitable for any
+ * server-side product event (e.g. `flashcard_tail_sampled`).
+ *
+ * Never throws — telemetry must not break the request that triggered it.
+ */
+export function captureEvent(
+  event: string,
+  distinctId: string,
+  properties: Record<string, unknown>,
+  env?: AiTelemetryEnv,
+  ctx?: { waitUntil?: (p: Promise<unknown>) => void },
+): void {
+  if (!env?.POSTHOG_PROJECT_KEY) return;
+
+  const host = env.POSTHOG_INGEST_HOST || POSTHOG_DEFAULT_HOST;
+  const body = {
+    api_key: env.POSTHOG_PROJECT_KEY,
+    event,
+    distinct_id: distinctId,
+    properties,
+    timestamp: new Date().toISOString(),
+  };
+
+  const send = fetch(`${host}/capture/`, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify(body),
+  })
+    .then(() => undefined)
+    .catch((err) => {
+      try {
+        log.warning("posthog capture failed", { event, err: String(err) });
+      } catch {
+        // ignore
+      }
+    });
+
+  if (ctx?.waitUntil) {
+    try {
+      ctx.waitUntil(send);
+    } catch {
+      // ignore — fallback to dangling promise
+    }
+  }
+}
+
+/**
  * Emit an AI call event. Always logs; optionally fires a PostHog capture if
  * `env.POSTHOG_PROJECT_KEY` is set. Never throws — telemetry must not break
  * the request that produced it.

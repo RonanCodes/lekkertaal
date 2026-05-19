@@ -16,6 +16,8 @@ import { awardLessonComplete } from "./gamification";
 import { awardBadgesIfEligible } from "./badges";
 import { requireUserClerkId } from "./auth-helper";
 import { ensureUserRow } from "./ensure-user-row";
+import { captureEvent } from "../ai-telemetry";
+import type { AiTelemetryEnv } from "../ai-telemetry";
 
 export type DrillType =
   | "match_pairs"
@@ -128,7 +130,7 @@ export const getLesson = createServerFn({ method: "GET", strict: false })
   .inputValidator((input: { lessonId: number }) => input)
   .handler(async ({ data }): Promise<LessonPayload> => {
     const userId = await requireUserClerkId();
-    const { env } = requireWorkerContext();
+    const { env, ctx } = requireWorkerContext();
     const drz = db(env.DB);
 
     const me = [await ensureUserRow(userId, drz, env)];
@@ -238,7 +240,11 @@ export const getLesson = createServerFn({ method: "GET", strict: false })
         // (flashcards are the lowest-friction "lesson over" tail; spelling
         // tests should land before that).
         ...buildListeningSpellTail(vocabPool, lessonRow[0].id),
-        ...(await buildFlashcardTail(vocabPool, lessonRow[0].id, me[0].id, drz)),
+        ...(await buildFlashcardTail(vocabPool, lessonRow[0].id, me[0].id, drz, {
+          unitId: lessonRow[0].unitId,
+          env,
+          ctx,
+        })),
       ],
       reviews: reviewRows.map((r) => ({
         id: r.id,
@@ -276,12 +282,20 @@ const FLASHCARD_QUEUE_CAP = 3;
  *
  * Returns an empty list when the pool is too thin to sample; the lesson then
  * looks unchanged (no awkward "0 flashcards" placeholder).
+ *
+ * Observability (issue #157): fires a `flashcard_tail_sampled` PostHog event
+ * on every call so the bias can be monitored in production dashboards.
  */
 export async function buildFlashcardTail(
   pool: ReadonlyArray<{ nl: string; en: string }>,
   lessonId: number,
   userId: number,
   drz: DB,
+  opts?: {
+    unitId?: number;
+    env?: AiTelemetryEnv;
+    ctx?: { waitUntil?: (p: Promise<unknown>) => void };
+  },
 ): Promise<DrillPayload[]> {
   if (pool.length < FLASHCARD_TAIL_COUNT) return [];
 
@@ -337,6 +351,24 @@ export async function buildFlashcardTail(
   const fromPool = sampleRandom(poolRemaining, remaining);
   const sampled = [...fromQueue, ...fromPool];
 
+  // Observability: emit once per lesson load so we can track bias health in
+  // PostHog. The user id is hashed (sha256) — no raw PII in event properties.
+  if (opts?.env) {
+    const hashedUserId = await sha256Hex(userId.toString());
+    captureEvent(
+      "flashcard_tail_sampled",
+      hashedUserId,
+      {
+        unit_id: opts.unitId ?? null,
+        queue_rows_available: matched.length,
+        queue_rows_used: fromQueue.length,
+        pool_rows_used: fromPool.length,
+      },
+      opts.env,
+      opts.ctx,
+    );
+  }
+
   return sampled.map((p, i) => ({
     id: -1_000_000 - lessonId * 100 - i, // negative + lesson-scoped so no collision with real ids
     slug: `synthetic-flashcard-${lessonId}-${i}`,
@@ -386,6 +418,14 @@ export function buildListeningSpellTail(
     imageUrl: null,
     isSynthetic: true,
   }));
+}
+
+async function sha256Hex(input: string): Promise<string> {
+  const buf = new TextEncoder().encode(input);
+  const digest = await crypto.subtle.digest("SHA-256", buf);
+  return [...new Uint8Array(digest)]
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
 }
 
 function sampleRandom<T>(arr: ReadonlyArray<T>, n: number): T[] {
