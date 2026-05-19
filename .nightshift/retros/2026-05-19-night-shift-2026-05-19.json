@@ -1,0 +1,162 @@
+{
+  "run_id": "night-shift-2026-05-19",
+  "dispatcher": "night-shift",
+  "mode": "ready-only",
+  "repo": "RonanCodes/lekkertaal",
+  "branch": "main",
+  "started_at": "2026-05-19T17:29:00Z",
+  "ended_at": "2026-05-19T18:11:00Z",
+  "wall_clock_minutes": 42,
+  "approx_tokens": 581295,
+  "stats": {
+    "issues_picked": 5,
+    "prs_merged": 4,
+    "direct_pushes": 1,
+    "prs_blocked": 0,
+    "issues_deferred": 0,
+    "followups_opened": 2,
+    "waves": 2,
+    "workers_cap": 3
+  },
+  "per_slice": [
+    {
+      "issue": 139,
+      "title": "Audio-unavailable info indicator on Speaker buttons",
+      "outcome": "merged",
+      "pr": 160,
+      "retries": 0,
+      "matrix_fails": [],
+      "agent_wall_ms": 618064,
+      "agent_tokens": 85515,
+      "notes": "Clean worktree flow, PR + CI green + squash-merge."
+    },
+    {
+      "issue": 157,
+      "title": "Observability: PostHog event for flashcard tail bias usage",
+      "outcome": "merged",
+      "pr": null,
+      "direct_push_commits": ["d641b91", "cb64111"],
+      "retries": 0,
+      "matrix_fails": [],
+      "agent_wall_ms": 563942,
+      "agent_tokens": 95545,
+      "failure_mode": "other",
+      "failure_narrative": "Worker drifted out of its isolated worktree into the shared main checkout (planner-worker SKILL.md lesson #5a). Pushed two commits directly to origin/main with no PR. All quality gates passed via husky pre-push. Branch protection was OFF at the time. Worker self-diagnosed and filed follow-up #161 with proposed fix.",
+      "evidence_ref": "https://github.com/RonanCodes/lekkertaal/issues/157#issuecomment-direct-push"
+    },
+    {
+      "issue": 156,
+      "title": "E2E: extract shared walkToDrill helper for lesson-skip pattern",
+      "outcome": "merged",
+      "pr": 162,
+      "retries": 0,
+      "matrix_fails": [],
+      "agent_wall_ms": 1009480,
+      "agent_tokens": 137610,
+      "notes": "Removed ~164 lines of duplicated walk-to-drill code across 9 specs. Initially appeared to be working in the main checkout (staged edits visible there) but ultimately pushed via correct worktree branch."
+    },
+    {
+      "issue": 155,
+      "title": "PictureChoiceDrill: seed enough A2 unit-1 images so the drill renders",
+      "outcome": "merged",
+      "pr": 163,
+      "retries": 0,
+      "matrix_fails": [],
+      "agent_wall_ms": 965582,
+      "agent_tokens": 108910,
+      "notes": "Generated 8 PNGs via Gemini, set up R2 managed public domain, fixed image_word/image-word type mismatch. Filed follow-up #164 for remaining 32 PNGs.",
+      "scope_creep": "Branched into Gemini image generation + R2 public-domain configuration beyond the original 'seed JSON' scope. Net-positive scope creep; results documented in close-with-summary."
+    },
+    {
+      "issue": 140,
+      "title": "Auto-enrich vocab from dictionary APIs (Wiktionary + Wikimedia + Tatoeba)",
+      "outcome": "merged",
+      "pr": 165,
+      "retries": 0,
+      "matrix_fails": [],
+      "agent_wall_ms": 1125947,
+      "agent_tokens": 153715,
+      "notes": "L-size slice with Drizzle migration 0012, three API integrations, full enrichment library with rate-limiting + caching, attribution UI component, 458 tests."
+    }
+  ],
+  "failures": [
+    {
+      "slice": 157,
+      "mode": "other",
+      "subtype": "worktree-drift-to-main-checkout",
+      "evidence_ref": "https://github.com/RonanCodes/lekkertaal/issues/161",
+      "narrative": "Worker landed in the shared main repo checkout instead of its isolated worktree. cd <main-repo-path> for the quality gate, then `git push` ran from there. With branch protection OFF, push to main succeeded.",
+      "mitigated_in_run": true,
+      "mitigation": "Turned ON branch protection on main; hardened wave-2 worker prompts with explicit worktree guard"
+    }
+  ],
+  "action_items": [
+    {
+      "title": "Worker dispatch prompt fails to keep worker pinned to its worktree — needs git -C <worktree-path> prefixes + branch-name guard before commit step",
+      "gap_class": "SYSTEM",
+      "source_repo": "ronan-skills",
+      "severity": "high",
+      "proof_ref": "lekkertaal#161 + this run #157 anomaly",
+      "created_issue": "lekkertaal#161",
+      "note": "Already filed by the worker itself during the run; routing as SYSTEM gap since the fix lives in ~/Dev/ronan-skills/skills/{planner-worker,ralph}/SKILL.md, not in lekkertaal. Re-file or migrate the issue to ronan-skills."
+    },
+    {
+      "title": "Workers don't remove `in-progress` label after squash-merge — 4/5 wave workers left stale labels on closed issues",
+      "gap_class": "SYSTEM",
+      "source_repo": "ronan-skills",
+      "severity": "med",
+      "proof_ref": "lekkertaal #139, #140, #155, #157 (all closed but kept `in-progress` until cleaned up post-merge)",
+      "created_issue": null,
+      "note": "The worker dispatch prompt adds `in-progress` on Step 2 but the cleanup is implicit (the issue auto-closes on squash-merge via `Closes #N` autoclose). The label survives the close. Add an explicit `gh issue edit <N> --remove-label in-progress` step right before or after the squash-merge in the worker prompt."
+    },
+    {
+      "title": "completion-report skill is spec-only — scripts/generate.sh missing from plugin cache",
+      "gap_class": "SYSTEM",
+      "source_repo": "ronan-skills",
+      "severity": "low",
+      "proof_ref": "this run — /ro:completion-report was invoked, the skill SKILL.md loaded with references to scripts/{generate,risk-checks,diff-to-html}.sh but the scripts/ directory does not exist in the plugin cache; HTML was generated inline by the orchestrator",
+      "created_issue": null,
+      "note": "Either implement the scripts and ship them with the skill, or fold the HTML-generation logic INTO the SKILL.md itself as a heredoc-style bash block the orchestrator can copy-paste."
+    },
+    {
+      "title": "Apply 40 image-word seed rows to production D1 (manual operator action from #155)",
+      "gap_class": "PROJECT",
+      "source_repo": "lekkertaal",
+      "severity": "med",
+      "proof_ref": "PR #163 close-with-summary comment",
+      "created_issue": null,
+      "note": "Run `pnpm seed:load --remote` to push the new image-word rows. Not filed as an issue since it's a single one-shot operator action with no investigation needed."
+    },
+    {
+      "title": "Upload 32 remaining vocab PNGs to R2 lekkertaal-images bucket",
+      "gap_class": "PROJECT",
+      "source_repo": "lekkertaal",
+      "severity": "med",
+      "proof_ref": "lekkertaal#164",
+      "created_issue": "lekkertaal#164"
+    }
+  ],
+  "system_gaps_surfaced": [
+    "Worker-pinning is not enforced by the dispatch prompt — needs hard guard.",
+    "Lifecycle-label hygiene (in-progress -> closed) is implicit, should be explicit step in worker prompt.",
+    "completion-report skill spec/implementation drift — scripts referenced but not shipped."
+  ],
+  "cross_repo_issues_to_file": [
+    {
+      "repo": "ronan-skills",
+      "title": "[from-retro] Worker dispatch prompt: pin to worktree (git -C + branch-name guard)",
+      "labels": ["from-retro", "source-repo:lekkertaal", "run-id:night-shift-2026-05-19"],
+      "covered_by_existing": "lekkertaal#161 (will need to migrate / re-file)"
+    },
+    {
+      "repo": "ronan-skills",
+      "title": "[from-retro] Worker dispatch prompt: explicit `gh issue edit --remove-label in-progress` step before close",
+      "labels": ["from-retro", "source-repo:lekkertaal", "run-id:night-shift-2026-05-19"]
+    },
+    {
+      "repo": "ronan-skills",
+      "title": "[from-retro] completion-report skill: ship scripts/generate.sh OR fold into SKILL.md heredoc",
+      "labels": ["from-retro", "source-repo:lekkertaal", "run-id:night-shift-2026-05-19"]
+    }
+  ]
+}
