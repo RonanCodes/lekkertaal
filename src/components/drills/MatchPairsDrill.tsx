@@ -4,6 +4,7 @@ import { Speaker } from "./Speaker";
 import { parseField } from "./DrillRenderer";
 import type { DrillProps } from "./DrillRenderer";
 import { recordVocabPairResult } from "../../lib/server/lesson";
+import { VocabSourceAttribution } from "../VocabSourceAttribution";
 
 type Pair = { nl: string; en: string };
 
@@ -23,7 +24,7 @@ const PAIRS_PER_ROUND = 4;
  * come back as reviews. The whole-drill `onSubmit(true)` fires once at the
  * end so the lesson player advances.
  */
-export function MatchPairsDrill({ drill, onSubmit, vocabPool }: DrillProps) {
+export function MatchPairsDrill({ drill, onSubmit, vocabPool, vocabEnrichedMap }: DrillProps) {
   const pairs = useMemo<Pair[]>(() => {
     const fromAnswer = parseField<Pair[]>(drill.answer);
     const fromOptions = parseField<Pair[]>(drill.options);
@@ -215,8 +216,35 @@ export function MatchPairsDrill({ drill, onSubmit, vocabPool }: DrillProps) {
                           : "border-neutral-200 bg-white hover:border-orange-300"
                 }`}
               >
-                <span>{t.text}</span>
-                <Speaker text={t.text} size="sm" />
+                {(() => {
+                  const enriched = vocabEnrichedMap?.[t.text.toLowerCase()];
+                  return (
+                    <>
+                      <span className="flex flex-col gap-0">
+                        <span>{t.text}</span>
+                        {enriched?.ipa && (
+                          <span className="font-mono text-xs font-normal text-neutral-400">
+                            {enriched.ipa}
+                          </span>
+                        )}
+                      </span>
+                      <span className="flex items-center gap-1">
+                        {enriched?.gender && (
+                          <span className="rounded-full border border-neutral-200 bg-neutral-50 px-1.5 py-0 text-xs font-normal text-neutral-500">
+                            {enriched.gender}
+                          </span>
+                        )}
+                        <Speaker text={t.text} size="sm" />
+                        {enriched?.sources && (
+                          <VocabSourceAttribution
+                            word={t.text}
+                            sources={enriched.sources}
+                          />
+                        )}
+                      </span>
+                    </>
+                  );
+                })()}
               </button>
             );
           })}

@@ -7,8 +7,10 @@ import {
   userLessonProgress,
   userUnitProgress,
   spacedRepQueue,
+  vocab,
 } from "../../db/schema";
-import { eq, and, asc, lte, sql, desc  } from "drizzle-orm";
+import type { VocabField, VocabSource } from "../../db/schema";
+import { eq, and, asc, lte, sql, desc, inArray } from "drizzle-orm";
 import type { DB } from "../../db/client";
 import { requireWorkerContext } from "../../entry.server";
 import { enqueueDrillMistake, enqueueVocabPairMistake } from "./spaced-rep";
@@ -97,6 +99,22 @@ export type LessonPayload = {
    * a skip-frame rather than punishing the learner for missing seed content.
    */
   imagePool: Array<{ nl: string; en: string; imageUrl: string }>;
+  /**
+   * Enriched vocab data keyed by lowercased Dutch word (`nl`). Populated for
+   * words in the vocabPool that have been through the enrich-vocab script.
+   * Components use this to render IPA, gender chip, and source attribution.
+   * Absent entries mean the word has not been enriched yet — degrade gracefully.
+   */
+  vocabEnrichedMap: Record<string, VocabEnriched>;
+};
+
+/** Per-word enriched data surfaced to drill UI components. */
+export type VocabEnriched = {
+  ipa: string | null;
+  gender: "de" | "het" | null;
+  audioUrl: string | null;
+  wordType: "noun" | "verb" | "adjective" | "adverb" | "other" | null;
+  sources: Partial<Record<VocabField, VocabSource>> | null;
 };
 
 export type ReviewCardPayload = {
@@ -191,6 +209,35 @@ export const getLesson = createServerFn({ method: "GET", strict: false })
       );
     const imagePool = extractImagePool(unitImageRows);
 
+    // Fetch enriched vocab data for words in the vocab pool (IPA, gender,
+    // audio URL, sources). Only words that have been through the enrich-vocab
+    // script will have data; absent entries are fine — components degrade
+    // gracefully. Keyed by lowercased nl for O(1) lookup in drill components.
+    const vocabEnrichedMap: Record<string, VocabEnriched> = {};
+    if (vocabPool.length > 0) {
+      const nlWords = [...new Set(vocabPool.map((p) => p.nl.toLowerCase()))];
+      const enrichedRows = await drz
+        .select({
+          nl: vocab.nl,
+          ipa: vocab.ipa,
+          gender: vocab.gender,
+          audioUrl: vocab.audioUrl,
+          wordType: vocab.wordType,
+          sources: vocab.sources,
+        })
+        .from(vocab)
+        .where(inArray(vocab.nl, nlWords));
+      for (const row of enrichedRows) {
+        vocabEnrichedMap[row.nl.toLowerCase()] = {
+          ipa: row.ipa ?? null,
+          gender: (row.gender as "de" | "het" | null) ?? null,
+          audioUrl: row.audioUrl ?? null,
+          wordType: (row.wordType as VocabEnriched["wordType"]) ?? null,
+          sources: row.sources ?? null,
+        };
+      }
+    }
+
     // US-019: surface up to 3 due review cards before the new content.
     const now = new Date().toISOString();
     const reviewRows = await drz
@@ -254,6 +301,7 @@ export const getLesson = createServerFn({ method: "GET", strict: false })
       })),
       vocabPool,
       imagePool,
+      vocabEnrichedMap,
     };
   });
 

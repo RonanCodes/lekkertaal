@@ -146,6 +146,11 @@ export function AppShell({
         </nav>
       </header>
       <main className="mx-auto max-w-4xl px-4 py-6 sm:px-6">{children}</main>
+      <footer className="mx-auto max-w-4xl px-4 py-4 text-center text-xs text-neutral-400 sm:px-6">
+        <a href="/attribution" className="hover:text-neutral-600 hover:underline">
+          Data sources
+        </a>
+      </footer>
     </div>
   );
 }
