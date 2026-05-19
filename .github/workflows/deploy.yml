@@ -3,6 +3,19 @@ name: CI + Deploy
 on:
   push:
     branches: [main]
+    # Skip the workflow entirely when a push only touches documentation /
+    # local-factory artefacts / completion reports. These never affect the
+    # built worker, so a deploy adds CF API pressure for zero user-visible
+    # change. PRs still run the full workflow regardless of paths so
+    # reviewers always see CI status.
+    paths-ignore:
+      - "**/*.md"
+      - "docs/**"
+      - ".nightshift/**"
+      - ".ralph/**"
+      - ".completion-reports/**"
+      - ".ronan-skills.json"
+      - "ATTRIBUTION.md"
   pull_request:
     branches: [main]
   workflow_dispatch:
@@ -54,24 +67,28 @@ jobs:
         run: pnpm install --frozen-lockfile
       - name: Build
         run: pnpm build
+      # Apply only NEW migrations. wrangler d1 migrations apply reads
+      # drizzle/meta/_journal.json (the Drizzle migration journal) and the
+      # remote `__drizzle_migrations` tracking table, then applies only the
+      # files that haven't run yet. The migrations_dir is configured in
+      # wrangler.jsonc as "drizzle".
+      #
+      # Replaces the previous brute-force loop that re-applied every .sql
+      # on every deploy. That pattern was: ~13 API calls per deploy ×
+      # ~20 deploys/day = ~260 calls/day, tripped CF Workers API rate-limit
+      # 10429 on 2026-05-19. This step is now 1 API call per deploy.
       - name: Apply D1 migrations (remote)
-        run: |
-          if [ -d drizzle ] && ls drizzle/*.sql 2>/dev/null | head -1 > /dev/null; then
-            for f in drizzle/*.sql; do
-              echo "Applying $f..."
-              pnpm wrangler d1 execute lekkertaal_db --remote --file="$f" || true
-            done
-          else
-            echo "No migrations to apply yet"
-          fi
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: d1 migrations apply lekkertaal_db --remote
       - name: Deploy worker
-        run: pnpm wrangler deploy
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: deploy
       - name: Smoke test
         run: |
           sleep 5
