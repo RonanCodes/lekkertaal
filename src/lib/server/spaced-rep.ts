@@ -12,8 +12,11 @@
  * - enqueueDrillMistake(userId, exerciseId, payload): called from
  *   recordDrillResult on incorrect answers.
  *
- * Cap: max 10 active review items per user (acceptance 5). Oldest-but-not-due
- * items are evicted past the cap so we don't crowd out new errors.
+ * Cap: max 200 active review items per user (raised from the original 10 in
+ * US-008 once we measured D1 query latency staying well under 50ms at that
+ * size). Oldest-but-not-due items are evicted past the cap so we don't crowd
+ * out new errors, but the cap is now generous enough that real learners'
+ * miss inventory is not silently dropped.
  */
 import { createServerFn } from "@tanstack/react-start";
 import { db } from "../../db/client";
@@ -24,7 +27,7 @@ import { requireWorkerContext } from "../../entry.server";
 import { requireUserClerkId } from "./auth-helper";
 import { ensureUserRow } from "./ensure-user-row";
 
-const MAX_ACTIVE_REVIEWS = 10;
+const MAX_ACTIVE_REVIEWS = 200;
 const DUE_BATCH = 3;
 
 export type ReviewCard = {
