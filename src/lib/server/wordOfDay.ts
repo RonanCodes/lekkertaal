@@ -1,14 +1,25 @@
 /**
  * Word of the Day picker + dictionary lookup.
  *
- * Deterministic per UTC date: hash(YYYY-MM-DD) % WORDLIST.length, so every
+ * Deterministic per UTC date: `dayOfYear(isoDate) % WORDLIST.length`. Every
  * user sees the same word on the same day. The dictionary call hits the
- * R2-cached Wiktionary lookup, so the second user of the day reads from
- * warm cache.
+ * R2-cached Wiktionary lookup, so the second user of the day reads from warm
+ * cache.
  *
  * Curated A1-A2 list (50 entries) covering nouns, verbs, adjectives, and
  * common conjugations a learner meets in the first month. All have audio
  * on Wikimedia Commons and definitions on en.wiktionary (verified 2026-05-19).
+ * The list order is intentionally jumbled (not alphabetical / not by topic)
+ * so that day-of-year indexing produces a varied feel.
+ *
+ * Why not hash(date) % length: the previous djb2 version walked the wordlist
+ * in tight sequential steps because consecutive ISO date strings differ by
+ * one byte (e.g. May 10-17 2026 picked idx 11,10,9,8,7,6,5,4). Switching to
+ * SHA-256 mod length spread the distribution but introduced birthday-paradox
+ * collisions (May 17 and 18 2026 both landed on "eten"). Day-of-year mod
+ * length is collision-free for any 50-day window AND has predictable
+ * not-random distribution, which is fine for a learner-facing single-word
+ * surface.
  */
 import { createServerFn } from "@tanstack/react-start";
 import { lookupDictionary } from "./dictionary";
@@ -31,8 +42,7 @@ export type WordOfTheDay = {
 export const getWordOfTheDay = createServerFn({ method: "GET" }).handler(
   async (): Promise<WordOfTheDay> => {
     const isoDate = new Date().toISOString().slice(0, 10);
-    const idx = djb2(isoDate) % WORDLIST.length;
-    const word = WORDLIST[idx];
+    const word = pickWord(isoDate);
 
     const result = await lookupDictionary(word);
     return {
@@ -43,14 +53,23 @@ export const getWordOfTheDay = createServerFn({ method: "GET" }).handler(
   },
 );
 
-export function pickWord(isoDate: string, wordlist: ReadonlyArray<string> = WORDLIST): string {
-  return wordlist[djb2(isoDate) % wordlist.length];
+export function pickWord(
+  isoDate: string,
+  wordlist: ReadonlyArray<string> = WORDLIST,
+): string {
+  return wordlist[dayOfYearUTC(isoDate) % wordlist.length];
 }
 
-function djb2(input: string): number {
-  let h = 5381;
-  for (let i = 0; i < input.length; i++) {
-    h = (h * 33) ^ input.charCodeAt(i);
-  }
-  return Math.abs(h | 0);
+/**
+ * 0-based UTC day-of-year for an ISO date string (YYYY-MM-DD). Jan 1 = 0,
+ * Dec 31 = 364 (or 365 in a leap year). Pure function, no timezone surprises.
+ */
+function dayOfYearUTC(isoDate: string): number {
+  const [yearStr, monthStr, dayStr] = isoDate.split("-");
+  const year = Number(yearStr);
+  const month = Number(monthStr);
+  const day = Number(dayStr);
+  const startOfYear = Date.UTC(year, 0, 1);
+  const thisDate = Date.UTC(year, month - 1, day);
+  return Math.floor((thisDate - startOfYear) / 86_400_000);
 }
