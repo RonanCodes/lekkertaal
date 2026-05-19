@@ -6,6 +6,7 @@ import { WordOrderingDrill } from "./WordOrderingDrill";
 import { SpeakDrill } from "./SpeakDrill";
 import { ImageWordDrill } from "./ImageWordDrill";
 import { FlashcardDrill } from "./FlashcardDrill";
+import { ListeningSpellDrill } from "./ListeningSpellDrill";
 import { DrillFrame } from "./DrillFrame";
 import type { DrillPayload } from "../../lib/server/lesson";
 
@@ -60,6 +61,8 @@ export function DrillRenderer({ drill, onSubmit, vocabPool }: DrillProps) {
       return <ImageWordDrill drill={drill} onSubmit={onSubmit} />;
     case "flashcard":
       return <FlashcardDrill drill={drill} onSubmit={onSubmit} />;
+    case "listening_spell":
+      return <ListeningSpellDrill drill={drill} onSubmit={onSubmit} />;
     default:
       return (
         <DrillFrame promptLabel="Unsupported drill" prompt={`Type: ${drill.type}`}>

@@ -1,4 +1,13 @@
 import type { ReactNode } from "react";
+import { levenshtein } from "../../lib/server/levenshtein";
+
+/**
+ * Re-export the shared Levenshtein helper so existing call-sites in this
+ * module (and tests importing from `DrillFrame`) keep working. The single
+ * source of truth lives at `src/lib/server/levenshtein.ts` so the
+ * listening-spell drill and any future server-side grading can share it.
+ */
+export { levenshtein };
 
 /**
  * Shared shell for every drill type. Holds the prompt header, the body slot
@@ -58,28 +67,6 @@ export function FeedbackBanner({
   );
 }
 
-/**
- * Levenshtein distance — small, no deps. Used by translation/fitb/word-order
- * grading per US-012/US-013/US-014.
- */
-export function levenshtein(a: string, b: string): number {
-  const m = a.length;
-  const n = b.length;
-  if (m === 0) return n;
-  if (n === 0) return m;
-  const prev = new Array(n + 1).fill(0);
-  const curr = new Array(n + 1).fill(0);
-  for (let j = 0; j <= n; j++) prev[j] = j;
-  for (let i = 1; i <= m; i++) {
-    curr[0] = i;
-    for (let j = 1; j <= n; j++) {
-      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
-      curr[j] = Math.min(curr[j - 1] + 1, prev[j] + 1, prev[j - 1] + cost);
-    }
-    for (let j = 0; j <= n; j++) prev[j] = curr[j];
-  }
-  return prev[n];
-}
 
 /**
  * Normalise an answer for tolerant grading: lowercase, trim, strip terminal

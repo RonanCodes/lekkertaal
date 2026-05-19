@@ -26,7 +26,8 @@ export type DrillType =
   | "word_ordering"
   | "speak"
   | "image_word"
-  | "flashcard";
+  | "flashcard"
+  | "listening_spell";
 
 /**
  * DB rows store drill `type` in hyphen-form (`match-pairs`, `translation-typing`,
@@ -198,6 +199,10 @@ export const getLesson = createServerFn({ method: "GET", strict: false })
           audioUrl: d.audioUrl,
           imageUrl: d.imageUrl,
         })),
+        // Listening-spell drills first so flashcards remain the final activity
+        // (flashcards are the lowest-friction "lesson over" tail; spelling
+        // tests should land before that).
+        ...buildListeningSpellTail(vocabPool, lessonRow[0].id),
         ...(await buildFlashcardTail(vocabPool, lessonRow[0].id, me[0].id, drz)),
       ],
       reviews: reviewRows.map((r) => ({
@@ -302,6 +307,42 @@ export async function buildFlashcardTail(
     type: "flashcard",
     promptNl: null,
     promptEn: "Do you remember this word?",
+    options: null,
+    answer: JSON.stringify(p),
+    hints: null,
+    audioUrl: null,
+    imageUrl: null,
+    isSynthetic: true,
+  }));
+}
+
+const LISTENING_SPELL_TAIL_COUNT = 2;
+
+/**
+ * Synthesize a small batch of listening-spell drills at the end of a lesson,
+ * drawn from the unit vocab pool. Each drill plays a Dutch headword and asks
+ * the learner to type what they heard; grading is Levenshtein-≤1 client-side.
+ *
+ * Unlike `buildFlashcardTail`, no biasing is needed — listening-spell is a
+ * production-style typing check, not a recall surface, so we sample fresh
+ * from the pool each call. Returns an empty list when the pool is too thin.
+ *
+ * Negative ids live in the `-2_000_000` range so they never collide with the
+ * flashcard tail's `-1_000_000` range nor with real DB ids (which are
+ * positive auto-increments).
+ */
+export function buildListeningSpellTail(
+  pool: ReadonlyArray<{ nl: string; en: string }>,
+  lessonId: number,
+): DrillPayload[] {
+  if (pool.length < LISTENING_SPELL_TAIL_COUNT) return [];
+  const sampled = sampleRandom(pool, LISTENING_SPELL_TAIL_COUNT);
+  return sampled.map((p, i) => ({
+    id: -2_000_000 - lessonId * 100 - i,
+    slug: `synthetic-listening-spell-${lessonId}-${i}`,
+    type: "listening_spell",
+    promptNl: null,
+    promptEn: "Listen and type what you hear",
     options: null,
     answer: JSON.stringify(p),
     hints: null,
