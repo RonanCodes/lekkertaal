@@ -6701,10 +6701,10 @@
     "prompt_nl": null,
     "prompt_en": "Tap the picture that matches the word.",
     "options": null,
-    "answer": "{\"nl\":\"huis\",\"en\":\"house\",\"imageUrl\":\"https://images.lekkertaal.dev/vocab/huis.png\"}",
+    "answer": "{\"nl\":\"huis\",\"en\":\"house\",\"imageUrl\":\"https://pub-7dc3882d3fb04b9796d2b3c78f56db6c.r2.dev/vocab/huis.png\"}",
     "hints": [],
     "source_ref": "us-004-picture-choice-sample",
-    "image_url": "https://images.lekkertaal.dev/vocab/huis.png"
+    "image_url": "https://pub-7dc3882d3fb04b9796d2b3c78f56db6c.r2.dev/vocab/huis.png"
   },
   {
     "slug": "picture-choice-kat",
@@ -6713,10 +6713,10 @@
     "prompt_nl": null,
     "prompt_en": "Tap the picture that matches the word.",
     "options": null,
-    "answer": "{\"nl\":\"kat\",\"en\":\"cat\",\"imageUrl\":\"https://images.lekkertaal.dev/vocab/kat.png\"}",
+    "answer": "{\"nl\":\"kat\",\"en\":\"cat\",\"imageUrl\":\"https://pub-7dc3882d3fb04b9796d2b3c78f56db6c.r2.dev/vocab/kat.png\"}",
     "hints": [],
     "source_ref": "us-004-picture-choice-sample",
-    "image_url": "https://images.lekkertaal.dev/vocab/kat.png"
+    "image_url": "https://pub-7dc3882d3fb04b9796d2b3c78f56db6c.r2.dev/vocab/kat.png"
   },
   {
     "slug": "dialogue-reply-hoe-gaat-het",
