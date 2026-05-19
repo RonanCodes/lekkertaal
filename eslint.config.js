@@ -31,6 +31,8 @@ export default [
       'eslint.config.js',
       'prettier.config.js',
       'commitlint.config.mjs',
+      '.claude/**',
+      '.nightshift/**',
       'public/**',
       'dist/**',
       'src/routeTree.gen.ts',
