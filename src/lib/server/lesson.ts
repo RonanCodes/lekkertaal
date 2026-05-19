@@ -30,7 +30,8 @@ export type DrillType =
   | "flashcard"
   | "listening_spell"
   | "picture_choice"
-  | "dialogue_reply";
+  | "dialogue_reply"
+  | "conjugation";
 
 /**
  * DB rows store drill `type` in hyphen-form (`match-pairs`, `translation-typing`,
