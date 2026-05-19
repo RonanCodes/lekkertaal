@@ -23,48 +23,12 @@
  */
 
 import { test, expect } from "@playwright/test";
-import type { Page } from "@playwright/test";
 import { isClerkTestingConfigured, signInAsTestUser } from "../setup/clerk-auth";
+import { walkToDrill } from "../setup/lesson-nav";
 
 const SKIP_REASON =
   "E2E auth bypass not configured. Set E2E_BYPASS_TOKEN locally (or as a " +
   "wrangler secret in deployed envs) to exercise the flashcard tail.";
-
-const MAX_HOPS = 60;
-
-async function walkToFlashcardTail(page: Page) {
-  await page.goto("/app/path");
-
-  const a2UnitLink = page.locator('a[href*="/app/unit/a2-unit-1"]').first();
-  if ((await a2UnitLink.count()) === 0) {
-    return null;
-  }
-  await a2UnitLink.click();
-  await page.waitForURL(/\/app\/unit\//);
-
-  const lessonLink = page.locator('a[href*="/app/lesson/"]').first();
-  if ((await lessonLink.count()) === 0) {
-    return null;
-  }
-  await lessonLink.click();
-  await page.waitForURL(/\/app\/lesson\//);
-
-  const drill = page.getByTestId("flashcard-drill");
-  for (let i = 0; i < MAX_HOPS; i++) {
-    if ((await drill.count()) > 0) return drill;
-    const continueBtn = page.getByRole("button", { name: /continue|finish lesson/i });
-    const skipBtn = page.getByRole("button", { name: /^skip$/i });
-    if (await continueBtn.count()) {
-      await continueBtn.first().click();
-    } else if (await skipBtn.count()) {
-      await skipBtn.first().click();
-    } else {
-      break;
-    }
-    await page.waitForTimeout(150);
-  }
-  return null;
-}
 
 test.describe("Flashcard tail (US-009)", () => {
   test.beforeEach(async ({ page }) => {
@@ -75,7 +39,7 @@ test.describe("Flashcard tail (US-009)", () => {
   test("renders headword + reveal + grade buttons, advances on Knew it", async ({
     page,
   }) => {
-    const drill = await walkToFlashcardTail(page);
+    const drill = await walkToDrill(page, { drillTestId: "flashcard-drill", maxHops: 60 });
     test.skip(drill === null, "No flashcard tail found in this lesson.");
     if (drill === null) return;
 
@@ -118,7 +82,7 @@ test.describe("Flashcard tail (US-009)", () => {
   });
 
   test("Didn't know path completes without error", async ({ page }) => {
-    const drill = await walkToFlashcardTail(page);
+    const drill = await walkToDrill(page, { drillTestId: "flashcard-drill", maxHops: 60 });
     test.skip(drill === null, "No flashcard tail found in this lesson.");
     if (drill === null) return;
 

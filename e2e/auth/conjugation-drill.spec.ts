@@ -17,12 +17,11 @@
 import { test, expect } from "@playwright/test";
 import type { Page } from "@playwright/test";
 import { isClerkTestingConfigured, signInAsTestUser } from "../setup/clerk-auth";
+import { walkToDrill } from "../setup/lesson-nav";
 
 const SKIP_REASON =
   "E2E auth bypass not configured. Set E2E_BYPASS_TOKEN locally (or as a " +
   "wrangler secret in deployed envs) to exercise the conjugation drill.";
-
-const MAX_HOPS = 40;
 
 // hebben, present tense — matches seed entry `conj-pres-hebben`.
 const PERSONS = ["ik", "jij", "hij_zij", "wij", "jullie", "zij"] as const;
@@ -36,36 +35,6 @@ const HEBBEN_FORMS: Record<Person, string> = {
   jullie: "hebben",
   zij: "hebben",
 };
-
-async function walkToConjugation(page: Page) {
-  await page.goto("/app/path");
-
-  const a2UnitLink = page.locator('a[href*="/app/unit/a2-unit-1"]').first();
-  if ((await a2UnitLink.count()) === 0) return null;
-  await a2UnitLink.click();
-  await page.waitForURL(/\/app\/unit\//);
-
-  const lessonLink = page.locator('a[href*="/app/lesson/"]').first();
-  if ((await lessonLink.count()) === 0) return null;
-  await lessonLink.click();
-  await page.waitForURL(/\/app\/lesson\//);
-
-  const drill = page.getByTestId("conjugation-drill");
-  for (let i = 0; i < MAX_HOPS; i++) {
-    if ((await drill.count()) > 0) return drill;
-    const continueBtn = page.getByRole("button", { name: /continue|finish lesson/i });
-    const skipBtn = page.getByRole("button", { name: /^skip$/i });
-    if (await continueBtn.count()) {
-      await continueBtn.first().click();
-    } else if (await skipBtn.count()) {
-      await skipBtn.first().click();
-    } else {
-      break;
-    }
-    await page.waitForTimeout(150);
-  }
-  return null;
-}
 
 /**
  * Read the displayed infinitive from the conjugation card. Lets the spec
@@ -88,7 +57,7 @@ test.describe("Conjugation drill (US-006)", () => {
   });
 
   test("all-correct fill marks every cell green and advances", async ({ page }) => {
-    const drill = await walkToConjugation(page);
+    const drill = await walkToDrill(page, { drillTestId: "conjugation-drill" });
     test.skip(drill === null, "No conjugation drill found in this lesson tail.");
     if (drill === null) return;
 
@@ -123,7 +92,7 @@ test.describe("Conjugation drill (US-006)", () => {
   test("mixed correct/wrong fill marks cells red/green and still advances", async ({
     page,
   }) => {
-    const drill = await walkToConjugation(page);
+    const drill = await walkToDrill(page, { drillTestId: "conjugation-drill" });
     test.skip(drill === null, "No conjugation drill found in this lesson tail.");
     if (drill === null) return;
 

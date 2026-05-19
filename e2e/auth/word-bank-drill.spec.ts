@@ -17,12 +17,11 @@
 
 import { test, expect } from "@playwright/test";
 import { isClerkTestingConfigured, signInAsTestUser } from "../setup/clerk-auth";
+import { walkToDrill } from "../setup/lesson-nav";
 
 const SKIP_REASON =
   "E2E auth bypass not configured. Set E2E_BYPASS_TOKEN locally (or as a " +
   "wrangler secret in deployed envs) to exercise the word-bank drill.";
-
-const MAX_HOPS = 40;
 
 test.describe("Word-bank drill (US-002)", () => {
   test.beforeEach(async ({ page }) => {
@@ -33,40 +32,12 @@ test.describe("Word-bank drill (US-002)", () => {
   test("tile-tap → submit fires onSubmit and renders the answer reveal", async ({
     page,
   }) => {
-    await page.goto("/app/path");
-
-    const a2UnitLink = page.locator('a[href*="/app/unit/a2-unit-1"]').first();
+    const drill = await walkToDrill(page, { drillTestId: "word-bank-drill" });
     test.skip(
-      (await a2UnitLink.count()) === 0,
-      "a2-unit-1 not in path; seed not loaded.",
+      drill === null,
+      "No word_bank drill encountered within maxHops — seed may not include one here.",
     );
-    await a2UnitLink.click();
-    await page.waitForURL(/\/app\/unit\//);
-
-    const lessonLink = page.locator('a[href*="/app/lesson/"]').first();
-    test.skip((await lessonLink.count()) === 0, "Unit page has no lesson links.");
-    await lessonLink.click();
-    await page.waitForURL(/\/app\/lesson\//);
-
-    const drill = page.getByTestId("word-bank-drill");
-    for (let i = 0; i < MAX_HOPS; i++) {
-      if ((await drill.count()) > 0) break;
-      const continueBtn = page.getByRole("button", { name: /continue|finish lesson/i });
-      const skipBtn = page.getByRole("button", { name: /^skip$/i });
-      if (await continueBtn.count()) {
-        await continueBtn.first().click();
-      } else if (await skipBtn.count()) {
-        await skipBtn.first().click();
-      } else {
-        break;
-      }
-      await page.waitForTimeout(150);
-    }
-
-    test.skip(
-      (await drill.count()) === 0,
-      "No word_bank drill encountered within MAX_HOPS — seed may not include one here.",
-    );
+    if (drill === null) return;
     await expect(drill).toBeVisible();
 
     // Tap every bank tile in current render order. After each tap the tile
