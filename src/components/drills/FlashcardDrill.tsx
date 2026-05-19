@@ -56,9 +56,15 @@ export function FlashcardDrill({ drill, onSubmit }: DrillProps) {
       promptLabel="Flashcard"
       prompt={drill.promptEn ?? "Do you remember this word?"}
     >
-      <div className="flex flex-col items-center gap-4 py-4">
+      <div
+        className="flex flex-col items-center gap-4 py-4"
+        data-testid="flashcard-drill"
+      >
         <div className="flex items-center gap-3">
-          <div className="text-4xl font-bold text-neutral-900 dark:text-neutral-100">
+          <div
+            data-testid="flashcard-headword"
+            className="text-4xl font-bold text-neutral-900 dark:text-neutral-100"
+          >
             {pair.nl}
           </div>
           <Speaker text={pair.nl} size="md" />
@@ -66,13 +72,17 @@ export function FlashcardDrill({ drill, onSubmit }: DrillProps) {
 
         {revealed ? (
           <>
-            <div className="rounded-2xl border-2 border-orange-200 bg-orange-50 px-6 py-3 text-xl font-semibold text-orange-900">
+            <div
+              data-testid="flashcard-answer"
+              className="rounded-2xl border-2 border-orange-200 bg-orange-50 px-6 py-3 text-xl font-semibold text-orange-900"
+            >
               {pair.en}
             </div>
             <div className="mt-2 flex gap-3">
               <button
                 type="button"
                 onClick={() => grade(false)}
+                data-testid="flashcard-grade-didnt"
                 className="inline-flex items-center gap-2 rounded-full bg-rose-100 px-5 py-2 text-sm font-semibold text-rose-700 hover:bg-rose-200"
               >
                 <X size={16} aria-hidden /> Didn&rsquo;t know
@@ -80,6 +90,7 @@ export function FlashcardDrill({ drill, onSubmit }: DrillProps) {
               <button
                 type="button"
                 onClick={() => grade(true)}
+                data-testid="flashcard-grade-knew"
                 className="inline-flex items-center gap-2 rounded-full bg-emerald-500 px-5 py-2 text-sm font-semibold text-white hover:bg-emerald-600"
               >
                 <Check size={16} aria-hidden /> Knew it
@@ -90,6 +101,7 @@ export function FlashcardDrill({ drill, onSubmit }: DrillProps) {
           <button
             type="button"
             onClick={() => setRevealed(true)}
+            data-testid="flashcard-reveal"
             className="inline-flex items-center gap-2 rounded-full bg-orange-500 px-6 py-2 text-sm font-semibold text-white hover:bg-orange-600"
           >
             <RotateCcw size={16} aria-hidden /> Reveal meaning

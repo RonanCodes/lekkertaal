@@ -36,6 +36,12 @@ export function Speaker({
   const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const longPressFired = useRef<boolean>(false);
   const [state, setState] = useState<"idle" | "loading" | "playing" | "error">("idle");
+  // Last playback rate that was applied to the underlying <audio> element.
+  // Surfaced on the wrapper as `data-last-playback-rate` so e2e tests can
+  // assert the Turtle button actually set 0.5x without having to stub the
+  // Audio constructor. Stored in React state so the DOM attribute survives
+  // re-renders.
+  const [lastRate, setLastRate] = useState<number | null>(null);
 
   const sizeClass =
     size === "sm" ? "h-7 w-7" : size === "lg" ? "h-12 w-12" : "h-9 w-9";
@@ -65,6 +71,7 @@ export function Speaker({
       // playbackRate must be set BEFORE play() to take effect on the first
       // frame, otherwise Safari briefly plays full-speed and then snaps.
       audio.playbackRate = rate;
+      setLastRate(rate);
       await audio.play();
     } catch {
       setState("error");
@@ -101,7 +108,12 @@ export function Speaker({
   const Icon = state === "loading" ? Loader2 : state === "error" ? VolumeX : Volume2;
 
   return (
-    <span className={`inline-flex items-center gap-1 ${className ?? ""}`}>
+    <span
+      className={`inline-flex items-center gap-1 ${className ?? ""}`}
+      data-testid="speaker"
+      data-state={state}
+      data-last-playback-rate={lastRate === null ? undefined : String(lastRate)}
+    >
       <button
         type="button"
         onClick={handleClick}
@@ -111,6 +123,8 @@ export function Speaker({
         onPointerLeave={cancelLongPress}
         disabled={state === "loading" || !text}
         aria-label={ariaLabel ?? `Play audio for: ${text}`}
+        data-testid="speaker-play"
+        data-state={state}
         className={`inline-flex items-center justify-center rounded-full bg-orange-100 text-orange-700 transition-colors hover:bg-orange-200 disabled:opacity-50 ${sizeClass}`}
       >
         <Icon
@@ -129,7 +143,7 @@ export function Speaker({
         // doesn't ship a coarse-pointer variant by default, so use `hidden`
         // + a media query escape hatch via arbitrary variant.
         className={`hidden items-center justify-center rounded-full bg-orange-50 text-orange-700 transition-colors hover:bg-orange-100 disabled:opacity-50 [@media(pointer:fine)]:inline-flex ${slowSizeClass}`}
-        data-testid="speaker-slow"
+        data-testid="speaker-play-slow"
       >
         <Turtle size={slowIconSize} aria-hidden />
       </button>
