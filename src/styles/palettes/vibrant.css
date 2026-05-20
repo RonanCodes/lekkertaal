@@ -1,0 +1,67 @@
+/* ============================================================
+ * Palette: Vibrant
+ *
+ * High-contrast, energetic palette drawing from Dutch national
+ * colours (orange, blue) but pushed to maximum vibrancy. This
+ * is the "Duolingo green" equivalent for Lekkertaal: loud, fast,
+ * gamified. Electric teal pairs with the classic Dutch orange.
+ * Suitable for a future "dark mode first" variant.
+ *
+ * To preview: visit /styleguide (dev-only route).
+ * To adopt: swap this file in for the @theme and :root blocks in
+ * src/styles.css. Token names are intentionally identical.
+ *
+ * Palette research: #184
+ * ============================================================ */
+
+@theme {
+  --color-brand-orange: #FF5500;
+  --color-brand-orange-dark: #CC3A00;
+  --color-brand-orange-soft: #FFE8DC;
+  --color-brand-blue: #00A8CC;
+  --color-brand-blue-dark: #007A99;
+  --color-brand-blue-soft: #CCF0F8;
+  --color-brand-pink: #FF3366;
+  --color-brand-pink-soft: #FFD6E0;
+
+  --color-paper: #F5FEFF;
+  --color-paper-dark: #080F14;
+  --color-ink: #001420;
+  --color-ink-soft: #2A4A5C;
+
+  --color-good: #00CC66;
+  --color-warn: #FFAA00;
+  --color-bad: #FF2244;
+
+  --font-display: "Fredoka", system-ui, sans-serif;
+  --font-sans: "Nunito", system-ui, sans-serif;
+
+  --radius-card: 1.5rem;
+  --radius-button: 1rem;
+  --radius-pill: 9999px;
+}
+
+:root {
+  --surface-page: #F5FEFF;
+  --surface-app: #F8FEFF;
+  --surface-card: #FFFFFF;
+  --surface-card-alt: #EDF9FC;
+  --surface-input: #FFFFFF;
+  --surface-hover: #DDF5FA;
+  --surface-banner: #FFE8DC;
+  --surface-banner-blue: #CCF0F8;
+  --surface-banner-amber: #FFF5CC;
+  --surface-banner-red: #FFD6DD;
+  --surface-banner-green: #CCFFEA;
+  --surface-banner-sky: #D6F5FF;
+
+  --text-strong: #001420;
+  --text-body: #002A3C;
+  --text-soft: #2A4A5C;
+  --text-muted: #5A7A8C;
+  --text-faint: #A0B8C5;
+  --text-on-banner: #001A2A;
+
+  --line-soft: #C8EEF5;
+  --line-strong: #A0D8E8;
+}
