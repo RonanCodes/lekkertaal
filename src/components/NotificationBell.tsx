@@ -102,36 +102,47 @@ export function NotificationBell() {
           setOpen(next);
           if (next) void load();
         }}
-        className="relative inline-flex items-center justify-center rounded-full p-1 text-lg hover:bg-neutral-100"
+        className="nb-trigger"
+        data-active={open}
       >
         <span aria-hidden>🔔</span>
         {unread > 0 && (
-          <span
-            aria-hidden
-            className="absolute -right-1 -top-1 inline-flex h-4 min-w-[1rem] items-center justify-center rounded-full bg-orange-600 px-1 text-[10px] font-semibold text-white"
-          >
+          <span aria-hidden className="nb-badge text-display">
             {badge}
           </span>
         )}
       </button>
       {open && (
-        <div
-          role="menu"
-          aria-label="Notifications"
-          className="absolute right-0 mt-2 w-80 max-w-[90vw] rounded-xl border border-neutral-200 bg-white p-2 shadow-lg"
-        >
-          <div className="px-2 py-1 text-xs font-semibold uppercase tracking-wide text-neutral-500">
-            Notifications
+        <div role="menu" aria-label="Notifications" className="nb-sheet">
+          <div
+            className="text-display nb-sheet-head"
+          >
+            <span aria-hidden>🔔</span> Notifications
           </div>
           {loading && (
-            <div className="px-2 py-3 text-sm text-neutral-500">Loading...</div>
+            <div className="px-3 py-4 text-sm" style={{ color: "var(--text-muted)" }}>
+              Loading...
+            </div>
           )}
           {error && (
-            <div className="px-2 py-3 text-sm text-red-600">{error}</div>
+            <div
+              className="px-3 py-4 text-sm font-semibold"
+              style={{ color: "var(--color-bad)" }}
+            >
+              {error}
+            </div>
           )}
           {!loading && !error && items.length === 0 && (
-            <div className="px-2 py-3 text-sm text-neutral-500">
-              You are all caught up.
+            <div className="flex flex-col items-center gap-2 px-3 py-6 text-center">
+              <img
+                src="/mascot/treats/kaas/happy.png"
+                alt=""
+                aria-hidden
+                className="anim-idle-bob h-14 w-14"
+              />
+              <span className="text-sm" style={{ color: "var(--text-soft)" }}>
+                You are all caught up.
+              </span>
             </div>
           )}
           {!loading && !error && items.length > 0 && (
@@ -142,12 +153,27 @@ export function NotificationBell() {
                     type="button"
                     role="menuitem"
                     onClick={() => onItemClick(n)}
-                    className="block w-full rounded-lg px-2 py-2 text-left text-sm hover:bg-amber-50"
+                    className="nb-item"
                   >
-                    <div className="font-medium text-neutral-900">
-                      {describeKind(n)}
-                    </div>
-                    <div className="text-xs text-neutral-500">{n.sentAt}</div>
+                    <span aria-hidden className="nb-item-dot">
+                      {n.fromDisplayName
+                        ? n.fromDisplayName.slice(0, 2).toUpperCase()
+                        : "🔔"}
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <span
+                        className="text-display block truncate font-semibold"
+                        style={{ color: "var(--text-strong)" }}
+                      >
+                        {describeKind(n)}
+                      </span>
+                      <span
+                        className="block text-xs"
+                        style={{ color: "var(--text-muted)" }}
+                      >
+                        {n.sentAt}
+                      </span>
+                    </span>
                   </button>
                 </li>
               ))}

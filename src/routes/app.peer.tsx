@@ -105,27 +105,51 @@ function PeerPage() {
   return (
     <AppShell user={data.user}>
       <div className="mx-auto max-w-3xl space-y-6">
-        <header>
-          <h1 className="text-2xl font-bold text-neutral-900">Peer drills</h1>
-          <p className="mt-1 text-sm text-neutral-600">
-            Send a Dutch sentence to a friend, or answer one they sent you.
-          </p>
+        <header className="flex items-center gap-4">
+          <img
+            src="/mascot/treats/kaas/idle.png"
+            alt=""
+            aria-hidden
+            className="anim-idle-bob h-16 w-16 shrink-0"
+          />
+          <div>
+            <div
+              className="text-display text-xs font-semibold uppercase tracking-[0.12em]"
+              style={{ color: "var(--color-brand-blue-dark)" }}
+            >
+              <span aria-hidden>✉️</span> Friends
+            </div>
+            <h1 className="mt-0.5 text-3xl font-extrabold leading-tight">
+              Peer drills
+            </h1>
+            <p className="text-sm" style={{ color: "var(--text-soft)" }}>
+              Send a Dutch sentence to a friend, or answer one they sent you.
+            </p>
+          </div>
         </header>
 
-        <section className="rounded-2xl border border-neutral-200 bg-white p-5">
-          <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-neutral-500">
+        <section className="card">
+          <h2
+            className="text-display mb-4 text-sm font-bold uppercase tracking-[0.1em]"
+            style={{ color: "var(--color-brand-orange-dark)" }}
+          >
             Send a sentence
           </h2>
           {data.friends.length === 0 ? (
-            <p className="text-sm text-neutral-600">
+            <p className="text-sm" style={{ color: "var(--text-soft)" }}>
               You have no friends yet. Add one from the Users page first.
             </p>
           ) : (
             <form className="space-y-3" onSubmit={onSend}>
               <label className="block text-sm">
-                <span className="text-neutral-700">To</span>
+                <span
+                  className="text-display font-semibold"
+                  style={{ color: "var(--text-body)" }}
+                >
+                  To
+                </span>
                 <select
-                  className="mt-1 w-full rounded-lg border border-neutral-300 px-3 py-2"
+                  className="peer-input mt-1"
                   value={toUserId ?? ""}
                   onChange={(e) => setToUserId(Number(e.target.value))}
                 >
@@ -137,9 +161,14 @@ function PeerPage() {
                 </select>
               </label>
               <label className="block text-sm">
-                <span className="text-neutral-700">Sentence (Dutch)</span>
+                <span
+                  className="text-display font-semibold"
+                  style={{ color: "var(--text-body)" }}
+                >
+                  Sentence (Dutch)
+                </span>
                 <textarea
-                  className="mt-1 w-full rounded-lg border border-neutral-300 px-3 py-2"
+                  className="peer-input mt-1"
                   rows={2}
                   value={prompt}
                   onChange={(e) => setPrompt(e.target.value)}
@@ -148,11 +177,14 @@ function PeerPage() {
                 />
               </label>
               <label className="block text-sm">
-                <span className="text-neutral-700">
+                <span
+                  className="text-display font-semibold"
+                  style={{ color: "var(--text-body)" }}
+                >
                   Hint for them (optional)
                 </span>
                 <input
-                  className="mt-1 w-full rounded-lg border border-neutral-300 px-3 py-2"
+                  className="peer-input mt-1"
                   type="text"
                   value={hint}
                   onChange={(e) => setHint(e.target.value)}
@@ -163,24 +195,39 @@ function PeerPage() {
                 <button
                   type="submit"
                   disabled={sending || !prompt.trim()}
-                  className="rounded-lg bg-orange-600 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
+                  className="btn-3d btn-3d-sm"
                 >
                   {sending ? "Sending..." : "Send"}
                 </button>
                 {sendStatus && (
-                  <span className="text-sm text-neutral-600">{sendStatus}</span>
+                  <span className="text-sm" style={{ color: "var(--text-soft)" }}>
+                    {sendStatus}
+                  </span>
                 )}
               </div>
             </form>
           )}
         </section>
 
-        <section className="rounded-2xl border border-neutral-200 bg-white p-5">
-          <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-neutral-500">
+        <section className="card">
+          <h2
+            className="text-display mb-4 text-sm font-bold uppercase tracking-[0.1em]"
+            style={{ color: "var(--color-brand-orange-dark)" }}
+          >
             Inbox ({drills.length})
           </h2>
           {drills.length === 0 ? (
-            <p className="text-sm text-neutral-600">No pending drills.</p>
+            <div className="flex flex-col items-center gap-2 py-6 text-center">
+              <img
+                src="/mascot/treats/kaas/happy.png"
+                alt=""
+                aria-hidden
+                className="anim-idle-bob h-16 w-16"
+              />
+              <p className="text-sm" style={{ color: "var(--text-soft)" }}>
+                No pending drills. Lekker bezig!
+              </p>
+            </div>
           ) : (
             <ul className="space-y-3">
               {drills.map((d) => (
@@ -206,13 +253,27 @@ function InboxRow({
   const [err, setErr] = useState<string | null>(null);
 
   return (
-    <li className="rounded-xl border border-neutral-200 p-4">
-      <div className="mb-2 text-xs text-neutral-500">
+    <li className="peer-inbox-row">
+      <div
+        className="text-display mb-2 flex items-center gap-1.5 text-xs font-semibold"
+        style={{ color: "var(--text-muted)" }}
+      >
+        <span
+          className="inline-flex h-6 w-6 items-center justify-center rounded-full text-[10px] font-bold"
+          style={{
+            background: "var(--color-brand-blue-soft)",
+            color: "var(--color-brand-blue-dark)",
+          }}
+        >
+          {drill.fromDisplayName.slice(0, 2).toUpperCase()}
+        </span>
         From {drill.fromDisplayName}
       </div>
-      <div className="mb-2 text-base text-neutral-900">"{drill.prompt}"</div>
+      <div className="mb-2 text-lg font-semibold" style={{ color: "var(--text-strong)" }}>
+        &ldquo;{drill.prompt}&rdquo;
+      </div>
       {drill.expectedAnswerHint && (
-        <div className="mb-2 text-xs text-neutral-500">
+        <div className="mb-2 text-xs" style={{ color: "var(--text-muted)" }}>
           Hint: {drill.expectedAnswerHint}
         </div>
       )}
@@ -229,7 +290,7 @@ function InboxRow({
         }}
       >
         <input
-          className="flex-1 rounded-lg border border-neutral-300 px-3 py-2 text-sm"
+          className="peer-input flex-1"
           type="text"
           placeholder="Your translation"
           value={answer}
@@ -238,12 +299,16 @@ function InboxRow({
         <button
           type="submit"
           disabled={busy || !answer.trim()}
-          className="rounded-lg bg-orange-600 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
+          className="btn-3d btn-3d-green btn-3d-sm"
         >
           {busy ? "..." : "Send"}
         </button>
       </form>
-      {err && <div className="mt-1 text-xs text-red-600">{err}</div>}
+      {err && (
+        <div className="mt-1 text-xs font-semibold" style={{ color: "var(--color-bad)" }}>
+          {err}
+        </div>
+      )}
     </li>
   );
 }
