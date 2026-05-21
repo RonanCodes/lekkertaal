@@ -87,18 +87,16 @@ function SettingsPage() {
   return (
     <AppShell user={data.user}>
       <div className="mx-auto max-w-xl space-y-6">
-        <header className="flex items-center gap-4">
+        <header className="sp-head">
           <Stroop state={sleeping ? "sleeping" : "idle"} size="md" />
           <div>
-            <h1 className="text-2xl font-bold">Settings</h1>
-            <p className="text-sm text-neutral-500">Tune your Lekkertaal experience.</p>
+            <h1 className="sp-head__title">Settings</h1>
+            <p className="sp-head__sub">Tune your Lekkertaal experience.</p>
           </div>
         </header>
 
-        <section className="space-y-3 rounded-2xl border border-neutral-200 bg-white p-5">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-neutral-500">
-            Audio
-          </h2>
+        <section className="sp-section space-y-3">
+          <h2 className="sp-section__title">Audio</h2>
           <Toggle
             label="Sound effects"
             description="Correct/wrong/complete cues during lessons."
@@ -108,10 +106,8 @@ function SettingsPage() {
           />
         </section>
 
-        <section className="space-y-3 rounded-2xl border border-neutral-200 bg-white p-5">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-neutral-500">
-            Reminders
-          </h2>
+        <section className="sp-section space-y-3">
+          <h2 className="sp-section__title">Reminders</h2>
           <Toggle
             label="Daily reminder"
             description="Push notification at your chosen hour to keep the streak alive."
@@ -119,13 +115,13 @@ function SettingsPage() {
             disabled={busy}
             onChange={(v) => update({ reminderEnabled: v })}
           />
-          <label className="flex items-center justify-between gap-3 text-sm">
-            <span className="text-neutral-700">Reminder hour (UTC)</span>
+          <label className="sp-setting-row">
+            <span className="sp-setting-row__label">Reminder hour (UTC)</span>
             <select
               value={data.settings.reminderHour}
               disabled={busy}
               onChange={(e) => update({ reminderHour: Number(e.target.value) })}
-              className="rounded-md border border-neutral-300 bg-white px-2 py-1 text-sm"
+              className="sp-select"
             >
               {Array.from({ length: 24 }, (_, h) => (
                 <option key={h} value={h}>
@@ -136,10 +132,8 @@ function SettingsPage() {
           </label>
         </section>
 
-        <section className="space-y-3 rounded-2xl border border-neutral-200 bg-white p-5">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-neutral-500">
-            Privacy
-          </h2>
+        <section className="sp-section space-y-3">
+          <h2 className="sp-section__title">Privacy</h2>
           <Toggle
             label="Show profile on leaderboard / users directory"
             description="Off makes your profile private to other learners."
@@ -167,11 +161,11 @@ function Toggle({
   disabled?: boolean;
 }) {
   return (
-    <label className="flex cursor-pointer items-start justify-between gap-3 text-sm">
+    <label className="sp-setting-row">
       <span className="flex-1">
-        <span className="font-medium text-neutral-900">{label}</span>
+        <span className="sp-setting-row__label">{label}</span>
         {description && (
-          <span className="mt-0.5 block text-xs text-neutral-500">{description}</span>
+          <span className="sp-setting-row__desc">{description}</span>
         )}
       </span>
       <button
@@ -180,15 +174,10 @@ function Toggle({
         aria-checked={value}
         disabled={disabled}
         onClick={() => onChange(!value)}
-        className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition ${
-          value ? "bg-orange-500" : "bg-neutral-300"
-        } disabled:opacity-50`}
+        className="sp-toggle"
+        data-on={value ? "true" : "false"}
       >
-        <span
-          className={`inline-block h-5 w-5 transform rounded-full bg-white shadow transition ${
-            value ? "translate-x-5" : "translate-x-0.5"
-          }`}
-        />
+        <span className="sp-toggle__knob" />
       </button>
     </label>
   );

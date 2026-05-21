@@ -36,18 +36,29 @@ function ShopPage() {
     }
   }
 
+  // Tone for the purchase toast: a successful buy starts with "Bought".
+  const toastTone = message && message.startsWith("Bought") ? "success" : "error";
+
   return (
     <AppShell user={user}>
       <div className="mx-auto max-w-xl space-y-6 py-2">
-        <header className="text-center">
-          <h1 className="text-2xl font-bold text-neutral-900">Shop</h1>
-          <p className="mt-1 text-sm text-neutral-500">
-            Spend the coins you earned from lessons and roleplays.
-          </p>
+        <header className="sp-head">
+          <img
+            src="/mascot/treats/oliebollen/idle.png"
+            alt=""
+            className="sp-head__mascot anim-idle-bob"
+            aria-hidden
+          />
+          <div>
+            <h1 className="sp-head__title">Shop</h1>
+            <p className="sp-head__sub">
+              Spend the coins you earned from lessons and roleplays.
+            </p>
+          </div>
         </header>
 
         {/* Balances */}
-        <div className="grid grid-cols-3 gap-3">
+        <div className="sp-balances">
           <BalanceCard
             label="Coins"
             balanceKey="coins"
@@ -79,12 +90,9 @@ function ShopPage() {
             const isPending = pendingId === item.id;
             const ItemIcon = resolveShopIcon(item.iconName);
             return (
-              <li
-                key={item.id}
-                className="flex items-center gap-4 rounded-2xl border border-neutral-200 bg-white p-4"
-              >
+              <li key={item.id} className="sp-item">
                 <div
-                  className="flex h-12 w-12 items-center justify-center rounded-xl bg-neutral-100 text-neutral-700"
+                  className="sp-item__icon"
                   data-icon-name={item.iconName}
                   data-testid="shop-item-icon"
                   aria-hidden
@@ -92,14 +100,14 @@ function ShopPage() {
                   <ItemIcon size={28} />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <div className="font-semibold text-neutral-900">{item.titleEn}</div>
-                  <div className="text-sm text-neutral-600">{item.description}</div>
+                  <div className="sp-item__title">{item.titleEn}</div>
+                  <div className="sp-item__desc">{item.description}</div>
                 </div>
                 <button
                   type="button"
                   onClick={() => purchase(item)}
                   disabled={!canAfford || isPending}
-                  className="rounded-lg bg-orange-600 px-4 py-2 text-sm font-semibold text-white hover:bg-orange-700 disabled:cursor-not-allowed disabled:bg-neutral-300"
+                  className="btn-3d btn-3d-sm sp-item__buy"
                   aria-label={`Buy ${item.titleEn} for ${item.costCoins} coins`}
                 >
                   {isPending ? "..." : (
@@ -115,7 +123,7 @@ function ShopPage() {
         </ul>
 
         {message && (
-          <div className="rounded-lg bg-amber-50 px-4 py-3 text-sm text-amber-900 ring-1 ring-amber-200">
+          <div className="sp-toast" data-tone={toastTone === "error" ? "error" : undefined}>
             {message}
           </div>
         )}
@@ -143,17 +151,14 @@ function BalanceCard({
     <div
       data-testid="shop-balance-card"
       data-balance-label={balanceKey}
-      className={`rounded-2xl border p-3 text-center ${
-        highlight
-          ? "border-orange-300 bg-orange-50"
-          : "border-neutral-200 bg-white"
-      }`}
+      data-highlight={highlight ? "true" : undefined}
+      className="sp-balance"
     >
-      <div className="flex justify-center">
+      <div className="sp-balance__icon">
         <Icon size={28} className={iconClassName} aria-hidden />
       </div>
-      <div className="mt-1 text-xl font-bold">{value}</div>
-      <div className="text-xs uppercase tracking-wide text-neutral-500">{label}</div>
+      <div className="sp-balance__value">{value}</div>
+      <div className="sp-balance__label">{label}</div>
     </div>
   );
 }
