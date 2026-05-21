@@ -45,7 +45,7 @@ describe("ImageWordDrill", () => {
     const onSubmit = vi.fn();
     render(<ImageWordDrill drill={makeDrill({ imageUrl: null })} onSubmit={onSubmit} />);
     expect(screen.queryByTestId("image-word-drill-image")).not.toBeInTheDocument();
-    expect(screen.getByText(/image missing/i)).toBeInTheDocument();
+    expect(screen.getByTestId("image-word-drill-fallback")).toBeInTheDocument();
   });
 
   it("accepts the canonical Dutch noun and calls onSubmit(true)", () => {
