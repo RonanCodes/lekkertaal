@@ -87,58 +87,53 @@ function ScorecardPage() {
 
   return (
     <AppShell user={user}>
-      <div className="mx-auto max-w-xl space-y-6 py-8">
-        <div className="text-center">
-          <Stroop state={session.passed ? "proud" : "concerned"} size="lg" className="mx-auto" />
-          <div className="mt-3 text-sm uppercase tracking-wide text-neutral-500">
+      <div className="scorecard-screen mx-auto max-w-xl space-y-5 py-8">
+        {/* Hero: Kroket reaction + Stroop mascot + result banner */}
+        <div className={`scorecard-hero ${session.passed ? "scorecard-hero--pass" : "scorecard-hero--fail"}`}>
+          <div className="flex items-center justify-center gap-3">
+            <img
+              src={`/mascot/treats/kroket/${session.passed ? "happy" : "idle"}.png`}
+              alt=""
+              aria-hidden
+              className={`h-16 w-16 ${session.passed ? "anim-happy-bounce" : "anim-idle-bob"}`}
+            />
+            <Stroop state={session.passed ? "proud" : "concerned"} size="lg" />
+          </div>
+          <div className="mt-2 text-xs font-semibold uppercase tracking-wide text-neutral-500">
             Scorecard
           </div>
-          <h1 className="mt-1 text-2xl font-bold text-neutral-900">
-            {scenario.titleNl}
-          </h1>
-          <div className="mt-2 text-sm text-neutral-500">with {scenario.npcName}</div>
-        </div>
+          <h1 className="mt-1 text-2xl font-bold text-neutral-900">{scenario.titleNl}</h1>
+          <div className="mt-1 text-sm text-neutral-500">met {scenario.npcName}</div>
 
-        {/* Overall stars + XP */}
-        <div className="rounded-2xl border border-neutral-200 bg-white px-6 py-5 text-center shadow-sm">
-          <div className="text-4xl" aria-label={`${stars} out of 5 stars`}>
+          <div className="scorecard-stars" aria-label={`${stars} out of 5 stars`}>
             {"★".repeat(stars)}
-            <span className="text-neutral-300">{"★".repeat(5 - stars)}</span>
+            <span className="scorecard-stars-empty">{"★".repeat(5 - stars)}</span>
           </div>
-          <div className="mt-3 flex items-center justify-center gap-6 text-sm">
-            <div>
-              <div className="font-semibold text-orange-600">
-                +{session.xpAwarded} XP
-              </div>
-              <div className="text-xs text-neutral-500">
-                of {scenario.xpReward} possible
-              </div>
-            </div>
-            <div>
-              <div
-                className={`font-semibold ${
-                  session.passed ? "text-green-600" : "text-neutral-500"
-                }`}
-              >
-                {session.passed ? "Passed" : "Keep practising"}
-              </div>
-              <div className="text-xs text-neutral-500">3★ to pass</div>
-            </div>
+
+          <div className="mt-3 flex items-center justify-center gap-3">
+            <span className="chip">+{session.xpAwarded} XP</span>
+            <span className="text-xs text-neutral-500">of {scenario.xpReward}</span>
+            <span
+              className={`scorecard-result-pill ${
+                session.passed ? "scorecard-result-pill--pass" : "scorecard-result-pill--fail"
+              }`}
+            >
+              {session.passed ? "Geslaagd" : "Blijf oefenen"}
+            </span>
           </div>
+
           {badgeUnlocked && (
-            <div className="mt-4 inline-flex items-center gap-2 rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-900">
+            <div className="scorecard-badge">
               <span>🏅</span>
-              <span>Badge unlocked: {scenario.badgeUnlock}</span>
+              <span>Badge ontgrendeld: {scenario.badgeUnlock}</span>
             </div>
           )}
         </div>
 
         {/* Rubric breakdown */}
-        <div className="rounded-2xl border border-neutral-200 bg-white p-5">
-          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-neutral-500">
-            Rubric
-          </h2>
-          <div className="space-y-2">
+        <div className="card scorecard-card">
+          <h2 className="scorecard-section-title">Rubriek</h2>
+          <div className="space-y-2.5">
             <RubricRow label="Grammar" score={r.grammar ?? 0} />
             <RubricRow label="Vocabulary" score={r.vocabulary ?? 0} />
             <RubricRow label="Task completion" score={r.taskCompletion ?? 0} />
@@ -149,44 +144,31 @@ function ScorecardPage() {
 
         {/* Feedback */}
         {session.feedbackMd && (
-          <div className="rounded-2xl border border-neutral-200 bg-white p-5">
-            <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-neutral-500">
-              Feedback
-            </h2>
+          <div className="card scorecard-card">
+            <h2 className="scorecard-section-title">Feedback</h2>
             <p className="whitespace-pre-wrap text-sm leading-relaxed text-neutral-700">
               {session.feedbackMd}
             </p>
           </div>
         )}
 
-        {/* Errors */}
+        {/* Errors / corrections */}
         {errors.length > 0 && (
-          <div className="rounded-2xl border border-neutral-200 bg-white p-5">
-            <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-neutral-500">
-              Things to work on
-            </h2>
+          <div className="card scorecard-card">
+            <h2 className="scorecard-section-title">Om aan te werken</h2>
             <ul className="space-y-3">
               {errors.map((e) => (
-                <li
-                  key={e.id}
-                  className="rounded-lg bg-neutral-50 p-3 text-sm"
-                >
+                <li key={e.id} className="scorecard-correction">
                   <div className="text-xs font-medium uppercase tracking-wide text-neutral-500">
                     {e.category}
                   </div>
-                  <div className="mt-1 flex flex-wrap items-center gap-2">
-                    <span className="rounded bg-red-100 px-2 py-0.5 text-red-700 line-through">
-                      {e.incorrect}
-                    </span>
-                    <span className="text-neutral-400">→</span>
-                    <span className="rounded bg-green-100 px-2 py-0.5 font-medium text-green-800">
-                      {e.correction}
-                    </span>
+                  <div className="mt-1.5 flex flex-wrap items-center gap-2">
+                    <span className="scorecard-chip-bad line-through">{e.incorrect}</span>
+                    <span className="text-neutral-400" aria-hidden>→</span>
+                    <span className="scorecard-chip-good font-medium">{e.correction}</span>
                   </div>
                   {e.explanationEn && (
-                    <p className="mt-2 text-xs text-neutral-600">
-                      {e.explanationEn}
-                    </p>
+                    <p className="mt-2 text-xs text-neutral-600">{e.explanationEn}</p>
                   )}
                 </li>
               ))}
@@ -195,19 +177,16 @@ function ScorecardPage() {
         )}
 
         {/* Actions */}
-        <div className="flex flex-col gap-2 sm:flex-row">
+        <div className="flex flex-col gap-3 sm:flex-row">
           <Link
             to="/app/scenario/$slug"
             params={{ slug: scenario.slug }}
-            className="flex-1 rounded-lg border border-neutral-300 bg-white px-4 py-3 text-center text-sm font-semibold text-neutral-700 hover:bg-neutral-50"
+            className="btn-3d btn-3d-ghost btn-3d-full flex-1"
           >
-            Retry
+            Opnieuw
           </Link>
-          <Link
-            to="/app/path"
-            className="flex-1 rounded-lg bg-orange-600 px-4 py-3 text-center text-sm font-semibold text-white hover:bg-orange-700"
-          >
-            Continue
+          <Link to="/app/path" className="btn-3d btn-3d-green btn-3d-full flex-1">
+            Verder
           </Link>
         </div>
       </div>
@@ -217,11 +196,11 @@ function ScorecardPage() {
 
 function RubricRow({ label, score }: { label: string; score: number }) {
   return (
-    <div className="flex items-center justify-between">
+    <div className="scorecard-rubric-row">
       <span className="text-sm text-neutral-700">{label}</span>
-      <span className="text-sm">
-        <span className="text-orange-500">{"★".repeat(score)}</span>
-        <span className="text-neutral-300">{"★".repeat(5 - score)}</span>
+      <span className="scorecard-rubric-stars" aria-label={`${score} out of 5`}>
+        <span className="scorecard-rubric-stars-on">{"★".repeat(score)}</span>
+        <span className="scorecard-stars-empty">{"★".repeat(5 - score)}</span>
       </span>
     </div>
   );
