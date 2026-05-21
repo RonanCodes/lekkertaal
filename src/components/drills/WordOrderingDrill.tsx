@@ -7,16 +7,22 @@ import type { DrillProps } from "./DrillRenderer";
 type Tile = { id: number; text: string };
 
 /**
- * Word ordering drill (US-014).
+ * Word ordering drill (US-014) — chip-tray redesign (issue #212).
  *
  * Data shape:
- *   drill.options : ["Ik", "ga", "vandaag", "naar", "school"]   // pool of tiles (shuffled)
+ *   drill.options : ["Ik", "ga", "vandaag", "naar", "school"]   // pool of chips (shuffled)
  *   drill.answer  : "Ik ga vandaag naar school"                  // canonical, or array of accepted forms
  *
- * UX: tile pool at the bottom; tap a tile → moves to the sentence area in
- * tap-order; tap again → returns to the pool. Submit grades the assembled
- * sentence against the canonical with Levenshtein tolerance, which handles
- * equivalents like "vandaag" vs "op vandaag" naturally.
+ * UX: an answer tray (ruled lines) at the top; a chip pool below. Tap a pool
+ * chip → it flies into the tray in tap-order; tap a tray chip → it returns to
+ * the pool, leaving its slot empty. Submit grades the assembled sentence
+ * against the canonical with Levenshtein tolerance, which handles equivalents
+ * like "vandaag" vs "op vandaag" naturally.
+ *
+ * Visual layer routes entirely through the #205 foundation (3D chip buttons,
+ * --color-good/-bad tokens) + the screen-scoped `.word-order-*` block at the
+ * tail of styles.css, so light/dark both flip for free. Tap-reordering
+ * behaviour is preserved exactly from the pre-redesign version.
  */
 export function WordOrderingDrill({ drill, onSubmit }: DrillProps) {
   const canonicals = useMemo<string[]>(() => {
@@ -65,32 +71,35 @@ export function WordOrderingDrill({ drill, onSubmit }: DrillProps) {
     setTimeout(() => onSubmit(isCorrect, assembled), 800);
   };
 
+  const trayState = submitted ? (correct ? "good" : "bad") : "idle";
+
   return (
     <DrillFrame
       promptLabel="Word ordering"
       prompt={drill.promptEn ?? "Build the sentence in the correct order"}
     >
-      <div className="space-y-4">
-        {/* Sentence build area */}
+      <div className="word-order" data-testid="word-ordering-drill">
+        {/* Answer tray — ruled lines the chips land on. */}
         <div
-          className={`min-h-[5rem] rounded-2xl border-2 p-3 ${
-            submitted
-              ? correct
-                ? "border-emerald-300 bg-emerald-50"
-                : "border-rose-300 bg-rose-50"
-              : "border-dashed border-orange-300 bg-orange-50/30"
-          } ${shaking ? "animate-[shake_0.2s_ease-in-out]" : ""}`}
+          className={`word-order-tray word-order-tray--${trayState} ${
+            shaking ? "word-order-tray--shake" : ""
+          }`}
+          data-testid="word-ordering-tray"
         >
           {chosen.length === 0 ? (
-            <p className="text-sm text-neutral-500">Tap words below to build the sentence.</p>
+            <p className="word-order-tray__hint">
+              Tap the chips below to build the sentence.
+            </p>
           ) : (
-            <div className="flex flex-wrap gap-2">
+            <div className="word-order-chips">
               {chosen.map((t) => (
                 <button
                   key={t.id}
+                  type="button"
                   onClick={() => moveToPool(t)}
                   disabled={submitted}
-                  className="rounded-xl border-2 border-orange-400 bg-white px-3 py-2 text-base font-semibold text-neutral-800 shadow-sm hover:bg-orange-50 disabled:cursor-default"
+                  data-testid={`word-ordering-tray-chip-${t.id}`}
+                  className="word-order-chip word-order-chip--placed"
                 >
                   {t.text}
                 </button>
@@ -99,19 +108,20 @@ export function WordOrderingDrill({ drill, onSubmit }: DrillProps) {
           )}
         </div>
 
-        {/* Tile pool */}
-        <div className="rounded-2xl border-2 border-neutral-200 bg-neutral-50 p-3">
-          <div className="mb-2 text-xs uppercase tracking-wide text-neutral-500">Pool</div>
+        {/* Chip pool — the remaining unplaced words. */}
+        <div className="word-order-pool" data-testid="word-ordering-pool">
           {pool.length === 0 ? (
-            <p className="text-sm text-neutral-500">All tiles used.</p>
+            <p className="word-order-pool__empty">All chips placed.</p>
           ) : (
-            <div className="flex flex-wrap gap-2">
+            <div className="word-order-chips">
               {pool.map((t) => (
                 <button
                   key={t.id}
+                  type="button"
                   onClick={() => moveToChosen(t)}
                   disabled={submitted}
-                  className="rounded-xl border-2 border-neutral-300 bg-white px-3 py-2 text-base font-semibold text-neutral-800 shadow-sm hover:border-orange-400 disabled:cursor-default disabled:opacity-50"
+                  data-testid={`word-ordering-pool-chip-${t.id}`}
+                  className="word-order-chip"
                 >
                   {t.text}
                 </button>
@@ -120,7 +130,7 @@ export function WordOrderingDrill({ drill, onSubmit }: DrillProps) {
           )}
         </div>
 
-        <div className="flex items-center justify-between gap-2">
+        <div className="word-order-actions">
           <button
             type="button"
             onClick={() => {
@@ -129,7 +139,8 @@ export function WordOrderingDrill({ drill, onSubmit }: DrillProps) {
               setChosen([]);
             }}
             disabled={submitted || chosen.length === 0}
-            className="rounded-full border border-neutral-300 bg-white px-3 py-2 text-xs font-semibold text-neutral-700 hover:bg-neutral-100 disabled:opacity-50"
+            data-testid="word-ordering-reset"
+            className="btn-3d btn-3d-ghost btn-3d-sm"
           >
             Reset
           </button>
@@ -137,29 +148,26 @@ export function WordOrderingDrill({ drill, onSubmit }: DrillProps) {
             type="button"
             onClick={submit}
             disabled={submitted || chosen.length === 0}
-            className="rounded-full bg-orange-500 px-5 py-2 text-sm font-semibold text-white hover:bg-orange-600 disabled:opacity-50"
+            data-testid="word-ordering-submit"
+            className="btn-3d btn-3d-green btn-3d-sm"
           >
             Check
           </button>
         </div>
 
         {submitted && (
-          <div className="rounded-2xl border-2 border-neutral-200 bg-neutral-50 p-3 text-sm">
-            <div className="text-xs uppercase tracking-wide text-neutral-500">Canonical</div>
-            <div className="flex items-center gap-2 font-semibold text-neutral-800">
+          <div
+            className="word-order-canonical"
+            data-testid="word-ordering-canonical"
+          >
+            <div className="word-order-canonical__label">Answer</div>
+            <div className="word-order-canonical__row">
               <span>{canonical}</span>
               <Speaker text={canonical} size="sm" />
             </div>
           </div>
         )}
       </div>
-      <style>{`
-        @keyframes shake {
-          0%, 100% { transform: translateX(0); }
-          25% { transform: translateX(-4px); }
-          75% { transform: translateX(4px); }
-        }
-      `}</style>
     </DrillFrame>
   );
 }
