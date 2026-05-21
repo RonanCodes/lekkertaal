@@ -24,6 +24,12 @@ type MCOption = {
  *
  * Selecting an option immediately styles it correct/wrong + reveals the
  * explanation. The lesson-player parent handles advancement.
+ *
+ * UI: redesigned as `.option-card` tappable cards (#210). Each card carries a
+ * keyboard-hint chip (1-4) on pointer-capable screens; selected/correct/wrong
+ * states route through the shared `--color-good-soft` / `--color-bad-soft`
+ * feedback tokens so light + dark inherit automatically. Sits inside the #209
+ * lesson-player shell; the frame + sticky feedback bar are owned upstream.
  */
 export function MultipleChoiceDrill({
   drill,
@@ -72,51 +78,64 @@ export function MultipleChoiceDrill({
       promptLabel={mode === "audio" ? "Listening" : "Multiple choice"}
       prompt={
         mode === "audio" ? (
-          <div className="flex items-center gap-3">
+          <div className="mc-audio-prompt">
             <Speaker text={audioText} size="lg" ariaLabel="Play Dutch sentence" />
-            <span className="text-base text-neutral-500">Tap to play</span>
+            <span className="mc-audio-prompt__hint">Tap to play</span>
           </div>
         ) : (
           promptText
         )
       }
     >
-      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-        {options.map((o) => {
+      <div className="mc-options" data-testid="mc-options" role="listbox" aria-label="Answer options">
+        {options.map((o, i) => {
           const isPicked = picked === o.text;
           const isCorrect = canonical != null && o.text === canonical;
           const showCorrect = submitted && isCorrect;
           const showWrong = submitted && isPicked && !isCorrect;
+          const state = showCorrect ? "correct" : showWrong ? "wrong" : isPicked ? "selected" : "idle";
           return (
             <button
               key={o.text}
+              type="button"
               onClick={() => pick(o.text)}
               disabled={submitted}
-              className={`rounded-2xl border-2 px-4 py-3 text-left text-base font-semibold transition-all disabled:cursor-default ${
-                showCorrect
-                  ? "border-emerald-500 bg-emerald-100"
-                  : showWrong
-                    ? "border-rose-500 bg-rose-100"
-                    : "border-neutral-200 bg-white hover:border-orange-300"
-              }`}
+              data-state={state}
+              data-correct={isCorrect}
+              role="option"
+              aria-selected={isPicked}
+              className="option-card"
             >
-              {o.text}
+              <kbd className="option-card__kbd" aria-hidden="true">
+                {i + 1}
+              </kbd>
+              <span className="option-card__text">{o.text}</span>
+              {showCorrect && (
+                <span className="option-card__mark option-card__mark--good" aria-hidden="true">
+                  ✓
+                </span>
+              )}
+              {showWrong && (
+                <span className="option-card__mark option-card__mark--bad" aria-hidden="true">
+                  ✕
+                </span>
+              )}
             </button>
           );
         })}
       </div>
       {submitted && picked && (
-        <div className="mt-4 rounded-2xl border border-neutral-200 bg-neutral-50 p-3 text-sm text-neutral-700">
+        <div className="mc-explanation">
           {(() => {
             const isCorrect = canonical != null && picked === canonical;
             if (isCorrect) {
               const explanation = options.find((o) => o.text === picked)?.explanation;
-              return explanation ? <>{explanation}</> : <>Nice. {canonical} is right.</>;
+              return explanation ? <>{explanation}</> : <>Goed zo. {canonical} is right.</>;
             }
             const pickedExp = options.find((o) => o.text === picked)?.explanation;
             return (
               <>
-                <span className="font-semibold">{canonical}</span> is correct
+                <span className="mc-explanation__answer">{canonical}</span> is correct
                 {pickedExp ? <> because {pickedExp}</> : null}.
               </>
             );

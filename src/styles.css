@@ -1411,3 +1411,188 @@ h1, h2, h3, h4, h5, h6 {
   padding: 0.75rem 0 0.25rem;
 }
 
+/* ============================================================
+ * Drill: multiple_choice + listening_mc — option cards (#210)
+ * Screen-scoped block. Renders inside the #209 lesson-player shell
+ * (DrillFrame + sticky feedback bar live upstream; this owns only the
+ * answer cards + audio prompt + inline explanation). All colour routes
+ * through the shared foundation tokens (--surface-card, --text-strong,
+ * --line-soft, --color-good/-soft, --color-bad/-soft) so light + dark
+ * inherit automatically — no palette edits here.
+ * ============================================================ */
+
+.mc-audio-prompt {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+.mc-audio-prompt__hint {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.mc-options {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.7rem;
+}
+@media (min-width: 640px) {
+  .mc-options {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* Chunky tappable answer card with a pressed-state shadow, echoing the
+ * .btn-3d depth language without re-defining the brand button. */
+.option-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  width: 100%;
+  padding: 0.95rem 1.05rem;
+  text-align: left;
+  font-family: var(--font-sans);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-strong);
+  background: var(--surface-card);
+  border: 2px solid var(--line-soft);
+  border-radius: var(--radius-button);
+  box-shadow: 0 4px 0 0 var(--line-soft);
+  cursor: pointer;
+  transition:
+    transform 0.08s ease,
+    box-shadow 0.08s ease,
+    border-color 0.12s ease,
+    background-color 0.12s ease;
+}
+.option-card:hover:not(:disabled) {
+  border-color: var(--color-brand-orange);
+}
+.option-card:active:not(:disabled) {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 0 var(--line-soft);
+}
+.option-card:focus-visible {
+  outline: 3px solid var(--color-brand-orange);
+  outline-offset: 2px;
+}
+.option-card:disabled {
+  cursor: default;
+}
+
+/* Keyboard-hint chip (1-4). Hidden on coarse pointers where there's no
+ * physical keyboard to map to. */
+.option-card__kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  min-width: 1.6rem;
+  height: 1.6rem;
+  padding: 0 0.35rem;
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--text-muted);
+  background: var(--surface-card-alt);
+  border: 1px solid var(--line-soft);
+  border-radius: 0.5rem;
+}
+@media (pointer: coarse) {
+  .option-card__kbd {
+    display: none;
+  }
+}
+
+.option-card__text {
+  flex: 1 1 auto;
+}
+
+.option-card__mark {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.95rem;
+  font-weight: 900;
+}
+.option-card__mark--good {
+  color: var(--color-good);
+  background: var(--color-good-soft);
+}
+.option-card__mark--bad {
+  color: var(--color-bad);
+  background: var(--color-bad-soft);
+}
+
+/* Selected (pre-grade, e.g. if the parent ever defers grading). */
+.option-card[data-state="selected"] {
+  border-color: var(--color-brand-orange);
+  background: var(--surface-hover);
+}
+.option-card[data-state="selected"] .option-card__kbd {
+  border-color: var(--color-brand-orange);
+  color: var(--color-brand-orange);
+}
+
+/* Correct pick. */
+.option-card[data-state="correct"] {
+  border-color: var(--color-good);
+  background: var(--color-good-soft);
+  box-shadow: 0 4px 0 0 color-mix(in srgb, var(--color-good) 35%, transparent);
+  color: var(--text-strong);
+}
+.option-card[data-state="correct"] .option-card__kbd {
+  border-color: var(--color-good);
+  color: var(--color-good);
+  background: transparent;
+}
+
+/* Wrong pick — nudge with a brief shake. */
+.option-card[data-state="wrong"] {
+  border-color: var(--color-bad);
+  background: var(--color-bad-soft);
+  box-shadow: 0 4px 0 0 color-mix(in srgb, var(--color-bad) 35%, transparent);
+  color: var(--text-strong);
+  animation: mc-shake 0.32s ease;
+}
+.option-card[data-state="wrong"] .option-card__kbd {
+  border-color: var(--color-bad);
+  color: var(--color-bad);
+  background: transparent;
+}
+
+@keyframes mc-shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-5px); }
+  40% { transform: translateX(5px); }
+  60% { transform: translateX(-3px); }
+  80% { transform: translateX(3px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .option-card[data-state="wrong"] {
+    animation: none;
+  }
+}
+
+.mc-explanation {
+  margin-top: 1rem;
+  padding: 0.8rem 0.95rem;
+  font-size: 0.92rem;
+  color: var(--text-soft);
+  background: var(--surface-card-alt);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-button);
+}
+.mc-explanation__answer {
+  font-weight: 800;
+  color: var(--text-strong);
+}
+
