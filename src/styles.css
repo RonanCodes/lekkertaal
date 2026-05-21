@@ -497,7 +497,9 @@ h1, h2, h3, h4, h5, h6 {
   gap: 0.75rem 0.6rem;
   align-items: start;
 }
-/* Brick stagger: nudge every other column down a touch. */
+/* Brick stagger: nudge every other column down a touch. The grid's direct
+   children are `.path-cell` wrappers (tile + visible label) since #243. */
+.path-grid > .path-cell:nth-child(even),
 .path-grid > .path-tile:nth-child(even) {
   transform: translateY(14px);
 }
@@ -2915,6 +2917,112 @@ h1, h2, h3, h4, h5, h6 {
   gap: 0.125rem;
   flex: 1 1 auto;
 }
+}
+
+/* ---------------------------------------------------------------------------
+ * Neighbourhood-block fidelity (#243) — unit-header treat mascot + per-unit
+ * progress bar, visible tile labels, and scattered bobbing decorative treats.
+ * Builds on the existing .path-block / .path-grid / .path-tile recipe above;
+ * all colours route through tokens so light + dark "just work".
+ * Source of truth: docs/design/screens-path.jsx (UnitBlock / LessonTile /
+ * PathDeco).
+ * ------------------------------------------------------------------------- */
+
+/* Header is a 2-column row: title + progress on the left, badge + mascot on
+   the right. The mascot sits at ~62px per the design. */
+.path-block__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+.path-block__header-end {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: none;
+}
+.path-unit-mascot {
+  height: 62px;
+  width: 62px;
+  flex: none;
+  object-fit: contain;
+}
+
+/* Inline per-unit progress bar — a slim track with an orange fill. */
+.path-progress {
+  position: relative;
+  height: 0.5rem;
+  width: 100%;
+  max-width: 14rem;
+  border-radius: var(--radius-pill);
+  background: var(--surface-card-alt);
+  overflow: hidden;
+}
+.path-progress__fill {
+  display: block;
+  height: 100%;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(
+    90deg,
+    var(--color-brand-orange) 0%,
+    var(--color-brand-orange-dark) 100%
+  );
+  transition: width 240ms ease;
+}
+
+/* Stage wraps the tile grid + the absolutely-positioned decorative treats. */
+.path-grid-stage {
+  position: relative;
+}
+
+/* Each grid cell wraps a tile and its visible label. The cell — not the tile —
+   is now the grid child, so it carries the staggered offset. */
+.path-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  min-width: 0;
+}
+
+/* The 11px label under each tile (LessonTile in the design). Truncated so a
+   long lesson title never breaks the grid. */
+.path-tile-label {
+  max-width: 5.5rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  line-height: 1.1;
+  text-align: center;
+  color: var(--text-strong);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.path-tile-label--muted {
+  color: var(--text-muted);
+}
+
+/* Scattered decorative treats — bob in the grid gaps, sit below the tiles, and
+   take no pointer events so they never block a tap. Dimmed so they read as
+   background dressing. */
+.path-deco {
+  position: absolute;
+  z-index: 0;
+  height: 2.25rem;
+  width: 2.25rem;
+  pointer-events: none;
+  opacity: 0.85;
+}
+.path-deco img {
+  height: 100%;
+  width: 100%;
+  object-fit: contain;
+}
+/* Keep tiles above the decorations. */
+.path-grid {
+  position: relative;
+  z-index: 1;
 }
 
 /* ──────────────────────────────────────────────────────────────────────────
