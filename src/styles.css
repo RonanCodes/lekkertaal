@@ -602,3 +602,193 @@ h1, h2, h3, h4, h5, h6 {
   color: var(--text-strong);
 }
 
+/* ============================================================
+ * Lesson player shell — screen-scoped styles (issue #209).
+ * The shared chrome every drill renders inside: a sticky top bar
+ * (close + chunky progress track + hearts), and a sticky bottom
+ * feedback bar that tints good/bad via the #205 foundation tokens
+ * (--color-good-soft / --color-bad-soft). No token edits here; all
+ * colours route through semantic tokens so dark mode flips for free.
+ * ============================================================ */
+
+/* Top bar: close button, fat progress track, hearts cluster. */
+.lesson-topbar {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+/* Fat, rounded progress track — the chunky Duolingo-style bar. */
+.lesson-progress {
+  position: relative;
+  flex: 1;
+  height: 1rem;
+  border-radius: 999px;
+  background: var(--line-soft);
+  overflow: hidden;
+}
+.lesson-progress__fill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--color-brand-orange);
+  transition: width 240ms ease-out;
+}
+/* Glossy sheen on the filled portion for the tactile feel. */
+.lesson-progress__fill::after {
+  content: "";
+  position: absolute;
+  inset: 2px 4px auto 4px;
+  height: 3px;
+  border-radius: 999px;
+  background: color-mix(in srgb, white 45%, transparent);
+}
+
+/* Close (✕) — quiet circular tap target that fits the chrome. */
+.lesson-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  flex: none;
+  border-radius: 999px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 120ms ease, color 120ms ease;
+}
+.lesson-close:hover {
+  background: var(--surface-hover);
+  color: var(--text-strong);
+}
+
+/* Hearts cluster — shows remaining "lives" for the session. We have no
+ * fail-out mechanic, so hearts read as a soft tally of mistakes made;
+ * spent hearts dim rather than disappear. */
+.lesson-hearts {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.15rem;
+  flex: none;
+  font-size: 1.05rem;
+  line-height: 1;
+}
+.lesson-heart {
+  color: var(--color-bad);
+  transition: opacity 200ms ease, transform 200ms ease;
+}
+.lesson-heart--spent {
+  opacity: 0.25;
+  transform: scale(0.85);
+}
+
+/* ---- Bottom feedback bar ---- */
+
+/* The sticky footer that slides in after an answer. Tinted by state via
+ * the shared --color-good-soft / --color-bad-soft tokens (dark-mode tuned
+ * in the prefers-color-scheme block). */
+.feedback-bar {
+  position: sticky;
+  bottom: 0;
+  margin-top: 1.25rem;
+  border-radius: var(--radius-card) var(--radius-card) 0 0;
+  padding: 1rem 1.1rem calc(1rem + env(safe-area-inset-bottom, 0px));
+  box-shadow: 0 -8px 24px -12px rgba(0, 0, 0, 0.25);
+  animation: lk-feedback-rise 220ms ease-out;
+}
+.feedback-bar--good {
+  background: var(--color-good-soft);
+}
+.feedback-bar--bad {
+  background: var(--color-bad-soft);
+}
+.feedback-bar__inner {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+.feedback-bar__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  flex: none;
+  border-radius: 999px;
+  background: color-mix(in srgb, white 65%, transparent);
+  font-size: 1.3rem;
+  line-height: 1;
+}
+.feedback-bar--good .feedback-bar__icon { color: var(--color-good); }
+.feedback-bar--bad .feedback-bar__icon { color: var(--color-bad); }
+.feedback-bar__title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+.feedback-bar--good .feedback-bar__title { color: var(--color-good); }
+.feedback-bar--bad .feedback-bar__title { color: var(--color-bad); }
+.feedback-bar__detail {
+  font-size: 0.85rem;
+  color: var(--text-soft);
+  margin-top: 0.1rem;
+}
+.feedback-bar__cta {
+  flex: none;
+}
+/* Stack the button under the message on narrow viewports. */
+@media (max-width: 28rem) {
+  .feedback-bar__inner {
+    flex-wrap: wrap;
+  }
+  .feedback-bar__cta {
+    width: 100%;
+  }
+}
+
+/* Inline feedback banner (rendered inside a drill body, not the sticky bar).
+ * Shares the good/bad token tints with .feedback-bar so the two read alike. */
+.feedback-banner {
+  border: 2px solid transparent;
+}
+.feedback-banner--good {
+  background: var(--color-good-soft);
+  border-color: color-mix(in srgb, var(--color-good) 45%, transparent);
+  color: var(--color-good);
+}
+.feedback-banner--bad {
+  background: var(--color-bad-soft);
+  border-color: color-mix(in srgb, var(--color-bad) 45%, transparent);
+  color: var(--color-bad);
+}
+@media (prefers-color-scheme: dark) {
+  .feedback-banner--good { color: #7BD98C; }
+  .feedback-banner--bad { color: #FFA8A8; }
+}
+
+@keyframes lk-feedback-rise {
+  from { transform: translateY(60%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .feedback-bar { animation: none; }
+}
+
+@media (prefers-color-scheme: dark) {
+  .feedback-bar {
+    box-shadow: 0 -8px 24px -10px rgba(0, 0, 0, 0.6);
+  }
+  .feedback-bar__icon {
+    background: color-mix(in srgb, var(--surface-card) 70%, transparent);
+  }
+  /* On the dim dark good/bad surfaces, the strong --color-good / --color-bad
+   * lose contrast — lift the title + icon to the readable banner-text tints. */
+  .feedback-bar--good .feedback-bar__icon,
+  .feedback-bar--good .feedback-bar__title { color: #7BD98C; }
+  .feedback-bar--bad .feedback-bar__icon,
+  .feedback-bar--bad .feedback-bar__title { color: #FFA8A8; }
+}
+

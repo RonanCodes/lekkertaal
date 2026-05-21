@@ -44,6 +44,16 @@ export function DrillFrame({
   );
 }
 
+/**
+ * Inline post-answer banner. Kept for drill components that surface their own
+ * feedback (e.g. listening-spell showing the correct spelling) inside the
+ * drill body. The lesson player itself now renders the sticky `.feedback-bar`
+ * footer (see `app.lesson.$lessonId.tsx`); this banner reads the same shared
+ * `--color-good-soft` / `--color-bad-soft` tokens so the two stay in sync.
+ *
+ * Props are intentionally stable: drill screens call this with
+ * `{ correct, message }`.
+ */
 export function FeedbackBanner({
   correct,
   message,
@@ -53,10 +63,8 @@ export function FeedbackBanner({
 }) {
   return (
     <div
-      className={`rounded-2xl border-2 p-3 text-sm font-medium ${
-        correct
-          ? "border-emerald-300 bg-emerald-50 text-emerald-800"
-          : "border-rose-300 bg-rose-50 text-rose-800"
+      className={`feedback-banner rounded-2xl p-3 text-sm font-medium ${
+        correct ? "feedback-banner--good" : "feedback-banner--bad"
       }`}
       role="status"
       aria-live="polite"

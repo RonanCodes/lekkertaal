@@ -3,9 +3,16 @@ import { useEffect, useState } from "react";
 import { getLesson, recordDrillResult, completeLesson } from "../lib/server/lesson";
 import { AppShell } from "../components/AppShell";
 import { DrillRenderer } from "../components/drills/DrillRenderer";
-import { FeedbackBanner } from "../components/drills/DrillFrame";
 import { ReviewRibbon } from "../components/ReviewRibbon";
 import { useSfx } from "../lib/use-sfx";
+
+/**
+ * Hearts shown in the top bar. We have no fail-out / out-of-hearts mechanic,
+ * so hearts read as a soft tally of mistakes this session: each wrong answer
+ * dims one heart, and the count is floored at zero (the lesson never ends
+ * early). Five matches the chunky Duolingo-style chrome from the redesign.
+ */
+const HEART_COUNT = 5;
 
 export const Route = createFileRoute("/app/lesson/$lessonId")({
   loader: async ({ params }) => {
@@ -37,6 +44,7 @@ function LessonPlayerPage() {
   const total = drills.length;
   const drill = drills[drillIdx];
   const progressPct = total > 0 ? Math.round(((drillIdx + (feedback ? 1 : 0)) / total) * 100) : 0;
+  const heartsLeft = Math.max(0, HEART_COUNT - incorrectCount);
 
   // Keyboard: Enter to advance after feedback.
   useEffect(() => {
@@ -114,24 +122,40 @@ function LessonPlayerPage() {
     <AppShell user={user}>
       {/* US-019: due review cards shown before new content. */}
       {reviews && reviews.length > 0 && <ReviewRibbon reviews={reviews} />}
-      {/* Progress + skip */}
-      <div className="mb-5 flex items-center gap-3">
+
+      {/* Top bar: close · progress track · hearts (#209 shared shell) */}
+      <div className="lesson-topbar mb-5">
         <button
           type="button"
           onClick={confirmSkip}
           aria-label="Exit lesson"
-          className="rounded-full p-2 text-neutral-500 hover:bg-neutral-100"
+          className="lesson-close"
         >
           ✕
         </button>
-        <div className="h-3 flex-1 overflow-hidden rounded-full bg-neutral-200">
-          <div
-            className="h-full bg-orange-500 transition-all"
-            style={{ width: `${progressPct}%` }}
-          />
+        <div
+          className="lesson-progress"
+          role="progressbar"
+          aria-label="Lesson progress"
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-valuenow={progressPct}
+        >
+          <div className="lesson-progress__fill" style={{ width: `${progressPct}%` }} />
         </div>
-        <div className="text-xs font-semibold text-neutral-500">
-          {Math.min(drillIdx + 1, total)} / {total}
+        <div
+          className="lesson-hearts"
+          aria-label={`${heartsLeft} of ${HEART_COUNT} hearts left`}
+        >
+          {Array.from({ length: HEART_COUNT }).map((_, i) => (
+            <span
+              key={i}
+              aria-hidden="true"
+              className={`lesson-heart${i >= heartsLeft ? " lesson-heart--spent" : ""}`}
+            >
+              ♥
+            </span>
+          ))}
         </div>
       </div>
 
@@ -142,16 +166,32 @@ function LessonPlayerPage() {
       <DrillRenderer key={drill.id} drill={drill} onSubmit={handleSubmit} vocabPool={vocabPool} imagePool={imagePool} vocabEnrichedMap={vocabEnrichedMap} />
 
       {feedback && (
-        <div className="mt-4 space-y-3">
-          <FeedbackBanner correct={feedback.correct} />
-          <button
-            type="button"
-            onClick={next}
-            disabled={finishing}
-            className="w-full rounded-full bg-orange-500 px-5 py-3 text-base font-semibold text-white hover:bg-orange-600 disabled:opacity-60"
-          >
-            {finishing ? "Saving…" : drillIdx + 1 >= total ? "Finish lesson" : "Continue (Enter)"}
-          </button>
+        <div
+          className={`feedback-bar ${feedback.correct ? "feedback-bar--good" : "feedback-bar--bad"}`}
+        >
+          <div className="feedback-bar__inner">
+            <span className="feedback-bar__icon" aria-hidden="true">
+              {feedback.correct ? "✓" : "✕"}
+            </span>
+            <div className="min-w-0 flex-1" role="status" aria-live="polite">
+              <div className="feedback-bar__title">
+                {feedback.correct ? "Correct!" : "Not quite"}
+              </div>
+              <div className="feedback-bar__detail">
+                {feedback.correct
+                  ? "Nice one. Keep the streak going."
+                  : "No worries, this one comes back for review."}
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={next}
+              disabled={finishing}
+              className={`btn-3d btn-3d-lg feedback-bar__cta ${feedback.correct ? "btn-3d-green" : "btn-3d-red"}`}
+            >
+              {finishing ? "Saving…" : drillIdx + 1 >= total ? "Finish lesson" : "Continue"}
+            </button>
+          </div>
         </div>
       )}
 
