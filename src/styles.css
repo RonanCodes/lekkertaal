@@ -2732,3 +2732,131 @@ h1, h2, h3, h4, h5, h6 {
 .sp-toggle[data-on="true"] .sp-toggle__knob {
   transform: translateX(1.45rem);
 }
+
+/* ============================================================
+   Landing hero fidelity (#240) — tilted phone-in-phone path
+   preview + social-proof card. Scoped `lp-` prefix so these
+   never collide with the real /app path-tile grid.
+   ============================================================ */
+
+/* Mascot + tilted preview share a relative stage. */
+.lp-hero-stage {
+  position: relative;
+  margin: 1.5rem auto 0;
+  height: 280px;
+  max-width: 28rem;
+}
+.lp-hero-mascot {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  z-index: 2;
+  height: 9.5rem;
+  width: 9.5rem;
+}
+
+/* Tilted phone-in-phone frame. */
+.lp-phone {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 11rem;
+  height: 15rem;
+  border-radius: 1.75rem;
+  background: var(--surface-card);
+  border: 8px solid #1a1410;
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.35);
+  transform: rotate(7deg);
+  overflow: hidden;
+}
+.lp-phone__bar {
+  background: var(--surface-banner-blue);
+  height: 2.5rem;
+  padding: 0.5rem 0.625rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: var(--color-brand-blue-dark);
+}
+.lp-phone__body {
+  padding: 0.875rem;
+}
+.lp-phone__eyebrow {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+}
+
+/* Mini lesson tiles — fixed size, not the full-width grid tile. */
+.lp-tile-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.lp-tile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  flex: none;
+  border-radius: 0.75rem;
+  color: #fff;
+}
+.lp-tile--done {
+  background: var(--color-good);
+  box-shadow: 0 3px 0 0 #2D6638;
+}
+.lp-tile--current {
+  background: var(--color-brand-orange);
+  box-shadow: 0 3px 0 0 var(--color-brand-orange-dark);
+}
+.lp-tile--locked {
+  background: var(--line-strong);
+  color: var(--text-faint);
+  box-shadow: 0 3px 0 0 var(--line-strong);
+}
+
+/* Social-proof card. */
+.lp-proof {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: var(--surface-banner);
+}
+.lp-proof__mascot {
+  height: 3.5rem;
+  width: 3.5rem;
+  flex: none;
+}
+.lp-proof__rating {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--text-on-banner);
+}
+.lp-proof__quote {
+  margin-top: 0.25rem;
+  font-size: 0.8125rem;
+  color: var(--color-ink-soft);
+}
+
+@media (max-width: 480px) {
+  .lp-hero-stage {
+    height: 250px;
+  }
+  .lp-hero-mascot {
+    height: 8rem;
+    width: 8rem;
+  }
+  .lp-phone {
+    width: 9.5rem;
+    height: 13rem;
+  }
+}
