@@ -1,0 +1,67 @@
+/* ============================================================
+ * Palette: Warm Bakery
+ *
+ * Inspired by the interiors of a Dutch bakkerij (bakery): golden
+ * croissant crusts, dark rye bread, cream cheese, and the amber
+ * glow of a pastry-case lamp. Warm terracotta as the primary brand
+ * colour, deep brown ink, parchment surfaces. Feels trustworthy
+ * and nostalgic without being dark.
+ *
+ * To preview: visit /styleguide (dev-only route).
+ * To adopt: swap this file in for the @theme and :root blocks in
+ * src/styles.css. Token names are intentionally identical.
+ *
+ * Palette research: #184
+ * ============================================================ */
+
+@theme {
+  --color-brand-orange: #D4600A;
+  --color-brand-orange-dark: #9E4200;
+  --color-brand-orange-soft: #FAEADB;
+  --color-brand-blue: #5A6E2E;
+  --color-brand-blue-dark: #3C4A1A;
+  --color-brand-blue-soft: #E8EDDA;
+  --color-brand-pink: #C4774A;
+  --color-brand-pink-soft: #F2E0D2;
+
+  --color-paper: #FDF6EC;
+  --color-paper-dark: #1A1208;
+  --color-ink: #1C1008;
+  --color-ink-soft: #5C3C20;
+
+  --color-good: #4A8A3A;
+  --color-warn: #B87C10;
+  --color-bad: #A83030;
+
+  --font-display: "Fredoka", system-ui, sans-serif;
+  --font-sans: "Nunito", system-ui, sans-serif;
+
+  --radius-card: 1.5rem;
+  --radius-button: 1rem;
+  --radius-pill: 9999px;
+}
+
+:root {
+  --surface-page: #FDF6EC;
+  --surface-app: #FEF9F2;
+  --surface-card: #FFFCF5;
+  --surface-card-alt: #F8F0E3;
+  --surface-input: #FFFCF5;
+  --surface-hover: #F0E4D0;
+  --surface-banner: #FAEADB;
+  --surface-banner-blue: #E8EDDA;
+  --surface-banner-amber: #FEF5DC;
+  --surface-banner-red: #FADDDD;
+  --surface-banner-green: #DFF0D8;
+  --surface-banner-sky: #DCF0F8;
+
+  --text-strong: #1C1008;
+  --text-body: #3C2410;
+  --text-soft: #5C3C20;
+  --text-muted: #8C6A42;
+  --text-faint: #B59A7A;
+  --text-on-banner: #4A2008;
+
+  --line-soft: #ECD8BC;
+  --line-strong: #D4BC94;
+}

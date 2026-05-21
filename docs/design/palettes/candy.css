@@ -1,0 +1,66 @@
+/* ============================================================
+ * Palette: Candy
+ *
+ * Vivid, high-saturation colours inspired by Dutch stroopwafel
+ * sprinkle candy (hagelslag) and classic Dutch sweet-shop treats.
+ * Bright pinks, electric purples, and citrus yellows give the app
+ * a playful confectionery feel.
+ *
+ * To preview: visit /styleguide (dev-only route).
+ * To adopt: swap this file in for the @theme and :root blocks in
+ * src/styles.css. Token names are intentionally identical.
+ *
+ * Palette research: #184
+ * ============================================================ */
+
+@theme {
+  --color-brand-orange: #FF3E9A;
+  --color-brand-orange-dark: #C4006E;
+  --color-brand-orange-soft: #FFD6EC;
+  --color-brand-blue: #7B2FFF;
+  --color-brand-blue-dark: #5500CC;
+  --color-brand-blue-soft: #E8D9FF;
+  --color-brand-pink: #FF6B6B;
+  --color-brand-pink-soft: #FFD6D6;
+
+  --color-paper: #FFF5FB;
+  --color-paper-dark: #1A1020;
+  --color-ink: #1A0A20;
+  --color-ink-soft: #5C3A5C;
+
+  --color-good: #2DBE6C;
+  --color-warn: #FFB800;
+  --color-bad: #FF2D55;
+
+  --font-display: "Fredoka", system-ui, sans-serif;
+  --font-sans: "Nunito", system-ui, sans-serif;
+
+  --radius-card: 1.5rem;
+  --radius-button: 1rem;
+  --radius-pill: 9999px;
+}
+
+:root {
+  --surface-page: #FFF5FB;
+  --surface-app: #FFF8FC;
+  --surface-card: #FFFFFF;
+  --surface-card-alt: #FDF0FA;
+  --surface-input: #FFFFFF;
+  --surface-hover: #F5E5F5;
+  --surface-banner: #FFD6EC;
+  --surface-banner-blue: #E8D9FF;
+  --surface-banner-amber: #FFF3CC;
+  --surface-banner-red: #FFD6D6;
+  --surface-banner-green: #CCFFE5;
+  --surface-banner-sky: #D6F0FF;
+
+  --text-strong: #1A0A20;
+  --text-body: #3A1A3A;
+  --text-soft: #5C3A5C;
+  --text-muted: #8C6A8C;
+  --text-faint: #B5A0B5;
+  --text-on-banner: #4A0A2A;
+
+  --line-soft: #F0D5F0;
+  --line-strong: #DEC0DE;
+}
