@@ -25,6 +25,13 @@ import type { DrillProps } from "./DrillRenderer";
  *
  * The drill exposes a small set of data-testid hooks so Playwright can drive
  * the upload path without permission-granting a real microphone.
+ *
+ * Redesign (#214 / parent #203): visual reskin onto the shared foundation. The
+ * mic becomes a chunky 3D affordance (`.speak-mic`, mirroring the `.btn-3d`
+ * recipe), the target sentence sits in a tinted card, and the score / token
+ * diff route through the `--color-good/-bad/-streak` feedback tokens so light
+ * and dark inherit automatically. NONE of the STT pipeline, MediaRecorder
+ * wiring, fetch calls, or scoring/XP logic changed — markup + classes only.
  */
 export type SpeakTokenDiff = {
   word: string;
@@ -231,16 +238,23 @@ export function SpeakDrill({ drill, onSubmit }: DrillProps) {
 
   const recordingSeconds = (recordingMs / 1000).toFixed(1);
   const isPassed = score !== null && score.score >= SPEAK_PASS_THRESHOLD;
+  const isBusy = phase === "uploading" || phase === "scoring";
+  const micLabel =
+    phase === "recording"
+      ? `Stop (${recordingSeconds}s)`
+      : phase === "uploading"
+        ? "Uploading…"
+        : phase === "scoring"
+          ? "Scoring…"
+          : "Record";
 
   return (
     <DrillFrame promptLabel="Speak in Dutch" prompt={prompt}>
-      <div className="space-y-4" data-testid="speak-drill">
-        <div className="rounded-2xl border-2 border-neutral-200 bg-neutral-50 p-3">
-          <div className="mb-1 text-xs uppercase tracking-wide text-neutral-500">
-            Target sentence
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="text-lg font-semibold" data-testid="speak-canonical">
+      <div className="speak" data-testid="speak-drill">
+        <div className="speak-target">
+          <div className="speak-target__label">Target sentence</div>
+          <div className="speak-target__row">
+            <span className="speak-target__text" data-testid="speak-canonical">
               {canonical}
             </span>
             <Speaker text={canonical} size="sm" />
@@ -248,47 +262,39 @@ export function SpeakDrill({ drill, onSubmit }: DrillProps) {
         </div>
 
         {phase !== "done" && (
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+          <div className="speak-controls">
             {recordingSupported ? (
               <button
                 type="button"
                 onClick={phase === "recording" ? stopRecording : startRecording}
-                disabled={phase === "uploading" || phase === "scoring"}
+                disabled={isBusy}
                 aria-label={phase === "recording" ? "Stop recording" : "Start recording"}
+                aria-pressed={phase === "recording"}
                 data-testid="speak-record-btn"
-                className={`flex items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-semibold text-white transition-all disabled:opacity-50 ${
-                  phase === "recording"
-                    ? "animate-pulse bg-rose-500 hover:bg-rose-600"
-                    : "bg-orange-500 hover:bg-orange-600"
+                className={`speak-mic${phase === "recording" ? " speak-mic--recording" : ""}${
+                  isBusy ? " speak-mic--busy" : ""
                 }`}
               >
-                <span aria-hidden="true">{phase === "recording" ? "■" : "●"}</span>
-                {phase === "recording"
-                  ? `Stop (${recordingSeconds}s)`
-                  : phase === "uploading"
-                    ? "Uploading…"
-                    : phase === "scoring"
-                      ? "Scoring…"
-                      : "Record"}
+                <span className="speak-mic__icon" aria-hidden="true">
+                  {phase === "recording" ? "■" : isBusy ? "…" : "🎤"}
+                </span>
+                <span className="speak-mic__label">{micLabel}</span>
               </button>
             ) : (
-              <div className="text-xs text-neutral-500">
+              <div className="speak-controls__unsupported">
                 Recording unavailable in this browser. Upload a clip instead.
               </div>
             )}
 
-            <label
-              className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-full border-2 border-neutral-300 px-4 py-2 text-xs font-semibold text-neutral-700 hover:bg-neutral-50"
-              data-testid="speak-upload-label"
-            >
+            <label className="speak-upload" data-testid="speak-upload-label">
               Upload clip
               <input
                 type="file"
                 accept="audio/*"
                 onChange={onFilePicked}
-                className="hidden"
+                className="speak-upload__input"
                 data-testid="speak-upload-input"
-                disabled={phase === "uploading" || phase === "scoring" || phase === "recording"}
+                disabled={isBusy || phase === "recording"}
               />
             </label>
           </div>
@@ -296,7 +302,7 @@ export function SpeakDrill({ drill, onSubmit }: DrillProps) {
 
         {errMsg && (
           <div
-            className="rounded-2xl border-2 border-rose-300 bg-rose-50 p-3 text-sm text-rose-800"
+            className="speak-error"
             role="alert"
             data-testid="speak-error"
           >
@@ -306,40 +312,28 @@ export function SpeakDrill({ drill, onSubmit }: DrillProps) {
 
         {score && (
           <div
-            className={`rounded-2xl border-2 p-3 text-sm ${
-              isPassed
-                ? "border-emerald-300 bg-emerald-50"
-                : "border-amber-300 bg-amber-50"
-            }`}
+            className={`speak-result ${isPassed ? "speak-result--good" : "speak-result--near"}`}
             data-testid="speak-result"
           >
-            <div className="mb-2 flex items-baseline gap-3">
+            <div className="speak-result__head">
               <div
-                className={`text-2xl font-bold ${
-                  isPassed ? "text-emerald-700" : "text-amber-800"
-                }`}
+                className={`speak-score ${isPassed ? "speak-score--good" : "speak-score--near"}`}
                 data-testid="speak-score"
               >
                 {score.score}
               </div>
-              <div className="text-xs uppercase tracking-wide text-neutral-500">
+              <div className="speak-result__caption">
                 {isPassed ? "Nice pronunciation!" : `Aim for ${SPEAK_PASS_THRESHOLD}+`}
               </div>
             </div>
             <TokenDiffRow tokens={score.tokens} />
             {outcome && outcome.xpAwarded > 0 && (
-              <div
-                className="mt-2 text-xs font-semibold text-emerald-700"
-                data-testid="speak-xp"
-              >
+              <div className="speak-xp" data-testid="speak-xp">
                 +{outcome.xpAwarded} XP
               </div>
             )}
             {outcome && outcome.passed && outcome.alreadyAwarded && (
-              <div
-                className="mt-2 text-xs text-neutral-500"
-                data-testid="speak-xp-already"
-              >
+              <div className="speak-xp-already" data-testid="speak-xp-already">
                 XP already awarded earlier; this counts as practice.
               </div>
             )}
@@ -351,7 +345,7 @@ export function SpeakDrill({ drill, onSubmit }: DrillProps) {
             type="button"
             onClick={resetForRetry}
             data-testid="speak-retry"
-            className="rounded-full border border-orange-300 bg-white px-4 py-2 text-xs font-semibold text-orange-700 hover:bg-orange-50"
+            className="btn-3d btn-3d-ghost btn-3d-sm"
           >
             Try again
           </button>
@@ -363,27 +357,16 @@ export function SpeakDrill({ drill, onSubmit }: DrillProps) {
 
 function TokenDiffRow({ tokens }: { tokens: SpeakTokenDiff[] }) {
   if (tokens.length === 0) {
-    return <div className="text-xs text-neutral-500">No tokens to compare.</div>;
+    return <div className="speak-tokens__empty">No tokens to compare.</div>;
   }
   return (
-    <div
-      className="flex flex-wrap gap-1 text-sm font-medium"
-      data-testid="speak-tokens"
-    >
+    <div className="speak-tokens" data-testid="speak-tokens">
       {tokens.map((t, i) => (
         <span
           key={`${t.word}-${i}`}
           data-status={t.status}
           title={t.spoken ? `you said: ${t.spoken}` : undefined}
-          className={
-            t.status === "match"
-              ? "rounded-md bg-emerald-200 px-2 py-1 text-emerald-900"
-              : t.status === "wrong"
-                ? "rounded-md bg-rose-200 px-2 py-1 text-rose-900 line-through decoration-rose-500"
-                : t.status === "missing"
-                  ? "rounded-md bg-neutral-200 px-2 py-1 text-neutral-500"
-                  : "rounded-md bg-amber-200 px-2 py-1 text-amber-900"
-          }
+          className={`speak-token speak-token--${t.status}`}
         >
           {t.word}
         </span>

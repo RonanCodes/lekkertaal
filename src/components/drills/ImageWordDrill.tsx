@@ -11,6 +11,17 @@ import type { DrillProps } from "./DrillRenderer";
  * the Dutch noun for the object shown. Reuses the `gradeText` helper from
  * `DrillFrame` (case-insensitive, punctuation-tolerant, Levenshtein <= 1).
  *
+ * Redesign (#214 / parent #203): mapped onto the shared foundation. Reuses the
+ * `.input3d*` field + hint pill + reveal panel classes the input-drill screen
+ * (#211) introduced, plus a screen-scoped `.imageword-*` block for the picture
+ * frame. The frame carries an explicit loading shimmer and a graceful
+ * fallback for the images that are not yet in R2 (issue #164 is blocked), so a
+ * 404 or a missing `imageUrl` never leaves a broken-image glyph on screen.
+ *
+ * STT/audio is not involved here; only the picture loads remotely. The
+ * loading/error logic below is the only behavioural change — grading, hint,
+ * and submit timing are preserved exactly.
+ *
  * Data shape on `DrillPayload`:
  *   imageUrl : "https://images.lekkertaal.dev/vocab/kat.png"
  *   answer   : "kat"               OR ["kat", "de kat"]
@@ -30,6 +41,11 @@ export function ImageWordDrill({ drill, onSubmit }: DrillProps) {
   const [correct, setCorrect] = useState(false);
   const [shaking, setShaking] = useState(false);
   const [hintUsed, setHintUsed] = useState(false);
+  // Image load state: until `loaded` flips we show a shimmer; on `error` we
+  // show a friendly fallback card instead of a broken-image glyph.
+  const [imgState, setImgState] = useState<"loading" | "loaded" | "error">(
+    drill.imageUrl ? "loading" : "error",
+  );
 
   const submit = () => {
     if (submitted || value.trim().length === 0) return;
@@ -54,22 +70,42 @@ export function ImageWordDrill({ drill, onSubmit }: DrillProps) {
       promptLabel="What is this in Dutch?"
       prompt={drill.promptEn ?? "Type the Dutch word for what you see"}
     >
-      <div className="space-y-3">
-        {drill.imageUrl ? (
-          <div className="flex justify-center">
+      <div className="imageword">
+        <div
+          className={`imageword-frame${imgState === "error" ? " imageword-frame--missing" : ""}`}
+        >
+          {drill.imageUrl && imgState !== "error" && (
             <img
               src={drill.imageUrl}
               alt="Vocabulary item to name in Dutch"
               data-testid="image-word-drill-image"
               loading="lazy"
-              className="max-h-64 w-auto rounded-2xl border-2 border-neutral-200 bg-neutral-50 object-contain shadow-sm"
+              onLoad={() => setImgState("loaded")}
+              onError={() => setImgState("error")}
+              className={`imageword-img${imgState === "loading" ? " imageword-img--hidden" : ""}`}
             />
-          </div>
-        ) : (
-          <div className="rounded-2xl border-2 border-dashed border-neutral-300 bg-neutral-50 p-6 text-center text-sm text-neutral-500">
-            (image missing)
-          </div>
-        )}
+          )}
+          {imgState === "loading" && (
+            <div
+              className="imageword-shimmer"
+              data-testid="image-word-drill-loading"
+              aria-hidden="true"
+            />
+          )}
+          {imgState === "error" && (
+            <div
+              className="imageword-fallback"
+              data-testid="image-word-drill-fallback"
+            >
+              <span className="imageword-fallback__glyph" aria-hidden="true">
+                🖼️
+              </span>
+              <span className="imageword-fallback__text">
+                Picture coming soon — the Dutch word still works.
+              </span>
+            </div>
+          )}
+        </div>
 
         <input
           type="text"
@@ -87,31 +123,27 @@ export function ImageWordDrill({ drill, onSubmit }: DrillProps) {
           placeholder="Type the Dutch word..."
           disabled={submitted}
           data-testid="image-word-drill-input"
-          className={`w-full rounded-2xl border-2 px-4 py-3 text-lg font-semibold outline-none transition-all ${
-            submitted
-              ? correct
-                ? "border-emerald-400 bg-emerald-50"
-                : "border-rose-400 bg-rose-50"
-              : "border-neutral-300 bg-white focus:border-orange-400"
-          } ${shaking ? "animate-[shake_0.2s_ease-in-out]" : ""}`}
+          className={`input3d ${
+            submitted ? (correct ? "input3d--good" : "input3d--bad") : ""
+          } ${shaking ? "input3d--shake" : ""}`}
         />
 
-        <div className="flex items-center justify-between gap-2">
+        <div className="input3d-actions">
           <button
             type="button"
             onClick={useHint}
             disabled={submitted || hintUsed}
-            className="rounded-full border border-amber-300 bg-amber-50 px-3 py-2 text-xs font-semibold text-amber-800 hover:bg-amber-100 disabled:opacity-50"
+            className="input3d-hint"
           >
-            Hint (5 coins)
-            {hintUsed && <span className="ml-1 text-amber-600">used</span>}
+            💡 Hint (5 coins)
+            {hintUsed && <span className="input3d-hint-used">used</span>}
           </button>
           <button
             type="button"
             onClick={submit}
             disabled={submitted || value.trim().length === 0}
             data-testid="image-word-drill-check"
-            className="rounded-full bg-orange-500 px-5 py-2 text-sm font-semibold text-white hover:bg-orange-600 disabled:opacity-50"
+            className="btn-3d btn-3d-green"
           >
             Check
           </button>
@@ -119,28 +151,30 @@ export function ImageWordDrill({ drill, onSubmit }: DrillProps) {
 
         {submitted && (
           <div
-            className="rounded-2xl border-2 border-neutral-200 bg-neutral-50 p-3 text-sm"
+            className={`input3d-reveal ${correct ? "input3d-reveal--good" : "input3d-reveal--bad"}`}
             data-testid="image-word-drill-feedback"
           >
-            <div className="mb-1 text-xs uppercase tracking-wide text-neutral-500">
+            <div className="input3d-reveal-label">
               {correct ? "Your answer" : "You wrote"}
             </div>
-            <div className={`font-semibold ${correct ? "text-emerald-700" : "text-rose-700"}`}>
+            <div
+              className={`input3d-reveal-value ${correct ? "input3d-reveal-value--good" : "input3d-reveal-value--bad"}`}
+            >
               {value}
             </div>
             {!correct && (
               <>
-                <div className="mt-2 text-xs uppercase tracking-wide text-neutral-500">
+                <div className="input3d-reveal-label" style={{ marginTop: "0.6rem" }}>
                   Canonical
                 </div>
-                <div className="flex items-center gap-2 font-semibold text-neutral-800">
+                <div className="input3d-reveal-value">
                   <span>{canonical}</span>
                   <Speaker text={canonical} size="sm" />
                 </div>
               </>
             )}
             {correct && (
-              <div className="mt-2 flex items-center gap-2 text-xs text-neutral-500">
+              <div className="input3d-reveal-gloss input3d-reveal-value">
                 Canonical: <span>{canonical}</span>
                 <Speaker text={canonical} size="sm" />
               </div>
@@ -148,13 +182,6 @@ export function ImageWordDrill({ drill, onSubmit }: DrillProps) {
           </div>
         )}
       </div>
-      <style>{`
-        @keyframes shake {
-          0%, 100% { transform: translateX(0); }
-          25% { transform: translateX(-4px); }
-          75% { transform: translateX(4px); }
-        }
-      `}</style>
     </DrillFrame>
   );
 }
