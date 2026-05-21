@@ -47,19 +47,25 @@ function LeaderboardPage() {
 
   return (
     <AppShell user={user}>
-      <div className="mx-auto max-w-2xl space-y-4">
-        <header>
-          <h1 className="text-2xl font-bold">Leaderboard</h1>
-          <p className="text-sm text-neutral-500">
+      <div className="mx-auto max-w-2xl space-y-5">
+        <header className="text-center">
+          <div
+            className="text-display text-xs font-semibold uppercase tracking-[0.12em]"
+            style={{ color: "var(--color-brand-blue-dark)" }}
+          >
+            <span aria-hidden>🏆</span> League
+          </div>
+          <h1 className="mt-1 text-3xl font-extrabold leading-tight">Leaderboard</h1>
+          <p className="mt-1 text-sm" style={{ color: "var(--text-soft)" }}>
             {activeScope === "friends"
               ? "You and your friends, ranked by XP."
-              : "Top 50 by XP. Your rank is shown even if you're outside the top."}
+              : "Top 50 by XP. Your rank shows even if you're outside the top."}
           </p>
         </header>
 
-        {/* Scope tabs (Global / Friends) */}
+        {/* Scope tabs (Global / Friends) — chunky segmented control. */}
         <div
-          className="flex gap-1 rounded-lg bg-neutral-100 p-1"
+          className="lb-segment"
           role="tablist"
           aria-label="Leaderboard scope"
         >
@@ -71,11 +77,8 @@ function LeaderboardPage() {
               role="tab"
               aria-selected={activeScope === t.id}
               data-testid={`leaderboard-scope-${t.id}`}
-              className={`flex-1 rounded-md px-3 py-1.5 text-center text-sm font-semibold ${
-                activeScope === t.id
-                  ? "bg-white text-neutral-900 shadow-sm"
-                  : "text-neutral-500 hover:text-neutral-700"
-              }`}
+              className="lb-segment-item text-display"
+              data-active={activeScope === t.id}
             >
               {t.label}
             </Link>
@@ -83,17 +86,14 @@ function LeaderboardPage() {
         </div>
 
         {/* Window tabs */}
-        <div className="flex gap-1 rounded-lg bg-neutral-100 p-1">
+        <div className="lb-segment lb-segment--sub">
           {WINDOW_TABS.map((t) => (
             <Link
               key={t.id}
               to="/app/leaderboard"
               search={{ window: t.id, scope: activeScope }}
-              className={`flex-1 rounded-md px-3 py-1.5 text-center text-sm font-medium ${
-                activeWindow === t.id
-                  ? "bg-white text-neutral-900 shadow-sm"
-                  : "text-neutral-500 hover:text-neutral-700"
-              }`}
+              className="lb-segment-item text-display"
+              data-active={activeWindow === t.id}
             >
               {t.label}
             </Link>
@@ -120,12 +120,12 @@ function GlobalView({
   const meIsInTop = current && rows.some((r) => r.userId === current.userId);
   return (
     <>
-      <ol
-        className="space-y-1 rounded-2xl border border-neutral-200 bg-white p-2"
-        data-testid="leaderboard-rows"
-      >
+      <ol className="card space-y-1.5 p-3" data-testid="leaderboard-rows">
         {rows.length === 0 && (
-          <li className="px-3 py-6 text-center text-sm text-neutral-500">
+          <li
+            className="px-3 py-8 text-center text-sm"
+            style={{ color: "var(--text-muted)" }}
+          >
             No XP earned in this window yet.
           </li>
         )}
@@ -135,8 +135,11 @@ function GlobalView({
       </ol>
 
       {current && !meIsInTop && (
-        <div className="rounded-2xl border-2 border-orange-300 bg-orange-50 p-2">
-          <div className="px-3 pb-1 pt-2 text-xs font-semibold uppercase tracking-wide text-orange-700">
+        <div className="lb-you-card">
+          <div
+            className="text-display px-3 pb-1 pt-2 text-xs font-bold uppercase tracking-[0.1em]"
+            style={{ color: "var(--color-brand-orange-dark)" }}
+          >
             You
           </div>
           <Row row={current} isMe={true} />
@@ -152,10 +155,16 @@ function FriendsView({ rows }: { rows: Array<LeaderboardRow & { isMe: boolean }>
   if (rows.length === 0) {
     return (
       <div
-        className="rounded-2xl border border-dashed border-neutral-300 bg-white p-6 text-center"
+        className="card flex flex-col items-center gap-3 py-8 text-center"
         data-testid="leaderboard-friends-empty"
       >
-        <p className="text-sm text-neutral-600">
+        <img
+          src="/mascot/treats/kaas/idle.png"
+          alt=""
+          aria-hidden
+          className="anim-idle-bob h-20 w-20"
+        />
+        <p className="text-base font-semibold" style={{ color: "var(--text-body)" }}>
           Add friends to see your circle ranked here.
         </p>
         {/* /app/friends UI is a forward-looking destination (P2-SOC-1 shipped
@@ -164,7 +173,7 @@ function FriendsView({ rows }: { rows: Array<LeaderboardRow & { isMe: boolean }>
             route table; the empty-state CTA still surfaces user intent. */}
         <a
           href="/app/friends"
-          className="mt-3 inline-block rounded-md bg-orange-500 px-4 py-2 text-sm font-semibold text-white hover:bg-orange-600"
+          className="btn-3d btn-3d-sm"
           data-testid="leaderboard-friends-cta"
         >
           Find friends
@@ -174,10 +183,7 @@ function FriendsView({ rows }: { rows: Array<LeaderboardRow & { isMe: boolean }>
   }
 
   return (
-    <ol
-      className="space-y-1 rounded-2xl border border-neutral-200 bg-white p-2"
-      data-testid="leaderboard-rows"
-    >
+    <ol className="card space-y-1.5 p-3" data-testid="leaderboard-rows">
       {rows.map((r) => (
         <Row key={r.userId} row={r} isMe={r.isMe} />
       ))}
@@ -185,28 +191,37 @@ function FriendsView({ rows }: { rows: Array<LeaderboardRow & { isMe: boolean }>
   );
 }
 
+const MEDALS: Record<number, string> = { 1: "🥇", 2: "🥈", 3: "🥉" };
+
 function Row({ row, isMe }: { row: LeaderboardRow; isMe: boolean }) {
+  const medal = MEDALS[row.rank];
   return (
     <li
-      className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm ${
-        isMe ? "bg-orange-100 ring-1 ring-orange-300" : ""
-      }`}
+      className="lb-row"
+      data-me={isMe ? "true" : undefined}
+      data-podium={medal ? "true" : undefined}
       data-testid="leaderboard-row"
     >
-      <span className="w-8 text-right font-semibold tabular-nums text-neutral-500">
-        #{row.rank}
+      <span className="lb-rank text-display" aria-hidden={Boolean(medal)}>
+        {medal ?? `#${row.rank}`}
       </span>
       {row.avatarUrl ? (
-        <img src={row.avatarUrl} alt="" className="h-8 w-8 rounded-full" />
+        <img src={row.avatarUrl} alt="" className="h-9 w-9 rounded-full" />
       ) : (
-        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-orange-100 text-xs font-bold text-orange-700">
+        <div
+          className="text-display flex h-9 w-9 items-center justify-center rounded-full text-xs font-bold"
+          style={{
+            background: "var(--color-brand-orange-soft)",
+            color: "var(--color-brand-orange-dark)",
+          }}
+        >
           {row.displayName.slice(0, 2).toUpperCase()}
         </div>
       )}
       <Link
         to="/app/profile/$displayName"
         params={{ displayName: row.displayName }}
-        className="min-w-0 flex-1 truncate font-medium hover:text-orange-600"
+        className="text-display min-w-0 flex-1 truncate font-semibold hover:text-orange-600"
       >
         {row.displayName}
       </Link>
@@ -225,11 +240,17 @@ function Row({ row, isMe }: { row: LeaderboardRow; isMe: boolean }) {
           {tierMeta(row.leagueTier).name}
         </span>
       )}
-      <span className="hidden items-center gap-1 text-xs text-neutral-500 sm:inline-flex">
-        <Flame size={12} className="text-orange-500" aria-hidden />
+      <span
+        className="hidden items-center gap-1 text-xs sm:inline-flex"
+        style={{ color: "var(--color-streak)" }}
+      >
+        <Flame size={13} aria-hidden />
         {row.streakDays}
       </span>
-      <span className="w-16 text-right font-bold tabular-nums text-orange-600">
+      <span
+        className="text-display w-16 text-right font-extrabold tabular-nums"
+        style={{ color: "var(--color-brand-orange)" }}
+      >
         {row.windowXp.toLocaleString()} XP
       </span>
     </li>
