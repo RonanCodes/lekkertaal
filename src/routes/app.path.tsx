@@ -1,11 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { CheckCircle2, Circle, Lock, Play } from "lucide-react";
 import { getPath } from "../lib/server/path";
 import { getWordOfTheDay } from "../lib/server/wordOfDay";
 import { AppShell } from "../components/AppShell";
 import { Stroop } from "../components/Stroop";
 import { DailyQuests } from "../components/DailyQuests";
 import { WordOfTheDay } from "../components/WordOfTheDay";
+import { PathStatusStrip } from "../components/path/PathStatusStrip";
+import { NeighbourhoodBlock } from "../components/path/NeighbourhoodBlock";
 
 export const Route = createFileRoute("/app/path")({
   loader: async () => {
@@ -23,13 +24,20 @@ function PathPage() {
 
   return (
     <AppShell user={data.user}>
-      <div className="mb-4 flex items-center gap-4">
+      <PathStatusStrip
+        streakDays={data.user.streakDays}
+        xpTotal={data.user.xpTotal}
+        coinsBalance={data.user.coinsBalance}
+        freezes={data.user.streakFreezesBalance}
+      />
+
+      <div className="mb-5 flex items-center gap-4">
         <Stroop
           state={data.user.streakDays === 0 ? "concerned" : "idle"}
           size="md"
         />
         <div>
-          <h1 className="text-2xl font-bold">Your path</h1>
+          <h1 className="text-2xl font-bold text-neutral-900">Your path</h1>
           <p className="text-sm text-neutral-500">Level: {data.user.cefrLevel}</p>
         </div>
       </div>
@@ -38,69 +46,13 @@ function PathPage() {
 
       <WordOfTheDay data={data.wordOfDay} />
 
-      <ol className="space-y-4">
-        {data.path.map((u, i) => {
-          const isLocked = u.status === "locked";
-          const isCompleted = u.status === "completed";
-          const isInProgress = u.status === "in_progress";
-          const bgClass = isCompleted
-            ? "bg-emerald-100 border-emerald-300"
-            : isInProgress
-              ? "bg-orange-100 border-orange-300"
-              : isLocked
-                ? "bg-neutral-100 border-neutral-200 opacity-60"
-                : "bg-white border-orange-200 hover:border-orange-400";
-          const indent = i % 2 === 0 ? "" : "ml-12";
-          const inner = (
-            <div
-              className={`rounded-3xl border-2 ${bgClass} p-4 transition-all ${indent} shadow-sm`}
-            >
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="text-xs uppercase text-neutral-500">
-                    Unit {u.order} · {u.status}
-                  </div>
-                  <div className="text-lg font-bold">{u.titleNl}</div>
-                  <div className="text-sm text-neutral-600">{u.titleEn}</div>
-                </div>
-                <div className="text-2xl">
-                  {isCompleted ? (
-                    <CheckCircle2 size={28} className="text-emerald-500" aria-label="Completed" />
-                  ) : isInProgress ? (
-                    <Play size={28} className="text-orange-500" aria-label="In progress" />
-                  ) : isLocked ? (
-                    <Lock size={28} className="text-neutral-400" aria-label="Locked" />
-                  ) : (
-                    <Circle size={28} className="text-orange-400" aria-label="Unlocked" />
-                  )}
-                </div>
-              </div>
-              {!isLocked && (
-                <div className="mt-2 h-1 w-full overflow-hidden rounded-full bg-white">
-                  <div
-                    className="h-full bg-orange-500"
-                    style={{
-                      width: `${u.lessonsTotal > 0 ? (u.lessonsCompleted / u.lessonsTotal) * 100 : 0}%`,
-                    }}
-                  />
-                </div>
-              )}
-            </div>
-          );
-
-          return (
-            <li key={u.id}>
-              {isLocked ? (
-                inner
-              ) : (
-                <a href={`/app/unit/${u.slug}`} className="block">
-                  {inner}
-                </a>
-              )}
-            </li>
-          );
-        })}
-      </ol>
+      <div className="canal-bg mt-2 rounded-3xl">
+        <div className="space-y-5 py-2">
+          {data.path.map((unit) => (
+            <NeighbourhoodBlock key={unit.id} unit={unit} />
+          ))}
+        </div>
+      </div>
     </AppShell>
   );
 }

@@ -434,3 +434,171 @@ h1, h2, h3, h4, h5, h6 {
   .text-red-700 { color: #FFA8A8 !important; }
 }
 
+/* ============================================================
+ * Learning path — screen-scoped styles (issue #207).
+ * The neighbourhood-block tile grid: each unit is a "block" card
+ * holding a staggered grid of lesson tiles, capped by a wide
+ * boss-fight bar. Builds on the #205 foundation tokens (no token
+ * edits here). All colours route through the semantic surface
+ * tokens, so dark mode flips automatically with no extra rules.
+ * ============================================================ */
+
+/* Canal motif: a soft, repeating wavy water band painted behind the
+ * block stack. Subtle — it reads as texture, never competes with tiles. */
+.canal-bg {
+  position: relative;
+}
+.canal-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--color-brand-blue-soft) 60%, transparent) 0,
+    color-mix(in srgb, var(--color-brand-blue-soft) 60%, transparent) 2px,
+    transparent 2px,
+    transparent 22px
+  );
+  -webkit-mask-image: radial-gradient(ellipse at top, black 0%, transparent 70%);
+  mask-image: radial-gradient(ellipse at top, black 0%, transparent 70%);
+  opacity: 0.5;
+  border-radius: inherit;
+}
+.canal-bg > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Neighbourhood block: the unit card that wraps a tile grid. */
+.path-block {
+  border-radius: 1.5rem;
+  border: 2px solid var(--line-soft);
+  background: var(--surface-card);
+  box-shadow: 0 2px 0 0 var(--line-soft);
+}
+.path-block--current {
+  border-color: var(--color-brand-orange);
+  box-shadow: 0 3px 0 0 var(--color-brand-orange-dark);
+}
+.path-block--done {
+  border-color: var(--color-good);
+  background: var(--color-good-soft);
+}
+.path-block--locked {
+  opacity: 0.6;
+}
+
+/* Tile grid: a staggered (brick-offset) grid, NOT a single-column tree. */
+.path-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+  gap: 0.75rem 0.6rem;
+  align-items: start;
+}
+/* Brick stagger: nudge every other column down a touch. */
+.path-grid > .path-tile:nth-child(even) {
+  transform: translateY(14px);
+}
+
+/* Individual lesson tile — chunky, tactile, 3D-offset like the buttons. */
+.path-tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+  aspect-ratio: 1 / 1;
+  width: 100%;
+  border-radius: 1rem;
+  border: none;
+  font-weight: 700;
+  color: #fff;
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform 0.08s ease, box-shadow 0.08s ease;
+}
+.path-tile:hover {
+  transform: translateY(-2px);
+}
+.path-tile:active {
+  transform: translateY(2px);
+}
+
+.path-tile--done {
+  background: var(--color-good);
+  box-shadow: 0 4px 0 0 #2D6638;
+}
+.path-tile--current {
+  background: var(--color-brand-orange);
+  box-shadow: 0 4px 0 0 var(--color-brand-orange-dark);
+  animation: lk-tile-pulse 1.8s ease-in-out infinite;
+}
+.path-tile--available {
+  background: var(--color-brand-blue);
+  box-shadow: 0 4px 0 0 var(--color-brand-blue-dark);
+}
+.path-tile--locked {
+  background: var(--line-strong);
+  color: var(--text-faint);
+  box-shadow: 0 4px 0 0 var(--line-strong);
+  cursor: not-allowed;
+}
+.path-tile--locked:hover {
+  transform: none;
+}
+
+@keyframes lk-tile-pulse {
+  0%, 100% { box-shadow: 0 4px 0 0 var(--color-brand-orange-dark), 0 0 0 0 color-mix(in srgb, var(--color-brand-orange) 60%, transparent); }
+  50% { box-shadow: 0 4px 0 0 var(--color-brand-orange-dark), 0 0 0 8px color-mix(in srgb, var(--color-brand-orange) 0%, transparent); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .path-tile--current { animation: none; }
+}
+
+/* Wide boss-fight bar — caps a unit, full-width, unmistakably bigger. */
+.path-boss {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  width: 100%;
+  border-radius: 1.1rem;
+  padding: 0.9rem 1.1rem;
+  font-weight: 800;
+  color: #fff;
+  text-decoration: none;
+  background: linear-gradient(135deg, var(--color-brand-pink) 0%, var(--color-brand-orange) 100%);
+  box-shadow: 0 4px 0 0 var(--color-brand-orange-dark);
+  transition: transform 0.08s ease, box-shadow 0.08s ease;
+}
+.path-boss:hover {
+  transform: translateY(-2px);
+}
+.path-boss:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 0 var(--color-brand-orange-dark);
+}
+.path-boss--locked {
+  background: var(--line-strong);
+  color: var(--text-faint);
+  box-shadow: 0 4px 0 0 var(--line-strong);
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Top status strip chips (streak / XP ring / coins / hearts). */
+.path-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border-radius: 999px;
+  padding: 0.35rem 0.7rem;
+  font-weight: 700;
+  font-size: 0.85rem;
+  background: var(--surface-card);
+  border: 1.5px solid var(--line-soft);
+  color: var(--text-strong);
+}
+
