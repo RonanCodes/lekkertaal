@@ -26,8 +26,11 @@
   --color-ink-soft: #5C4A3A;
 
   --color-good: #3F8A4C;
+  --color-good-soft: #DCFCE7;
   --color-warn: #C28E1A;
   --color-bad:  #B23A3A;
+  --color-bad-soft: #FEE2E2;
+  --color-streak: #FF8A1A;
 
   --font-display: "Fredoka", system-ui, sans-serif;
   --font-sans: "Nunito", system-ui, sans-serif;
@@ -142,6 +145,110 @@ h1, h2, h3, h4, h5, h6 {
   box-shadow: 0 1px 0 0 var(--color-ink-soft);
 }
 
+/* Semantic-state button variants (from the redesign foundation).
+ * Green = positive / continue-after-correct, red = destructive / out-of-hearts.
+ * They follow the same chunky-3D offset-shadow recipe as the orange/blue. */
+.btn-3d-green {
+  background: var(--color-good);
+  box-shadow: 0 4px 0 0 #2D6638;
+}
+.btn-3d-green:hover {
+  box-shadow: 0 5px 0 0 #2D6638;
+  background: color-mix(in srgb, var(--color-good) 92%, white 8%);
+}
+.btn-3d-green:active {
+  box-shadow: 0 1px 0 0 #2D6638;
+}
+
+.btn-3d-red {
+  background: var(--color-bad);
+  box-shadow: 0 4px 0 0 #7A2424;
+}
+.btn-3d-red:hover {
+  box-shadow: 0 5px 0 0 #7A2424;
+  background: color-mix(in srgb, var(--color-bad) 92%, white 8%);
+}
+.btn-3d-red:active {
+  box-shadow: 0 1px 0 0 #7A2424;
+}
+
+/* Size + width modifiers — compose with any colour variant. */
+.btn-3d-lg {
+  padding: 1.1rem 1.5rem;
+  font-size: 1.1rem;
+}
+.btn-3d-sm {
+  padding: 0.5rem 0.9rem;
+  font-size: 0.85rem;
+  box-shadow: 0 3px 0 0 var(--color-brand-orange-dark);
+}
+.btn-3d-sm:hover {
+  box-shadow: 0 4px 0 0 var(--color-brand-orange-dark);
+}
+.btn-3d-sm:active {
+  box-shadow: 0 1px 0 0 var(--color-brand-orange-dark);
+}
+.btn-3d-full {
+  width: 100%;
+}
+
+/* Disabled — flat, muted, no lift. Covers both the HTML attribute and the
+ * aria pattern used for non-button elements styled as buttons. */
+.btn-3d:disabled,
+.btn-3d[aria-disabled="true"] {
+  background: var(--line-soft);
+  color: var(--text-muted);
+  box-shadow: 0 4px 0 0 var(--line-strong);
+  cursor: not-allowed;
+  transform: none;
+}
+.btn-3d:disabled:hover,
+.btn-3d[aria-disabled="true"]:hover {
+  transform: none;
+  box-shadow: 0 4px 0 0 var(--line-strong);
+  background: var(--line-soft);
+}
+
+/* ============================================================
+ * Mascot animation classes (shared foundation).
+ * Documented in docs/branding/README.md; previously only defined
+ * inline on /styleguide. Promoted here so any screen can attach an
+ * idle bob / happy bounce / surprised pop to a mascot image.
+ * ============================================================ */
+.anim-idle-bob {
+  animation: lk-idle-bob 2.5s ease-in-out infinite;
+}
+.anim-happy-bounce {
+  animation: lk-happy-bounce 0.6s ease-in-out 3;
+}
+.anim-surprised-pop {
+  animation: lk-surprised-pop 0.35s ease-in-out 2;
+}
+@keyframes lk-idle-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+@keyframes lk-happy-bounce {
+  0% { transform: translateY(0) scale(1, 1); }
+  30% { transform: translateY(-14px) scale(0.95, 1.05); }
+  60% { transform: translateY(0) scale(1.05, 0.95); }
+  80% { transform: translateY(-5px) scale(0.98, 1.02); }
+  100% { transform: translateY(0) scale(1, 1); }
+}
+@keyframes lk-surprised-pop {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.18); }
+  70% { transform: scale(0.95); }
+  100% { transform: scale(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .anim-idle-bob,
+  .anim-happy-bounce,
+  .anim-surprised-pop {
+    animation: none;
+  }
+}
+
 /* Cards */
 .card {
   background: white;
@@ -213,6 +320,12 @@ h1, h2, h3, h4, h5, h6 {
 
     --line-soft: #3C322A;
     --line-strong: #5C4A3A;
+
+    /* Feedback tints: the light values are near-white and would glare on the
+     * dark paper, so retune to dim, readable surfaces that match the banner
+     * tints above. The strong --color-good / --color-bad stay as-is. */
+    --color-good-soft: #1F3A22;
+    --color-bad-soft: #3D1F1F;
   }
 
   body {
