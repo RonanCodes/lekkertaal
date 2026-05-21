@@ -1227,3 +1227,187 @@ h1, h2, h3, h4, h5, h6 {
   color: var(--color-good);
 }
 
+/* ============================================================
+ * Input-drill screen (#211): translation_typing + fill_blank +
+ * listening_spell. Reskins the three text-entry drills onto the
+ * shared foundation (3D buttons, feedback tokens, semantic surface
+ * tokens). All colours route through tokens that the dark-mode block
+ * higher in this file already flips, so light + dark both work with
+ * no separate dark override here. Screen-scoped under .input3d-*.
+ * ============================================================ */
+
+/* Chunky text field with a 3D bottom-rail, like the buttons. */
+.input3d {
+  width: 100%;
+  border-radius: var(--radius-button);
+  border: 2px solid var(--line-strong);
+  background: var(--surface-input);
+  color: var(--text-strong);
+  padding: 0.85rem 1rem;
+  font-family: var(--font-sans);
+  font-size: 1.15rem;
+  font-weight: 700;
+  line-height: 1.3;
+  outline: none;
+  box-shadow: 0 3px 0 0 var(--line-soft);
+  transition: border-color 120ms ease, box-shadow 120ms ease, background 120ms ease;
+}
+.input3d::placeholder {
+  color: var(--text-faint);
+  font-weight: 600;
+}
+.input3d:focus {
+  border-color: var(--color-brand-orange);
+  box-shadow: 0 3px 0 0 var(--color-brand-orange-dark);
+}
+.input3d:disabled {
+  cursor: default;
+}
+.input3d--good {
+  border-color: var(--color-good);
+  background: var(--color-good-soft);
+  color: var(--color-good);
+  box-shadow: 0 3px 0 0 color-mix(in srgb, var(--color-good) 55%, transparent);
+}
+.input3d--bad {
+  border-color: var(--color-bad);
+  background: var(--color-bad-soft);
+  color: var(--color-bad);
+  box-shadow: 0 3px 0 0 color-mix(in srgb, var(--color-bad) 55%, transparent);
+}
+.input3d--shake {
+  animation: input3d-shake 0.25s ease-in-out;
+}
+@keyframes input3d-shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .input3d--shake { animation: none; }
+}
+
+/* Action row: hint pill on the left, Check on the right. */
+.input3d-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  margin-top: 0.9rem;
+}
+.input3d-actions--end { justify-content: flex-end; }
+
+/* Hint pill — soft amber, not a primary 3D button. */
+.input3d-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border-radius: var(--radius-pill);
+  border: 1.5px solid color-mix(in srgb, var(--color-warn) 45%, transparent);
+  background: var(--surface-banner-amber);
+  color: var(--text-on-banner);
+  padding: 0.5rem 0.9rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: filter 120ms ease;
+}
+.input3d-hint:hover:not(:disabled) { filter: brightness(0.96); }
+.input3d-hint:disabled { opacity: 0.5; cursor: not-allowed; }
+.input3d-hint-used {
+  margin-left: 0.2rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+/* Reveal panel after an answer is graded. */
+.input3d-reveal {
+  margin-top: 0.9rem;
+  border-radius: var(--radius-button);
+  border: 1.5px solid var(--line-soft);
+  background: var(--surface-card-alt);
+  padding: 0.9rem 1rem;
+  font-size: 0.95rem;
+}
+.input3d-reveal--good {
+  border-color: color-mix(in srgb, var(--color-good) 45%, transparent);
+  background: var(--color-good-soft);
+}
+.input3d-reveal--bad {
+  border-color: color-mix(in srgb, var(--color-bad) 45%, transparent);
+  background: var(--color-bad-soft);
+}
+.input3d-reveal-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  margin-bottom: 0.25rem;
+}
+.input3d-reveal-value {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--text-strong);
+}
+.input3d-reveal-value--good { color: var(--color-good); }
+.input3d-reveal-value--bad { color: var(--color-bad); }
+.input3d-reveal-gloss {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--text-soft);
+}
+.input3d-close-enough {
+  margin-top: 0.5rem;
+  font-size: 0.82rem;
+  font-style: italic;
+  font-weight: 600;
+  color: var(--color-good);
+}
+
+/* Fill-blank: the cloze sentence sits in a soft card with an inline slot. */
+.input3d-cloze {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.4rem;
+  border-radius: var(--radius-button);
+  border: 2px solid var(--line-strong);
+  background: var(--surface-input);
+  color: var(--text-strong);
+  padding: 1.1rem 1rem;
+  font-size: 1.35rem;
+  font-weight: 600;
+  line-height: 1.5;
+  box-shadow: 0 3px 0 0 var(--line-soft);
+}
+.input3d-cloze--good { border-color: var(--color-good); background: var(--color-good-soft); }
+.input3d-cloze--bad { border-color: var(--color-bad); background: var(--color-bad-soft); }
+.input3d-slot {
+  border: none;
+  border-bottom: 3px solid var(--color-brand-orange);
+  background: transparent;
+  color: var(--color-brand-orange);
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 800;
+  outline: none;
+  padding: 0 0.2rem 0.1rem;
+}
+.input3d-slot::placeholder { color: var(--text-faint); }
+.input3d-slot:focus { border-bottom-color: var(--color-brand-orange-dark); }
+.input3d-cloze--good .input3d-slot { border-bottom-color: var(--color-good); color: var(--color-good); }
+.input3d-cloze--bad .input3d-slot { border-bottom-color: var(--color-bad); color: var(--color-bad); }
+
+/* Listening-spell: big tactile speaker hero centred above the field. */
+.input3d-speaker {
+  display: flex;
+  justify-content: center;
+  padding: 0.75rem 0 0.25rem;
+}
+

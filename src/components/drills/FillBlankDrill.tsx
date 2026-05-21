@@ -60,15 +60,11 @@ export function FillBlankDrill({ drill, onSubmit }: DrillProps) {
       promptLabel="Fill in the blank"
       prompt={drill.promptEn ?? "Complete the sentence"}
     >
-      <div className="space-y-3">
+      <div>
         <div
-          className={`flex flex-wrap items-center gap-2 rounded-2xl border-2 px-4 py-4 text-xl ${
-            submitted
-              ? correct
-                ? "border-emerald-300 bg-emerald-50"
-                : "border-rose-300 bg-rose-50"
-              : "border-neutral-200 bg-white"
-          } ${shaking ? "animate-[shake_0.2s_ease-in-out]" : ""}`}
+          className={`input3d-cloze ${
+            submitted ? (correct ? "input3d-cloze--good" : "input3d-cloze--bad") : ""
+          } ${shaking ? "input3d--shake" : ""}`}
         >
           {before && <span>{before}</span>}
           <input
@@ -87,46 +83,38 @@ export function FillBlankDrill({ drill, onSubmit }: DrillProps) {
             placeholder="___"
             disabled={submitted}
             style={{ width: `${widthCh}ch` }}
-            className={`inline-block rounded-lg border-b-2 bg-transparent px-1 text-center text-xl font-bold outline-none ${
-              submitted
-                ? correct
-                  ? "border-emerald-500 text-emerald-700"
-                  : "border-rose-500 text-rose-700"
-                : "border-orange-400 text-orange-700 focus:border-orange-600"
-            }`}
+            className="input3d-slot"
           />
           {after && <span>{after}</span>}
         </div>
 
-        <div className="flex items-center justify-between gap-2">
+        <div className="input3d-actions">
           <button
             type="button"
             onClick={useHint}
             disabled={submitted || hintUsed}
-            className="rounded-full border border-amber-300 bg-amber-50 px-3 py-2 text-xs font-semibold text-amber-800 hover:bg-amber-100 disabled:opacity-50"
+            className="input3d-hint"
           >
             💡 Hint (10 coins)
-            {hintUsed && <span className="ml-1 text-amber-600">used</span>}
+            {hintUsed && <span className="input3d-hint-used">used</span>}
           </button>
           <button
             type="button"
             onClick={submit}
             disabled={submitted || value.trim().length === 0}
-            className="rounded-full bg-orange-500 px-5 py-2 text-sm font-semibold text-white hover:bg-orange-600 disabled:opacity-50"
+            className="btn-3d btn-3d-green"
           >
             Check
           </button>
         </div>
 
         {submitted && !correct && (
-          <div className="rounded-2xl border-2 border-neutral-200 bg-neutral-50 p-3 text-sm">
-            <div className="text-xs uppercase tracking-wide text-neutral-500">
-              Correct answer
-            </div>
-            <div className="flex items-center gap-2 font-semibold text-neutral-800">
+          <div className="input3d-reveal input3d-reveal--bad">
+            <div className="input3d-reveal-label">Correct answer</div>
+            <div className="input3d-reveal-value">
               <span>
                 {before}
-                <span className="text-emerald-700">{canonical}</span>
+                <span className="input3d-reveal-value--good">{canonical}</span>
                 {after}
               </span>
               <Speaker text={`${before}${canonical}${after}`} size="sm" />
@@ -134,13 +122,6 @@ export function FillBlankDrill({ drill, onSubmit }: DrillProps) {
           </div>
         )}
       </div>
-      <style>{`
-        @keyframes shake {
-          0%, 100% { transform: translateX(0); }
-          25% { transform: translateX(-4px); }
-          75% { transform: translateX(4px); }
-        }
-      `}</style>
     </DrillFrame>
   );
 }
