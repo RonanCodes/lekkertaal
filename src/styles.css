@@ -1227,3 +1227,165 @@ h1, h2, h3, h4, h5, h6 {
   color: var(--color-good);
 }
 
+/* ============================================================
+ * Word-ordering drill (chip tray) — screen-scoped (issue #212).
+ * A ruled answer tray + a chip pool. Chips reuse the chunky-3D
+ * offset-shadow feel of the #205 buttons; the tray tints
+ * good/bad via the shared --color-good / --color-bad tokens so
+ * dark mode flips automatically. No global brand-token edits;
+ * tap-reordering behaviour lives in the component, this block is
+ * presentation only.
+ * ============================================================ */
+.word-order {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Answer tray — where placed chips land, drawn as ruled lines. */
+.word-order-tray {
+  min-height: 5.5rem;
+  display: flex;
+  align-items: center;
+  border-radius: var(--radius-card);
+  border: 2px dashed var(--line-strong);
+  background: var(--surface-card-alt);
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent,
+    transparent calc(2.75rem - 2px),
+    var(--line-soft) calc(2.75rem - 2px),
+    var(--line-soft) 2.75rem
+  );
+  padding: 0.75rem 0.85rem;
+  transition: border-color 160ms ease, background-color 160ms ease;
+}
+.word-order-tray--good {
+  border-style: solid;
+  border-color: var(--color-good);
+  background: var(--color-good-soft);
+  background-image: none;
+}
+.word-order-tray--bad {
+  border-style: solid;
+  border-color: var(--color-bad);
+  background: var(--color-bad-soft);
+  background-image: none;
+}
+.word-order-tray--shake {
+  animation: lk-word-order-shake 0.22s ease-in-out;
+}
+.word-order-tray__hint {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+/* Chip pool — the remaining unplaced words. */
+.word-order-pool {
+  border-radius: var(--radius-card);
+  border: 1.5px solid var(--line-soft);
+  background: var(--surface-card-alt);
+  padding: 0.85rem;
+  min-height: 4rem;
+}
+.word-order-pool__empty {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.word-order-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+/* The chip itself — chunky tappable word token (44px min target). */
+.word-order-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0.55rem 0.95rem;
+  border-radius: var(--radius-button);
+  border: 1.5px solid var(--line-strong);
+  background: var(--surface-card);
+  color: var(--text-strong);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 3px 0 0 var(--line-strong);
+  transition: transform 80ms ease-out, box-shadow 80ms ease-out,
+    border-color 120ms ease, background 120ms ease;
+}
+.word-order-chip:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 0 0 var(--line-strong);
+  border-color: var(--color-brand-orange);
+}
+.word-order-chip:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 0 var(--line-strong);
+}
+/* Placed chips read as the "chosen" set: warm brand border + lift. */
+.word-order-chip--placed {
+  border-color: var(--color-brand-orange);
+  box-shadow: 0 3px 0 0 var(--color-brand-orange-dark);
+}
+.word-order-chip--placed:hover {
+  box-shadow: 0 4px 0 0 var(--color-brand-orange-dark);
+}
+.word-order-chip--placed:active {
+  box-shadow: 0 1px 0 0 var(--color-brand-orange-dark);
+}
+.word-order-chip:disabled {
+  cursor: default;
+  transform: none;
+  opacity: 0.85;
+}
+.word-order-chip:disabled:hover {
+  transform: none;
+}
+
+.word-order-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+/* Post-answer canonical reveal. */
+.word-order-canonical {
+  border-radius: var(--radius-card);
+  border: 1.5px solid var(--line-soft);
+  background: var(--surface-card-alt);
+  padding: 0.85rem;
+  font-size: 0.9rem;
+}
+.word-order-canonical__label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  margin-bottom: 0.25rem;
+}
+.word-order-canonical__row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  color: var(--text-strong);
+}
+
+@keyframes lk-word-order-shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .word-order-tray--shake { animation: none; }
+}
+
