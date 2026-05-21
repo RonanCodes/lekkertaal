@@ -192,83 +192,74 @@ export function MatchPairsDrill({ drill, onSubmit, vocabPool, vocabEnrichedMap }
       promptLabel="Match pairs"
       prompt={drill.promptEn ?? "Match the Dutch words to their English meanings"}
     >
-      <div className="grid grid-cols-2 gap-3" data-testid="match-pairs-drill">
-        <div className="space-y-2">
+      <div className="match-pairs" data-testid="match-pairs-drill">
+        <div className="match-pairs__col">
           {visibleNl.map((t, i) => {
             const isSelected = selectedNl === t.idx;
             const isWrong = flash?.kind === "wrong" && flash.nlIdx === t.idx;
             const isCorrect = flash?.kind === "correct" && flash.nlIdx === t.idx;
             const isFocused = kbdEnabled && focusCol === "nl" && focusPos === i;
+            const cls = [
+              "match-pairs__tile",
+              "match-pairs__tile--nl",
+              isCorrect && "match-pairs__tile--correct",
+              isWrong && "match-pairs__tile--wrong",
+              !isCorrect && !isWrong && isSelected && "match-pairs__tile--selected",
+              !isCorrect && !isWrong && !isSelected && isFocused && "match-pairs__tile--focused",
+            ]
+              .filter(Boolean)
+              .join(" ");
+            const enriched = vocabEnrichedMap?.[t.text.toLowerCase()];
             return (
               <button
                 key={t.key}
                 data-testid={`match-pairs-nl-${t.idx}`}
                 onClick={() => pickNl(t.idx)}
-                className={`flex w-full items-center justify-between rounded-2xl border-2 px-3 py-3 text-left text-base font-semibold transition-all ${
-                  isCorrect
-                    ? "border-emerald-500 bg-emerald-100"
-                    : isWrong
-                      ? "animate-[shake_0.2s_ease-in-out] border-rose-500 bg-rose-100"
-                      : isSelected
-                        ? "border-orange-500 bg-orange-100"
-                        : isFocused
-                          ? "border-orange-400 bg-white"
-                          : "border-neutral-200 bg-white hover:border-orange-300"
-                }`}
+                className={cls}
               >
-                {(() => {
-                  const enriched = vocabEnrichedMap?.[t.text.toLowerCase()];
-                  return (
-                    <>
-                      <span className="flex flex-col gap-0">
-                        <span>{t.text}</span>
-                        {enriched?.ipa && (
-                          <span className="font-mono text-xs font-normal text-neutral-400">
-                            {enriched.ipa}
-                          </span>
-                        )}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        {enriched?.gender && (
-                          <span className="rounded-full border border-neutral-200 bg-neutral-50 px-1.5 py-0 text-xs font-normal text-neutral-500">
-                            {enriched.gender}
-                          </span>
-                        )}
-                        <Speaker text={t.text} size="sm" />
-                        {enriched?.sources && (
-                          <VocabSourceAttribution
-                            word={t.text}
-                            sources={enriched.sources}
-                          />
-                        )}
-                      </span>
-                    </>
-                  );
-                })()}
+                <span className="match-pairs__word">
+                  <span>{t.text}</span>
+                  {enriched?.ipa && (
+                    <span className="match-pairs__ipa">{enriched.ipa}</span>
+                  )}
+                </span>
+                <span className="match-pairs__meta">
+                  {enriched?.gender && (
+                    <span className="match-pairs__gender">{enriched.gender}</span>
+                  )}
+                  <Speaker text={t.text} size="sm" />
+                  {enriched?.sources && (
+                    <VocabSourceAttribution
+                      word={t.text}
+                      sources={enriched.sources}
+                    />
+                  )}
+                </span>
               </button>
             );
           })}
         </div>
-        <div className="space-y-2">
+        <div className="match-pairs__col">
           {visibleEn.map((t, i) => {
             const isWrong = flash?.kind === "wrong" && flash.enIdx === t.idx;
             const isCorrect = flash?.kind === "correct" && flash.enIdx === t.idx;
             const isFocused = kbdEnabled && focusCol === "en" && focusPos === i;
+            const cls = [
+              "match-pairs__tile",
+              "match-pairs__tile--en",
+              isCorrect && "match-pairs__tile--correct",
+              isWrong && "match-pairs__tile--wrong",
+              !isCorrect && !isWrong && isFocused && "match-pairs__tile--focused",
+            ]
+              .filter(Boolean)
+              .join(" ");
             return (
               <button
                 key={t.key}
                 data-testid={`match-pairs-en-${t.idx}`}
                 onClick={() => pickEn(t.idx)}
                 disabled={selectedNl == null}
-                className={`w-full rounded-2xl border-2 px-3 py-3 text-base font-semibold transition-all disabled:opacity-50 ${
-                  isCorrect
-                    ? "border-emerald-500 bg-emerald-100"
-                    : isWrong
-                      ? "animate-[shake_0.2s_ease-in-out] border-rose-500 bg-rose-100"
-                      : isFocused
-                        ? "border-orange-400 bg-white"
-                        : "border-neutral-200 bg-white hover:border-orange-300"
-                }`}
+                className={cls}
               >
                 {t.text}
               </button>
@@ -276,17 +267,10 @@ export function MatchPairsDrill({ drill, onSubmit, vocabPool, vocabEnrichedMap }
           })}
         </div>
       </div>
-      <p className="mt-3 text-xs text-neutral-500">
+      <p className="match-pairs__hint">
         Tap a Dutch word, then its English translation.
         {kbdEnabled && " Use ←/→ to switch columns, ↑/↓ to move, Enter to pick."}
       </p>
-      <style>{`
-        @keyframes shake {
-          0%, 100% { transform: translateX(0); }
-          25% { transform: translateX(-4px); }
-          75% { transform: translateX(4px); }
-        }
-      `}</style>
     </DrillFrame>
   );
 }
