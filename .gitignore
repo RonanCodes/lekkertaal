@@ -1,38 +1,36 @@
+
 __unconfig*
+.claude/
+.completion-reports/
 .dev.vars
 .DS_Store
 .env
 .env*
+.nightshift/last-retro-url.txt
+.nightshift/state/
 .nitro
 .output
+.ralph/.gitignore-policy
+.ralph/*.progress.txt
+.ralph/sessions/*/
+.ronan-skills-llm-wiki.local.json
+.swarm/
 .tanstack
 .vinxi
 .wrangler
 *.local
+# Everything else under .nightshift/ is ephemeral wave-coordination state.
+# Local-factory artefacts (Ralph / planner-worker / night-shift, etc).
+# Night-shift artefacts: retros stay tracked under .nightshift/retros/.
+# patterns.md and *.session.md stay tracked; everything else under .ralph/ is ephemeral.
+# Playwright
+# See ~/Dev/ronan-skills/skills/ralph/SKILL.md § "Run artefacts (the canonical shape)".
 dist
 dist-ssr
 node_modules
-todos.json
-seed/.cache/
-src/routeTree.gen.ts
-
-# Playwright
-test-results
 playwright-report
 playwright/.cache
-.swarm/
-.ronan-skills-llm-wiki.local.json
-.claude/
-
-# Local-factory artefacts (Ralph / planner-worker / night-shift, etc).
-# See ~/Dev/ronan-skills/skills/ralph/SKILL.md § "Run artefacts (the canonical shape)".
-# patterns.md and *.session.md stay tracked; everything else under .ralph/ is ephemeral.
-.ralph/sessions/*/
-.ralph/*.progress.txt
-.ralph/.gitignore-policy
-.completion-reports/
-
-# Night-shift artefacts: retros stay tracked under .nightshift/retros/.
-# Everything else under .nightshift/ is ephemeral wave-coordination state.
-.nightshift/state/
-.nightshift/last-retro-url.txt
+seed/.cache/
+src/routeTree.gen.ts
+test-results
+todos.json

@@ -1,6 +1,6 @@
 /* Lekkertaal service worker — install/activate, fetch caching, push, click. */
 
-const CACHE_VERSION = "lekkertaal-v1";
+const CACHE_VERSION = "lekkertaal-v2";
 const SHELL_CACHE = `${CACHE_VERSION}-shell`;
 const STATIC_CACHE = `${CACHE_VERSION}-static`;
 
