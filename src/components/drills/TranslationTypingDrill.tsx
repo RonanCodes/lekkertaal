@@ -98,31 +98,27 @@ export function TranslationTypingDrill({ drill, onSubmit }: DrillProps) {
           placeholder="Type the Dutch translation..."
           disabled={submitted}
           data-testid="translation-typing-input"
-          className={`w-full rounded-2xl border-2 px-4 py-3 text-lg font-semibold outline-none transition-all ${
-            submitted
-              ? correct
-                ? "border-emerald-400 bg-emerald-50"
-                : "border-rose-400 bg-rose-50"
-              : "border-neutral-300 bg-white focus:border-orange-400"
-          } ${shaking ? "animate-[shake_0.2s_ease-in-out]" : ""}`}
+          className={`input3d ${
+            submitted ? (correct ? "input3d--good" : "input3d--bad") : ""
+          } ${shaking ? "input3d--shake" : ""}`}
         />
 
-        <div className="flex items-center justify-between gap-2">
+        <div className="input3d-actions">
           <button
             type="button"
             onClick={useHint}
             disabled={submitted || hintUsed}
-            className="rounded-full border border-amber-300 bg-amber-50 px-3 py-2 text-xs font-semibold text-amber-800 hover:bg-amber-100 disabled:opacity-50"
+            className="input3d-hint"
           >
             💡 Hint (5 coins)
-            {hintUsed && <span className="ml-1 text-amber-600">used</span>}
+            {hintUsed && <span className="input3d-hint-used">used</span>}
           </button>
           <button
             type="button"
             onClick={submit}
             disabled={submitted || value.trim().length === 0}
             data-testid="translation-typing-submit"
-            className="rounded-full bg-orange-500 px-5 py-2 text-sm font-semibold text-white hover:bg-orange-600 disabled:opacity-50"
+            className="btn-3d btn-3d-green"
           >
             Check
           </button>
@@ -130,24 +126,21 @@ export function TranslationTypingDrill({ drill, onSubmit }: DrillProps) {
 
         {submitted && (
           <div
-            className="rounded-2xl border-2 border-neutral-200 bg-neutral-50 p-3 text-sm"
+            className={`input3d-reveal ${correct ? "input3d-reveal--good" : "input3d-reveal--bad"}`}
             data-testid="translation-typing-feedback"
           >
-            <div className="mb-1 text-xs uppercase tracking-wide text-neutral-500">
+            <div className="input3d-reveal-label">
               {correct ? "Your answer" : "You wrote"}
             </div>
-            <div className={`font-semibold ${correct ? "text-emerald-700" : "text-rose-700"}`}>
+            <div className={`input3d-reveal-value ${correct ? "input3d-reveal-value--good" : "input3d-reveal-value--bad"}`}>
               {value}
             </div>
             {!correct && (
               <>
-                <div className="mt-2 text-xs uppercase tracking-wide text-neutral-500">
+                <div className="input3d-reveal-label" style={{ marginTop: "0.6rem" }}>
                   Canonical
                 </div>
-                <div
-                  className="flex items-center gap-2 font-semibold text-neutral-800"
-                  data-testid="translation-typing-canonical"
-                >
+                <div className="input3d-reveal-value" data-testid="translation-typing-canonical">
                   <span>{canonical}</span>
                   <Speaker text={canonical} size="sm" />
                 </div>
@@ -155,7 +148,7 @@ export function TranslationTypingDrill({ drill, onSubmit }: DrillProps) {
             )}
             {correct && (
               <div
-                className="mt-2 flex items-center gap-2 text-xs text-neutral-500"
+                className="input3d-reveal-gloss input3d-reveal-value"
                 data-testid="translation-typing-canonical"
               >
                 Canonical: <span>{canonical}</span>
@@ -163,23 +156,13 @@ export function TranslationTypingDrill({ drill, onSubmit }: DrillProps) {
               </div>
             )}
             {nearMiss && (
-              <div
-                className="mt-2 text-xs italic text-emerald-700"
-                data-testid="translation-typing-close-enough"
-              >
+              <div className="input3d-close-enough" data-testid="translation-typing-close-enough">
                 Close enough — counted as correct.
               </div>
             )}
           </div>
         )}
       </div>
-      <style>{`
-        @keyframes shake {
-          0%, 100% { transform: translateX(0); }
-          25% { transform: translateX(-4px); }
-          75% { transform: translateX(4px); }
-        }
-      `}</style>
     </DrillFrame>
   );
 }
