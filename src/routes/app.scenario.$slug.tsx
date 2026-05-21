@@ -131,30 +131,62 @@ function ScenarioChatPage() {
     void sendMessage({ text: trimmed });
   }
 
+  const busy = status === "submitted" || status === "streaming";
+  // Kroket-frame state: surprised while a turn streams in, idle otherwise.
+  const kroketFrame = busy ? "surprised" : "idle";
+  const objectives = scenario.successCriteria;
+  const mustUse = scenario.mustUseVocab;
+
   return (
     <AppShell user={user}>
-      <div className="mx-auto flex h-[calc(100vh-4rem)] max-w-2xl flex-col px-4">
-        {/* Header */}
-        <div className="border-b border-neutral-200 py-3">
-          <div className="flex items-center justify-between gap-3">
-            <div className="min-w-0">
-              <div className="truncate text-sm text-neutral-500">
-                Roleplay · {scenario.npcName}
+      <div className="roleplay-scene mx-auto flex h-[calc(100vh-4rem)] max-w-2xl flex-col px-4">
+        {/* Scene header: Kroket companion + NPC + objectives + turn meter */}
+        <header className="roleplay-header">
+          <div className="flex items-center gap-3">
+            <img
+              src={`/mascot/treats/kroket/${kroketFrame}.png`}
+              alt=""
+              aria-hidden
+              className={`roleplay-companion h-12 w-12 shrink-0 ${
+                busy ? "anim-surprised-pop" : "anim-idle-bob"
+              }`}
+            />
+            <div className="min-w-0 flex-1">
+              <div className="truncate text-xs font-semibold uppercase tracking-wide text-neutral-500">
+                Roleplay met {scenario.npcName}
               </div>
-              <h1 className="truncate text-lg font-semibold text-neutral-900">
+              <h1 className="truncate text-lg font-bold text-neutral-900">
                 {scenario.titleNl}
               </h1>
             </div>
-            <div className="text-xs text-neutral-500">
-              Turn {Math.min(userTurnCount, MAX_USER_TURNS)} / {MAX_USER_TURNS}
+            <div className="roleplay-turn-meter" aria-label={`Turn ${Math.min(userTurnCount, MAX_USER_TURNS)} of ${MAX_USER_TURNS}`}>
+              <span className="roleplay-turn-count">
+                {Math.min(userTurnCount, MAX_USER_TURNS)}
+              </span>
+              <span className="roleplay-turn-total">/ {MAX_USER_TURNS}</span>
             </div>
           </div>
-        </div>
+
+          {(objectives.length > 0 || mustUse.length > 0) && (
+            <div className="roleplay-objectives" aria-label="Scene objectives">
+              {objectives.slice(0, 3).map((o, i) => (
+                <span key={`obj-${i}`} className="roleplay-objective-chip">
+                  🎯 {o}
+                </span>
+              ))}
+              {mustUse.slice(0, 4).map((w, i) => (
+                <span key={`vocab-${i}`} className="roleplay-vocab-chip">
+                  {w}
+                </span>
+              ))}
+            </div>
+          )}
+        </header>
 
         {/* Transcript */}
         <div
           ref={scrollRef}
-          className="flex-1 space-y-3 overflow-y-auto py-4"
+          className="roleplay-transcript flex-1 space-y-3 overflow-y-auto py-4"
           aria-live="polite"
         >
           {messages.map((m) => (
@@ -162,38 +194,46 @@ function ScenarioChatPage() {
               key={m.id}
               role={m.role}
               text={extractText(m)}
+              npcName={scenario.npcName}
               voiceId={scenario.npcVoiceId}
               onWordClick={(word) => {
-                if (status === "submitted" || status === "streaming" || ended) return;
+                if (busy || ended) return;
                 void sendMessage({ text: `Wat betekent "${word}"?` });
               }}
             />
           ))}
-          {(status === "submitted" || status === "streaming") && (
-            <div className="text-xs text-neutral-400">{scenario.npcName} typt...</div>
+          {busy && (
+            <div className="flex justify-start">
+              <div className="roleplay-typing" aria-label={`${scenario.npcName} typt`}>
+                <span className="roleplay-typing-name">{scenario.npcName}</span>
+                <span className="roleplay-typing-dots" aria-hidden>
+                  <span />
+                  <span />
+                  <span />
+                </span>
+              </div>
+            </div>
           )}
         </div>
 
         {/* Composer + sticky end button */}
         <form
           onSubmit={onSubmit}
-          className="sticky bottom-0 flex gap-2 border-t border-neutral-200 bg-white/95 py-3 backdrop-blur"
+          className="roleplay-composer sticky bottom-0 flex gap-2 bg-white/95 py-3 backdrop-blur"
         >
           <input
             type="text"
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
             placeholder='Typ in het Nederlands... (of "klaar" om te stoppen)'
-            disabled={ended || status === "submitted" || status === "streaming"}
-            className="flex-1 rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500 disabled:bg-neutral-100"
+            disabled={ended || busy}
+            className="roleplay-input flex-1 disabled:opacity-60"
             autoFocus
           />
           <button
             type="submit"
-            disabled={
-              !draft.trim() || ended || status === "submitted" || status === "streaming"
-            }
-            className="rounded-lg bg-orange-600 px-4 py-2 text-sm font-semibold text-white hover:bg-orange-700 disabled:cursor-not-allowed disabled:bg-neutral-300"
+            disabled={!draft.trim() || ended || busy}
+            className="btn-3d btn-3d-sm"
           >
             Stuur
           </button>
@@ -201,7 +241,7 @@ function ScenarioChatPage() {
             type="button"
             onClick={() => void endConversation()}
             disabled={ended}
-            className="rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm text-neutral-700 hover:bg-neutral-50 disabled:opacity-50"
+            className="btn-3d btn-3d-ghost btn-3d-sm"
           >
             Klaar
           </button>
@@ -214,30 +254,36 @@ function ScenarioChatPage() {
 function ChatBubble({
   role,
   text,
+  npcName,
   voiceId,
   onWordClick,
 }: {
   role: string;
   text: string;
+  npcName: string;
   voiceId: string | null;
   onWordClick?: (word: string) => void;
 }) {
   const isUser = role === "user";
+  if (isUser) {
+    return (
+      <div className="flex justify-end">
+        <div className="roleplay-bubble roleplay-bubble--user max-w-[80%]">
+          <p className="whitespace-pre-wrap leading-relaxed">{text}</p>
+        </div>
+      </div>
+    );
+  }
   return (
-    <div className={`flex ${isUser ? "justify-end" : "justify-start"}`}>
-      <div
-        className={`max-w-[80%] rounded-2xl px-4 py-2 text-sm ${
-          isUser
-            ? "bg-orange-600 text-white"
-            : "bg-white text-neutral-900 ring-1 ring-neutral-200"
-        }`}
-      >
+    <div className="flex justify-start gap-2">
+      <span className="roleplay-bubble-avatar" aria-hidden>
+        {npcName.charAt(0).toUpperCase()}
+      </span>
+      <div className="roleplay-bubble roleplay-bubble--npc max-w-[80%]">
         <p className="whitespace-pre-wrap leading-relaxed">
-          {isUser || !onWordClick ? text : <ClickableDutchWords text={text} onWordClick={onWordClick} />}
+          {onWordClick ? <ClickableDutchWords text={text} onWordClick={onWordClick} /> : text}
         </p>
-        {!isUser && text && (
-          <SpeakButton text={text} voiceId={voiceId} />
-        )}
+        {text && <SpeakButton text={text} voiceId={voiceId} />}
       </div>
     </div>
   );

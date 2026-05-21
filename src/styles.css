@@ -792,3 +792,238 @@ h1, h2, h3, h4, h5, h6 {
   .feedback-bar--bad .feedback-bar__title { color: #FFA8A8; }
 }
 
+/* ============================================================
+ * Roleplay scene + scorecard — screen-scoped (issue #216).
+ * Builds on the #205 foundation (3D buttons, feedback tokens,
+ * mascot anims) + the semantic surface tokens, so dark mode flips
+ * automatically. The Kroket treat mascot rides along as the
+ * conversation companion; bubbles, objectives header, inline
+ * correction chips and the scorecard hero are all defined here.
+ * No global brand-token edits.
+ * ============================================================ */
+
+/* Header: companion + NPC + objectives + turn meter */
+.roleplay-header {
+  padding: 0.85rem 0;
+  border-bottom: 1.5px solid var(--line-soft);
+}
+.roleplay-companion {
+  object-fit: contain;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
+}
+.roleplay-turn-meter {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.15rem;
+  padding: 0.3rem 0.7rem;
+  border-radius: var(--radius-pill);
+  background: var(--color-brand-orange-soft);
+  color: var(--color-brand-orange-dark);
+  font-family: var(--font-display);
+  font-weight: 700;
+}
+.roleplay-turn-count { font-size: 1.05rem; line-height: 1; }
+.roleplay-turn-total { font-size: 0.75rem; opacity: 0.8; }
+
+.roleplay-objectives {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.6rem;
+}
+.roleplay-objective-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.78rem;
+  font-weight: 600;
+  background: var(--surface-banner-blue);
+  color: var(--color-brand-blue-dark);
+}
+.roleplay-vocab-chip {
+  padding: 0.25rem 0.55rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.78rem;
+  font-weight: 600;
+  background: var(--surface-card-alt);
+  border: 1px solid var(--line-soft);
+  color: var(--text-soft);
+}
+
+/* Bubbles */
+.roleplay-transcript { scroll-behavior: smooth; }
+.roleplay-bubble {
+  border-radius: 1.25rem;
+  padding: 0.6rem 0.9rem;
+  font-size: 0.9rem;
+}
+.roleplay-bubble--user {
+  background: var(--color-brand-orange);
+  color: #fff;
+  border-bottom-right-radius: 0.4rem;
+}
+.roleplay-bubble--npc {
+  background: var(--surface-card);
+  color: var(--text-strong);
+  border: 1px solid var(--line-soft);
+  border-bottom-left-radius: 0.4rem;
+}
+.roleplay-bubble-avatar {
+  flex-shrink: 0;
+  width: 2rem;
+  height: 2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-pill);
+  background: var(--color-brand-blue);
+  color: #fff;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.9rem;
+  margin-top: 0.15rem;
+}
+
+/* Typing indicator */
+.roleplay-typing {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 0.9rem;
+  border-radius: 1.25rem;
+  border-bottom-left-radius: 0.4rem;
+  background: var(--surface-card);
+  border: 1px solid var(--line-soft);
+}
+.roleplay-typing-name {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+.roleplay-typing-dots {
+  display: inline-flex;
+  gap: 0.2rem;
+}
+.roleplay-typing-dots span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-brand-orange);
+  animation: lk-typing-bounce 1.2s ease-in-out infinite;
+}
+.roleplay-typing-dots span:nth-child(2) { animation-delay: 0.15s; }
+.roleplay-typing-dots span:nth-child(3) { animation-delay: 0.3s; }
+@keyframes lk-typing-bounce {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
+  30% { transform: translateY(-4px); opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .roleplay-typing-dots span { animation: none; }
+}
+
+/* Composer */
+.roleplay-composer {
+  border-top: 1.5px solid var(--line-soft);
+}
+.roleplay-input {
+  border-radius: var(--radius-button);
+  border: 1.5px solid var(--line-soft);
+  background: var(--surface-input);
+  color: var(--text-strong);
+  padding: 0.7rem 0.9rem;
+  font-size: 0.9rem;
+  font-family: var(--font-sans);
+}
+.roleplay-input::placeholder { color: var(--text-faint); }
+.roleplay-input:focus {
+  outline: none;
+  border-color: var(--color-brand-orange);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-brand-orange) 25%, transparent);
+}
+
+/* ---- Scorecard ---- */
+.scorecard-hero {
+  text-align: center;
+  border-radius: var(--radius-card);
+  padding: 1.5rem 1.25rem;
+  border: 1.5px solid var(--line-soft);
+  background: var(--surface-card);
+}
+.scorecard-hero--pass {
+  border-color: var(--color-good);
+  background: var(--color-good-soft);
+}
+.scorecard-hero--fail {
+  border-color: var(--color-brand-orange-soft);
+  background: var(--surface-banner);
+}
+.scorecard-stars {
+  margin-top: 0.75rem;
+  font-size: 2.5rem;
+  line-height: 1;
+  color: var(--color-streak);
+  letter-spacing: 0.1rem;
+}
+.scorecard-stars-empty { color: var(--line-strong); }
+.scorecard-result-pill {
+  padding: 0.25rem 0.7rem;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.8rem;
+}
+.scorecard-result-pill--pass { background: var(--color-good); color: #fff; }
+.scorecard-result-pill--fail {
+  background: var(--surface-card-alt);
+  color: var(--text-soft);
+  border: 1px solid var(--line-soft);
+}
+.scorecard-badge {
+  margin-top: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.8rem;
+  border-radius: var(--radius-pill);
+  background: var(--surface-banner-amber);
+  color: var(--text-on-banner);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+.scorecard-card { padding: 1.25rem; }
+.scorecard-section-title {
+  margin-bottom: 0.85rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+.scorecard-rubric-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.scorecard-rubric-stars { font-size: 0.95rem; letter-spacing: 0.05rem; }
+.scorecard-rubric-stars-on { color: var(--color-streak); }
+.scorecard-correction {
+  border-radius: var(--radius-button);
+  background: var(--surface-card-alt);
+  padding: 0.75rem;
+  font-size: 0.85rem;
+}
+.scorecard-chip-bad {
+  border-radius: 0.4rem;
+  padding: 0.1rem 0.5rem;
+  background: var(--color-bad-soft);
+  color: var(--color-bad);
+}
+.scorecard-chip-good {
+  border-radius: 0.4rem;
+  padding: 0.1rem 0.5rem;
+  background: var(--color-good-soft);
+  color: var(--color-good);
+}
+
