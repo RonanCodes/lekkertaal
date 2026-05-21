@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { pickCelebration } from "../app.lesson.$lessonId.complete";
+import {
+  accuracyFromResult,
+  milestoneBadge,
+  pickCelebration,
+} from "../app.lesson.$lessonId.complete";
 
 /**
  * #234 — the lesson player now passes `?correct&total` to the complete screen.
@@ -32,5 +36,59 @@ describe("pickCelebration", () => {
     expect(pickCelebration({ correct: 5, total: 8, milestone: true, streakDays: 3 })).toBe(
       "milestone",
     );
+  });
+});
+
+/**
+ * #245 — the accuracy row renders from the passed correct/total. These lock in
+ * the pure summary the row reads: rounded percentage, raw counts, and a hidden
+ * row (null) whenever the player didn't pass a usable result.
+ */
+describe("accuracyFromResult", () => {
+  it("summarises a partial run with rounded percentage", () => {
+    expect(accuracyFromResult({ correct: 8, total: 9 })).toEqual({
+      pct: 89,
+      correct: 8,
+      mistakes: 1,
+    });
+  });
+
+  it("reports 100% with zero mistakes on a flawless run", () => {
+    expect(accuracyFromResult({ correct: 10, total: 10 })).toEqual({
+      pct: 100,
+      correct: 10,
+      mistakes: 0,
+    });
+  });
+
+  it("returns null when no result was passed", () => {
+    expect(accuracyFromResult({})).toBeNull();
+  });
+
+  it("returns null on an empty lesson (total 0)", () => {
+    expect(accuracyFromResult({ correct: 0, total: 0 })).toBeNull();
+  });
+
+  it("clamps correct above total so mistakes never go negative", () => {
+    expect(accuracyFromResult({ correct: 12, total: 10 })).toEqual({
+      pct: 100,
+      correct: 10,
+      mistakes: 0,
+    });
+  });
+});
+
+describe("milestoneBadge", () => {
+  it("names the 30-day badge", () => {
+    expect(milestoneBadge(30).name).toBe("Maand-monster");
+  });
+
+  it("picks the highest threshold the streak has crossed", () => {
+    expect(milestoneBadge(120).name).toBe("Eeuweling");
+    expect(milestoneBadge(365).name).toBe("Jaar-held");
+  });
+
+  it("falls back to the week badge below 14 days", () => {
+    expect(milestoneBadge(7).name).toBe("Week-winnaar");
   });
 });
