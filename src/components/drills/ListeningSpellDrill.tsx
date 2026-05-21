@@ -38,7 +38,7 @@ export function ListeningSpellDrill({ drill, onSubmit }: DrillProps) {
         <button
           type="button"
           onClick={() => onSubmit(true)}
-          className="rounded-full bg-orange-500 px-5 py-2 text-sm font-semibold text-white hover:bg-orange-600"
+          className="btn-3d btn-3d-green"
         >
           Skip
         </button>
@@ -70,11 +70,8 @@ export function ListeningSpellDrill({ drill, onSubmit }: DrillProps) {
       promptLabel="Listening"
       prompt={drill.promptEn ?? "Listen and type what you hear"}
     >
-      <div className="space-y-4" data-testid="listening-spell-drill">
-        <div
-          className="flex justify-center py-2"
-          data-testid="listening-spell-speaker"
-        >
+      <div data-testid="listening-spell-drill">
+        <div className="input3d-speaker" data-testid="listening-spell-speaker">
           <Speaker text={pair.nl} size="lg" ariaLabel="Play the Dutch word" />
         </div>
 
@@ -95,22 +92,18 @@ export function ListeningSpellDrill({ drill, onSubmit }: DrillProps) {
           disabled={submitted}
           aria-label="Type the Dutch word you heard"
           data-testid="listening-spell-input"
-          className={`w-full rounded-2xl border-2 px-4 py-3 text-lg font-semibold outline-none transition-all ${
-            submitted
-              ? correct
-                ? "border-emerald-400 bg-emerald-50"
-                : "border-rose-400 bg-rose-50"
-              : "border-neutral-300 bg-white focus:border-orange-400"
+          className={`input3d ${
+            submitted ? (correct ? "input3d--good" : "input3d--bad") : ""
           }`}
         />
 
-        <div className="flex justify-end">
+        <div className="input3d-actions input3d-actions--end">
           <button
             type="button"
             onClick={grade}
             disabled={submitted || value.trim().length === 0}
             data-testid="listening-spell-submit"
-            className="rounded-full bg-orange-500 px-5 py-2 text-sm font-semibold text-white hover:bg-orange-600 disabled:opacity-50"
+            className="btn-3d btn-3d-green"
           >
             Check
           </button>
@@ -118,34 +111,28 @@ export function ListeningSpellDrill({ drill, onSubmit }: DrillProps) {
 
         {submitted && (
           <div
-            className="rounded-2xl border-2 border-neutral-200 bg-neutral-50 p-3 text-sm"
+            className={`input3d-reveal ${correct ? "input3d-reveal--good" : "input3d-reveal--bad"}`}
             data-testid="listening-spell-feedback"
           >
-            <div className="mb-1 text-xs uppercase tracking-wide text-neutral-500">
+            <div className="input3d-reveal-label">
               {correct ? "Correct" : "You wrote"}
             </div>
-            <div className={`font-semibold ${correct ? "text-emerald-700" : "text-rose-700"}`}>
+            <div className={`input3d-reveal-value ${correct ? "input3d-reveal-value--good" : "input3d-reveal-value--bad"}`}>
               {value}
             </div>
-            <div className="mt-2 text-xs uppercase tracking-wide text-neutral-500">
+            <div className="input3d-reveal-label" style={{ marginTop: "0.6rem" }}>
               Canonical
             </div>
-            <div
-              className="flex items-center gap-2 font-semibold text-neutral-800"
-              data-testid="listening-spell-canonical"
-            >
+            <div className="input3d-reveal-value" data-testid="listening-spell-canonical">
               <span>{pair.nl}</span>
               <Speaker text={pair.nl} size="sm" />
             </div>
             {correct && distanceAfterSubmit === 1 && (
-              <div
-                className="mt-2 text-xs italic text-emerald-700"
-                data-testid="listening-spell-close-enough"
-              >
+              <div className="input3d-close-enough" data-testid="listening-spell-close-enough">
                 Close enough — counted as correct.
               </div>
             )}
-            <div className="mt-2 text-xs text-neutral-500">{pair.en}</div>
+            <div className="input3d-reveal-gloss">{pair.en}</div>
           </div>
         )}
       </div>
