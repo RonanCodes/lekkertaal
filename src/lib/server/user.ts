@@ -71,6 +71,29 @@ export const setCefrLevel = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
+export type LearningGoal = "moving" | "dating" | "study" | "fun";
+
+/**
+ * Persist why the learner is here, captured on the first onboarding step.
+ * Backward-compatible: the column is nullable, so callers that skip this step
+ * leave it unset.
+ */
+export const setLearningGoal = createServerFn({ method: "POST" })
+  .inputValidator((input: { goal: LearningGoal }) => input)
+  .handler(async ({ data }) => {
+    const clerkId = await requireUserClerkId();
+    const { env } = requireWorkerContext();
+    const drz = db(env.DB);
+    await drz
+      .update(users)
+      .set({
+        learningGoal: data.goal,
+        updatedAt: new Date().toISOString(),
+      })
+      .where(eq(users.clerkId, clerkId));
+    return { ok: true };
+  });
+
 export const setReminderPrefs = createServerFn({ method: "POST" })
   .inputValidator((input: { hour: number; enabled: boolean; timezone?: string }) => input)
   .handler(async ({ data }) => {

@@ -38,6 +38,10 @@ export const users = sqliteTable(
     hintsBalance: integer("hints_balance").default(0).notNull(),
     sfxEnabled: integer("sfx_enabled", { mode: "boolean" }).default(true).notNull(),
     isPublic: integer("is_public", { mode: "boolean" }).default(true).notNull(),
+    // Why the learner is here, captured on the first onboarding step. One of
+    // "moving" | "dating" | "study" | "fun"; nullable so existing rows and
+    // users who skip the step stay valid.
+    learningGoal: text("learning_goal"),
     onboardedAt: text("onboarded_at"),
     createdAt: text("created_at").default(sql`CURRENT_TIMESTAMP`).notNull(),
     updatedAt: text("updated_at").default(sql`CURRENT_TIMESTAMP`).notNull(),
