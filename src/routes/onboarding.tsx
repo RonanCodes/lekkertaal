@@ -10,15 +10,19 @@ function OnboardingPage() {
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<string[]>([]);
   const [submitting, setSubmitting] = useState(false);
+  const [picked, setPicked] = useState<string | null>(null);
 
   const total = PLACEMENT_QUESTIONS.length;
   const q = PLACEMENT_QUESTIONS[step];
 
   async function chooseAnswer(value: string) {
+    setPicked(value);
     const next = [...answers, value];
     setAnswers(next);
     if (step + 1 < total) {
+      // Brief selected-state beat before advancing.
       setStep(step + 1);
+      setPicked(null);
       return;
     }
     setSubmitting(true);
@@ -32,46 +36,120 @@ function OnboardingPage() {
     navigate({ to: "/onboarding/notifications" });
   }
 
+  const progress = (step / total) * 100;
+
   return (
     <main className="mx-auto max-w-2xl px-6 py-12">
-      <header className="mb-8">
-        <h1 className="text-3xl font-bold">Quick placement check</h1>
-        <p className="mt-2 text-neutral-600">
+      <header className="mb-8 text-center">
+        <p
+          className="text-display text-sm font-semibold uppercase tracking-[0.12em]"
+          style={{ color: "var(--color-brand-blue-dark)" }}
+        >
+          Even kijken
+        </p>
+        <img
+          src="/mascot/stroop-512.png"
+          alt="Stroop the stroopwafel"
+          className="anim-idle-bob mx-auto mt-3 mb-1 h-24 w-24"
+        />
+        <h1
+          className="text-display mt-1 text-3xl font-extrabold tracking-tight"
+          style={{ color: "var(--text-strong)" }}
+        >
+          Quick placement check
+        </h1>
+        <p className="mx-auto mt-2 max-w-md" style={{ color: "var(--text-soft)" }}>
           Five questions, 60 seconds. We use this to drop you at the right starting point.
         </p>
         <p className="mt-2 text-sm">
-          <a href="/onboarding/level-pick" className="underline">
+          <a
+            href="/onboarding/level-pick"
+            className="font-semibold underline"
+            style={{ color: "var(--color-brand-orange-dark)" }}
+          >
             I know my level, let me pick
           </a>
         </p>
       </header>
 
-      <div className="mb-4 h-2 w-full overflow-hidden rounded-full bg-neutral-200">
+      <div
+        className="mb-5 h-3 w-full overflow-hidden rounded-full"
+        role="progressbar"
+        aria-valuemin={0}
+        aria-valuemax={total}
+        aria-valuenow={step}
+        style={{ background: "var(--surface-card-alt)" }}
+      >
         <div
-          className="h-full bg-orange-500 transition-all"
-          style={{ width: `${(step / total) * 100}%` }}
+          className="h-full rounded-full transition-all"
+          style={{ width: `${progress}%`, background: "var(--color-brand-orange)" }}
         />
       </div>
 
-      <section className="rounded-3xl border border-neutral-200 bg-white p-6 shadow-sm">
-        <p className="mb-1 text-sm uppercase tracking-wide text-neutral-500">
+      <section className="card">
+        <p
+          className="text-display mb-1 text-xs font-semibold uppercase tracking-[0.1em]"
+          style={{ color: "var(--text-muted)" }}
+        >
           Question {step + 1} of {total}
         </p>
-        <h2 className="mb-1 text-2xl font-semibold">{q.promptEn}</h2>
-        <p className="mb-6 text-neutral-500">{q.promptNl}</p>
+        <h2 className="text-display text-2xl font-bold" style={{ color: "var(--text-strong)" }}>
+          {q.promptEn}
+        </h2>
+        <p className="mb-5 mt-1" style={{ color: "var(--text-soft)" }}>
+          {q.promptNl}
+        </p>
         <div className="grid gap-3">
           {q.options.map((opt) => (
-            <button
+            <OptionRow
               key={opt.value}
+              label={opt.label}
+              selected={picked === opt.value}
               disabled={submitting}
-              onClick={() => chooseAnswer(opt.value)}
-              className="rounded-2xl border-2 border-neutral-200 px-4 py-3 text-left hover:border-orange-400 hover:bg-orange-50 disabled:opacity-50"
-            >
-              {opt.label}
-            </button>
+              onSelect={() => chooseAnswer(opt.value)}
+            />
           ))}
         </div>
       </section>
     </main>
+  );
+}
+
+/**
+ * Tappable answer row from the redesign's onboarding screens. Reads the
+ * shared semantic tokens so light + dark both render correctly; selecting
+ * one lifts it into the brand-orange soft fill.
+ */
+function OptionRow({
+  label,
+  selected,
+  disabled,
+  onSelect,
+}: {
+  label: string;
+  selected: boolean;
+  disabled: boolean;
+  onSelect: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      disabled={disabled}
+      aria-pressed={selected}
+      onClick={onSelect}
+      className="flex items-center justify-between rounded-2xl border-2 px-4 py-3 text-left font-medium transition-colors disabled:opacity-50"
+      style={{
+        borderColor: selected ? "var(--color-brand-orange)" : "var(--line-soft)",
+        background: selected ? "var(--color-brand-orange-soft)" : "var(--surface-card)",
+        color: "var(--text-strong)",
+      }}
+    >
+      <span>{label}</span>
+      {selected && (
+        <span style={{ color: "var(--color-brand-orange-dark)" }} aria-hidden>
+          ✓
+        </span>
+      )}
+    </button>
   );
 }

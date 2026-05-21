@@ -72,41 +72,78 @@ function NotificationsPage() {
 
   return (
     <main className="mx-auto max-w-2xl px-6 py-12">
-      <h1 className="text-3xl font-bold">Daily reminder</h1>
-      <p className="mt-2 text-neutral-600">
-        We ping you once a day at the time you pick. 5 minutes of Dutch keeps the streak alive.
-      </p>
+      <header className="text-center">
+        <p
+          className="text-display text-sm font-semibold uppercase tracking-[0.12em]"
+          style={{ color: "var(--color-brand-blue-dark)" }}
+        >
+          One last thing
+        </p>
+        <img
+          src="/mascot/stroop-512.png"
+          alt="Stroop the stroopwafel"
+          className="anim-idle-bob mx-auto mt-3 mb-1 h-24 w-24"
+        />
+        <h1
+          className="text-display mt-1 text-3xl font-extrabold tracking-tight"
+          style={{ color: "var(--text-strong)" }}
+        >
+          Daily reminder
+        </h1>
+        <p className="mx-auto mt-2 max-w-md" style={{ color: "var(--text-soft)" }}>
+          We ping you once a day at the time you pick. 5 minutes of Dutch keeps the streak alive.
+        </p>
+      </header>
 
-      <section className="mt-8 rounded-3xl border border-neutral-200 bg-white p-6">
-        <label className="block text-sm font-semibold">When?</label>
+      <section className="card mt-8">
+        <label
+          htmlFor="reminder-time"
+          className="text-display block text-sm font-semibold"
+          style={{ color: "var(--text-strong)" }}
+        >
+          When suits you?
+        </label>
         <input
+          id="reminder-time"
           type="time"
           value={`${String(hour).padStart(2, "0")}:00`}
           onChange={(e) => setHour(Number(e.target.value.split(":")[0] ?? 20))}
-          className="mt-2 rounded-2xl border border-neutral-300 px-4 py-2 text-lg"
+          className="mt-2 rounded-2xl border-2 px-4 py-2 text-lg"
+          style={{
+            borderColor: "var(--line-soft)",
+            background: "var(--surface-input)",
+            color: "var(--text-strong)",
+          }}
         />
-        <p className="mt-1 text-xs text-neutral-500">Timezone: {timezone}</p>
+        <p className="mt-2 text-xs" style={{ color: "var(--text-muted)" }}>
+          Timezone: {timezone}
+        </p>
       </section>
 
-      <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+      <div className="mt-6 flex flex-col gap-3">
         <button
+          type="button"
           disabled={submitting}
           onClick={enableReminders}
-          className="rounded-2xl bg-orange-500 px-6 py-3 font-semibold text-white shadow-md hover:bg-orange-600 disabled:opacity-50"
+          className="btn-3d btn-3d-lg btn-3d-full"
         >
           Enable reminders
         </button>
         <button
+          type="button"
           disabled={submitting}
           onClick={skip}
-          className="rounded-2xl border border-neutral-300 px-6 py-3 font-semibold text-neutral-700 hover:bg-neutral-50 disabled:opacity-50"
+          className="btn-3d btn-3d-ghost btn-3d-full"
         >
           Skip for now
         </button>
       </div>
 
       {pushStatus === "denied" && (
-        <p className="mt-4 text-sm text-amber-700">
+        <p
+          className="mt-4 rounded-2xl px-4 py-3 text-sm"
+          style={{ background: "var(--surface-banner-amber)", color: "var(--text-on-banner)" }}
+        >
           You blocked notifications. We saved your reminder hour but cannot send pushes.
         </p>
       )}
