@@ -1760,6 +1760,140 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* ============================================================
+ * Match-pairs drill — screen-scoped styles (issue #213).
+ * Two columns of chunky tappable tiles: Dutch on the left,
+ * English on the right. Tap a Dutch word, then its English
+ * meaning; correct pairs flash green and drop out, wrong pairs
+ * shake red and stay. Builds on the #205 foundation tokens
+ * (--color-good / --color-bad / *-soft, --color-brand-orange)
+ * and the semantic surface tokens so dark mode flips for free.
+ * No global brand-token edits.
+ * ============================================================ */
+
+.match-pairs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+.match-pairs__col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+/* The tile itself — chunky 3D-lift tappable token (44px min target). */
+.match-pairs__tile {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.4rem;
+  width: 100%;
+  min-height: 52px;
+  padding: 0.7rem 0.85rem;
+  text-align: left;
+  border-radius: var(--radius-button);
+  border: 1.5px solid var(--line-strong);
+  background: var(--surface-card);
+  color: var(--text-strong);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1rem;
+  line-height: 1.2;
+  cursor: pointer;
+  box-shadow: 0 3px 0 0 var(--line-strong);
+  transition: transform 80ms ease-out, box-shadow 80ms ease-out,
+    border-color 120ms ease, background 120ms ease;
+}
+.match-pairs__tile--en {
+  justify-content: center;
+  text-align: center;
+}
+.match-pairs__tile:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 0 0 var(--line-strong);
+  border-color: var(--color-brand-orange);
+}
+.match-pairs__tile:active:not(:disabled) {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 0 var(--line-strong);
+}
+.match-pairs__tile:disabled {
+  cursor: default;
+  opacity: 0.55;
+}
+
+/* Selected Dutch tile: warm brand border + lift. */
+.match-pairs__tile--selected,
+.match-pairs__tile--focused {
+  border-color: var(--color-brand-orange);
+  box-shadow: 0 3px 0 0 var(--color-brand-orange-dark);
+}
+.match-pairs__tile--focused {
+  outline: 2px solid var(--color-brand-orange-soft);
+  outline-offset: 2px;
+}
+
+/* Correct flash: green surface before the tile drops out. */
+.match-pairs__tile--correct {
+  border-color: var(--color-good);
+  background: var(--color-good-soft);
+  color: var(--color-good);
+  box-shadow: 0 3px 0 0 color-mix(in srgb, var(--color-good) 55%, transparent);
+}
+
+/* Wrong flash: red surface + shake, stays on the board. */
+.match-pairs__tile--wrong {
+  border-color: var(--color-bad);
+  background: var(--color-bad-soft);
+  color: var(--color-bad);
+  box-shadow: 0 3px 0 0 color-mix(in srgb, var(--color-bad) 55%, transparent);
+  animation: lk-match-pairs-shake 0.2s ease-in-out;
+}
+
+/* Word block (Dutch headword + optional IPA). */
+.match-pairs__word {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.match-pairs__ipa {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.72rem;
+  font-weight: 400;
+  color: var(--text-muted);
+}
+.match-pairs__meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  flex: none;
+}
+.match-pairs__gender {
+  padding: 0 0.4rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--line-soft);
+  background: var(--surface-card-alt);
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.match-pairs__hint {
+  margin-top: 0.85rem;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+@keyframes lk-match-pairs-shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .match-pairs__tile--wrong { animation: none; }
+}
+
+/* ============================================================
  * Drill: image_word + speak (#214, parent #203)
  * Screen-scoped block. Renders inside the #209 lesson-player shell
  * (DrillFrame + sticky feedback bar live upstream). image_word reuses
