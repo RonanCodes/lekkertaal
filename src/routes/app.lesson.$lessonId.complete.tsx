@@ -47,7 +47,35 @@ export const Route = createFileRoute("/app/lesson/$lessonId/complete")({
   component: LessonCompletePage,
 });
 
-type CelebrationState = "normal" | "perfect" | "milestone";
+export type CelebrationState = "normal" | "perfect" | "milestone";
+
+/**
+ * Pick the celebration variant from the lesson result + the user's streak.
+ *
+ * - milestone wins (rarest, biggest moment): forced via `?milestone=true` or
+ *   when the current streak lands on a milestone day.
+ * - perfect: a flawless run, i.e. `correct >= total > 0`.
+ * - normal: everything else, including a missing/partial result.
+ *
+ * Pure so the player→complete wiring (#234) can be asserted without rendering.
+ */
+export function pickCelebration(args: {
+  correct?: number;
+  total?: number;
+  milestone?: boolean;
+  streakDays: number;
+}): CelebrationState {
+  const isPerfect =
+    typeof args.correct === "number" &&
+    typeof args.total === "number" &&
+    args.total > 0 &&
+    args.correct >= args.total;
+
+  const isMilestone =
+    args.milestone === true || STREAK_MILESTONES.includes(args.streakDays as never);
+
+  return isMilestone ? "milestone" : isPerfect ? "perfect" : "normal";
+}
 
 /** A treat to crown a streak milestone — rotates so a long streak isn't stale. */
 const MILESTONE_TREATS = ["oliebollen", "tompouce", "poffertjes", "kaas"] as const;
@@ -59,21 +87,12 @@ function LessonCompletePage() {
   const backTo = lesson.unitSlug ? `/app/unit/${lesson.unitSlug}` : "/app/path";
   const sfx = useSfx(user.sfxEnabled);
 
-  const isPerfect =
-    typeof search.correct === "number" &&
-    typeof search.total === "number" &&
-    search.total > 0 &&
-    search.correct >= search.total;
-
-  const isMilestone =
-    search.milestone === true || STREAK_MILESTONES.includes(user.streakDays as never);
-
-  // Milestone takes precedence (rarer, bigger moment), then perfect, else normal.
-  const celebration: CelebrationState = isMilestone
-    ? "milestone"
-    : isPerfect
-      ? "perfect"
-      : "normal";
+  const celebration = pickCelebration({
+    correct: search.correct,
+    total: search.total,
+    milestone: search.milestone,
+    streakDays: user.streakDays,
+  });
 
   useEffect(() => {
     sfx.play("lesson-complete");

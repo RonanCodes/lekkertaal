@@ -79,18 +79,29 @@ function LessonPlayerPage() {
     setFeedback(null);
     if (drillIdx + 1 >= total) {
       setFinishing(true);
+      // Fold the final drill's just-shown feedback into the running tally so the
+      // completion screen sees the true end-of-lesson counts (state setters from
+      // handleSubmit haven't flushed by the time we navigate).
+      const finalCorrect = correctCount + (feedback?.correct ? 1 : 0);
+      const finalIncorrect = incorrectCount + (feedback && !feedback.correct ? 1 : 0);
       try {
         await completeLesson({
           data: {
             lessonId: lesson.id,
-            correctCount: correctCount + (feedback?.correct ? 1 : 0),
-            incorrectCount: incorrectCount + (feedback && !feedback.correct ? 1 : 0),
+            correctCount: finalCorrect,
+            incorrectCount: finalIncorrect,
           },
         });
       } catch {
         // Best-effort; don't block the user from seeing the completion screen.
       }
-      navigate({ to: `/app/lesson/${lesson.id}/complete` });
+      // Pass per-lesson results so the complete screen can unlock its
+      // perfect-lesson state (correct >= total > 0). Milestone is derived there
+      // from streakDays, so we don't pass it from here.
+      navigate({
+        to: `/app/lesson/${lesson.id}/complete`,
+        search: { correct: finalCorrect, total: finalCorrect + finalIncorrect },
+      });
       return;
     }
     setDrillIdx((i) => i + 1);
