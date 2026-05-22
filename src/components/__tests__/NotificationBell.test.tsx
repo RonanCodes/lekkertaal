@@ -178,13 +178,22 @@ describe("<NotificationBell/>", () => {
   });
 
   it("groups rows by Today / Yesterday and shows day labels", async () => {
+    // The component buckets by local calendar day. Anchor the fixtures to the
+    // local-midnight boundary so the test is stable regardless of the CI
+    // runner's wall-clock time of day. The component parses stored timestamps
+    // as UTC (appends a Z when none is present), so emit timestamps in UTC
+    // that fall on the correct *local* calendar day. "Today" = local midnight
+    // plus an hour; "Yesterday" = local midnight minus an hour.
     const now = new Date();
-    const today = now.toISOString().slice(0, 19).replace("T", " ");
-    const yesterdayDate = new Date(now.getTime() - 26 * 3600_000);
-    const yesterday = yesterdayDate
-      .toISOString()
-      .slice(0, 19)
-      .replace("T", " ");
+    const localMidnight = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate(),
+    ).getTime();
+    const toStamp = (ms: number) =>
+      new Date(ms).toISOString().slice(0, 19).replace("T", " ");
+    const today = toStamp(localMidnight + 3600_000);
+    const yesterday = toStamp(localMidnight - 3600_000);
     inboxFetchMock([
       {
         id: 1,
