@@ -4074,3 +4074,90 @@ img.roleplay-bubble-avatar {
   [data-theme="dark"] .text-orange-700 { color: #FFB47A !important; }
   [data-theme="dark"] .text-red-700 { color: #FFA8A8 !important; }
 
+
+/* ============================================================
+ * App shell chrome — TopBar title + floating lk-tabbar bottom dock
+ * (#256). Mirrors docs/design/ui.jsx `TopBar` + `lk-tabbar`. The
+ * dock is mobile-only (Tailwind `sm:hidden` removes it >=640px,
+ * where the in-header Primary nav takes over). Brand stays
+ * orange + blue; colours flow through CSS vars so both dark
+ * mechanisms (prefers-color-scheme + forced data-theme) adapt.
+ * ============================================================ */
+
+/* TopBar title: display font, brand-orange-dark, like the design. */
+.lk-topbar-title {
+  font-weight: 700;
+  font-size: 1.125rem;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  color: var(--color-brand-orange-dark);
+}
+
+/* Floating rounded dock. Fixed to the viewport bottom so it stays in
+ * reach as content scrolls; safe-area inset keeps it above the home bar. */
+.lk-tabbar {
+  position: fixed;
+  left: 14px;
+  right: 14px;
+  bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+  display: flex;
+  gap: 4px;
+  padding: 8px;
+  background: var(--surface-card);
+  border: 1px solid var(--line-soft);
+  border-radius: 28px;
+  box-shadow:
+    0 14px 30px -10px rgba(0, 0, 0, 0.18),
+    0 2px 0 0 rgba(0, 0, 0, 0.05);
+  z-index: 20;
+}
+
+.lk-tab {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 8px 4px;
+  border-radius: 20px;
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 11px;
+  text-decoration: none;
+  transition:
+    background 120ms,
+    color 120ms;
+}
+
+.lk-tab:hover {
+  color: var(--text-body);
+}
+
+.lk-tab.active {
+  background: var(--color-brand-orange-soft);
+  color: var(--color-brand-orange-dark);
+}
+
+/* Active-tab treatment in dark: the light peach soft would glare on the
+ * dark paper, so dim it to match the design's dark `lk-tabbar` rule. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .lk-tab.active {
+    background: #3a2916;
+    color: #ffb47a;
+  }
+}
+:root[data-theme="dark"] .lk-tab.active {
+  background: #3a2916;
+  color: #ffb47a;
+}
+
+/* Keep the floating dock from covering page content on mobile: pad the
+ * main scroll area by the dock height + inset. Cleared at >=640px where
+ * the dock is hidden. */
+@media (max-width: 639px) {
+  .lk-main {
+    padding-bottom: calc(88px + env(safe-area-inset-bottom, 0px));
+  }
+}

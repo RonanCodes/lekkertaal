@@ -50,11 +50,17 @@ export function AppShell({
   const freezes = user.streakFreezesBalance ?? 0;
   const pathname = currentPathname();
   return (
-    <div className="min-h-screen bg-amber-50/40">
-      <header className="sticky top-0 z-10 border-b border-neutral-200 bg-white/95 px-6 py-3 backdrop-blur">
+    <div className="lk-shell min-h-screen bg-amber-50/40">
+      <header className="lk-topbar sticky top-0 z-10 border-b border-neutral-200 bg-white/95 px-4 py-3 backdrop-blur sm:px-6">
         <div className="mx-auto flex max-w-4xl items-center justify-between gap-4">
           <div className="flex items-center gap-6">
-            <a href="/app/path" className="text-lg font-bold text-orange-600">
+            {/* TopBar title — display font, brand-orange-dark, matches design's
+                `TopBar` chrome. */}
+            <a
+              href="/app/path"
+              className="text-display lk-topbar-title"
+              aria-label="Lekkertaal home"
+            >
               Lekkertaal
             </a>
             <nav aria-label="Primary" className="hidden gap-1 sm:flex">
@@ -120,37 +126,32 @@ export function AppShell({
             <span className="hidden text-neutral-500 sm:inline">{user.displayName}</span>
           </div>
         </div>
-        <nav
-          aria-label="Primary (mobile)"
-          className="mx-auto mt-2 flex max-w-4xl gap-1 sm:hidden"
-        >
-          {NAV_ITEMS.map((item) => {
-            const active = isActive(item, pathname);
-            return (
-              <a
-                key={item.href}
-                href={item.href}
-                aria-current={active ? "page" : undefined}
-                className={
-                  "inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium " +
-                  (active
-                    ? "bg-orange-100 text-orange-700"
-                    : "text-neutral-600 hover:bg-neutral-100")
-                }
-              >
-                <item.Icon size={14} aria-hidden />
-                <span>{item.label}</span>
-              </a>
-            );
-          })}
-        </nav>
       </header>
-      <main className="mx-auto max-w-4xl px-4 py-6 sm:px-6">{children}</main>
-      <footer className="mx-auto max-w-4xl px-4 py-4 text-center text-xs text-neutral-400 sm:px-6">
+      <main className="lk-main mx-auto max-w-4xl px-4 py-6 sm:px-6">{children}</main>
+      <footer className="lk-footer mx-auto max-w-4xl px-4 py-4 text-center text-xs text-neutral-400 sm:px-6">
         <a href="/attribution" className="hover:text-neutral-600 hover:underline">
           Data sources
         </a>
       </footer>
+      {/* Floating bottom dock — mirrors the design's `lk-tabbar`. Mobile only;
+          desktop uses the in-header `Primary` nav above. Same NAV_ITEMS so the
+          active-state logic is shared. */}
+      <nav aria-label="Primary (mobile)" className="lk-tabbar sm:hidden">
+        {NAV_ITEMS.map((item) => {
+          const active = isActive(item, pathname);
+          return (
+            <a
+              key={item.href}
+              href={item.href}
+              aria-current={active ? "page" : undefined}
+              className={"lk-tab" + (active ? " active" : "")}
+            >
+              <item.Icon size={20} aria-hidden />
+              <span>{item.label}</span>
+            </a>
+          );
+        })}
+      </nav>
     </div>
   );
 }
