@@ -2,6 +2,7 @@ import { createFileRoute, notFound, useNavigate, Link } from "@tanstack/react-ro
 import { getScorecard } from "../lib/server/roleplay";
 import { AppShell } from "../components/AppShell";
 import { useState } from "react";
+import type { CSSProperties } from "react";
 import { Stroop } from "../components/Stroop";
 import { LiveRubric } from "../components/LiveRubric";
 
@@ -75,14 +76,34 @@ function ScorecardPage() {
   }
 
   const r = session.rubric;
-  const avg =
-    ((r.grammar ?? 0) +
-      (r.vocabulary ?? 0) +
-      (r.taskCompletion ?? 0) +
-      (r.fluency ?? 0) +
-      (r.politeness ?? 0)) /
-    5;
-  const stars = Math.round(avg);
+  // Rubric scores are stored 1–5; the redesign shows them as 0–100. Map each
+  // criterion to a percentage and round the average to the displayed ring score.
+  const to100 = (n: number | null | undefined) => Math.round(((n ?? 0) / 5) * 100);
+  const criteria = [
+    { label: "Grammar", score: to100(r.grammar) },
+    { label: "Vocabulary", score: to100(r.vocabulary) },
+    { label: "Task completion", score: to100(r.taskCompletion) },
+    { label: "Fluency", score: to100(r.fluency) },
+    { label: "Politeness", score: to100(r.politeness) },
+  ];
+  const ringScore = Math.round(
+    criteria.reduce((sum, c) => sum + c.score, 0) / criteria.length,
+  );
+  const ringColor =
+    ringScore >= 85
+      ? "var(--color-good)"
+      : ringScore >= 70
+        ? "var(--color-warn)"
+        : "var(--color-bad)";
+  // The best line is the learner's strongest criterion — surface it as the
+  // highlight without needing a new AI field on the grading schema.
+  const best = criteria.reduce((a, b) => (b.score > a.score ? b : a));
+  // "Try these next time" tips reuse the persisted error corrections, the most
+  // actionable per-turn guidance the grader already produces.
+  const tips = errors
+    .map((e) => e.explanationEn?.trim() || `Use "${e.correction}" instead of "${e.incorrect}".`)
+    .filter(Boolean)
+    .slice(0, 3);
   const badgeUnlocked = session.passed && scenario.badgeUnlock;
 
   return (
@@ -105,9 +126,21 @@ function ScorecardPage() {
           <h1 className="mt-1 text-2xl font-bold text-neutral-900">{scenario.titleNl}</h1>
           <div className="mt-1 text-sm text-neutral-500">met {scenario.npcName}</div>
 
-          <div className="scorecard-stars" aria-label={`${stars} out of 5 stars`}>
-            {"★".repeat(stars)}
-            <span className="scorecard-stars-empty">{"★".repeat(5 - stars)}</span>
+          <div
+            className="scorecard-ring"
+            style={
+              {
+                "--ring-pct": `${ringScore}%`,
+                "--ring-color": ringColor,
+              } as CSSProperties
+            }
+            role="img"
+            aria-label={`Score ${ringScore} out of 100`}
+          >
+            <div className="scorecard-ring-inner">
+              <span className="scorecard-ring-num">{ringScore}</span>
+              <span className="scorecard-ring-label">score</span>
+            </div>
           </div>
 
           <div className="mt-3 flex items-center justify-center gap-3">
@@ -130,17 +163,41 @@ function ScorecardPage() {
           )}
         </div>
 
-        {/* Rubric breakdown */}
+        {/* Rubric breakdown: numeric 0–100 bars + notes */}
         <div className="card scorecard-card">
           <h2 className="scorecard-section-title">Rubriek</h2>
-          <div className="space-y-2.5">
-            <RubricRow label="Grammar" score={r.grammar ?? 0} />
-            <RubricRow label="Vocabulary" score={r.vocabulary ?? 0} />
-            <RubricRow label="Task completion" score={r.taskCompletion ?? 0} />
-            <RubricRow label="Fluency" score={r.fluency ?? 0} />
-            <RubricRow label="Politeness" score={r.politeness ?? 0} />
+          <div className="space-y-3">
+            {criteria.map((c) => (
+              <RubricRow key={c.label} label={c.label} score={c.score} />
+            ))}
           </div>
         </div>
+
+        {/* Highlights: best criterion */}
+        <div className="scorecard-highlight">
+          <div className="scorecard-highlight-head">
+            <span aria-hidden>✓</span> Sterkste punt
+          </div>
+          <div className="scorecard-highlight-line">{best.label}</div>
+          <div className="scorecard-highlight-note">
+            {best.score} / 100 — je beste rubriek deze ronde.
+          </div>
+        </div>
+
+        {/* Try these next time */}
+        {tips.length > 0 && (
+          <div className="card scorecard-card">
+            <h2 className="scorecard-section-title">Probeer dit volgende keer</h2>
+            <ul className="space-y-2.5">
+              {tips.map((tip, i) => (
+                <li key={i} className="scorecard-tip-row">
+                  <span className="scorecard-tip-icon" aria-hidden>✦</span>
+                  <span className="text-sm text-neutral-700">{tip}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         {/* Feedback */}
         {session.feedbackMd && (
@@ -194,14 +251,33 @@ function ScorecardPage() {
   );
 }
 
+function critNote(score: number): string {
+  if (score >= 90) return "Uitstekend — bijna foutloos.";
+  if (score >= 75) return "Sterk, met kleine slordigheden.";
+  if (score >= 60) return "Voldoende, blijf oefenen.";
+  return "Hier valt de meeste winst te halen.";
+}
+
 function RubricRow({ label, score }: { label: string; score: number }) {
+  const tone = score >= 85 ? "good" : score >= 70 ? "warn" : "bad";
   return (
-    <div className="scorecard-rubric-row">
-      <span className="text-sm text-neutral-700">{label}</span>
-      <span className="scorecard-rubric-stars" aria-label={`${score} out of 5`}>
-        <span className="scorecard-rubric-stars-on">{"★".repeat(score)}</span>
-        <span className="scorecard-stars-empty">{"★".repeat(5 - score)}</span>
-      </span>
+    <div className="scorecard-crit" data-tone={tone}>
+      <div className="scorecard-crit-head">
+        <span className="text-sm font-medium text-neutral-700">{label}</span>
+        <span className="scorecard-crit-score" aria-label={`${score} out of 100`}>
+          {score}
+        </span>
+      </div>
+      <div
+        className="scorecard-crit-bar"
+        role="progressbar"
+        aria-valuenow={score}
+        aria-valuemin={0}
+        aria-valuemax={100}
+      >
+        <div className="scorecard-crit-fill" style={{ width: `${score}%` }} />
+      </div>
+      <div className="scorecard-crit-note">{critNote(score)}</div>
     </div>
   );
 }
