@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { BookOpen, Flame, Mic, Sparkles } from "lucide-react";
+import { BookOpen, Check, Coins, Flame, Mic, Sparkles } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import type { PathQuest } from "../lib/server/path";
 
@@ -12,6 +12,11 @@ import type { PathQuest } from "../lib/server/path";
  * the tap-to-do flow is obvious. The claim button enables when
  * progress >= target and is not yet claimed; clicking POSTs to
  * /api/daily-quests/claim and optimistically marks the row claimed.
+ *
+ * Fidelity (#244): the card mirrors the `DailyQuests` / `QuestRow` design in
+ * `docs/design/screens-path.jsx` — an oliebollen mascot header with a
+ * "Reset in 6u 14m" countdown to local midnight, a total-coin badge, and a
+ * coin-reward badge on every row.
  */
 
 const KIND_ICON: Record<PathQuest["kind"], LucideIcon> = {
@@ -33,11 +38,53 @@ const KIND_HREF: Record<PathQuest["kind"], string> = {
   speak: "/app/peer",
 };
 
+/** Milliseconds until the next local midnight (when quests reset). */
+function msUntilMidnight(now: Date): number {
+  const next = new Date(now);
+  next.setHours(24, 0, 0, 0);
+  return next.getTime() - now.getTime();
+}
+
+/** Format a duration as the design's "6u 14m" (Dutch uur / minuut) shorthand. */
+function formatReset(ms: number): string {
+  const totalMinutes = Math.max(0, Math.floor(ms / 60000));
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+  if (hours > 0) return `Reset in ${hours}u ${minutes}m`;
+  return `Reset in ${minutes}m`;
+}
+
+/** Live "Reset in Xu Ym" countdown to local midnight, ticking each minute. */
+function useResetCountdown(): string {
+  const [ms, setMs] = useState(() => msUntilMidnight(new Date()));
+
+  useEffect(() => {
+    const tick = () => setMs(msUntilMidnight(new Date()));
+    const id = setInterval(tick, 60_000);
+    return () => clearInterval(id);
+  }, []);
+
+  return formatReset(ms);
+}
+
+/** Small coin chip — used for the header total and per-row rewards. */
+function CoinBadge({ amount }: { amount: number }) {
+  return (
+    <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-800 ring-1 ring-amber-200">
+      <Coins size={12} aria-hidden />
+      {amount}
+    </span>
+  );
+}
+
 export function DailyQuests({ initial }: { initial: PathQuest[] }) {
   const [quests, setQuests] = useState<PathQuest[]>(initial);
   const [claiming, setClaiming] = useState<number | null>(null);
+  const resetLabel = useResetCountdown();
 
   if (quests.length === 0) return null;
+
+  const totalCoins = quests.reduce((sum, q) => sum + q.bonusCoins, 0);
 
   async function claim(quest: PathQuest) {
     if (claiming !== null) return;
@@ -74,11 +121,20 @@ export function DailyQuests({ initial }: { initial: PathQuest[] }) {
       aria-label="daily quests"
       className="mb-6 rounded-2xl border-2 border-orange-200 bg-orange-50 p-4"
     >
-      <header className="mb-3 flex items-center justify-between">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-orange-900">
-          Daily quests
-        </h2>
-        <span className="text-xs text-orange-800/70">resets at midnight</span>
+      <header className="mb-3 flex items-center gap-3">
+        <img
+          src="/mascot/treats/oliebollen/happy.png"
+          alt=""
+          aria-hidden
+          className="anim-idle-bob h-11 w-11 shrink-0"
+        />
+        <div className="min-w-0 flex-1">
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-orange-900">
+            Daily quests
+          </h2>
+          <p className="text-xs text-orange-800/70">{resetLabel}</p>
+        </div>
+        {totalCoins > 0 && <CoinBadge amount={totalCoins} />}
       </header>
       <ul className="space-y-2">
         {quests.map((q) => (
@@ -106,12 +162,13 @@ function QuestRow({
   const pct =
     quest.target > 0 ? Math.min(100, (quest.progress / quest.target) * 100) : 0;
   const canClaim = !quest.claimed && quest.progress >= quest.target;
+  const done = quest.progress >= quest.target;
   const buttonLabel = quest.claimed
     ? "Claimed"
     : canClaim
       ? `Claim +${quest.bonusXp} XP`
       : `${quest.progress} / ${quest.target}`;
-  const Icon = KIND_ICON[quest.kind];
+  const Icon = done ? Check : KIND_ICON[quest.kind];
   const href = KIND_HREF[quest.kind];
 
   return (
@@ -127,7 +184,16 @@ function QuestRow({
           className="group flex min-w-0 flex-1 items-center gap-2 rounded-md p-1 -m-1 transition-colors hover:bg-orange-50"
           aria-label={`Open activity for ${quest.titleEn}`}
         >
-          <Icon size={20} aria-hidden className="shrink-0 text-orange-700" />
+          <span
+            aria-hidden
+            className={`grid h-8 w-8 shrink-0 place-items-center rounded-lg ${
+              done
+                ? "bg-emerald-100 text-emerald-700"
+                : "bg-orange-100 text-orange-700"
+            }`}
+          >
+            <Icon size={16} />
+          </span>
           <div className="min-w-0">
             <div className="truncate text-sm font-medium text-neutral-800 group-hover:text-orange-700">
               {quest.titleEn}
@@ -135,21 +201,24 @@ function QuestRow({
             <div className="truncate text-xs text-neutral-500">{quest.titleNl}</div>
           </div>
         </Link>
-        <button
-          type="button"
-          aria-label={`claim quest ${quest.kind}`}
-          disabled={!canClaim || disabled}
-          onClick={onClaim}
-          className={`shrink-0 rounded-md px-3 py-1.5 text-xs font-semibold transition-colors ${
-            quest.claimed
-              ? "bg-emerald-100 text-emerald-700"
-              : canClaim
-                ? "bg-orange-500 text-white hover:bg-orange-600"
-                : "bg-neutral-100 text-neutral-500"
-          } ${!canClaim && !quest.claimed ? "cursor-not-allowed" : ""}`}
-        >
-          {buttonLabel}
-        </button>
+        <div className="flex shrink-0 items-center gap-2">
+          {quest.bonusCoins > 0 && <CoinBadge amount={quest.bonusCoins} />}
+          <button
+            type="button"
+            aria-label={`claim quest ${quest.kind}`}
+            disabled={!canClaim || disabled}
+            onClick={onClaim}
+            className={`shrink-0 rounded-md px-3 py-1.5 text-xs font-semibold transition-colors ${
+              quest.claimed
+                ? "bg-emerald-100 text-emerald-700"
+                : canClaim
+                  ? "bg-orange-500 text-white hover:bg-orange-600"
+                  : "bg-neutral-100 text-neutral-500"
+            } ${!canClaim && !quest.claimed ? "cursor-not-allowed" : ""}`}
+          >
+            {buttonLabel}
+          </button>
+        </div>
       </div>
       <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-neutral-100">
         <div

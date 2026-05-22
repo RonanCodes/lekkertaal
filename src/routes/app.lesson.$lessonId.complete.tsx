@@ -80,6 +80,42 @@ export function pickCelebration(args: {
 /** A treat to crown a streak milestone — rotates so a long streak isn't stale. */
 const MILESTONE_TREATS = ["oliebollen", "tompouce", "poffertjes", "kaas"] as const;
 
+/**
+ * Accuracy summary for the celebration's accuracy row. Returns null when the
+ * player didn't pass a result (the row is then hidden rather than guessing).
+ * `pct` is rounded for display; `correct`/`mistakes` are the raw counts.
+ */
+export function accuracyFromResult(args: {
+  correct?: number;
+  total?: number;
+}): { pct: number; correct: number; mistakes: number } | null {
+  const { correct, total } = args;
+  if (typeof correct !== "number" || typeof total !== "number" || total <= 0) {
+    return null;
+  }
+  const c = Math.max(0, Math.min(correct, total));
+  return {
+    pct: Math.round((c / total) * 100),
+    correct: c,
+    mistakes: total - c,
+  };
+}
+
+/**
+ * The badge a streak milestone unlocks. Mirrors the gamification milestone
+ * ladder so the celebration names the same badge the user actually earns.
+ */
+export function milestoneBadge(streakDays: number): { name: string; blurb: string } {
+  if (streakDays >= 365) return { name: "Jaar-held", blurb: "365 days — a full year of Dutch." };
+  if (streakDays >= 200) return { name: "Twee-honderd", blurb: "200 days in a row. Onverwoestbaar." };
+  if (streakDays >= 150) return { name: "Honderdvijftig", blurb: "150 days strong and counting." };
+  if (streakDays >= 100) return { name: "Eeuweling", blurb: "100 days — a true centurion." };
+  if (streakDays >= 50) return { name: "Vijftig", blurb: "50 days in a row. Echt sterk." };
+  if (streakDays >= 30) return { name: "Maand-monster", blurb: "30 days in a row — that's the whole maand." };
+  if (streakDays >= 14) return { name: "Twee-weker", blurb: "Two weeks straight. Lekker bezig." };
+  return { name: "Week-winnaar", blurb: "Seven days in a row. Goed begin!" };
+}
+
 function LessonCompletePage() {
   const data = Route.useLoaderData();
   const search = Route.useSearch();
@@ -104,6 +140,11 @@ function LessonCompletePage() {
     () => MILESTONE_TREATS[user.streakDays % MILESTONE_TREATS.length],
     [user.streakDays],
   );
+  const accuracy = useMemo(
+    () => accuracyFromResult({ correct: search.correct, total: search.total }),
+    [search.correct, search.total],
+  );
+  const badge = useMemo(() => milestoneBadge(user.streakDays), [user.streakDays]);
 
   return (
     <AppShell user={user}>
@@ -162,6 +203,77 @@ function LessonCompletePage() {
                 emphasised={celebration === "milestone"}
               />
             </dl>
+
+            {/* Perfect-lesson bonus — only on a flawless run. */}
+            {celebration === "perfect" && (
+              <div className="lesson-complete__callout lesson-complete__callout--bonus">
+                <span className="lesson-complete__callout-icon" aria-hidden="true">
+                  ✨
+                </span>
+                <div className="lesson-complete__callout-body">
+                  <span className="lesson-complete__callout-title">Perfect lesson bonus</span>
+                  <span className="lesson-complete__callout-sub">No mistakes — +6 XP, +5 coins</span>
+                </div>
+              </div>
+            )}
+
+            {/* Milestone badge unlock — names the streak badge just earned. */}
+            {celebration === "milestone" && (
+              <div className="lesson-complete__callout lesson-complete__callout--badge">
+                <span className="lesson-complete__callout-icon" aria-hidden="true">
+                  👑
+                </span>
+                <div className="lesson-complete__callout-body">
+                  <span className="lesson-complete__callout-title">
+                    Badge unlocked: {badge.name}
+                  </span>
+                  <span className="lesson-complete__callout-sub">{badge.blurb}</span>
+                </div>
+              </div>
+            )}
+
+            {/* Accuracy row — only when the player passed a result. */}
+            {accuracy && (
+              <div className="lesson-complete__accuracy">
+                <div className="lesson-complete__accuracy-head">
+                  <span className="lesson-complete__accuracy-label">Accuracy</span>
+                  <span
+                    className={`lesson-complete__accuracy-pct ${
+                      accuracy.pct === 100 ? "lesson-complete__accuracy-pct--perfect" : ""
+                    }`}
+                  >
+                    {accuracy.pct}%
+                  </span>
+                </div>
+                <div
+                  className="lesson-complete__accuracy-track"
+                  role="progressbar"
+                  aria-valuenow={accuracy.pct}
+                  aria-valuemin={0}
+                  aria-valuemax={100}
+                  aria-label="Lesson accuracy"
+                >
+                  <div
+                    className={`lesson-complete__accuracy-fill ${
+                      accuracy.pct === 100 ? "lesson-complete__accuracy-fill--perfect" : ""
+                    }`}
+                    style={{ width: `${accuracy.pct}%` }}
+                  />
+                </div>
+                <div className="lesson-complete__accuracy-counts">
+                  <span>
+                    <strong className="lesson-complete__count--correct">{accuracy.correct}</strong>{" "}
+                    correct
+                  </span>
+                  <span>
+                    <strong className="lesson-complete__count--mistakes">
+                      {accuracy.mistakes}
+                    </strong>{" "}
+                    {accuracy.mistakes === 1 ? "mistake" : "mistakes"}
+                  </span>
+                </div>
+              </div>
+            )}
           </motion.div>
         </div>
 
@@ -174,6 +286,14 @@ function LessonCompletePage() {
           <a href={backTo} className="btn-3d btn-3d-green btn-3d-lg btn-3d-full">
             {copy.cta}
           </a>
+          {accuracy && accuracy.mistakes > 0 && (
+            <a
+              href={`/app/lesson/${lesson.id}?review=mistakes`}
+              className="btn-3d btn-3d-ghost btn-3d-full lesson-complete__review"
+            >
+              Review mistakes
+            </a>
+          )}
         </motion.div>
       </div>
     </AppShell>

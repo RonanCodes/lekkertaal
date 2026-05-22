@@ -3024,3 +3024,134 @@ h1, h2, h3, h4, h5, h6 {
   position: relative;
   z-index: 1;
 }
+
+/* ──────────────────────────────────────────────────────────────────────────
+ * Lesson-complete fidelity top-up (#245) — accuracy row, perfect-lesson bonus
+ * + milestone badge callouts, and the "Review mistakes" secondary CTA. All
+ * colour routes through the shared semantic tokens so light + dark flip
+ * automatically; orange + blue palette preserved. Scoped to .lesson-complete.
+ * ────────────────────────────────────────────────────────────────────────── */
+
+/* Callout cards inside the postcard (perfect bonus / milestone badge). */
+.lesson-complete__callout {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  text-align: left;
+  margin-top: 1rem;
+  padding: 0.75rem 0.85rem;
+  border-radius: 0.85rem;
+  border: 1.5px solid var(--line-soft);
+  background: var(--surface-card-alt);
+}
+.lesson-complete__callout-icon {
+  font-size: 1.1rem;
+  line-height: 1.4;
+  flex: 0 0 auto;
+}
+.lesson-complete__callout-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+.lesson-complete__callout-title {
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: var(--text-strong);
+}
+.lesson-complete__callout-sub {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+.lesson-complete__callout--bonus {
+  border-color: color-mix(in srgb, var(--color-brand-orange) 40%, transparent);
+  background: color-mix(in srgb, var(--color-brand-orange) 12%, var(--surface-card));
+}
+.lesson-complete__callout--bonus .lesson-complete__callout-title,
+.lesson-complete__callout--bonus .lesson-complete__callout-sub {
+  color: var(--color-brand-orange-dark);
+}
+.lesson-complete__callout--badge {
+  border-color: transparent;
+  background: linear-gradient(
+    135deg,
+    var(--color-brand-orange) 0%,
+    var(--color-brand-orange-dark) 100%
+  );
+}
+.lesson-complete__callout--badge .lesson-complete__callout-title {
+  color: #fff;
+}
+.lesson-complete__callout--badge .lesson-complete__callout-sub {
+  color: rgba(255, 255, 255, 0.88);
+}
+
+/* Accuracy row — bar + N correct · M mistakes. */
+.lesson-complete__accuracy {
+  margin-top: 1rem;
+  padding: 0.85rem;
+  border-radius: 0.85rem;
+  border: 1.5px solid var(--line-soft);
+  background: var(--surface-card-alt);
+  text-align: left;
+}
+.lesson-complete__accuracy-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+.lesson-complete__accuracy-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-strong);
+}
+.lesson-complete__accuracy-pct {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--color-brand-orange-dark);
+}
+.lesson-complete__accuracy-pct--perfect {
+  color: var(--color-good);
+}
+.lesson-complete__accuracy-track {
+  margin-top: 0.5rem;
+  height: 0.5rem;
+  border-radius: 999px;
+  background: var(--line-soft);
+  overflow: hidden;
+}
+.lesson-complete__accuracy-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--color-brand-orange);
+  transition: width 0.4s ease;
+}
+.lesson-complete__accuracy-fill--perfect {
+  background: var(--color-good);
+}
+.lesson-complete__accuracy-counts {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.55rem;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+.lesson-complete__count--correct {
+  color: var(--color-good);
+  font-weight: 800;
+}
+.lesson-complete__count--mistakes {
+  color: var(--color-bad);
+  font-weight: 800;
+}
+
+/* Secondary CTA spacing under the primary continue button. */
+.lesson-complete__review {
+  margin-top: 0.6rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lesson-complete__accuracy-fill {
+    transition: none;
+  }
+}
