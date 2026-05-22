@@ -1,6 +1,6 @@
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { Coins, Lightbulb, Snowflake } from "lucide-react";
+import { Coins, Heart, Lightbulb, Snowflake, Sparkles } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { getShop, buyItem } from "../lib/server/shop";
 import type { ShopItem } from "../lib/server/shop";
@@ -22,11 +22,14 @@ export const Route = createFileRoute("/app/shop")({
  * Anything we can't classify falls back to the Power-ups bucket so a future
  * catalogue addition still renders without a code change here.
  */
-type ShopSectionId = "streak-freeze" | "heart-refill" | "power-up";
+type ShopSectionId = "streak-freeze" | "power-up";
 
+// Server-backed catalogue sections, in the design's order. Heart refills and
+// avatars are rendered between these two by ShopPage (they have no catalogue
+// rows of their own), so the on-screen order is:
+//   streak freezes → heart refills → avatars → power-ups.
 const SECTION_ORDER: { id: ShopSectionId; title: string }[] = [
   { id: "streak-freeze", title: "Streak freezes" },
-  { id: "heart-refill", title: "Heart refills" },
   { id: "power-up", title: "Power-ups" },
 ];
 
@@ -40,6 +43,43 @@ const SECTION_BY_ITEM: Partial<Record<string, ShopSectionId>> = {
 function sectionForItem(item: ShopItem): ShopSectionId {
   return SECTION_BY_ITEM[item.id] ?? "power-up";
 }
+
+/**
+ * Heart-refill catalogue.
+ *
+ * There is NO server schema for hearts yet (no `hearts` balance, no
+ * `refill_hearts` catalogue item — see `shop.ts`). The design calls for a
+ * dedicated "Heart refills" section, so we render the two designed cards in a
+ * coming-soon state: the UI is present and on-brand, but the buy buttons are
+ * disabled until the hearts/energy backend lands. Prices mirror the
+ * `ScreenShop` prototype in `docs/design/screens-misc.jsx`.
+ */
+type HeartRefill = {
+  id: string;
+  title: string;
+  description: string;
+  price: number;
+  Icon: typeof Heart;
+  decorate?: boolean;
+};
+
+const HEART_REFILLS: HeartRefill[] = [
+  {
+    id: "refill_hearts",
+    title: "Refill hearts",
+    description: "Fill all 5 instantly",
+    price: 50,
+    Icon: Heart,
+  },
+  {
+    id: "unlimited_30",
+    title: "Unlimited 30 min",
+    description: "Practice without limits",
+    price: 150,
+    Icon: Heart,
+    decorate: true,
+  },
+];
 
 /**
  * Cosmetic treat-avatar catalogue.
@@ -131,6 +171,9 @@ function ShopPage() {
     })).filter((section) => section.items.length > 0);
   }, [items]);
 
+  const freezeSection = sections.find((s) => s.id === "streak-freeze");
+  const powerupSection = sections.find((s) => s.id === "power-up");
+
   const equippedMascot = equipped;
 
   return (
@@ -183,50 +226,61 @@ function ShopPage() {
           />
         </div>
 
-        {/* Catalogue grouped into the designed sections. */}
-        {sections.map((section) => (
-          <section key={section.id} className="sp-cat" data-section={section.id}>
-            <h2 className="sp-cat__title">{section.title}</h2>
-            <ul className="space-y-3">
-              {section.items.map((item) => {
-                const canAfford = user.coinsBalance >= item.costCoins;
-                const isPending = pendingId === item.id;
-                const ItemIcon = resolveShopIcon(item.iconName);
-                return (
-                  <li key={item.id} className="sp-item">
-                    <div
-                      className="sp-item__icon"
-                      data-icon-name={item.iconName}
-                      data-testid="shop-item-icon"
-                      aria-hidden
-                    >
-                      <ItemIcon size={28} />
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <div className="sp-item__title">{item.titleEn}</div>
-                      <div className="sp-item__desc">{item.description}</div>
-                    </div>
-                    <Button
-                      type="button"
-                      size="sm"
-                      onClick={() => purchase(item)}
-                      disabled={!canAfford || isPending}
-                      className="sp-item__buy"
-                      aria-label={`Buy ${item.titleEn} for ${item.costCoins} coins`}
-                    >
-                      {isPending ? "..." : (
-                        <span className="inline-flex items-center gap-1">
-                          {item.costCoins}
-                          <Coins size={14} className="text-amber-200" aria-hidden />
-                        </span>
-                      )}
-                    </Button>
-                  </li>
-                );
-              })}
-            </ul>
-          </section>
-        ))}
+        {/* Designed section order: freezes → heart refills → avatars →
+            power-ups. Streak freezes + power-ups are the only server-backed
+            catalogue sections; heart refills + avatars sit between them. */}
+        {freezeSection && (
+          <CatalogueSection
+            section={freezeSection}
+            coinsBalance={user.coinsBalance}
+            pendingId={pendingId}
+            onBuy={purchase}
+          />
+        )}
+
+        {/* Heart refills — UI-only until the hearts/energy backend lands
+            (see HEART_REFILLS note). Buttons disabled, marked coming soon. */}
+        <section className="sp-cat" data-section="heart-refill">
+          <h2 className="sp-cat__title">Heart refills</h2>
+          <div className="sp-shopcards">
+            {HEART_REFILLS.map((h) => {
+              const HeartIcon = h.Icon;
+              return (
+                <div
+                  key={h.id}
+                  className="sp-shopcard"
+                  data-coming-soon="true"
+                  data-testid="shop-heart-refill"
+                >
+                  <div className="sp-shopcard__icon" aria-hidden>
+                    <HeartIcon size={24} className="text-rose-500" />
+                    {h.decorate && (
+                      <Sparkles
+                        size={13}
+                        className="sp-shopcard__spark text-amber-500"
+                      />
+                    )}
+                  </div>
+                  <div className="sp-shopcard__title">{h.title}</div>
+                  <div className="sp-shopcard__desc">{h.description}</div>
+                  <Button
+                    type="button"
+                    size="sm"
+                    disabled
+                    className="sp-shopcard__buy"
+                    aria-label={`${h.title}, coming soon`}
+                  >
+                    <span className="inline-flex items-center gap-1">
+                      {h.price}
+                      <Coins size={14} className="text-amber-200" aria-hidden />
+                    </span>
+                  </Button>
+                  <span className="sp-shopcard__soon">Coming soon</span>
+                </div>
+              );
+            })}
+          </div>
+        </section>
 
         {/* Cosmetic treat-avatar grid. */}
         <section className="sp-cat" data-section="cosmetics">
@@ -281,10 +335,21 @@ function ShopPage() {
               );
             })}
           </div>
-          <p className="sp-cat__foot">
-            Need more? <span>Earn coins on the path.</span>
-          </p>
         </section>
+
+        {/* Power-ups — last, per the design. */}
+        {powerupSection && (
+          <CatalogueSection
+            section={powerupSection}
+            coinsBalance={user.coinsBalance}
+            pendingId={pendingId}
+            onBuy={purchase}
+          />
+        )}
+
+        <p className="sp-cat__foot">
+          Need more? <span>Earn coins on the path.</span>
+        </p>
 
         {message && (
           <div className="sp-toast" data-tone={toastTone === "error" ? "error" : undefined}>
@@ -293,6 +358,68 @@ function ShopPage() {
         )}
       </div>
     </AppShell>
+  );
+}
+
+type CatalogueSectionData = {
+  id: ShopSectionId;
+  title: string;
+  items: ShopItem[];
+};
+
+function CatalogueSection({
+  section,
+  coinsBalance,
+  pendingId,
+  onBuy,
+}: {
+  section: CatalogueSectionData;
+  coinsBalance: number;
+  pendingId: string | null;
+  onBuy: (item: ShopItem) => void;
+}) {
+  return (
+    <section className="sp-cat" data-section={section.id}>
+      <h2 className="sp-cat__title">{section.title}</h2>
+      <ul className="space-y-3">
+        {section.items.map((item) => {
+          const canAfford = coinsBalance >= item.costCoins;
+          const isPending = pendingId === item.id;
+          const ItemIcon = resolveShopIcon(item.iconName);
+          return (
+            <li key={item.id} className="sp-item">
+              <div
+                className="sp-item__icon"
+                data-icon-name={item.iconName}
+                data-testid="shop-item-icon"
+                aria-hidden
+              >
+                <ItemIcon size={28} />
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="sp-item__title">{item.titleEn}</div>
+                <div className="sp-item__desc">{item.description}</div>
+              </div>
+              <Button
+                type="button"
+                size="sm"
+                onClick={() => onBuy(item)}
+                disabled={!canAfford || isPending}
+                className="sp-item__buy"
+                aria-label={`Buy ${item.titleEn} for ${item.costCoins} coins`}
+              >
+                {isPending ? "..." : (
+                  <span className="inline-flex items-center gap-1">
+                    {item.costCoins}
+                    <Coins size={14} className="text-amber-200" aria-hidden />
+                  </span>
+                )}
+              </Button>
+            </li>
+          );
+        })}
+      </ul>
+    </section>
   );
 }
 
