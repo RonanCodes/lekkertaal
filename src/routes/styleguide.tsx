@@ -22,54 +22,93 @@ import { useState } from "react";
 // Data
 // ---------------------------------------------------------------------------
 
+/**
+ * The treat cast. Sourced from docs/design/screens-brand.jsx (`ScreenMascotSheet`).
+ * Each treat anchors a place in the world — a unit, a feature, an emotional beat.
+ * `accent` is the per-character brand colour pulled straight from the design sheet.
+ */
 const TREATS = [
   {
     slug: "kroket",
     name: "Kroket",
-    emoji: "🥩",
-    description: "Golden-brown croquette. Crispy outside, creamy inside.",
+    eponym: "Kroket — fried snack-bar staple",
+    role: "Bakkerij unit lead",
+    tagline:
+      "Holds down the counter at Bakkerij De Stoeptegel. Patient correction-giver.",
+    uses: ["Boss-fight roleplays", "Unit 3 hero", "Snack bar scenes"],
+    vocab: ["bestellen", "alstublieft", "afrekenen"],
+    accent: "#C4774A",
   },
   {
     slug: "bitterballen",
     name: "Bitterballen",
-    emoji: "🔵",
-    description: "Round fried snacks. A Dutch bar staple.",
+    eponym: "Bitterballen — bar snack",
+    role: "Café-scene chorus",
+    tagline: "Always shows up in threes. Knows everyone at the bar.",
+    uses: ["Social-proof strip", "Friend invites", "Borrel scenes"],
+    vocab: ["proost", "een rondje", "gezellig"],
+    accent: "#D4600A",
   },
   {
     slug: "oliebollen",
     name: "Oliebollen",
-    emoji: "🍩",
-    description: "Deep-fried dough balls. New Year's Eve tradition.",
+    eponym: "Oliebollen — New Year's doughnut",
+    role: "Streak & celebration",
+    tagline: "Comes out for milestones — 7, 30, 100 day streaks.",
+    uses: ["Daily quests card", "Streak milestones", "Promotion celebration"],
+    vocab: ["gelukkig nieuwjaar", "vuurwerk"],
+    accent: "#C28E1A",
   },
   {
     slug: "drop",
     name: "Drop",
-    emoji: "⬛",
-    description: "Black licorice. Salty or sweet — fiercely divisive.",
+    eponym: "Drop — Dutch licorice",
+    role: "The bouncer",
+    tagline: "Sits next to locked content. Doesn't smile. Means well.",
+    uses: ["Locked tiles", "Out-of-hearts state", "Premium gates"],
+    vocab: ["zout", "zoet", "kun je raden"],
+    accent: "#1A1410",
   },
   {
     slug: "poffertjes",
     name: "Poffertjes",
-    emoji: "🥞",
-    description: "Mini puffy pancakes. Dusted with powdered sugar.",
+    eponym: "Poffertjes — mini pancakes",
+    role: "Beginner cameo",
+    tagline:
+      "Soft landing for A1 learners. The mascot you pick if you're new.",
+    uses: ["A1 level card", "Profile default", "Tutorial walkthroughs"],
+    vocab: ["een beetje", "klein", "lief"],
+    accent: "#FF7AA2",
   },
   {
     slug: "frikandel",
     name: "Frikandel",
-    emoji: "🌭",
-    description: "Fried minced-meat sausage. Snack-bar classic.",
+    eponym: "Frikandel — snackbar sausage",
+    role: "Energetic sidekick",
+    tagline: "The friend who challenges you to a peer drill at 11pm.",
+    uses: ["Peer drills", "Leaderboard fast-movers", "Quick wins"],
+    vocab: ["snel", "lekker", "doe maar"],
+    accent: "#7A3010",
   },
   {
     slug: "tompouce",
     name: "Tompouce",
-    emoji: "🟥",
-    description: "Layered pastry with pink fondant top. Bakkerij staple.",
+    eponym: "Tompouce — fondant pastry",
+    role: "Polite-conversation lead",
+    tagline: "Pink-frosted. Always says 'alstublieft'.",
+    uses: ["Bakkerij window", "Polite-form lessons", "Profile cosmetic"],
+    vocab: ["alstublieft", "graag", "mag ik"],
+    accent: "#FF7AA2",
   },
   {
     slug: "kaas",
     name: "Kaas",
-    emoji: "🧀",
-    description: "Gouda cheese wedge. The Netherlands' greatest export.",
+    eponym: "Kaas — Gouda wedge",
+    role: "Market-day veteran",
+    tagline: "Lives at the kaaswinkel. Will explain de vs het with patience.",
+    uses: ["Op de markt unit", "Grammar drills", "Listening drills"],
+    vocab: ["jong", "belegen", "een ons"],
+    accent: "#C28E1A",
   },
 ] as const;
 
@@ -196,20 +235,50 @@ function StyleguidePage() {
           </p>
         </header>
 
-        {/* Mascot gallery */}
-        <Section title="Treat Mascot Family">
+        {/* Brand cast — the treat family */}
+        <Section title="The Lekkertaal cast">
+          <p
+            style={{
+              color: "var(--text-soft)",
+              marginBottom: "1.25rem",
+              fontSize: "0.9rem",
+              maxWidth: "46rem",
+              lineHeight: 1.6,
+            }}
+          >
+            One stroopwafel and eight Dutch treats. Each treat anchors a place in
+            the world — a unit, a feature, an emotional beat — so users meet them
+            in context, not in a parade. Each card shows the three expression
+            frames (idle, happy, surprised) plus where the character appears and
+            the vocab it brings. Per the design sheet in{" "}
+            <code
+              style={{
+                background: "var(--surface-card-alt)",
+                padding: "0.1em 0.3em",
+                borderRadius: "0.25rem",
+                fontSize: "0.85em",
+              }}
+            >
+              docs/design/screens-brand.jsx
+            </code>
+            .
+          </p>
           <ExpressionPicker active={activeExpression} onChange={setActiveExpression} />
           <div
             data-testid="treat-gallery"
             style={{
               display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))",
-              gap: "1.5rem",
+              gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
+              gap: "1.25rem",
               marginTop: "1.5rem",
             }}
           >
             {TREATS.map((treat) => (
-              <TreatCard key={treat.slug} treat={treat} expression={activeExpression} />
+              <CastCard
+                key={treat.slug}
+                treat={treat}
+                activeExpression={activeExpression}
+              />
             ))}
           </div>
         </Section>
@@ -383,59 +452,226 @@ function ExpressionPicker({
   );
 }
 
-function TreatCard({
+/**
+ * Cast card — one treat character per the design sheet's `CastCard`.
+ * Shows the active-expression hero frame (driven by the picker), the three
+ * expression frames, a role pill, tagline, where it appears, and the vocab
+ * it brings. Per-character `accent` colour tints the role + vocab chips.
+ */
+function CastCard({
   treat,
-  expression,
+  activeExpression,
 }: {
   treat: (typeof TREATS)[number];
-  expression: Expression;
+  activeExpression: Expression;
 }) {
-  const animClass = expression === "idle" ? "anim-idle-bob" : expression === "happy" ? "anim-happy-bounce" : "anim-surprised-pop";
+  const animClass =
+    activeExpression === "idle"
+      ? "anim-idle-bob"
+      : activeExpression === "happy"
+        ? "anim-happy-bounce"
+        : "anim-surprised-pop";
 
   return (
     <div
       style={{
-        background: "white",
+        background: "var(--surface-card)",
+        border: "1.5px solid var(--line-soft)",
         borderRadius: "var(--radius-card)",
-        padding: "1rem",
-        border: "1px solid var(--line-soft)",
-        textAlign: "center",
-        boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
+        padding: "1.125rem",
+        boxShadow: "0 2px 0 0 rgba(0,0,0,.03), 0 12px 28px -16px rgba(0,0,0,.1)",
+        position: "relative",
+        overflow: "hidden",
       }}
     >
-      <div style={{ display: "flex", justifyContent: "center", marginBottom: "0.5rem" }}>
+      {/* name + eponym */}
+      <div style={{ display: "flex", alignItems: "flex-start", gap: "0.75rem" }}>
+        <div style={{ minWidth: 0 }}>
+          <div
+            style={{
+              fontFamily: "var(--font-display)",
+              fontWeight: 700,
+              fontSize: "1.35rem",
+              color: "var(--text-strong)",
+              lineHeight: 1.1,
+            }}
+          >
+            {treat.name}
+          </div>
+          <div
+            style={{
+              fontSize: "0.75rem",
+              color: "var(--text-muted)",
+              marginTop: "0.15rem",
+            }}
+          >
+            {treat.eponym}
+          </div>
+        </div>
+        {/* active-expression hero frame — first img in DOM, tracks the picker */}
         <img
-          src={`/mascot/treats/${treat.slug}/${expression}.png`}
-          alt={`${treat.name} mascot — ${expression}`}
+          src={`/mascot/treats/${treat.slug}/${activeExpression}.png`}
+          alt={`${treat.name} mascot — ${activeExpression}`}
           className={animClass}
           style={{
-            width: 100,
-            height: 100,
+            width: 64,
+            height: 64,
             objectFit: "contain",
+            marginLeft: "auto",
+            flexShrink: 0,
           }}
         />
       </div>
-      <p
+
+      {/* three expression frames */}
+      <div
         style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(3, 1fr)",
+          gap: "0.5rem",
+          marginTop: "0.9rem",
+          alignItems: "end",
+        }}
+      >
+        {EXPRESSIONS.map((mood) => (
+          <div
+            key={mood}
+            style={{
+              background: "var(--surface-card-alt)",
+              borderRadius: "0.75rem",
+              padding: "0.4rem",
+              display: "grid",
+              placeItems: "center",
+              aspectRatio: "1 / 1",
+              border: "1px solid var(--line-soft)",
+            }}
+          >
+            <img
+              src={`/mascot/treats/${treat.slug}/${mood}.png`}
+              alt={`${treat.name} — ${mood}`}
+              style={{ width: 64, height: 64, objectFit: "contain" }}
+            />
+          </div>
+        ))}
+      </div>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(3, 1fr)",
+          gap: "0.5rem",
+          marginTop: "0.25rem",
           fontFamily: "var(--font-display)",
           fontWeight: 600,
-          fontSize: "1rem",
-          margin: "0 0 0.25rem",
-          color: "var(--text-strong)",
-        }}
-      >
-        {treat.emoji} {treat.name}
-      </p>
-      <p
-        style={{
-          fontSize: "0.75rem",
+          fontSize: "0.65rem",
           color: "var(--text-muted)",
-          margin: 0,
-          lineHeight: 1.4,
+          textAlign: "center",
         }}
       >
-        {treat.description}
-      </p>
+        <span>idle</span>
+        <span>happy</span>
+        <span>surprised</span>
+      </div>
+
+      {/* role + tagline */}
+      <div style={{ marginTop: "0.85rem" }}>
+        <span
+          style={{
+            display: "inline-block",
+            fontFamily: "var(--font-display)",
+            fontWeight: 700,
+            fontSize: "0.625rem",
+            letterSpacing: "0.08em",
+            textTransform: "uppercase",
+            color: treat.accent,
+            background: `color-mix(in srgb, ${treat.accent} 14%, transparent)`,
+            padding: "0.2rem 0.55rem",
+            borderRadius: "var(--radius-pill)",
+          }}
+        >
+          {treat.role}
+        </span>
+        <p
+          style={{
+            marginTop: "0.45rem",
+            fontSize: "0.825rem",
+            color: "var(--text-body)",
+            lineHeight: 1.45,
+          }}
+        >
+          {treat.tagline}
+        </p>
+      </div>
+
+      {/* appears in */}
+      <div style={{ marginTop: "0.85rem" }}>
+        <div
+          style={{
+            fontFamily: "var(--font-display)",
+            fontWeight: 700,
+            fontSize: "0.625rem",
+            letterSpacing: "0.08em",
+            textTransform: "uppercase",
+            color: "var(--text-muted)",
+            marginBottom: "0.35rem",
+          }}
+        >
+          Appears in
+        </div>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "0.3rem" }}>
+          {treat.uses.map((u) => (
+            <span
+              key={u}
+              style={{
+                fontFamily: "var(--font-display)",
+                fontWeight: 600,
+                fontSize: "0.7rem",
+                color: "var(--text-soft)",
+                background: "var(--surface-card-alt)",
+                padding: "0.2rem 0.5rem",
+                borderRadius: "0.5rem",
+                border: "1px solid var(--line-soft)",
+              }}
+            >
+              {u}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* brings vocab */}
+      <div style={{ marginTop: "0.7rem" }}>
+        <div
+          style={{
+            fontFamily: "var(--font-display)",
+            fontWeight: 700,
+            fontSize: "0.625rem",
+            letterSpacing: "0.08em",
+            textTransform: "uppercase",
+            color: "var(--text-muted)",
+            marginBottom: "0.35rem",
+          }}
+        >
+          Brings vocab
+        </div>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "0.3rem" }}>
+          {treat.vocab.map((v) => (
+            <span
+              key={v}
+              style={{
+                fontFamily: "var(--font-display)",
+                fontWeight: 700,
+                fontSize: "0.75rem",
+                color: treat.accent,
+                background: `color-mix(in srgb, ${treat.accent} 12%, transparent)`,
+                padding: "0.2rem 0.5rem",
+                borderRadius: "0.5rem",
+              }}
+            >
+              {v}
+            </span>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
