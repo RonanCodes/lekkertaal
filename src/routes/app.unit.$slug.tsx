@@ -1,6 +1,6 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { useState } from "react";
-import { Check, Lock, Sparkles, Swords } from "lucide-react";
+import { Check, Lock, Sparkles, Swords, Target } from "lucide-react";
 import { getUnitDetail } from "../lib/server/unit";
 import { AppShell } from "../components/AppShell";
 import { Speaker } from "../components/drills/Speaker";
@@ -315,58 +315,43 @@ function UnitDetailPage() {
         </section>
       )}
 
-      {/* Boss fight CTA — the unit's capstone roleplay. Unlocked once every
-          lesson is done; glows and offers the mascot a happy frame. */}
+      {/* Boss fight teaser — the unit's capstone roleplay, presented as a dark
+          bakkerij-gradient card with an AI-roleplay sparkle badge and
+          objectives / time chips (matches ScreenUnit in the design source).
+          Unlocked once every lesson is done; locked state dims the card and
+          swaps the CTA for a lock + hint. */}
       {bossFight && (
         <section className="mb-28">
-          <h2 className="text-display mb-3 text-lg font-bold">Boss fight</h2>
-          <div
-            className={`rounded-3xl border-2 p-5 transition-all ${
-              bossFight.unlocked
-                ? "border-amber-400 bg-gradient-to-br from-amber-50 to-orange-100 shadow-lg shadow-amber-200"
-                : "border-neutral-300 bg-neutral-100 opacity-70"
-            }`}
-          >
-            <div className="flex items-center justify-between gap-3">
-              <div className="flex min-w-0 items-center gap-3">
-                <span
-                  className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl text-white"
-                  style={{
-                    background: bossFight.unlocked
-                      ? "var(--color-brand-orange)"
-                      : "var(--text-faint)",
-                  }}
-                >
-                  <Swords size={24} strokeWidth={2.5} />
+          <h2 className="text-display mb-3 text-lg font-bold">Caps the unit</h2>
+          <div className={`boss-teaser ${bossFight.unlocked ? "" : "boss-teaser--locked"}`}>
+            <span className="boss-teaser-badge">
+              <Sparkles size={12} strokeWidth={2.5} aria-hidden="true" />
+              AI roleplay
+            </span>
+            <h3 className="boss-teaser-title text-display">{bossFight.titleNl}</h3>
+            <p className="boss-teaser-sub">{bossFight.titleEn}</p>
+            <div className="boss-teaser-chips">
+              {bossFight.objectivesCount > 0 && (
+                <span className="boss-teaser-chip boss-teaser-chip--green">
+                  <Target size={11} strokeWidth={2.5} aria-hidden="true" />
+                  {bossFight.objectivesCount} objectives
                 </span>
-                <div className="min-w-0">
-                  <div
-                    className="text-display text-xs font-semibold uppercase tracking-[0.1em]"
-                    style={{ color: "var(--text-muted)" }}
-                  >
-                    Roleplay challenge
-                  </div>
-                  <div className="text-display truncate text-xl font-extrabold">
-                    {bossFight.titleNl}
-                  </div>
-                  <div className="truncate text-sm" style={{ color: "var(--text-soft)" }}>
-                    {bossFight.titleEn}
-                  </div>
-                </div>
-              </div>
+              )}
+              <span className="boss-teaser-chip">~{bossFight.estimatedMinutes} min</span>
+            </div>
+            <div className="boss-teaser-actions">
               {bossFight.unlocked ? (
-                <a href={`/app/roleplay/${bossFight.slug}`} className="btn-3d btn-3d-sm shrink-0">
-                  Start
+                <a href={`/app/roleplay/${bossFight.slug}`} className="btn-3d btn-3d-sm">
+                  Start scenario &rarr;
                 </a>
               ) : (
-                <Lock size={28} style={{ color: "var(--text-faint)" }} aria-label="Locked" />
+                <span className="boss-teaser-locked-hint">
+                  <Lock size={16} strokeWidth={2.5} aria-hidden="true" />
+                  Finish all lessons to unlock
+                </span>
               )}
             </div>
-            {!bossFight.unlocked && (
-              <p className="mt-3 text-xs" style={{ color: "var(--text-muted)" }}>
-                Finish all lessons in this unit to unlock the boss fight.
-              </p>
-            )}
+            <Swords className="boss-teaser-deco" size={120} strokeWidth={1.5} aria-hidden="true" />
           </div>
         </section>
       )}

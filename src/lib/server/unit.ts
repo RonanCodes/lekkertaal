@@ -96,6 +96,8 @@ export const getUnitDetail = createServerFn({ method: "GET" })
             slug: scen[0].slug,
             titleNl: scen[0].titleNl,
             titleEn: scen[0].titleEn,
+            objectivesCount: scen[0].successCriteria?.length ?? 0,
+            estimatedMinutes: scen[0].estimatedMinutes,
             unlocked: allLessonsDone,
           }
         : null,

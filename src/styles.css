@@ -4612,3 +4612,98 @@ img.roleplay-bubble-avatar {
     animation: none;
   }
 }
+
+/* ============================================================
+ * Unit-detail boss-fight teaser (#258)
+ * Dark bakkerij-gradient card with an AI-roleplay sparkle badge
+ * and objectives / time chips, matching ScreenUnit in the design
+ * source. Same gradient as the roleplay scene header so the boss
+ * fight reads as the same world. Locked state dims + greys. Appended
+ * at tail to stay merge-friendly; no global brand-token edits.
+ * ============================================================ */
+.boss-teaser {
+  position: relative;
+  overflow: hidden;
+  border-radius: 22px;
+  padding: 1rem 1.1rem 1.1rem;
+  color: #fff;
+  background: linear-gradient(160deg, #2a1810, #4a2810);
+  box-shadow: 0 8px 22px -10px rgba(0, 0, 0, 0.5);
+}
+.boss-teaser--locked {
+  background: linear-gradient(160deg, #2c241f, #3a3128);
+  box-shadow: 0 6px 16px -10px rgba(0, 0, 0, 0.45);
+}
+.boss-teaser-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  padding: 0.28rem 0.6rem;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffd9b5;
+}
+.boss-teaser-title {
+  margin-top: 0.6rem;
+  font-size: 1.4rem;
+  font-weight: 800;
+  line-height: 1.15;
+  color: #fff;
+}
+.boss-teaser-sub {
+  margin-top: 0.3rem;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.82);
+}
+.boss-teaser-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-top: 0.85rem;
+}
+.boss-teaser-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.26rem 0.6rem;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+.boss-teaser-chip--green {
+  background: rgba(88, 204, 2, 0.22);
+  color: #d8f5bd;
+  border-color: rgba(88, 204, 2, 0.35);
+}
+.boss-teaser-actions {
+  position: relative;
+  z-index: 1;
+  margin-top: 0.95rem;
+}
+.boss-teaser-locked-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.78);
+}
+.boss-teaser-deco {
+  position: absolute;
+  right: -0.6rem;
+  bottom: -1.2rem;
+  color: rgba(255, 217, 181, 0.16);
+  pointer-events: none;
+}
+.boss-teaser--locked .boss-teaser-deco {
+  color: rgba(255, 255, 255, 0.08);
+}
