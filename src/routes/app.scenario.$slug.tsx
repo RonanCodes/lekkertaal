@@ -1,5 +1,5 @@
 import { createFileRoute, notFound, useNavigate } from "@tanstack/react-router";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport  } from "ai";
 import type {UIMessage} from "ai";
@@ -12,7 +12,7 @@ import {
 } from "../lib/server/roleplay";
 import type {RoleplayTranscriptEntry} from "../lib/server/roleplay";
 import { AppShell } from "../components/AppShell";
-import { Info } from "lucide-react";
+import { Info, Mic, Square } from "lucide-react";
 import { log } from "../lib/logger";
 import { UNAVAILABLE_TOOLTIP } from "../components/drills/Speaker";
 
@@ -83,6 +83,9 @@ function ScenarioChatPage() {
   // Count of user turns sent — drives auto-end at 8.
   const userTurnCount = messages.filter((m) => m.role === "user").length;
 
+  // Mid-conversation corrections keyed by the learner message they tweak.
+  const correctionMap = useMemo(() => buildCorrectionMap(messages), [messages]);
+
   // Auto-scroll to the latest message.
   useEffect(() => {
     scrollRef.current?.scrollTo({
@@ -137,11 +140,99 @@ function ScenarioChatPage() {
   const objectives = scenario.successCriteria;
   const mustUse = scenario.mustUseVocab;
 
+  // ---- Mic → STT → input draft -------------------------------------------
+  // Reuses SpeakDrill's MediaRecorder + /api/stt/transcribe pattern, but the
+  // transcript drops into the composer draft (no scoring) so the learner can
+  // review or tweak the words before sending. drillId is omitted on transcribe
+  // (the endpoint accepts a null drillId for free-speak contexts like this).
+  const [micPhase, setMicPhase] = useState<
+    "idle" | "recording" | "transcribing" | "error"
+  >("idle");
+  const recorderRef = useRef<MediaRecorder | null>(null);
+  const chunksRef = useRef<Blob[]>([]);
+  const streamRef = useRef<MediaStream | null>(null);
+  const startedAtRef = useRef<number>(0);
+
+  const micSupported = useMemo(
+    () =>
+      typeof window !== "undefined" &&
+      typeof window.MediaRecorder !== "undefined" &&
+      !!navigator.mediaDevices &&
+      typeof navigator.mediaDevices.getUserMedia === "function",
+    [],
+  );
+
+  useEffect(() => {
+    return () => {
+      streamRef.current?.getTracks().forEach((t) => t.stop());
+    };
+  }, []);
+
+  const transcribeClip = useCallback(async (blob: Blob, durationMs: number) => {
+    setMicPhase("transcribing");
+    try {
+      const form = new FormData();
+      form.append("audio", blob, "clip.webm");
+      form.append("durationMs", String(durationMs));
+      const r = await fetch("/api/stt/transcribe", { method: "POST", body: form });
+      if (!r.ok) throw new Error(`transcribe ${r.status}`);
+      const { transcript } = (await r.json()) as { transcript: string };
+      const clean = transcript.trim();
+      if (clean) {
+        // Append to whatever the learner has already typed.
+        setDraft((d) => (d.trim() ? `${d.trim()} ${clean}` : clean));
+      }
+      setMicPhase("idle");
+    } catch (err) {
+      log.warn("scenario stt transcribe failed", { err: String(err) });
+      setMicPhase("error");
+    }
+  }, []);
+
+  const startRecording = useCallback(async () => {
+    if (micPhase === "recording" || micPhase === "transcribing") return;
+    setMicPhase("idle");
+    chunksRef.current = [];
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      streamRef.current = stream;
+      const rec = new MediaRecorder(stream, { mimeType: "audio/webm" });
+      recorderRef.current = rec;
+      rec.addEventListener("dataavailable", (e) => {
+        if (e.data && e.data.size > 0) chunksRef.current.push(e.data);
+      });
+      rec.addEventListener("stop", () => {
+        const recordedBlob = new Blob(chunksRef.current, { type: "audio/webm" });
+        const durationMs = Math.max(1, Date.now() - startedAtRef.current);
+        streamRef.current?.getTracks().forEach((t) => t.stop());
+        streamRef.current = null;
+        void transcribeClip(recordedBlob, durationMs);
+      });
+      startedAtRef.current = Date.now();
+      rec.start();
+      setMicPhase("recording");
+    } catch (err) {
+      log.warn("scenario mic getUserMedia denied", { err: String(err) });
+      setMicPhase("error");
+    }
+  }, [micPhase, transcribeClip]);
+
+  const stopRecording = useCallback(() => {
+    const rec = recorderRef.current;
+    if (rec && rec.state !== "inactive") rec.stop();
+  }, []);
+
+  const onMicClick = useCallback(() => {
+    if (micPhase === "recording") stopRecording();
+    else void startRecording();
+  }, [micPhase, startRecording, stopRecording]);
+
   return (
     <AppShell user={user}>
       <div className="roleplay-scene mx-auto flex h-[calc(100vh-4rem)] max-w-2xl flex-col px-4">
-        {/* Scene header: Kroket companion + NPC + objectives + turn meter */}
-        <header className="roleplay-header">
+        {/* Scene header: dark bakkerij gradient with Kroket companion + NPC
+            + objectives + turn meter (matches ScreenRoleplay's dark scene). */}
+        <header className="roleplay-header roleplay-header--dark">
           <div className="flex items-center gap-3">
             <img
               src={`/mascot/treats/kroket/${kroketFrame}.png`}
@@ -152,10 +243,10 @@ function ScenarioChatPage() {
               }`}
             />
             <div className="min-w-0 flex-1">
-              <div className="truncate text-xs font-semibold uppercase tracking-wide text-neutral-500">
+              <div className="roleplay-header-eyebrow truncate text-xs font-semibold uppercase tracking-wide">
                 Roleplay met {scenario.npcName}
               </div>
-              <h1 className="truncate text-lg font-bold text-neutral-900">
+              <h1 className="roleplay-header-title truncate text-lg font-bold">
                 {scenario.titleNl}
               </h1>
             </div>
@@ -196,6 +287,7 @@ function ScenarioChatPage() {
               text={extractText(m)}
               npcName={scenario.npcName}
               voiceId={scenario.npcVoiceId}
+              corrections={correctionMap.get(m.id)}
               onWordClick={(word) => {
                 if (busy || ended) return;
                 void sendMessage({ text: `Wat betekent "${word}"?` });
@@ -219,7 +311,7 @@ function ScenarioChatPage() {
         {/* Composer + sticky end button */}
         <form
           onSubmit={onSubmit}
-          className="roleplay-composer sticky bottom-0 flex gap-2 bg-white/95 py-3 backdrop-blur"
+          className="roleplay-composer sticky bottom-0 flex items-center gap-2 bg-white/95 py-3 backdrop-blur"
         >
           <input
             type="text"
@@ -230,6 +322,29 @@ function ScenarioChatPage() {
             className="roleplay-input flex-1 disabled:opacity-60"
             autoFocus
           />
+          {micSupported && (
+            <button
+              type="button"
+              onClick={onMicClick}
+              disabled={ended || busy || micPhase === "transcribing"}
+              aria-label={
+                micPhase === "recording" ? "Stop opname" : "Spreek je antwoord in"
+              }
+              aria-pressed={micPhase === "recording"}
+              data-testid="roleplay-mic"
+              className={`roleplay-mic${
+                micPhase === "recording" ? " roleplay-mic--recording" : ""
+              }${micPhase === "transcribing" ? " roleplay-mic--busy" : ""}`}
+            >
+              {micPhase === "recording" ? (
+                <Square size={18} fill="currentColor" aria-hidden />
+              ) : micPhase === "transcribing" ? (
+                <span className="roleplay-mic-spinner" aria-hidden />
+              ) : (
+                <Mic size={20} aria-hidden />
+              )}
+            </button>
+          )}
           <button
             type="submit"
             disabled={!draft.trim() || ended || busy}
@@ -256,35 +371,63 @@ function ChatBubble({
   text,
   npcName,
   voiceId,
+  corrections,
   onWordClick,
 }: {
   role: string;
   text: string;
   npcName: string;
   voiceId: string | null;
+  corrections?: InlineCorrection[];
   onWordClick?: (word: string) => void;
 }) {
   const isUser = role === "user";
   if (isUser) {
     return (
-      <div className="flex justify-end">
+      <div className="flex flex-col items-end gap-1">
         <div className="roleplay-bubble roleplay-bubble--user max-w-[80%]">
           <p className="whitespace-pre-wrap leading-relaxed">{text}</p>
         </div>
+        {corrections?.map((c, i) => (
+          <CorrectionCard key={`${c.incorrect}-${i}`} correction={c} />
+        ))}
       </div>
     );
   }
   return (
     <div className="flex justify-start gap-2">
-      <span className="roleplay-bubble-avatar" aria-hidden>
-        {npcName.charAt(0).toUpperCase()}
-      </span>
+      <img
+        src="/mascot/treats/kroket/idle.png"
+        alt={`${npcName} avatar`}
+        className="roleplay-bubble-avatar"
+      />
       <div className="roleplay-bubble roleplay-bubble--npc max-w-[80%]">
         <p className="whitespace-pre-wrap leading-relaxed">
           {onWordClick ? <ClickableDutchWords text={text} onWordClick={onWordClick} /> : text}
         </p>
         {text && <SpeakButton text={text} voiceId={voiceId} />}
       </div>
+    </div>
+  );
+}
+
+/**
+ * Inline "Tiny tweak" correction card, rendered under the learner bubble it
+ * tweaks. Mirrors `ScreenRoleplay`'s `MsgMe` correction: strike the original,
+ * show the fix in display weight, then a short English note. Colours come from
+ * the amber-banner tokens so light + dark inherit automatically.
+ */
+function CorrectionCard({ correction }: { correction: InlineCorrection }) {
+  return (
+    <div className="roleplay-correction max-w-[80%]" data-testid="roleplay-correction">
+      <div className="roleplay-correction-eyebrow">Tiny tweak</div>
+      <div className="roleplay-correction-body">
+        <s className="roleplay-correction-original">{correction.incorrect}</s>
+        <div className="roleplay-correction-fixed">{correction.correction}</div>
+      </div>
+      {correction.explanationEn && (
+        <div className="roleplay-correction-note">{correction.explanationEn}</div>
+      )}
     </div>
   );
 }
@@ -398,6 +541,64 @@ function SpeakButton({ text, voiceId }: { text: string; voiceId: string | null }
       <span className="underline-offset-2 hover:underline">hoor</span>
     </button>
   );
+}
+
+/**
+ * An inline "Tiny tweak" correction surfaced mid-conversation. The roleplay
+ * model emits these silently via the `flagSuspectedError` tool — the tool part
+ * rides along on the assistant message that answers a learner turn. We pull
+ * them out here so the transcript can render a correction card under the
+ * learner's own bubble, matching `ScreenRoleplay`'s `MsgMe` correction shape.
+ */
+export type InlineCorrection = {
+  category: string;
+  incorrect: string;
+  correction: string;
+  explanationEn?: string;
+};
+
+/**
+ * Pull `flagSuspectedError` tool inputs out of an assistant message's parts.
+ * AI SDK v6 names the part `tool-<toolName>` and carries the model's args on
+ * `input`. We read defensively because the part is also persisted to D1 and
+ * round-tripped through JSON, so the runtime shape is `unknown`-ish.
+ */
+export function extractCorrections(m: UIMessage): InlineCorrection[] {
+  const parts = (m.parts ?? []) as Array<{ type?: string; input?: unknown }>;
+  const out: InlineCorrection[] = [];
+  for (const p of parts) {
+    if (p?.type !== "tool-flagSuspectedError") continue;
+    const input = p.input as Partial<InlineCorrection> | undefined;
+    if (!input?.incorrect || !input?.correction) continue;
+    out.push({
+      category: String(input.category ?? "grammar"),
+      incorrect: String(input.incorrect),
+      correction: String(input.correction),
+      explanationEn: input.explanationEn ? String(input.explanationEn) : undefined,
+    });
+  }
+  return out;
+}
+
+/**
+ * Map each user message id to the corrections the model flagged in response.
+ * A learner turn is corrected by the assistant turn that immediately follows
+ * it, so we attach any corrections on assistant message N+1 to user message N.
+ */
+export function buildCorrectionMap(
+  messages: UIMessage[],
+): Map<string, InlineCorrection[]> {
+  const map = new Map<string, InlineCorrection[]>();
+  for (let i = 0; i < messages.length; i++) {
+    const m = messages[i];
+    if (m.role !== "user") continue;
+    const next = messages[i + 1];
+    if (next && next.role === "assistant") {
+      const corrections = extractCorrections(next);
+      if (corrections.length > 0) map.set(m.id, corrections);
+    }
+  }
+  return map;
 }
 
 function extractText(m: UIMessage): string {
