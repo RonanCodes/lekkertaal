@@ -1,9 +1,9 @@
 import { createFileRoute, useRouter } from "@tanstack/react-router";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Coins, Lightbulb, Snowflake } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import { getShop, buyItem  } from "../lib/server/shop";
-import type {ShopItem} from "../lib/server/shop";
+import { getShop, buyItem } from "../lib/server/shop";
+import type { ShopItem } from "../lib/server/shop";
 import { AppShell } from "../components/AppShell";
 import { resolveShopIcon } from "../lib/shop-icons";
 
@@ -12,12 +12,77 @@ export const Route = createFileRoute("/app/shop")({
   component: ShopPage,
 });
 
+/**
+ * Which design section a catalogue item belongs to.
+ *
+ * The live catalogue (`SHOP_CATALOGUE`) only has two real, server-backed items
+ * today: `streak_freeze` and `hint_pack`. We map them onto the design's named
+ * sections so the screen reads as designed even though the backend is thin.
+ * Anything we can't classify falls back to the Power-ups bucket so a future
+ * catalogue addition still renders without a code change here.
+ */
+type ShopSectionId = "streak-freeze" | "heart-refill" | "power-up";
+
+const SECTION_ORDER: { id: ShopSectionId; title: string }[] = [
+  { id: "streak-freeze", title: "Streak freezes" },
+  { id: "heart-refill", title: "Heart refills" },
+  { id: "power-up", title: "Power-ups" },
+];
+
+// Items that aren't streak freezes fall back to Power-ups, so a future
+// catalogue addition still slots in without a code change here.
+const SECTION_BY_ITEM: Partial<Record<string, ShopSectionId>> = {
+  streak_freeze: "streak-freeze",
+  hint_pack: "power-up",
+};
+
+function sectionForItem(item: ShopItem): ShopSectionId {
+  return SECTION_BY_ITEM[item.id] ?? "power-up";
+}
+
+/**
+ * Cosmetic treat-avatar catalogue.
+ *
+ * There is NO server schema for equippable cosmetics yet (see `shop.ts`:
+ * "Cosmetic mascot outfits are deferred to Phase 2"). Per the slice brief we
+ * render the designed grid driven by the live coin balance for the
+ * owned/can-afford state, and hold equipped/owned purely client-side for this
+ * session. Buying or equipping does NOT persist — when the backend lands, the
+ * `owned`/`equipped` sets below become server-derived. Prices mirror the
+ * `ScreenShop` prototype in `docs/design/screens-misc.jsx`.
+ */
+type Cosmetic = {
+  mascot: string;
+  name: string;
+  price: number;
+};
+
+const COSMETICS: Cosmetic[] = [
+  { mascot: "poffertjes", name: "Poffertjes", price: 200 },
+  { mascot: "oliebollen", name: "Oliebollen", price: 200 },
+  { mascot: "tompouce", name: "Tompouce", price: 250 },
+  { mascot: "kaas", name: "Kaas", price: 250 },
+  { mascot: "kroket", name: "Kroket", price: 400 },
+  { mascot: "drop", name: "Drop", price: 400 },
+];
+
+// The starter avatar everyone has equipped by default until cosmetics persist.
+const DEFAULT_EQUIPPED = "poffertjes";
+
 function ShopPage() {
   const data = Route.useLoaderData();
   const router = useRouter();
   const { user, items } = data;
   const [pendingId, setPendingId] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
+
+  // Client-side cosmetic state (no backend yet — see COSMETICS note above).
+  // Owned avatars are seeded with the two the design shows as already-bought so
+  // the equip flow is exercisable; equipped tracks the active one.
+  const [owned, setOwned] = useState<Set<string>>(
+    () => new Set([DEFAULT_EQUIPPED, "oliebollen"]),
+  );
+  const [equipped, setEquipped] = useState<string>(DEFAULT_EQUIPPED);
 
   async function purchase(item: ShopItem) {
     if (pendingId) return;
@@ -36,28 +101,62 @@ function ShopPage() {
     }
   }
 
-  // Tone for the purchase toast: a successful buy starts with "Bought".
-  const toastTone = message && message.startsWith("Bought") ? "success" : "error";
+  function buyCosmetic(c: Cosmetic) {
+    if (owned.has(c.mascot)) {
+      setEquipped(c.mascot);
+      setMessage(`Equipped ${c.name}.`);
+      return;
+    }
+    if (user.coinsBalance < c.price) return;
+    // No server fn for cosmetics yet, so this is session-local.
+    setOwned((prev) => new Set(prev).add(c.mascot));
+    setEquipped(c.mascot);
+    setMessage(`Unlocked ${c.name}! Equipped.`);
+  }
+
+  // Tone for the purchase toast: a successful buy/equip is upbeat.
+  const toastTone =
+    message &&
+    (message.startsWith("Bought") ||
+      message.startsWith("Equipped") ||
+      message.startsWith("Unlocked"))
+      ? "success"
+      : "error";
+
+  const sections = useMemo(() => {
+    return SECTION_ORDER.map((section) => ({
+      ...section,
+      items: items.filter((item) => sectionForItem(item) === section.id),
+    })).filter((section) => section.items.length > 0);
+  }, [items]);
+
+  const equippedMascot = equipped;
 
   return (
     <AppShell user={user}>
       <div className="mx-auto max-w-xl space-y-6 py-2">
-        <header className="sp-head">
+        {/* Stroopwafel-gradient balance hero */}
+        <div className="sp-hero-balance">
           <img
-            src="/mascot/treats/oliebollen/idle.png"
+            src={`/mascot/treats/${equippedMascot}/happy.png`}
             alt=""
-            className="sp-head__mascot anim-idle-bob"
+            className="sp-hero-balance__mascot anim-idle-bob"
             aria-hidden
           />
-          <div>
-            <h1 className="sp-head__title">Shop</h1>
-            <p className="sp-head__sub">
+          <div className="sp-hero-balance__body">
+            <div className="sp-hero-balance__eyebrow">Your balance</div>
+            <div className="sp-hero-balance__amount">
+              <Coins size={28} className="text-amber-500" aria-hidden />
+              <span>{user.coinsBalance}</span>
+            </div>
+            <p className="sp-hero-balance__hint">
               Spend the coins you earned from lessons and roleplays.
             </p>
           </div>
-        </header>
+        </div>
 
-        {/* Balances */}
+        {/* Secondary balances (streak freezes / hints) — keeps the e2e
+            balance-card selectors and the at-a-glance inventory. */}
         <div className="sp-balances">
           <BalanceCard
             label="Coins"
@@ -83,44 +182,107 @@ function ShopPage() {
           />
         </div>
 
-        {/* Catalogue */}
-        <ul className="space-y-3">
-          {items.map((item) => {
-            const canAfford = user.coinsBalance >= item.costCoins;
-            const isPending = pendingId === item.id;
-            const ItemIcon = resolveShopIcon(item.iconName);
-            return (
-              <li key={item.id} className="sp-item">
-                <div
-                  className="sp-item__icon"
-                  data-icon-name={item.iconName}
-                  data-testid="shop-item-icon"
-                  aria-hidden
-                >
-                  <ItemIcon size={28} />
-                </div>
-                <div className="min-w-0 flex-1">
-                  <div className="sp-item__title">{item.titleEn}</div>
-                  <div className="sp-item__desc">{item.description}</div>
-                </div>
+        {/* Catalogue grouped into the designed sections. */}
+        {sections.map((section) => (
+          <section key={section.id} className="sp-cat" data-section={section.id}>
+            <h2 className="sp-cat__title">{section.title}</h2>
+            <ul className="space-y-3">
+              {section.items.map((item) => {
+                const canAfford = user.coinsBalance >= item.costCoins;
+                const isPending = pendingId === item.id;
+                const ItemIcon = resolveShopIcon(item.iconName);
+                return (
+                  <li key={item.id} className="sp-item">
+                    <div
+                      className="sp-item__icon"
+                      data-icon-name={item.iconName}
+                      data-testid="shop-item-icon"
+                      aria-hidden
+                    >
+                      <ItemIcon size={28} />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="sp-item__title">{item.titleEn}</div>
+                      <div className="sp-item__desc">{item.description}</div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => purchase(item)}
+                      disabled={!canAfford || isPending}
+                      className="btn-3d btn-3d-sm sp-item__buy"
+                      aria-label={`Buy ${item.titleEn} for ${item.costCoins} coins`}
+                    >
+                      {isPending ? "..." : (
+                        <span className="inline-flex items-center gap-1">
+                          {item.costCoins}
+                          <Coins size={14} className="text-amber-200" aria-hidden />
+                        </span>
+                      )}
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          </section>
+        ))}
+
+        {/* Cosmetic treat-avatar grid. */}
+        <section className="sp-cat" data-section="cosmetics">
+          <h2 className="sp-cat__title">Avatars · treat family</h2>
+          <div className="sp-cosmetics">
+            {COSMETICS.map((c) => {
+              const isOwned = owned.has(c.mascot);
+              const isEquipped = equipped === c.mascot;
+              const canAfford = user.coinsBalance >= c.price;
+              const state = isEquipped
+                ? "equipped"
+                : isOwned
+                  ? "owned"
+                  : canAfford
+                    ? "afford"
+                    : "locked";
+              return (
                 <button
+                  key={c.mascot}
                   type="button"
-                  onClick={() => purchase(item)}
-                  disabled={!canAfford || isPending}
-                  className="btn-3d btn-3d-sm sp-item__buy"
-                  aria-label={`Buy ${item.titleEn} for ${item.costCoins} coins`}
+                  className="sp-cosmetic"
+                  data-testid="shop-cosmetic"
+                  data-state={state}
+                  disabled={state === "locked"}
+                  onClick={() => buyCosmetic(c)}
+                  aria-label={
+                    isEquipped
+                      ? `${c.name} avatar, equipped`
+                      : isOwned
+                        ? `Equip ${c.name} avatar`
+                        : `Buy ${c.name} avatar for ${c.price} coins`
+                  }
                 >
-                  {isPending ? "..." : (
-                    <span className="inline-flex items-center gap-1">
-                      {item.costCoins}
-                      <Coins size={14} className="text-amber-200" aria-hidden />
+                  <img
+                    src={`/mascot/treats/${c.mascot}/idle.png`}
+                    alt=""
+                    className="sp-cosmetic__mascot"
+                    aria-hidden
+                  />
+                  <span className="sp-cosmetic__name">{c.name}</span>
+                  {state === "equipped" ? (
+                    <span className="sp-cosmetic__badge">Equipped</span>
+                  ) : state === "owned" ? (
+                    <span className="sp-cosmetic__action">Equip</span>
+                  ) : (
+                    <span className="sp-cosmetic__price">
+                      <Coins size={12} aria-hidden />
+                      {c.price}
                     </span>
                   )}
                 </button>
-              </li>
-            );
-          })}
-        </ul>
+              );
+            })}
+          </div>
+          <p className="sp-cat__foot">
+            Need more? <span>Earn coins on the path.</span>
+          </p>
+        </section>
 
         {message && (
           <div className="sp-toast" data-tone={toastTone === "error" ? "error" : undefined}>

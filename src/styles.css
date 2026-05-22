@@ -3480,3 +3480,177 @@ img.roleplay-bubble-avatar {
   font-size: 0.72rem;
   color: var(--text-soft);
 }
+
+/* ============================================================
+ * Shop fidelity (#249): stroopwafel balance hero, category
+ * sections, cosmetic treat-avatar grid. Builds additively on the
+ * existing .sp-balance / .sp-item / .sp-toast recipes above. All
+ * colours route through brand + semantic tokens so dark mode flips
+ * for free; the hero gets an explicit dark override at the tail.
+ * ============================================================ */
+
+/* Stroopwafel-gradient balance hero. */
+.sp-hero-balance {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border-radius: var(--radius-card);
+  border: 1.5px solid transparent;
+  padding: 1.1rem 1.25rem;
+  background: linear-gradient(
+    160deg,
+    var(--color-brand-orange-soft),
+    var(--color-brand-pink-soft)
+  );
+  box-shadow: 0 8px 24px -16px rgba(213, 78, 0, 0.45);
+}
+.sp-hero-balance__mascot {
+  height: 4.25rem;
+  width: 4.25rem;
+  flex-shrink: 0;
+  object-fit: contain;
+}
+.sp-hero-balance__body {
+  min-width: 0;
+}
+.sp-hero-balance__eyebrow {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-brand-orange-dark);
+}
+.sp-hero-balance__amount {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.1rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.85rem;
+  line-height: 1.1;
+  color: var(--text-strong);
+  font-variant-numeric: tabular-nums;
+}
+.sp-hero-balance__hint {
+  margin-top: 0.3rem;
+  font-size: 0.82rem;
+  color: color-mix(in srgb, var(--text-strong) 70%, transparent);
+}
+
+/* Category section wrapper. */
+.sp-cat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+.sp-cat__title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+.sp-cat__foot {
+  margin-top: 0.5rem;
+  text-align: center;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+.sp-cat__foot span {
+  font-weight: 700;
+  color: var(--color-brand-orange-dark);
+}
+
+/* Cosmetic treat-avatar grid. */
+.sp-cosmetics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+.sp-cosmetic {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  border-radius: var(--radius-card);
+  border: 1.5px solid var(--line-soft);
+  background: var(--surface-card);
+  padding: 0.75rem 0.5rem;
+  text-align: center;
+  cursor: pointer;
+  transition:
+    border-color 120ms ease,
+    box-shadow 120ms ease,
+    transform 120ms ease;
+}
+.sp-cosmetic:not(:disabled):hover {
+  border-color: color-mix(in srgb, var(--color-brand-orange) 45%, var(--line-soft));
+  transform: translateY(-2px);
+}
+.sp-cosmetic[data-state="equipped"] {
+  border-color: var(--color-brand-orange);
+  box-shadow: 0 4px 0 0 var(--color-brand-orange-dark);
+}
+.sp-cosmetic[data-state="locked"] {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.sp-cosmetic__mascot {
+  height: 3.5rem;
+  width: 3.5rem;
+  object-fit: contain;
+}
+.sp-cosmetic__name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.72rem;
+  color: var(--text-strong);
+}
+.sp-cosmetic__badge {
+  font-size: 0.62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-good);
+  background: var(--color-good-soft);
+  border-radius: 999px;
+  padding: 0.1rem 0.5rem;
+}
+.sp-cosmetic__action {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--color-brand-orange-dark);
+  border: 1.5px solid color-mix(in srgb, var(--color-brand-orange) 40%, var(--line-soft));
+  border-radius: 999px;
+  padding: 0.1rem 0.6rem;
+}
+.sp-cosmetic__price {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--color-brand-orange-dark);
+  font-variant-numeric: tabular-nums;
+}
+.sp-cosmetic[data-state="locked"] .sp-cosmetic__price {
+  color: var(--text-muted);
+}
+
+/* Dark mode: the hero's light stroopwafel gradient needs a deeper
+ * caramel so text + mascot keep contrast on a dark page. */
+@media (prefers-color-scheme: dark) {
+  .sp-hero-balance {
+    background: linear-gradient(
+      160deg,
+      color-mix(in srgb, var(--color-brand-orange) 28%, var(--surface-card)),
+      color-mix(in srgb, var(--color-brand-pink) 24%, var(--surface-card))
+    );
+    box-shadow: 0 8px 24px -16px rgba(0, 0, 0, 0.6);
+  }
+  .sp-hero-balance__eyebrow {
+    color: var(--color-brand-orange-soft);
+  }
+}
