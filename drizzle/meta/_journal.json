@@ -92,6 +92,13 @@
       "when": 1747684800000,
       "tag": "0012_vocab_enrichment",
       "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "6",
+      "when": 1747872000000,
+      "tag": "0013_learning_goal",
+      "breakpoints": true
     }
   ]
 }
