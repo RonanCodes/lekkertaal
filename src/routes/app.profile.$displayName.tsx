@@ -1,6 +1,5 @@
 import { createFileRoute, notFound, Link } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
-import { Flame, Zap } from "lucide-react";
 import { db } from "../db/client";
 import { users } from "../db/schema";
 import { eq } from "drizzle-orm";
@@ -8,7 +7,13 @@ import { requireWorkerContext } from "../entry.server";
 import { requireUserClerkId } from "../lib/server/auth-helper";
 import { ensureUserRow } from "../lib/server/ensure-user-row";
 import { getProfileBadges } from "../lib/server/badges";
+import { getCurrentLeagueForUser, tierMeta } from "../lib/server/leagues";
+import {
+  getActivityHeatmap,
+  getLessonsCompleted,
+} from "../lib/server/profile-activity";
 import { AppShell } from "../components/AppShell";
+import { ProfileHero } from "../components/ProfileHero";
 
 /**
  * Public profile view at /app/profile/:displayName.
@@ -37,6 +42,9 @@ const getPublicProfile = createServerFn({ method: "GET" })
     }
 
     const badges = await getProfileBadges(drz, target[0].id);
+    const league = await getCurrentLeagueForUser(drz, target[0].id);
+    const heatmap = await getActivityHeatmap(drz, target[0].id);
+    const lessonsCompleted = await getLessonsCompleted(drz, target[0].id);
 
     return {
       viewer: {
@@ -56,6 +64,11 @@ const getPublicProfile = createServerFn({ method: "GET" })
         isSelf: target[0].id === me[0].id,
       },
       badges,
+      league: league
+        ? { tier: league.tier, weeklyXp: league.weeklyXp, ...tierMeta(league.tier) }
+        : null,
+      heatmap,
+      lessonsCompleted,
     };
   });
 
@@ -72,50 +85,41 @@ export const Route = createFileRoute("/app/profile/$displayName")({
 });
 
 function PublicProfilePage() {
-  const { viewer, profile, badges } = Route.useLoaderData();
+  const { viewer, profile, badges, league, heatmap, lessonsCompleted } =
+    Route.useLoaderData();
   const earned = badges.filter((b) => b.awarded);
 
   return (
     <AppShell user={viewer}>
       <div className="mx-auto max-w-3xl space-y-6">
-        <section className="sp-hero">
-          <div className="sp-hero__top">
-            {profile.avatarUrl ? (
-              <img src={profile.avatarUrl} alt="" className="sp-avatar" />
-            ) : (
-              <div className="sp-avatar sp-avatar--fallback">
-                {profile.displayName.slice(0, 2).toUpperCase()}
-              </div>
-            )}
-            <div className="min-w-0 flex-1">
-              <h1 className="sp-hero__name truncate">{profile.displayName}</h1>
-              <div className="sp-hero__meta">
-                <span className="sp-pill sp-pill--cefr">CEFR {profile.cefrLevel}</span>
-              </div>
-            </div>
-            {profile.isSelf && (
+        <ProfileHero
+          displayName={profile.displayName}
+          cefrLevel={profile.cefrLevel}
+          xpTotal={profile.xpTotal}
+          streakDays={profile.streakDays}
+          lessonsCompleted={lessonsCompleted}
+          league={league}
+          heatmap={heatmap}
+          metaExtra={
+            league && (
+              <span
+                data-testid="profile-league-badge"
+                className="sp-pill sp-pill--league"
+                title={`${league.name} league`}
+              >
+                <span aria-hidden>{league.emoji}</span>
+                {league.name}
+              </span>
+            )
+          }
+          action={
+            profile.isSelf ? (
               <Link to="/app/profile" className="btn-3d btn-3d-ghost btn-3d-sm">
                 My profile
               </Link>
-            )}
-          </div>
-          <div className="sp-hero__stats" style={{ gridTemplateColumns: "repeat(2, minmax(0, 1fr))" }}>
-            <div className="sp-stat">
-              <div className="sp-stat__value inline-flex items-center justify-center gap-1">
-                <Zap size={16} className="text-yellow-500" aria-hidden />
-                {profile.xpTotal}
-              </div>
-              <div className="sp-stat__label">XP</div>
-            </div>
-            <div className="sp-stat">
-              <div className="sp-stat__value inline-flex items-center justify-center gap-1">
-                <Flame size={16} className="text-orange-500" aria-hidden />
-                {profile.streakDays}
-              </div>
-              <div className="sp-stat__label">Day streak</div>
-            </div>
-          </div>
-        </section>
+            ) : undefined
+          }
+        />
 
         <section className="sp-section">
           <div className="sp-section__head">

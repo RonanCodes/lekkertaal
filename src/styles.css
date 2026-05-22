@@ -2769,6 +2769,175 @@ h1, h2, h3, h4, h5, h6 {
   padding: 1rem;
 }
 
+/* --- Profile hero: mascot avatar, 4 stat blocks, 12-week heatmap --- */
+
+/* Mascot avatar with a level-badge overlay (replaces the initials fallback). */
+.ph-avatar {
+  position: relative;
+  height: 4.75rem;
+  width: 4.75rem;
+  flex-shrink: 0;
+}
+.ph-avatar__img {
+  height: 100%;
+  width: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.12));
+}
+.ph-avatar__level {
+  position: absolute;
+  bottom: -0.25rem;
+  right: -0.4rem;
+  border-radius: var(--radius-pill);
+  background: var(--color-brand-orange);
+  border: 1.5px solid var(--color-brand-orange-dark);
+  color: #fff;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.65rem;
+  line-height: 1;
+  padding: 0.2rem 0.4rem;
+  white-space: nowrap;
+}
+
+/* Four-up stat blocks (Streak / Total XP / League / Lessons). */
+.ph-stats {
+  margin-top: 1.1rem;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.6rem;
+}
+@media (min-width: 640px) {
+  .ph-stats {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+.ph-stat {
+  border-radius: 0.9rem;
+  padding: 0.7rem 0.75rem;
+  background: var(--surface-card);
+  border: 1.5px solid var(--line-soft);
+}
+.ph-stat__head {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.ph-stat__label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.ph-stat__value {
+  margin-top: 0.3rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.35rem;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+.ph-stat__league {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 1rem;
+}
+.ph-stat--streak {
+  background: var(--color-brand-orange-soft);
+  border-color: color-mix(in srgb, var(--color-streak) 25%, transparent);
+  color: var(--color-streak);
+}
+.ph-stat--xp {
+  background: var(--color-brand-orange-soft);
+  border-color: color-mix(in srgb, var(--color-brand-orange-dark) 25%, transparent);
+  color: var(--color-brand-orange-dark);
+}
+.ph-stat--league {
+  background: color-mix(in srgb, var(--color-warn) 14%, var(--surface-card));
+  border-color: color-mix(in srgb, var(--color-warn) 30%, transparent);
+  color: var(--color-warn);
+}
+.ph-stat--lessons {
+  background: var(--color-good-soft);
+  border-color: color-mix(in srgb, var(--color-good) 25%, transparent);
+  color: var(--color-good);
+}
+
+/* Twelve-week activity heatmap. */
+.ph-heatmap-block {
+  margin-top: 1.2rem;
+}
+.ph-heatmap-block__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+.ph-heatmap-block__title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-brand-orange-dark);
+}
+.ph-heatmap-legend {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.65rem;
+  color: var(--text-muted);
+}
+.ph-heatmap-legend__scale {
+  display: flex;
+  gap: 2px;
+}
+.ph-heatmap {
+  margin-top: 0.6rem;
+  border-radius: 0.9rem;
+  border: 1.5px solid var(--line-soft);
+  background: var(--surface-card);
+  padding: 0.7rem;
+  overflow-x: auto;
+}
+.ph-heatmap__grid {
+  display: grid;
+  grid-template-rows: repeat(7, 12px);
+  grid-auto-flow: column;
+  grid-auto-columns: 12px;
+  gap: 3px;
+}
+.ph-heatmap__cell {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  background: var(--line-soft);
+}
+.ph-heatmap-legend .ph-heatmap__cell {
+  width: 10px;
+  height: 10px;
+}
+.ph-heatmap__cell[data-level="1"] {
+  background: color-mix(in srgb, var(--color-brand-orange) 40%, white);
+}
+.ph-heatmap__cell[data-level="2"] {
+  background: color-mix(in srgb, var(--color-brand-orange) 60%, white);
+}
+.ph-heatmap__cell[data-level="3"] {
+  background: color-mix(in srgb, var(--color-brand-orange) 80%, white);
+}
+.ph-heatmap__cell[data-level="4"] {
+  background: var(--color-brand-orange);
+}
+
+/* Hero action affordance (settings cog) on the own profile. */
+.ph-hero-action {
+  display: inline-flex;
+  align-items: center;
+  color: var(--text-muted);
+}
+
 /* --- Settings --- */
 
 .sp-setting-row {
