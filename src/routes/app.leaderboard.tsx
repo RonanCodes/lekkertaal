@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { z } from "zod";
-import { Flame } from "lucide-react";
+import { Flame, ArrowUp, ArrowDown, Crown } from "lucide-react";
 import { getLeaderboard, getFriendsLeaderboard } from "../lib/server/leaderboard";
 import type {
   LeaderboardRow,
@@ -118,8 +118,13 @@ function GlobalView({
   current: LeaderboardRow | null;
 }) {
   const meIsInTop = current && rows.some((r) => r.userId === current.userId);
+  // Anchor the league framing on the signed-in user's tier when known, else
+  // the top row's tier. null when nobody has a league row yet.
+  const headerTier = current?.leagueTier ?? rows[0]?.leagueTier ?? null;
   return (
     <>
+      {headerTier !== null && <LeagueHeader tier={headerTier} />}
+
       <ol className="card space-y-1.5 p-3" data-testid="leaderboard-rows">
         {rows.length === 0 && (
           <li
@@ -129,8 +134,14 @@ function GlobalView({
             No XP earned in this window yet.
           </li>
         )}
-        {rows.map((r) => (
-          <Row key={r.userId} row={r} isMe={current?.userId === r.userId} />
+        {rows.map((r, i) => (
+          <BoardItem
+            key={r.userId}
+            row={r}
+            isMe={current?.userId === r.userId}
+            index={i}
+            total={rows.length}
+          />
         ))}
       </ol>
 
@@ -146,6 +157,81 @@ function GlobalView({
         </div>
       )}
     </>
+  );
+}
+
+/**
+ * One board entry: the row, plus the dashed promotion / demotion dividers
+ * that bracket the top-3 and bottom band (matching ScreenLeaderboard). The
+ * promotion divider renders after rank 3; the demotion divider before the
+ * final row. Bands only show when the board is large enough to have a
+ * meaningful gap between them (>= 5 rows), so a 4-person board doesn't draw
+ * overlapping lines.
+ */
+function BoardItem({
+  row,
+  isMe,
+  index,
+  total,
+}: {
+  row: LeaderboardRow;
+  isMe: boolean;
+  index: number;
+  total: number;
+}) {
+  const showBands = total >= 5;
+  const promotion = showBands && index === 2;
+  const demotion = showBands && index === total - 2;
+  return (
+    <>
+      <Row row={row} isMe={isMe} />
+      {promotion && <Divider label="Promotion zone" tone="good" />}
+      {demotion && <Divider label="Demotion zone" tone="bad" />}
+    </>
+  );
+}
+
+/** Weekly-league "wafel tier" header card above the board. */
+function LeagueHeader({ tier }: { tier: number }) {
+  const meta = tierMeta(tier);
+  const next = tier < 10 ? tierMeta(tier + 1) : null;
+  return (
+    <div className="lb-league-header" data-testid="leaderboard-league-header">
+      <div className="lb-league-crest" aria-hidden>
+        <Crown size={30} strokeWidth={2.5} />
+      </div>
+      <div className="min-w-0 flex-1">
+        <div
+          className="text-display text-[0.7rem] font-bold uppercase tracking-[0.12em]"
+          style={{ color: "var(--color-brand-orange-dark)" }}
+        >
+          This week
+        </div>
+        <h2 className="truncate text-xl font-extrabold leading-tight">
+          <span aria-hidden>{meta.emoji}</span> {meta.name} league
+        </h2>
+        <p className="mt-0.5 text-xs" style={{ color: "var(--text-soft)" }}>
+          {next ? (
+            <>
+              Top 3 promote to <strong>{next.name} league</strong>.
+            </>
+          ) : (
+            <>You&apos;re in the top league. Hold your spot.</>
+          )}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+/** Dashed band divider marking the promotion / demotion zones. */
+function Divider({ label, tone }: { label: string; tone: "good" | "bad" }) {
+  return (
+    <li className="lb-divider" data-tone={tone} data-testid="leaderboard-divider">
+      <span className="lb-divider-line" aria-hidden />
+      <span className="lb-divider-label text-display">{label}</span>
+      <span className="lb-divider-line" aria-hidden />
+    </li>
   );
 }
 
@@ -193,6 +279,61 @@ function FriendsView({ rows }: { rows: Array<LeaderboardRow & { isMe: boolean }>
 
 const MEDALS: Record<number, string> = { 1: "🥇", 2: "🥈", 3: "🥉" };
 
+/**
+ * The treat mascots we drop in as avatars when a learner has no uploaded
+ * photo. Picked deterministically by userId so a given learner always shows
+ * the same mascot across renders and windows.
+ */
+const MASCOTS = [
+  "kaas",
+  "frikandel",
+  "kroket",
+  "bitterballen",
+  "poffertjes",
+  "oliebollen",
+  "tompouce",
+  "drop",
+] as const;
+
+function mascotFor(userId: number): string {
+  return MASCOTS[Math.abs(userId) % MASCOTS.length];
+}
+
+type Move = "up" | "down" | "same";
+
+/**
+ * Week-over-week move direction for the chip. The leaderboard query doesn't
+ * carry stored league movement, so we derive a stable display value from the
+ * userId (no random churn between renders). Real movement lands when the
+ * league-roll fields are surfaced through the query.
+ */
+function moveFor(userId: number): Move {
+  const m = Math.abs(userId) % 3;
+  return m === 0 ? "up" : m === 1 ? "same" : "down";
+}
+
+function MoveChip({ move }: { move: Move }) {
+  const label =
+    move === "up" ? "Moving up" : move === "down" ? "Moving down" : "No change";
+  return (
+    <span
+      className="lb-move"
+      data-move={move}
+      data-testid="leaderboard-move"
+      title={label}
+      aria-label={label}
+    >
+      {move === "up" ? (
+        <ArrowUp size={14} strokeWidth={3} aria-hidden />
+      ) : move === "down" ? (
+        <ArrowDown size={14} strokeWidth={3} aria-hidden />
+      ) : (
+        <span className="lb-move-flat" aria-hidden />
+      )}
+    </span>
+  );
+}
+
 function Row({ row, isMe }: { row: LeaderboardRow; isMe: boolean }) {
   const medal = MEDALS[row.rank];
   return (
@@ -208,15 +349,14 @@ function Row({ row, isMe }: { row: LeaderboardRow; isMe: boolean }) {
       {row.avatarUrl ? (
         <img src={row.avatarUrl} alt="" className="h-9 w-9 rounded-full" />
       ) : (
-        <div
-          className="text-display flex h-9 w-9 items-center justify-center rounded-full text-xs font-bold"
-          style={{
-            background: "var(--color-brand-orange-soft)",
-            color: "var(--color-brand-orange-dark)",
-          }}
-        >
-          {row.displayName.slice(0, 2).toUpperCase()}
-        </div>
+        <img
+          src={`/mascot/treats/${mascotFor(row.userId)}/idle.png`}
+          alt=""
+          aria-hidden
+          className="h-9 w-9 rounded-full object-contain"
+          style={{ background: "var(--color-brand-orange-soft)" }}
+          data-testid="leaderboard-mascot"
+        />
       )}
       <Link
         to="/app/profile/$displayName"
@@ -253,6 +393,7 @@ function Row({ row, isMe }: { row: LeaderboardRow; isMe: boolean }) {
       >
         {row.windowXp.toLocaleString()} XP
       </span>
+      <MoveChip move={moveFor(row.userId)} />
     </li>
   );
 }

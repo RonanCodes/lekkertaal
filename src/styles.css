@@ -3257,3 +3257,93 @@ h1, h2, h3, h4, h5, h6 {
     transition: none;
   }
 }
+
+/* ============================================================
+ * Leaderboard fidelity top-up (issue #248). Weekly-league framing:
+ * a "wafel tier" header card, dashed promotion / demotion band
+ * dividers, per-row move-direction chips. Screen-scoped; routes
+ * through the semantic tokens so dark mode flips for free.
+ * ============================================================ */
+
+/* League header — gradient "wafel tier" card above the board. */
+.lb-league-header {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  border-radius: var(--radius-card);
+  padding: 0.85rem 1rem;
+  border: 1.5px solid transparent;
+  background: linear-gradient(
+    160deg,
+    var(--color-brand-orange-soft),
+    color-mix(in srgb, var(--color-brand-blue-soft) 70%, transparent)
+  );
+}
+.lb-league-crest {
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 1.1rem;
+  color: #fff;
+  background: linear-gradient(
+    180deg,
+    var(--color-brand-orange),
+    var(--color-brand-orange-dark)
+  );
+  box-shadow: 0 4px 0 0 var(--color-brand-orange-dark);
+}
+
+/* Dashed band divider (promotion = good, demotion = bad). */
+.lb-divider {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.35rem 0.25rem;
+  list-style: none;
+}
+.lb-divider-line {
+  flex: 1;
+  height: 0;
+  border-top: 1.5px dashed currentColor;
+  opacity: 0.5;
+}
+.lb-divider-label {
+  font-weight: 700;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+.lb-divider[data-tone="good"] {
+  color: var(--color-good);
+}
+.lb-divider[data-tone="bad"] {
+  color: var(--color-bad);
+}
+
+/* Move-direction chip — up / down / same. */
+.lb-move {
+  flex-shrink: 0;
+  display: inline-grid;
+  place-items: center;
+  width: 1.4rem;
+  height: 1.4rem;
+  border-radius: 0.5rem;
+  color: var(--text-muted);
+}
+.lb-move[data-move="up"] {
+  background: var(--color-good-soft);
+  color: var(--color-good);
+}
+.lb-move[data-move="down"] {
+  background: var(--color-bad-soft);
+  color: var(--color-bad);
+}
+.lb-move-flat {
+  width: 0.5rem;
+  height: 1.5px;
+  background: currentColor;
+  border-radius: 1px;
+}
