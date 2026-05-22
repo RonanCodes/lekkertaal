@@ -48,6 +48,10 @@ const getSettings = createServerFn({ method: "GET" }).handler(async () => {
       reminderHour: me[0].reminderHour,
       isPublic: me[0].isPublic,
       dailyGoalXp: me[0].dailyGoalXp,
+      slowReplayDefault: me[0].slowReplayDefault,
+      notifyFriendPings: me[0].notifyFriendPings,
+      notifyStreakAlerts: me[0].notifyStreakAlerts,
+      notifyEmailDigest: me[0].notifyEmailDigest,
     },
   };
 });
@@ -60,6 +64,10 @@ const updateSettings = createServerFn({ method: "POST" })
       reminderHour?: number;
       isPublic?: boolean;
       dailyGoalXp?: number;
+      slowReplayDefault?: boolean;
+      notifyFriendPings?: boolean;
+      notifyStreakAlerts?: boolean;
+      notifyEmailDigest?: boolean;
     }) => input,
   )
   .handler(async ({ data }) => {
@@ -73,6 +81,14 @@ const updateSettings = createServerFn({ method: "POST" })
     if (typeof data.reminderHour === "number") patch.reminderHour = data.reminderHour;
     if (typeof data.isPublic === "boolean") patch.isPublic = data.isPublic;
     if (typeof data.dailyGoalXp === "number") patch.dailyGoalXp = data.dailyGoalXp;
+    if (typeof data.slowReplayDefault === "boolean")
+      patch.slowReplayDefault = data.slowReplayDefault;
+    if (typeof data.notifyFriendPings === "boolean")
+      patch.notifyFriendPings = data.notifyFriendPings;
+    if (typeof data.notifyStreakAlerts === "boolean")
+      patch.notifyStreakAlerts = data.notifyStreakAlerts;
+    if (typeof data.notifyEmailDigest === "boolean")
+      patch.notifyEmailDigest = data.notifyEmailDigest;
     if (Object.keys(patch).length > 0) {
       await drz.update(users).set(patch).where(eq(users.clerkId, clerkId));
     }
@@ -191,6 +207,13 @@ function SettingsPage() {
               })}
             </div>
           </div>
+          <Toggle
+            label="Slow-replay by default in listening drills"
+            description="Start audio at reduced speed so you can catch every word."
+            value={data.settings.slowReplayDefault}
+            disabled={busy}
+            onChange={(v) => update({ slowReplayDefault: v })}
+          />
         </section>
 
         <section className="sp-section space-y-3">
@@ -205,7 +228,7 @@ function SettingsPage() {
         </section>
 
         <section className="sp-section space-y-3">
-          <h2 className="sp-section__title">Reminders</h2>
+          <h2 className="sp-section__title">Notifications</h2>
           <Toggle
             label="Daily reminder"
             description="Push notification at your chosen hour to keep the streak alive."
@@ -228,6 +251,27 @@ function SettingsPage() {
               ))}
             </select>
           </label>
+          <Toggle
+            label="Friend & peer-drill pings"
+            description="Get notified when a friend invites you or a peer drill needs a turn."
+            value={data.settings.notifyFriendPings}
+            disabled={busy}
+            onChange={(v) => update({ notifyFriendPings: v })}
+          />
+          <Toggle
+            label="Streak alerts"
+            description="A nudge when your streak is about to expire."
+            value={data.settings.notifyStreakAlerts}
+            disabled={busy}
+            onChange={(v) => update({ notifyStreakAlerts: v })}
+          />
+          <Toggle
+            label="Email digest"
+            description="A weekly recap of your progress, sent by email."
+            value={data.settings.notifyEmailDigest}
+            disabled={busy}
+            onChange={(v) => update({ notifyEmailDigest: v })}
+          />
         </section>
 
         <section className="sp-section space-y-3">

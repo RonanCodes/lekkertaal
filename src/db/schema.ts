@@ -42,6 +42,22 @@ export const users = sqliteTable(
     // 20 (Regular), 50 (Serious), 100 (Intense). Defaults to 20 so existing
     // rows stay valid without a backfill.
     dailyGoalXp: integer("daily_goal_xp").default(20).notNull(),
+    // Listening-drill preference: play audio at reduced speed by default.
+    // Off by default; existing rows stay valid via the column default.
+    slowReplayDefault: integer("slow_replay_default", { mode: "boolean" })
+      .default(false)
+      .notNull(),
+    // Granular notification toggles. All default on so existing behaviour
+    // (a single "daily reminder") is preserved for current rows.
+    notifyFriendPings: integer("notify_friend_pings", { mode: "boolean" })
+      .default(true)
+      .notNull(),
+    notifyStreakAlerts: integer("notify_streak_alerts", { mode: "boolean" })
+      .default(true)
+      .notNull(),
+    notifyEmailDigest: integer("notify_email_digest", { mode: "boolean" })
+      .default(true)
+      .notNull(),
     // Why the learner is here, captured on the first onboarding step. One of
     // "moving" | "dating" | "study" | "fun"; nullable so existing rows and
     // users who skip the step stay valid.
