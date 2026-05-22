@@ -90,3 +90,35 @@ export async function requireUserClerkId(): Promise<string> {
   if (!id) throw redirect({ to: "/sign-in" });
   return id;
 }
+
+/**
+ * Resolve the current user's Clerk id and assert they are an admin, or throw
+ * a redirect. Used to gate admin-only surfaces like `/styleguide` (the design
+ * system), which must be reachable in production by staff but never by regular
+ * users.
+ *
+ * Admin set: the comma-separated `ADMIN_CLERK_IDS` worker var/secret, plus the
+ * dev/seed user (`seed_ronan`) which is always treated as admin in Vite dev so
+ * `pnpm dev:bypass-auth` can open the design system without extra config. Set
+ * `ADMIN_CLERK_IDS` in wrangler vars to your production Clerk user id(s).
+ *
+ * Not authenticated → redirect to `/sign-in`. Authenticated but not an admin
+ * → redirect to `/` (no leak that the route exists beyond a bounce).
+ */
+export async function requireAdminClerkId(): Promise<string> {
+  const id = await requireUserClerkId();
+  const ctx = getWorkerContext();
+  const raw =
+    ctx?.env.ADMIN_CLERK_IDS ??
+    (typeof process !== "undefined" ? process.env?.ADMIN_CLERK_IDS : undefined) ??
+    "";
+  const allow = new Set(
+    raw
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean),
+  );
+  if (import.meta.env.DEV) allow.add(DEV_BYPASS_CLERK_ID);
+  if (!allow.has(id)) throw redirect({ to: "/" });
+  return id;
+}
