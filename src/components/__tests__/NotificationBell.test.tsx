@@ -157,7 +157,7 @@ describe("<NotificationBell/>", () => {
 
     render(<NotificationBell />);
     fireEvent.click(await screen.findByRole("button", { name: /Notifications/i }));
-    const item = await screen.findByRole("menuitem", {
+    const item = await screen.findByRole("button", {
       name: /Bob answered your peer drill/i,
     });
 
@@ -175,5 +175,109 @@ describe("<NotificationBell/>", () => {
 
     // Navigated to the deep-link.
     expect(assignSpy).toHaveBeenCalledWith("/app/peer");
+  });
+
+  it("groups rows by Today / Yesterday and shows day labels", async () => {
+    // The component buckets by local calendar day. Anchor the fixtures to the
+    // local-midnight boundary so the test is stable regardless of the CI
+    // runner's wall-clock time of day. The component parses stored timestamps
+    // as UTC (appends a Z when none is present), so emit timestamps in UTC
+    // that fall on the correct *local* calendar day. "Today" = local midnight
+    // plus an hour; "Yesterday" = local midnight minus an hour.
+    const now = new Date();
+    const localMidnight = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate(),
+    ).getTime();
+    const toStamp = (ms: number) =>
+      new Date(ms).toISOString().slice(0, 19).replace("T", " ");
+    const today = toStamp(localMidnight + 3600_000);
+    const yesterday = toStamp(localMidnight - 3600_000);
+    inboxFetchMock([
+      {
+        id: 1,
+        kind: "streak_recovery",
+        sentAt: today,
+        result: null,
+        link: null,
+        fromDisplayName: null,
+      },
+      {
+        id: 2,
+        kind: "badge_unlocked",
+        sentAt: yesterday,
+        result: null,
+        link: null,
+        fromDisplayName: null,
+      },
+    ]);
+    render(<NotificationBell />);
+    fireEvent.click(
+      await screen.findByRole("button", { name: /Notifications/i }),
+    );
+    await waitFor(() => {
+      expect(screen.getByText("Today")).toBeInTheDocument();
+      expect(screen.getByText("Yesterday")).toBeInTheDocument();
+    });
+    expect(screen.getByText(/Don't break your streak/i)).toBeInTheDocument();
+    expect(screen.getByText(/Badge unlocked/i)).toBeInTheDocument();
+  });
+
+  it("marks all read, POSTs each id, and shows the empty state", async () => {
+    const today = new Date()
+      .toISOString()
+      .slice(0, 19)
+      .replace("T", " ");
+    const posted: string[] = [];
+    fetchMock.mockImplementation(async (url: string, init?: RequestInit) => {
+      if (url === "/api/notifications/inbox") {
+        return jsonResponse({
+          notifications: [
+            {
+              id: 1,
+              kind: "streak_recovery",
+              sentAt: today,
+              result: null,
+              link: null,
+              fromDisplayName: null,
+            },
+            {
+              id: 2,
+              kind: "badge_unlocked",
+              sentAt: today,
+              result: null,
+              link: null,
+              fromDisplayName: null,
+            },
+          ],
+        });
+      }
+      if (init?.method === "POST") {
+        posted.push(url);
+        return jsonResponse({ updated: true });
+      }
+      return new Response("not found", { status: 404 });
+    });
+
+    render(<NotificationBell />);
+    fireEvent.click(
+      await screen.findByRole("button", { name: /Notifications/i }),
+    );
+    const markAll = await screen.findByRole("button", {
+      name: /Mark all read/i,
+    });
+    await act(async () => {
+      fireEvent.click(markAll);
+    });
+    await waitFor(() => {
+      expect(screen.getByText(/You are all caught up\./i)).toBeInTheDocument();
+    });
+    expect(posted).toEqual(
+      expect.arrayContaining([
+        "/api/notifications/1/read",
+        "/api/notifications/2/read",
+      ]),
+    );
   });
 });
