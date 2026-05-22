@@ -5,6 +5,7 @@ import { AppShell } from "../components/AppShell";
 import { DrillRenderer } from "../components/drills/DrillRenderer";
 import { ReviewRibbon } from "../components/ReviewRibbon";
 import { useSfx } from "../lib/use-sfx";
+import { Button } from "@/components/ui/button";
 
 /**
  * Hearts shown in the top bar. We have no fail-out / out-of-hearts mechanic,
@@ -230,14 +231,16 @@ function LessonPlayerPage() {
                   : "No worries, this one comes back for review."}
               </div>
             </div>
-            <button
+            <Button
               type="button"
               onClick={next}
               disabled={finishing}
-              className={`btn-3d btn-3d-lg feedback-bar__cta ${feedback.correct ? "btn-3d-green" : "btn-3d-red"}`}
+              variant={feedback.correct ? "green" : "red"}
+              size="lg"
+              className="feedback-bar__cta"
             >
               {finishing ? "Saving…" : drillIdx + 1 >= total ? "Finish lesson" : "Continue"}
-            </button>
+            </Button>
           </div>
         </div>
       )}
