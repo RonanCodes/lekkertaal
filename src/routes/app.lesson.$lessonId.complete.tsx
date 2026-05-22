@@ -5,6 +5,7 @@ import { motion } from "motion/react";
 import { Stroop } from "../components/Stroop";
 import { useSfx } from "../lib/use-sfx";
 import { useEffect, useMemo } from "react";
+import { Button } from "../components/ui/button";
 
 /**
  * Optional search params. The lesson player navigates here without params, so
@@ -283,16 +284,20 @@ function LessonCompletePage() {
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.55 }}
         >
-          <a href={backTo} className="btn-3d btn-3d-green btn-3d-lg btn-3d-full">
-            {copy.cta}
-          </a>
+          <Button variant="green" size="lg" fullWidth asChild>
+            <a href={backTo}>{copy.cta}</a>
+          </Button>
           {accuracy && accuracy.mistakes > 0 && (
-            <a
-              href={`/app/lesson/${lesson.id}?review=mistakes`}
-              className="btn-3d btn-3d-ghost btn-3d-full lesson-complete__review"
+            <Button
+              variant="ghost"
+              fullWidth
+              asChild
+              className="lesson-complete__review"
             >
-              Review mistakes
-            </a>
+              <a href={`/app/lesson/${lesson.id}?review=mistakes`}>
+                Review mistakes
+              </a>
+            </Button>
           )}
         </motion.div>
       </div>

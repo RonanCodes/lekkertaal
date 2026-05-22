@@ -12,6 +12,10 @@ export default defineConfig({
   resolve: {
     alias: {
       "#": resolve(__dirname, "src"),
+      // `@/*` -> `./src/*` matches tsconfig `paths` + the app vite build.
+      // The shadcn `ui/*` primitives (added in #283) import via `@/lib/utils`,
+      // so vitest needs the same alias to resolve them inside component tests.
+      "@": resolve(__dirname, "src"),
       // `cloudflare:workers` is a virtual module provided by the workerd
       // runtime; it doesn't exist in node, so vitest can't resolve it.
       // `src/entry.server.ts` dynamic-imports it inside an `import.meta.env.DEV`

@@ -5,6 +5,7 @@ import { useState } from "react";
 import type { CSSProperties } from "react";
 import { Stroop } from "../components/Stroop";
 import { LiveRubric } from "../components/LiveRubric";
+import { Button } from "../components/ui/button";
 
 export const Route = createFileRoute("/app/scenario/$slug/scorecard")({
   loader: async ({ params }) => {
@@ -235,16 +236,14 @@ function ScorecardPage() {
 
         {/* Actions */}
         <div className="flex flex-col gap-3 sm:flex-row">
-          <Link
-            to="/app/scenario/$slug"
-            params={{ slug: scenario.slug }}
-            className="btn-3d btn-3d-ghost btn-3d-full flex-1"
-          >
-            Opnieuw
-          </Link>
-          <Link to="/app/path" className="btn-3d btn-3d-green btn-3d-full flex-1">
-            Verder
-          </Link>
+          <Button variant="ghost" fullWidth asChild className="flex-1">
+            <Link to="/app/scenario/$slug" params={{ slug: scenario.slug }}>
+              Opnieuw
+            </Link>
+          </Button>
+          <Button variant="green" fullWidth asChild className="flex-1">
+            <Link to="/app/path">Verder</Link>
+          </Button>
         </div>
       </div>
     </AppShell>
