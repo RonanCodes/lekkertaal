@@ -446,7 +446,8 @@ function Section({
  * components: the chunky 3D Button (every colour variant + size + width +
  * disabled), plus Input, Card, Switch, Tabs, Badge, Progress, Label. The
  * Button rows render side-by-side with the legacy `.btn-3d-*` classes so a
- * visual diff is one glance away.
+ * visual diff is one glance away. The single `.btn-3d` button below is the
+ * intentional legacy half of that parity check and is kept on purpose (#291).
  */
 function ShadcnPrimitives() {
   const [checked, setChecked] = useState(true)
