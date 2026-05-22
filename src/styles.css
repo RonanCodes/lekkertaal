@@ -2859,4 +2859,60 @@ h1, h2, h3, h4, h5, h6 {
     width: 9.5rem;
     height: 13rem;
   }
+
+/* ---------------------------------------------------------------------------
+ * Onboarding · notifications step (#242)
+ * Selectable reminder-time chips + the friend-ping card. Builds on the #205
+ * foundation (.card recipe, brand tokens, .sp-toggle). All colours route
+ * through tokens so light + dark "just work".
+ * ------------------------------------------------------------------------- */
+.onb-notif-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.onb-notif-chip {
+  cursor: pointer;
+  border-radius: var(--radius-pill);
+  border: 2px solid var(--line-soft);
+  background: var(--surface-card-alt);
+  padding: 0.5rem 0.85rem;
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-strong);
+  transition:
+    border-color 120ms ease,
+    background 120ms ease,
+    color 120ms ease;
+}
+.onb-notif-chip:hover {
+  border-color: var(--color-brand-orange);
+}
+.onb-notif-chip[data-selected="true"] {
+  border-color: var(--color-brand-orange);
+  background: var(--color-brand-orange-soft);
+  color: var(--color-brand-orange-dark);
+}
+.onb-notif-friend {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.onb-notif-friend__icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  height: 2.25rem;
+  width: 2.25rem;
+  border-radius: 0.75rem;
+  background: var(--color-brand-blue-soft);
+  color: var(--color-brand-blue-dark);
+}
+.onb-notif-friend__text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  flex: 1 1 auto;
+}
 }
