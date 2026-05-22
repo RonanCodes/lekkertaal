@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { Button } from "../ui/button";
 import { DrillFrame, gradeText } from "./DrillFrame";
 import { Speaker } from "./Speaker";
 import { parseField } from "./DrillRenderer";
@@ -131,8 +132,10 @@ export function WordOrderingDrill({ drill, onSubmit }: DrillProps) {
         </div>
 
         <div className="word-order-actions">
-          <button
+          <Button
             type="button"
+            variant="ghost"
+            size="sm"
             onClick={() => {
               if (submitted) return;
               setPool((p) => [...p, ...chosen]);
@@ -140,19 +143,19 @@ export function WordOrderingDrill({ drill, onSubmit }: DrillProps) {
             }}
             disabled={submitted || chosen.length === 0}
             data-testid="word-ordering-reset"
-            className="btn-3d btn-3d-ghost btn-3d-sm"
           >
             Reset
-          </button>
-          <button
+          </Button>
+          <Button
             type="button"
+            variant="green"
+            size="sm"
             onClick={submit}
             disabled={submitted || chosen.length === 0}
             data-testid="word-ordering-submit"
-            className="btn-3d btn-3d-green btn-3d-sm"
           >
             Check
-          </button>
+          </Button>
         </div>
 
         {submitted && (

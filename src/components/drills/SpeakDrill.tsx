@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { Button } from "../ui/button";
 import { DrillFrame } from "./DrillFrame";
 import { Speaker } from "./Speaker";
 import { parseField } from "./DrillRenderer";
@@ -341,14 +342,15 @@ export function SpeakDrill({ drill, onSubmit }: DrillProps) {
         )}
 
         {phase === "done" && !isPassed && (
-          <button
+          <Button
             type="button"
+            variant="ghost"
+            size="sm"
             onClick={resetForRetry}
             data-testid="speak-retry"
-            className="btn-3d btn-3d-ghost btn-3d-sm"
           >
             Try again
-          </button>
+          </Button>
         )}
       </div>
     </DrillFrame>

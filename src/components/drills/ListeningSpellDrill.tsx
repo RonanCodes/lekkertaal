@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Button } from "../ui/button";
 import { DrillFrame } from "./DrillFrame";
 import { Speaker } from "./Speaker";
 import { parseField } from "./DrillRenderer";
@@ -35,13 +36,13 @@ export function ListeningSpellDrill({ drill, onSubmit }: DrillProps) {
   if (!pair || typeof pair.nl !== "string" || typeof pair.en !== "string") {
     return (
       <DrillFrame promptLabel="Listening" prompt="Card unavailable">
-        <button
+        <Button
           type="button"
+          variant="green"
           onClick={() => onSubmit(true)}
-          className="btn-3d btn-3d-green"
         >
           Skip
-        </button>
+        </Button>
       </DrillFrame>
     );
   }
@@ -98,15 +99,15 @@ export function ListeningSpellDrill({ drill, onSubmit }: DrillProps) {
         />
 
         <div className="input3d-actions input3d-actions--end">
-          <button
+          <Button
             type="button"
+            variant="green"
             onClick={grade}
             disabled={submitted || value.trim().length === 0}
             data-testid="listening-spell-submit"
-            className="btn-3d btn-3d-green"
           >
             Check
-          </button>
+          </Button>
         </div>
 
         {submitted && (

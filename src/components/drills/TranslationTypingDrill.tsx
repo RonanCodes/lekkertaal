@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { Button } from "../ui/button";
 import { DrillFrame, normaliseAnswer } from "./DrillFrame";
 import { Speaker } from "./Speaker";
 import { parseField } from "./DrillRenderer";
@@ -113,15 +114,15 @@ export function TranslationTypingDrill({ drill, onSubmit }: DrillProps) {
             💡 Hint (5 coins)
             {hintUsed && <span className="input3d-hint-used">used</span>}
           </button>
-          <button
+          <Button
             type="button"
+            variant="green"
             onClick={submit}
             disabled={submitted || value.trim().length === 0}
             data-testid="translation-typing-submit"
-            className="btn-3d btn-3d-green"
           >
             Check
-          </button>
+          </Button>
         </div>
 
         {submitted && (
