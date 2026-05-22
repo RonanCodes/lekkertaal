@@ -4491,3 +4491,264 @@ img.roleplay-bubble-avatar {
 .boss-teaser--locked .boss-teaser-deco {
   color: rgba(255, 255, 255, 0.08);
 }
+
+/* ============================================================
+ * shadcn/ui token bridge (issue #283).
+ *
+ * shadcn primitives read a fixed set of CSS variables
+ * (--background/--foreground/--card/--primary/--border/--ring …).
+ * We map those onto the EXISTING Lekkertaal brand + semantic
+ * surface tokens so every primitive inherits the brand with zero
+ * extra styling, in BOTH light and dark.
+ *
+ * Nothing here restyles the app — these are NEW variables only the
+ * shadcn ui/* components consume. The app's own tokens are untouched.
+ *
+ * Dark mode follows the file's existing two-pronged strategy:
+ *   1. @media (prefers-color-scheme: dark) :root:not([data-theme="light"])
+ *   2. :root[data-theme="dark"]  (forced dark)
+ * so the bridge flips in lockstep with the rest of the theme.
+ *
+ * shadcn expects hsl() channel triples by default; we use direct
+ * colour values + the modern `--ring: …` form, which the New-York
+ * components consume via `var(--ring)` etc. (Tailwind v4 / shadcn
+ * canary token shape — no `hsl(var(--x))` wrapping needed).
+ * ============================================================ */
+:root {
+  --background: var(--surface-page);
+  --foreground: var(--text-strong);
+
+  --card: var(--surface-card);
+  --card-foreground: var(--text-strong);
+
+  --popover: var(--surface-card);
+  --popover-foreground: var(--text-strong);
+
+  --primary: var(--color-brand-orange);
+  --primary-foreground: #ffffff;
+
+  --secondary: var(--surface-card-alt);
+  --secondary-foreground: var(--text-strong);
+
+  --muted: var(--surface-card-alt);
+  --muted-foreground: var(--text-muted);
+
+  --accent: var(--color-brand-orange-soft);
+  --accent-foreground: var(--color-brand-orange-dark);
+
+  --destructive: var(--color-bad);
+  --destructive-foreground: #ffffff;
+
+  --border: var(--line-soft);
+  --input: var(--line-strong);
+  --ring: var(--color-brand-orange);
+
+  --radius: var(--radius-button);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --background: var(--surface-page);
+    --foreground: var(--text-strong);
+    --card: var(--surface-card);
+    --card-foreground: var(--text-strong);
+    --popover: var(--surface-card);
+    --popover-foreground: var(--text-strong);
+    --primary: var(--color-brand-orange);
+    --primary-foreground: #ffffff;
+    --secondary: var(--surface-card-alt);
+    --secondary-foreground: var(--text-strong);
+    --muted: var(--surface-card-alt);
+    --muted-foreground: var(--text-muted);
+    --accent: var(--surface-banner);
+    --accent-foreground: var(--text-on-banner);
+    --destructive: var(--color-bad);
+    --destructive-foreground: #ffffff;
+    --border: var(--line-soft);
+    --input: var(--line-strong);
+    --ring: var(--color-brand-orange);
+  }
+}
+:root[data-theme="dark"] {
+  --accent: var(--surface-banner);
+  --accent-foreground: var(--text-on-banner);
+}
+
+/* ============================================================
+ * shadcn Button — chunky 3D variant bridge (issue #283).
+ *
+ * The shadcn Button cva (src/components/ui/button.tsx) emits a
+ * `data-3d` attribute carrying the colour variant + size + width so
+ * the look stays as plain CSS here, reusing the EXACT recipe from the
+ * `.btn-3d-*` classes above (same paddings, font, offset-shadow
+ * colours, hover-lift, active-press). A
+ * `<Button variant="green" size="lg">` is pixel-identical to
+ * `.btn-3d-green.btn-3d-lg`.
+ *
+ * Keeping it attribute-driven (rather than @apply-ing the old classes)
+ * means migration call-sites swap `<button class="btn-3d-green …">`
+ * for `<Button variant="green">` with no visual delta, and the legacy
+ * `.btn-3d-*` CSS stays in place for un-migrated sites.
+ * ============================================================ */
+.btn3d {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1.5rem;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.05rem;
+  letter-spacing: 0.01em;
+  border-radius: var(--radius-button);
+  background: var(--color-brand-orange);
+  color: white;
+  box-shadow: 0 4px 0 0 var(--color-brand-orange-dark);
+  border: none;
+  cursor: pointer;
+  transition: transform 80ms ease-out, box-shadow 80ms ease-out, background 120ms ease;
+  text-decoration: none;
+}
+.btn3d:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 5px 0 0 var(--color-brand-orange-dark);
+  background: color-mix(in srgb, var(--color-brand-orange) 92%, white 8%);
+}
+.btn3d:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 0 var(--color-brand-orange-dark);
+}
+
+/* Colour variants */
+.btn3d[data-variant="blue"] {
+  background: var(--color-brand-blue);
+  box-shadow: 0 4px 0 0 var(--color-brand-blue-dark);
+}
+.btn3d[data-variant="blue"]:hover {
+  box-shadow: 0 5px 0 0 var(--color-brand-blue-dark);
+  background: color-mix(in srgb, var(--color-brand-blue) 92%, white 8%);
+}
+.btn3d[data-variant="blue"]:active {
+  box-shadow: 0 1px 0 0 var(--color-brand-blue-dark);
+}
+
+.btn3d[data-variant="green"] {
+  background: var(--color-good);
+  box-shadow: 0 4px 0 0 #2D6638;
+}
+.btn3d[data-variant="green"]:hover {
+  box-shadow: 0 5px 0 0 #2D6638;
+  background: color-mix(in srgb, var(--color-good) 92%, white 8%);
+}
+.btn3d[data-variant="green"]:active {
+  box-shadow: 0 1px 0 0 #2D6638;
+}
+
+.btn3d[data-variant="red"] {
+  background: var(--color-bad);
+  box-shadow: 0 4px 0 0 #7A2424;
+}
+.btn3d[data-variant="red"]:hover {
+  box-shadow: 0 5px 0 0 #7A2424;
+  background: color-mix(in srgb, var(--color-bad) 92%, white 8%);
+}
+.btn3d[data-variant="red"]:active {
+  box-shadow: 0 1px 0 0 #7A2424;
+}
+
+.btn3d[data-variant="ghost"] {
+  background: white;
+  color: var(--color-ink);
+  box-shadow: 0 4px 0 0 var(--color-ink-soft);
+  border: 1px solid var(--color-ink-soft);
+}
+.btn3d[data-variant="ghost"]:hover {
+  box-shadow: 0 5px 0 0 var(--color-ink-soft);
+  background: var(--color-brand-orange-soft);
+}
+.btn3d[data-variant="ghost"]:active {
+  box-shadow: 0 1px 0 0 var(--color-ink-soft);
+}
+
+/* Size modifiers */
+.btn3d[data-size="lg"] {
+  padding: 1.1rem 1.5rem;
+  font-size: 1.1rem;
+}
+.btn3d[data-size="sm"] {
+  padding: 0.5rem 0.9rem;
+  font-size: 0.85rem;
+  box-shadow: 0 3px 0 0 var(--color-brand-orange-dark);
+}
+.btn3d[data-size="sm"]:hover {
+  box-shadow: 0 4px 0 0 var(--color-brand-orange-dark);
+}
+.btn3d[data-size="sm"]:active {
+  box-shadow: 0 1px 0 0 var(--color-brand-orange-dark);
+}
+/* sm shadow needs the per-variant colour too */
+.btn3d[data-size="sm"][data-variant="blue"] { box-shadow: 0 3px 0 0 var(--color-brand-blue-dark); }
+.btn3d[data-size="sm"][data-variant="blue"]:hover { box-shadow: 0 4px 0 0 var(--color-brand-blue-dark); }
+.btn3d[data-size="sm"][data-variant="blue"]:active { box-shadow: 0 1px 0 0 var(--color-brand-blue-dark); }
+.btn3d[data-size="sm"][data-variant="green"] { box-shadow: 0 3px 0 0 #2D6638; }
+.btn3d[data-size="sm"][data-variant="green"]:hover { box-shadow: 0 4px 0 0 #2D6638; }
+.btn3d[data-size="sm"][data-variant="green"]:active { box-shadow: 0 1px 0 0 #2D6638; }
+.btn3d[data-size="sm"][data-variant="red"] { box-shadow: 0 3px 0 0 #7A2424; }
+.btn3d[data-size="sm"][data-variant="red"]:hover { box-shadow: 0 4px 0 0 #7A2424; }
+.btn3d[data-size="sm"][data-variant="red"]:active { box-shadow: 0 1px 0 0 #7A2424; }
+.btn3d[data-size="sm"][data-variant="ghost"] { box-shadow: 0 3px 0 0 var(--color-ink-soft); }
+.btn3d[data-size="sm"][data-variant="ghost"]:hover { box-shadow: 0 4px 0 0 var(--color-ink-soft); }
+.btn3d[data-size="sm"][data-variant="ghost"]:active { box-shadow: 0 1px 0 0 var(--color-ink-soft); }
+
+/* Full-width modifier */
+.btn3d[data-full="true"] {
+  width: 100%;
+}
+
+/* Disabled — flat, muted, no lift (mirrors .btn-3d:disabled). */
+.btn3d:disabled,
+.btn3d[aria-disabled="true"],
+.btn3d[data-disabled="true"] {
+  background: var(--line-soft);
+  color: var(--text-muted);
+  box-shadow: 0 4px 0 0 var(--line-strong);
+  cursor: not-allowed;
+  transform: none;
+}
+.btn3d:disabled:hover,
+.btn3d[aria-disabled="true"]:hover,
+.btn3d[data-disabled="true"]:hover {
+  transform: none;
+  box-shadow: 0 4px 0 0 var(--line-strong);
+  background: var(--line-soft);
+}
+
+/* Dark-mode ghost (mirrors the .btn-3d-ghost dark override). */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .btn3d[data-variant="ghost"] {
+    background: var(--surface-card);
+    color: var(--text-strong);
+    border-color: var(--line-strong);
+    box-shadow: 0 4px 0 0 var(--line-strong);
+  }
+  :root:not([data-theme="light"]) .btn3d[data-variant="ghost"]:hover {
+    background: var(--surface-hover);
+    box-shadow: 0 5px 0 0 var(--line-strong);
+  }
+  :root:not([data-theme="light"]) .btn3d[data-variant="ghost"]:active {
+    box-shadow: 0 1px 0 0 var(--line-strong);
+  }
+}
+:root[data-theme="dark"] .btn3d[data-variant="ghost"] {
+  background: var(--surface-card);
+  color: var(--text-strong);
+  border-color: var(--line-strong);
+  box-shadow: 0 4px 0 0 var(--line-strong);
+}
+:root[data-theme="dark"] .btn3d[data-variant="ghost"]:hover {
+  background: var(--surface-hover);
+  box-shadow: 0 5px 0 0 var(--line-strong);
+}
+:root[data-theme="dark"] .btn3d[data-variant="ghost"]:active {
+  box-shadow: 0 1px 0 0 var(--line-strong);
+}
