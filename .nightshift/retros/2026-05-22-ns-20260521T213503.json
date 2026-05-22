@@ -1,0 +1,35 @@
+{
+  "run_id": "ns-20260521T213503",
+  "dispatcher": "night-shift",
+  "mode": "auto-slice / drain",
+  "repo": "lekkertaal",
+  "branch": "main",
+  "started": "2026-05-21T21:35:03Z",
+  "ended": "2026-05-21T23:20:00Z",
+  "wall_clock_minutes": 105,
+  "waves": 6,
+  "workers": 3,
+  "stats": { "issues_picked": 17, "prs_merged": 16, "prs_blocked": 1, "deferred": 1, "followups_opened": 16 },
+  "slices": [
+    {"issue": 204, "title": "App redesign foundation", "outcome": "merged-partial", "pr": 205, "note": "sliced into 13 follow-ups #206-218"},
+    {"issue": 164, "title": "Upload 32 vocab images to R2", "outcome": "blocked", "pr": 219, "failure_mode": "runaway-resource-external", "narrative": "R2-Edit token missing; all 3 Cloudflare tokens rejected. Images generated + script committed; merge blocked on human token mint."},
+    {"issue": 208, "outcome": "merged", "pr": 220}, {"issue": 206, "outcome": "merged", "pr": 222},
+    {"issue": 207, "outcome": "merged", "pr": 223}, {"issue": 209, "outcome": "merged", "pr": 225},
+    {"issue": 216, "outcome": "merged", "pr": 226}, {"issue": 217, "outcome": "merged", "pr": 227},
+    {"issue": 212, "outcome": "merged", "pr": 228}, {"issue": 210, "outcome": "merged", "pr": 229},
+    {"issue": 211, "outcome": "merged", "pr": 230}, {"issue": 213, "outcome": "merged", "pr": 231},
+    {"issue": 215, "outcome": "merged", "pr": 232}, {"issue": 214, "outcome": "merged", "pr": 233},
+    {"issue": 234, "outcome": "merged", "pr": 235}, {"issue": 218, "outcome": "merged", "pr": 236},
+    {"issue": 224, "outcome": "merged", "pr": 237}
+  ],
+  "failure_modes": [
+    {"mode": "other", "narrative": "Workers exited at CI-armed without merging (auto-merge disabled repo-wide); orchestrator REST-merged #220/#222/#232/#236."},
+    {"mode": "context-drift", "narrative": "Claude Design bundle URL fetchable for worker #204 but 404 for all later workers; each re-discovered before falling back to #203 spec."}
+  ],
+  "action_items": [
+    {"title": "Workers exit before merge when auto-merge disabled", "gap_class": "SYSTEM", "source_repo": "ronan-skills", "severity": "high", "proof_ref": "PR#220,#222,#232,#236", "created_issue": 25},
+    {"title": "Attach extracted Claude Design spec to redesign slices", "gap_class": "SYSTEM", "source_repo": "ronan-skills", "severity": "med", "proof_ref": "lekkertaal#207 vs #204", "created_issue": 26},
+    {"title": "Closes #N did not auto-close #218 on squash", "gap_class": "UNCLEAR", "source_repo": "lekkertaal", "severity": "low", "proof_ref": "issue#218", "created_issue": null}
+  ],
+  "carry_over": [221, 164, 204, 194, 195, 196, 197, 198]
+}

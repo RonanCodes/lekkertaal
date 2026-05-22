@@ -78,6 +78,13 @@ export type WorkerEnv = {
    * calling Clerk. Dead-code-eliminated in production builds.
    */
   E2E_BYPASS_TOKEN?: string;
+  /**
+   * Comma-separated Clerk user ids granted admin access to admin-only routes
+   * (e.g. `/styleguide`, the design system). Safe to keep in `wrangler.jsonc`
+   * vars. The dev/seed user `seed_ronan` is always admin in Vite dev. See
+   * `requireAdminClerkId()` in `src/lib/server/auth-helper.ts`.
+   */
+  ADMIN_CLERK_IDS?: string;
 };
 
 const requestStore = new AsyncLocalStorage<{ env: WorkerEnv; ctx: ExecutionContext }>();
