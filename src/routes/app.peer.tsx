@@ -62,6 +62,39 @@ function PeerPage() {
   const [hint, setHint] = useState("");
   const [sending, setSending] = useState(false);
   const [sendStatus, setSendStatus] = useState<string | null>(null);
+  const [search, setSearch] = useState("");
+  const [searchBusy, setSearchBusy] = useState(false);
+  const [searchStatus, setSearchStatus] = useState<string | null>(null);
+
+  async function onAddLearner(e: React.FormEvent) {
+    e.preventDefault();
+    const name = search.trim();
+    if (!name) return;
+    setSearchBusy(true);
+    setSearchStatus(null);
+    try {
+      const r = await fetch("/api/friends/request", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ addresseeUsername: name }),
+      });
+      const body = (await r.json().catch(() => ({}))) as { error?: string };
+      if (r.ok) {
+        setSearchStatus(`Friend request sent to ${name}.`);
+        setSearch("");
+      } else if (body.error === "user_not_found") {
+        setSearchStatus(`No learner named "${name}".`);
+      } else if (body.error === "already_friends") {
+        setSearchStatus(`You're already friends with ${name}.`);
+      } else if (body.error === "self_friend") {
+        setSearchStatus("That's you!");
+      } else {
+        setSearchStatus("Sorry, that didn't work.");
+      }
+    } finally {
+      setSearchBusy(false);
+    }
+  }
 
   async function onSend(e: React.FormEvent) {
     e.preventDefault();
@@ -128,6 +161,39 @@ function PeerPage() {
             </p>
           </div>
         </header>
+
+        <form className="peer-search" onSubmit={onAddLearner}>
+          <div className="peer-search-field">
+            <span className="peer-search-icon" aria-hidden>
+              🔍
+            </span>
+            <input
+              className="peer-search-input"
+              type="search"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search learners…"
+              aria-label="Search learners by name to add a friend"
+            />
+          </div>
+          <Button
+            type="submit"
+            size="sm"
+            disabled={searchBusy || !search.trim()}
+            aria-label="Send friend request"
+          >
+            {searchBusy ? "…" : "+"}
+          </Button>
+        </form>
+        {searchStatus && (
+          <p
+            className="-mt-3 text-sm"
+            style={{ color: "var(--text-soft)" }}
+            role="status"
+          >
+            {searchStatus}
+          </p>
+        )}
 
         <section className="card">
           <h2
