@@ -1,12 +1,15 @@
 /**
- * Component tests for the learning-path redesign (issue #207).
+ * Component tests for the learning-path redesign (issue #207), lesson-grained
+ * in #224.
  *
  * Covers the parts these components own:
- *   - <NeighbourhoodBlock/> derives per-tile state (done / current /
- *     available / locked) from the unit's lessonsCompleted / lessonsTotal.
+ *   - <NeighbourhoodBlock/> renders one tile per lesson row, each carrying its
+ *     own state (done / current / available / locked) and a deep-link to
+ *     `/app/lesson/:id`.
  *   - The boss-fight bar is a live link when the unit is reachable, and an
  *     inert locked bar otherwise.
  *   - A locked unit renders no clickable tiles and links nowhere.
+ *   - With no lesson rows the block falls back to a single tile.
  *   - <PathStatusStrip/> renders the streak, an XP/level ring, coins
  *     (linking to the shop), and a hearts/freezes chip.
  */
@@ -14,7 +17,19 @@ import { describe, it, expect } from "vitest";
 import { render, screen, within } from "@testing-library/react";
 import { NeighbourhoodBlock } from "../NeighbourhoodBlock";
 import { PathStatusStrip } from "../PathStatusStrip";
-import type { PathUnit } from "../../../lib/server/path";
+import type { PathUnit, PathLesson, PathLessonState } from "../../../lib/server/path";
+
+function lesson(order: number, state: PathLessonState): PathLesson {
+  return {
+    id: 100 + order,
+    slug: `groeten-l${order}`,
+    order,
+    titleNl: `Les ${order}`,
+    titleEn: `Lesson ${order}`,
+    state,
+    href: state === "locked" ? null : `/app/lesson/${100 + order}`,
+  };
+}
 
 function unit(overrides: Partial<PathUnit> = {}): PathUnit {
   return {
@@ -26,13 +41,20 @@ function unit(overrides: Partial<PathUnit> = {}): PathUnit {
     status: "in_progress",
     lessonsCompleted: 2,
     lessonsTotal: 5,
+    lessons: [
+      lesson(1, "done"),
+      lesson(2, "done"),
+      lesson(3, "current"),
+      lesson(4, "available"),
+      lesson(5, "available"),
+    ],
     ...overrides,
   };
 }
 
 describe("<NeighbourhoodBlock/>", () => {
-  it("derives done / current / available tiles from progress", () => {
-    render(<NeighbourhoodBlock unit={unit({ lessonsCompleted: 2, lessonsTotal: 5 })} />);
+  it("renders one tile per lesson row carrying its own state", () => {
+    render(<NeighbourhoodBlock unit={unit()} />);
     expect(screen.getByLabelText("Lesson 1, completed")).toBeTruthy();
     expect(screen.getByLabelText("Lesson 2, completed")).toBeTruthy();
     expect(screen.getByLabelText("Lesson 3, continue")).toBeTruthy();
@@ -40,10 +62,12 @@ describe("<NeighbourhoodBlock/>", () => {
     expect(screen.getByLabelText("Lesson 5")).toBeTruthy();
   });
 
-  it("links reachable tiles to the unit detail and offers a live boss bar", () => {
+  it("deep-links each reachable tile to its own lesson and offers a live boss bar", () => {
     render(<NeighbourhoodBlock unit={unit({ status: "in_progress" })} />);
     const current = screen.getByLabelText("Lesson 3, continue");
-    expect(current.getAttribute("href")).toBe("/app/unit/groeten");
+    expect(current.getAttribute("href")).toBe("/app/lesson/103");
+    const done = screen.getByLabelText("Lesson 1, completed");
+    expect(done.getAttribute("href")).toBe("/app/lesson/101");
     const boss = screen.getByLabelText("Boss fight");
     expect(boss.getAttribute("href")).toBe("/app/unit/groeten");
   });
@@ -51,7 +75,16 @@ describe("<NeighbourhoodBlock/>", () => {
   it("locks every tile and the boss bar for a locked unit", () => {
     render(
       <NeighbourhoodBlock
-        unit={unit({ status: "locked", lessonsCompleted: 0, lessonsTotal: 3 })}
+        unit={unit({
+          status: "locked",
+          lessonsCompleted: 0,
+          lessonsTotal: 3,
+          lessons: [
+            lesson(1, "locked"),
+            lesson(2, "locked"),
+            lesson(3, "locked"),
+          ],
+        })}
       />,
     );
     expect(screen.getByLabelText("Lesson 1, locked")).toBeTruthy();
@@ -65,17 +98,28 @@ describe("<NeighbourhoodBlock/>", () => {
   it("renders all tiles as done and an unlocked boss bar for a completed unit", () => {
     render(
       <NeighbourhoodBlock
-        unit={unit({ status: "completed", lessonsCompleted: 3, lessonsTotal: 3 })}
+        unit={unit({
+          status: "completed",
+          lessonsCompleted: 3,
+          lessonsTotal: 3,
+          lessons: [lesson(1, "done"), lesson(2, "done"), lesson(3, "done")],
+        })}
       />,
     );
-    expect(screen.getByLabelText("Lesson 3, completed")).toBeTruthy();
+    expect(screen.getByLabelText("Lesson 3, completed").getAttribute("href")).toBe(
+      "/app/lesson/103",
+    );
     expect(screen.getByLabelText("Boss fight").getAttribute("href")).toBe(
       "/app/unit/groeten",
     );
   });
 
-  it("renders at least one tile even when lessonsTotal is zero", () => {
-    render(<NeighbourhoodBlock unit={unit({ lessonsTotal: 0, lessonsCompleted: 0 })} />);
+  it("falls back to a single tile when the unit carries no lesson rows", () => {
+    render(
+      <NeighbourhoodBlock
+        unit={unit({ lessonsTotal: 0, lessonsCompleted: 0, lessons: [] })}
+      />,
+    );
     expect(screen.getByRole("list").children.length).toBe(1);
   });
 });

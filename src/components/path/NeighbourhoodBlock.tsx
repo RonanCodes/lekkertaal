@@ -1,15 +1,17 @@
 import { Check, Lock, Star, Swords } from "lucide-react";
-import type { PathUnit } from "../../lib/server/path";
+import type { PathUnit, PathLesson, PathLessonState } from "../../lib/server/path";
 
 /**
- * Neighbourhood block (issue #207). One unit rendered as a "block" card
- * holding a staggered grid of lesson tiles, capped by a wide boss-fight bar.
- * NOT a winding tree — a brick-offset tile grid per the redesign.
+ * Neighbourhood block (issue #207, lesson-grained in #224). One unit rendered
+ * as a "block" card holding a staggered grid of lesson tiles, capped by a wide
+ * boss-fight bar. NOT a winding tree — a brick-offset tile grid per the
+ * redesign.
  *
- * The path loader is unit-grained (each unit carries lessonsCompleted /
- * lessonsTotal), so we derive per-tile state from those counts: tiles below
- * the completed count read "done", the next one reads "current", the rest
- * "available" (within an unlocked unit) or "locked".
+ * The path loader is now lesson-grained: each unit carries `lessons[]` with a
+ * per-lesson `state` (done / current / available / locked) and a deep-link
+ * `href` straight to `/app/lesson/:id`. Tiles consume those rows directly.
+ * When a unit has no lesson rows yet (count-only fallback) we still render a
+ * single tile from `lessonsTotal` so the block never collapses to nothing.
  */
 export function NeighbourhoodBlock({ unit }: { unit: PathUnit }) {
   const isLocked = unit.status === "locked";
@@ -26,7 +28,23 @@ export function NeighbourhoodBlock({ unit }: { unit: PathUnit }) {
 
   const total = Math.max(unit.lessonsTotal, 1);
   const done = Math.min(unit.lessonsCompleted, total);
-  const href = `/app/unit/${unit.slug}`;
+
+  // Prefer real lesson rows; fall back to a single synthesised tile when the
+  // loader returned none (e.g. content not yet seeded for the unit).
+  const tiles: PathLesson[] =
+    unit.lessons.length > 0
+      ? unit.lessons
+      : [
+          {
+            id: -1,
+            slug: `${unit.slug}-pending`,
+            order: 1,
+            titleNl: unit.titleNl,
+            titleEn: unit.titleEn,
+            state: isLocked ? "locked" : "available",
+            href: isLocked ? null : `/app/unit/${unit.slug}`,
+          },
+        ];
 
   return (
     <section
@@ -45,23 +63,14 @@ export function NeighbourhoodBlock({ unit }: { unit: PathUnit }) {
       </header>
 
       <div className="path-grid" role="list">
-        {Array.from({ length: total }).map((_, i) => {
-          const state: TileState = isLocked
-            ? "locked"
-            : i < done
-              ? "done"
-              : i === done
-                ? "current"
-                : "available";
-          return (
-            <PathTile
-              key={i}
-              index={i + 1}
-              state={state}
-              href={state === "locked" ? undefined : href}
-            />
-          );
-        })}
+        {tiles.map((lesson, i) => (
+          <PathTile
+            key={lesson.id >= 0 ? lesson.id : `pending-${i}`}
+            index={i + 1}
+            state={lesson.state}
+            href={lesson.href ?? undefined}
+          />
+        ))}
       </div>
 
       <BossFightBar slug={unit.slug} locked={!isDone && !isCurrent} />
@@ -69,7 +78,7 @@ export function NeighbourhoodBlock({ unit }: { unit: PathUnit }) {
   );
 }
 
-type TileState = "done" | "current" | "available" | "locked";
+type TileState = PathLessonState;
 
 function PathTile({
   index,
