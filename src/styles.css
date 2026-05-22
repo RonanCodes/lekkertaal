@@ -4077,6 +4077,64 @@ img.roleplay-bubble-avatar {
   }
 }
 
+/* Heart-refill cards (#307). A two-column grid of compact cards mirroring the
+ * ScreenShop prototype. UI-only / coming-soon until a hearts backend exists, so
+ * the buy button is disabled and a "Coming soon" hint sits beneath it. */
+.sp-shopcards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+.sp-shopcard {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  border-radius: var(--radius-card);
+  border: 1.5px solid var(--line-soft);
+  background: var(--surface-card);
+  padding: 0.85rem;
+}
+.sp-shopcard[data-coming-soon="true"] {
+  opacity: 0.85;
+}
+.sp-shopcard__icon {
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: 2.75rem;
+  width: 2.75rem;
+  border-radius: 0.85rem;
+  background: var(--color-brand-orange-soft);
+}
+.sp-shopcard__spark {
+  position: absolute;
+  top: 0.25rem;
+  right: 0.25rem;
+}
+.sp-shopcard__title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.92rem;
+  color: var(--text-strong);
+  margin-top: 0.15rem;
+}
+.sp-shopcard__desc {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+.sp-shopcard__buy {
+  width: 100%;
+  margin-top: 0.25rem;
+}
+.sp-shopcard__soon {
+  text-align: center;
+  font-size: 0.66rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+}
+
 /* ============================================================
  * Settings groups — Account / Learning / Appearance (#251).
  * Read-only value rows, the daily-goal pill grid, the theme
