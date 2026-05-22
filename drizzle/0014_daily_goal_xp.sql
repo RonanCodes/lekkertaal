@@ -1,0 +1,1 @@
+ALTER TABLE `users` ADD `daily_goal_xp` integer DEFAULT 20 NOT NULL;
