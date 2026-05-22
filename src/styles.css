@@ -4752,3 +4752,34 @@ img.roleplay-bubble-avatar {
 :root[data-theme="dark"] .btn3d[data-variant="ghost"]:active {
   box-shadow: 0 1px 0 0 var(--line-strong);
 }
+
+/* ── Unit detail (app.unit.$slug) ──────────────────────────────────────────
+ * Screen-scoped helpers for the unit page:
+ * 1. .unit-scroll--sticky-cta reserves room (plus iOS safe-area) under the
+ *    floating 'Start next lesson' bar so it never occludes the lesson list /
+ *    vocab / boss-fight card.
+ * 2. .unit-lesson-chip renders the per-lesson XP + accuracy badges shown on
+ *    completed rows (mirrors ScreenUnit's LessonRow chips). Theme-aware via
+ *    shared tokens, so light + dark both read correctly. */
+.unit-scroll--sticky-cta {
+  padding-bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px));
+}
+.unit-lesson-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  font-weight: 700;
+  line-height: 1;
+  padding: 0.22rem 0.5rem;
+  border-radius: var(--radius-pill);
+  background: var(--surface-card-alt);
+  color: var(--text-soft);
+  border: 1px solid var(--line-soft);
+}
+.unit-lesson-chip--xp {
+  background: var(--color-good-soft);
+  color: var(--color-good);
+  border-color: var(--color-good);
+}

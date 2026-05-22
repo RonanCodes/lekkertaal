@@ -1,6 +1,6 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { useState } from "react";
-import { Check, Lock, Sparkles, Swords, Target } from "lucide-react";
+import { Check, Lock, Sparkles, Swords, Target, Zap } from "lucide-react";
 import { getUnitDetail } from "../lib/server/unit";
 import { AppShell } from "../components/AppShell";
 import { Speaker } from "../components/drills/Speaker";
@@ -56,8 +56,14 @@ function UnitDetailPage() {
 
   const treat = treatFor(unit.order);
 
+  const stickyCtaVisible = Boolean(nextLesson) && !allLessonsDone;
+
   return (
     <AppShell user={user}>
+      {/* When the sticky 'Start next lesson' bar is shown it floats over the
+          page bottom. Reserve space (plus iOS safe-area) on the scroll content
+          so the bar never occludes the lesson list / vocab / boss-fight card. */}
+      <div className={stickyCtaVisible ? "unit-scroll--sticky-cta" : undefined}>
       <div className="mb-5">
         <a
           href="/app/path"
@@ -175,20 +181,26 @@ function UnitDetailPage() {
                       <div className="truncate text-xs" style={{ color: "var(--text-muted)" }}>
                         {l.titleEn}
                       </div>
+                      {/* Per-lesson progress chips: a green XP chip + accuracy
+                          badge once completed (matches ScreenUnit's LessonRow). */}
+                      {isDone && (
+                        <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
+                          <span className="unit-lesson-chip unit-lesson-chip--xp">
+                            <Zap size={11} strokeWidth={2.75} aria-hidden="true" />
+                            {xpEarned} XP
+                          </span>
+                          {score !== null && (
+                            <span className="unit-lesson-chip">{score}% accuracy</span>
+                          )}
+                        </div>
+                      )}
                     </div>
                   </div>
-                  <div className="text-display shrink-0 text-right text-xs font-semibold">
-                    {isDone ? (
-                      <>
-                        <div style={{ color: "var(--color-good)" }}>+{xpEarned} XP</div>
-                        {score !== null && (
-                          <div style={{ color: "var(--text-muted)" }}>Best {score}%</div>
-                        )}
-                      </>
-                    ) : (
+                  {!isDone && (
+                    <div className="text-display shrink-0 text-right text-xs font-semibold">
                       <div style={{ color: "var(--color-brand-orange-dark)" }}>+{l.xpReward} XP</div>
-                    )}
-                  </div>
+                    </div>
+                  )}
                 </a>
               </li>
             );
@@ -322,7 +334,7 @@ function UnitDetailPage() {
           Unlocked once every lesson is done; locked state dims the card and
           swaps the CTA for a lock + hint. */}
       {bossFight && (
-        <section className="mb-28">
+        <section className="mb-8">
           <h2 className="text-display mb-3 text-lg font-bold">Caps the unit</h2>
           <div className={`boss-teaser ${bossFight.unlocked ? "" : "boss-teaser--locked"}`}>
             <span className="boss-teaser-badge">
@@ -358,9 +370,10 @@ function UnitDetailPage() {
           </div>
         </section>
       )}
+      </div>
 
       {/* Sticky bottom: Start next lesson */}
-      {nextLesson && !allLessonsDone && (
+      {stickyCtaVisible && (
         <div
           className="fixed bottom-0 left-0 right-0 z-40 border-t bg-white/95 px-4 py-3 backdrop-blur"
           style={{ borderColor: "var(--line-soft)" }}
