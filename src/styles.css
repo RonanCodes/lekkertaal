@@ -1161,14 +1161,43 @@ h1, h2, h3, h4, h5, h6 {
   border-color: var(--color-brand-orange-soft);
   background: var(--surface-banner);
 }
-.scorecard-stars {
-  margin-top: 0.75rem;
-  font-size: 2.5rem;
-  line-height: 1;
-  color: var(--color-streak);
-  letter-spacing: 0.1rem;
+/* Hero score ring: conic 0–100 gauge with the number in the centre.
+ * --ring-pct and --ring-color are set inline per-render. The track tint
+ * routes through a token so light + dark both read correctly. */
+.scorecard-ring {
+  margin: 0.9rem auto 0;
+  width: 104px;
+  height: 104px;
+  border-radius: 50%;
+  background: conic-gradient(
+    var(--ring-color, var(--color-good)) var(--ring-pct, 0%),
+    var(--line-soft) 0
+  );
+  display: grid;
+  place-items: center;
 }
-.scorecard-stars-empty { color: var(--line-strong); }
+.scorecard-ring-inner {
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  background: var(--surface-card);
+  display: grid;
+  place-items: center;
+  text-align: center;
+}
+.scorecard-ring-num {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.9rem;
+  line-height: 1;
+  color: var(--text-strong);
+}
+.scorecard-ring-label {
+  display: block;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
 .scorecard-result-pill {
   padding: 0.25rem 0.7rem;
   border-radius: var(--radius-pill);
@@ -1203,13 +1232,86 @@ h1, h2, h3, h4, h5, h6 {
   letter-spacing: 0.05em;
   color: var(--text-muted);
 }
-.scorecard-rubric-row {
+/* Per-criterion row: numeric 0–100 score + progress bar + note. Tone
+ * (good/warn/bad) drives the fill colour via the data-tone attribute so
+ * a strong criterion reads green and a weak one reads red, light + dark. */
+.scorecard-crit-head {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   justify-content: space-between;
 }
-.scorecard-rubric-stars { font-size: 0.95rem; letter-spacing: 0.05rem; }
-.scorecard-rubric-stars-on { color: var(--color-streak); }
+.scorecard-crit-score {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+.scorecard-crit[data-tone="good"] .scorecard-crit-score { color: var(--color-good); }
+.scorecard-crit[data-tone="warn"] .scorecard-crit-score { color: var(--color-warn); }
+.scorecard-crit[data-tone="bad"] .scorecard-crit-score { color: var(--color-bad); }
+.scorecard-crit-bar {
+  margin-top: 0.4rem;
+  height: 8px;
+  border-radius: var(--radius-pill);
+  background: var(--line-soft);
+  overflow: hidden;
+}
+.scorecard-crit-fill {
+  height: 100%;
+  border-radius: inherit;
+  transition: width 0.5s ease;
+}
+.scorecard-crit[data-tone="good"] .scorecard-crit-fill { background: var(--color-good); }
+.scorecard-crit[data-tone="warn"] .scorecard-crit-fill { background: var(--color-brand-orange); }
+.scorecard-crit[data-tone="bad"] .scorecard-crit-fill { background: var(--color-bad); }
+.scorecard-crit-note {
+  margin-top: 0.4rem;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+/* Highlights / best line card */
+.scorecard-highlight {
+  border-radius: var(--radius-card);
+  border: 1.5px solid var(--color-good);
+  background: var(--color-good-soft);
+  padding: 1rem 1.1rem;
+}
+.scorecard-highlight-head {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--color-good);
+}
+.scorecard-highlight-line {
+  margin-top: 0.3rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--text-strong);
+}
+.scorecard-highlight-note {
+  margin-top: 0.2rem;
+  font-size: 0.75rem;
+  color: var(--color-good);
+}
+/* Tip rows: blue sparkle chip + actionable line */
+.scorecard-tip-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+}
+.scorecard-tip-icon {
+  flex: none;
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 0.5rem;
+  display: grid;
+  place-items: center;
+  background: var(--color-brand-blue-soft);
+  color: var(--color-brand-blue-dark);
+  font-size: 0.85rem;
+}
 .scorecard-correction {
   border-radius: var(--radius-button);
   background: var(--surface-card-alt);
