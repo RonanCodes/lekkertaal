@@ -145,7 +145,8 @@ function LessonPlayerPage() {
   }
 
   return (
-    <AppShell user={user}>
+    <AppShell user={user} immersive>
+      <div className="lesson-immersive">
       {/* US-019: due review cards shown before new content. */}
       {reviews && reviews.length > 0 && <ReviewRibbon reviews={reviews} />}
 
@@ -269,6 +270,7 @@ function LessonPlayerPage() {
           </div>
         </div>
       )}
+      </div>
     </AppShell>
   );
 }

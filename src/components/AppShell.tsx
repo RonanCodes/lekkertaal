@@ -37,6 +37,7 @@ function currentPathname(): string {
 export function AppShell({
   user,
   children,
+  immersive = false,
 }: {
   user: {
     displayName: string;
@@ -46,7 +47,19 @@ export function AppShell({
     streakFreezesBalance?: number;
   };
   children: ReactNode;
+  /**
+   * Full-screen immersive mode (#303). When true, the lesson player and
+   * roleplay scene render edge-to-edge with no global top banner, no
+   * streak/XP/coins row, and no bottom tab dock — matching the design's
+   * focused, distraction-free flow. The route owns its own chrome
+   * (lesson: ✕/progress/hearts; roleplay: dark header + flush composer).
+   */
+  immersive?: boolean;
 }) {
+  if (immersive) {
+    return <div className="lk-shell lk-shell--immersive">{children}</div>;
+  }
+
   const freezes = user.streakFreezesBalance ?? 0;
   const pathname = currentPathname();
   return (

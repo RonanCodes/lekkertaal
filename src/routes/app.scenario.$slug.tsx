@@ -229,8 +229,8 @@ function ScenarioChatPage() {
   }, [micPhase, startRecording, stopRecording]);
 
   return (
-    <AppShell user={user}>
-      <div className="roleplay-scene mx-auto flex h-[calc(100vh-4rem)] max-w-2xl flex-col px-4">
+    <AppShell user={user} immersive>
+      <div className="roleplay-scene mx-auto flex h-[100dvh] max-w-2xl flex-col px-4">
         {/* Scene header: dark bakkerij gradient with Kroket companion + NPC
             + objectives + turn meter (matches ScreenRoleplay's dark scene). */}
         <header className="roleplay-header roleplay-header--dark">

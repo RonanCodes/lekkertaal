@@ -1001,6 +1001,10 @@ h1, h2, h3, h4, h5, h6 {
 }
 .lesson-progress__fill {
   height: 100%;
+  /* Always show a brand-orange sliver so the bar reads as filled-from-the-start
+   * (#303) rather than an empty grey track on the first drill. The real
+   * progress lives in width / aria-valuenow; this is the visible floor. */
+  min-width: 0.85rem;
   border-radius: 999px;
   background: var(--color-brand-orange);
   transition: width 240ms ease-out;
@@ -1363,6 +1367,10 @@ h1, h2, h3, h4, h5, h6 {
 /* Composer */
 .roleplay-composer {
   border-top: 1.5px solid var(--line-soft);
+  /* Immersive (#303): no bottom tab dock, so the composer sits flush at the
+   * viewport bottom. Add the home-indicator inset so the mic + send buttons
+   * stay fully visible above the safe area. */
+  padding-bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
 }
 .roleplay-input {
   border-radius: var(--radius-button);
@@ -4395,6 +4403,32 @@ img.roleplay-bubble-avatar {
   .lk-main {
     padding-bottom: calc(88px + env(safe-area-inset-bottom, 0px));
   }
+}
+
+/* ============================================================
+ * Immersive mode (#303) — lesson player + roleplay scene render
+ * full-screen with no global banner, streak row, or bottom tab
+ * dock. The route owns its own chrome. Matches the design's
+ * focused, distraction-free flow (design-lesson-player.png +
+ * design-roleplay.png).
+ * ============================================================ */
+.lk-shell--immersive {
+  min-height: 100dvh;
+  background: var(--surface-app, #fffaf3);
+}
+
+/* Lesson player: a centred, max-width column that fills the viewport so
+ * the docked feedback / hint row sits at the bottom. Top inset clears the
+ * device status bar; bottom inset clears the home indicator. */
+.lesson-immersive {
+  position: relative;
+  margin: 0 auto;
+  display: flex;
+  min-height: 100dvh;
+  max-width: 42rem;
+  flex-direction: column;
+  padding: calc(1rem + env(safe-area-inset-top, 0px)) 1rem
+    calc(1rem + env(safe-area-inset-bottom, 0px));
 }
 
 /* ============================================================
