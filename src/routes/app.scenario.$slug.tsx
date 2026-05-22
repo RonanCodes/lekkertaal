@@ -13,6 +13,7 @@ import {
 import type {RoleplayTranscriptEntry} from "../lib/server/roleplay";
 import { AppShell } from "../components/AppShell";
 import { Info, Mic, Square } from "lucide-react";
+import { Button } from "../components/ui/button";
 import { log } from "../lib/logger";
 import { UNAVAILABLE_TOOLTIP } from "../components/drills/Speaker";
 
@@ -345,21 +346,22 @@ function ScenarioChatPage() {
               )}
             </button>
           )}
-          <button
+          <Button
             type="submit"
+            size="sm"
             disabled={!draft.trim() || ended || busy}
-            className="btn-3d btn-3d-sm"
           >
             Stuur
-          </button>
-          <button
+          </Button>
+          <Button
             type="button"
+            variant="ghost"
+            size="sm"
             onClick={() => void endConversation()}
             disabled={ended}
-            className="btn-3d btn-3d-ghost btn-3d-sm"
           >
             Klaar
-          </button>
+          </Button>
         </form>
       </div>
     </AppShell>
