@@ -5,6 +5,7 @@ import type { LucideIcon } from "lucide-react";
 import { getShop, buyItem } from "../lib/server/shop";
 import type { ShopItem } from "../lib/server/shop";
 import { AppShell } from "../components/AppShell";
+import { Button } from "@/components/ui/button";
 import { resolveShopIcon } from "../lib/shop-icons";
 
 export const Route = createFileRoute("/app/shop")({
@@ -205,11 +206,12 @@ function ShopPage() {
                       <div className="sp-item__title">{item.titleEn}</div>
                       <div className="sp-item__desc">{item.description}</div>
                     </div>
-                    <button
+                    <Button
                       type="button"
+                      size="sm"
                       onClick={() => purchase(item)}
                       disabled={!canAfford || isPending}
-                      className="btn-3d btn-3d-sm sp-item__buy"
+                      className="sp-item__buy"
                       aria-label={`Buy ${item.titleEn} for ${item.costCoins} coins`}
                     >
                       {isPending ? "..." : (
@@ -218,7 +220,7 @@ function ShopPage() {
                           <Coins size={14} className="text-amber-200" aria-hidden />
                         </span>
                       )}
-                    </button>
+                    </Button>
                   </li>
                 );
               })}

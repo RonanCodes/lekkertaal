@@ -14,6 +14,7 @@ import {
 } from "../lib/server/profile-activity";
 import { AppShell } from "../components/AppShell";
 import { ProfileHero } from "../components/ProfileHero";
+import { Button } from "@/components/ui/button";
 
 /**
  * Public profile view at /app/profile/:displayName.
@@ -114,9 +115,9 @@ function PublicProfilePage() {
           }
           action={
             profile.isSelf ? (
-              <Link to="/app/profile" className="btn-3d btn-3d-ghost btn-3d-sm">
-                My profile
-              </Link>
+              <Button asChild variant="ghost" size="sm">
+                <Link to="/app/profile">My profile</Link>
+              </Button>
             ) : undefined
           }
         />

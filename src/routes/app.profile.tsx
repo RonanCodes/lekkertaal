@@ -15,6 +15,7 @@ import {
 import { resetMyData } from "../lib/server/user";
 import { AppShell } from "../components/AppShell";
 import { ProfileHero } from "../components/ProfileHero";
+import { Button } from "@/components/ui/button";
 
 /**
  * Owner profile view, the signed-in user's own profile. The PUBLIC version
@@ -160,14 +161,16 @@ function ResetMyDataSection() {
       </p>
 
       {stage === "idle" && (
-        <button
+        <Button
           type="button"
+          variant="red"
+          size="sm"
           onClick={() => setStage("confirm")}
-          className="btn-3d btn-3d-red btn-3d-sm mt-3"
+          className="mt-3"
           data-testid="reset-my-data-button"
         >
           Reset my learning data
-        </button>
+        </Button>
       )}
 
       {stage === "confirm" && (
@@ -186,21 +189,23 @@ function ResetMyDataSection() {
             Continue?
           </p>
           <div className="mt-3 flex gap-2">
-            <button
+            <Button
               type="button"
+              variant="red"
+              size="sm"
               onClick={onConfirm}
-              className="btn-3d btn-3d-red btn-3d-sm"
               data-testid="reset-my-data-confirm-yes"
             >
               Yes, reset everything
-            </button>
-            <button
+            </Button>
+            <Button
               type="button"
+              variant="ghost"
+              size="sm"
               onClick={() => setStage("idle")}
-              className="btn-3d btn-3d-ghost btn-3d-sm"
             >
               Cancel
-            </button>
+            </Button>
           </div>
         </div>
       )}
