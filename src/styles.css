@@ -750,58 +750,228 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 700;
   box-shadow: 0 0 0 2px var(--surface-app);
 }
+.nb-root {
+  position: relative;
+}
+
+/* Bottom-sheet: full-bleed dim scrim + a rounded sheet docked to the bottom.
+ * Matches ScreenNotifications in docs/design/screens-social.jsx — grab handle,
+ * a "Mark all read" header, day-grouped rows with coloured icon tiles. */
+.nb-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: rgba(26, 20, 16, 0.55);
+  backdrop-filter: blur(2px);
+  animation: nb-fade-in 160ms ease;
+}
 .nb-sheet {
-  position: absolute;
+  position: fixed;
+  left: 0;
   right: 0;
-  margin-top: 0.5rem;
-  width: 20rem;
-  max-width: 90vw;
-  z-index: 50;
-  border-radius: var(--radius-card);
-  border: 1.5px solid var(--line-soft);
-  background: var(--surface-card);
-  padding: 0.4rem;
-  box-shadow: 0 12px 32px -10px rgba(213, 78, 0, 0.28);
+  bottom: 0;
+  z-index: 61;
+  max-height: 82vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--surface-page);
+  border-top-left-radius: 2rem;
+  border-top-right-radius: 2rem;
+  box-shadow: 0 -10px 30px -5px rgba(0, 0, 0, 0.25);
+  animation: nb-slide-up 200ms cubic-bezier(0.16, 1, 0.3, 1);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+@media (min-width: 640px) {
+  /* On wide screens, centre the sheet to a sensible column. */
+  .nb-sheet {
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    width: 26rem;
+    max-width: 92vw;
+    animation: nb-slide-up-centred 200ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+}
+@keyframes nb-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes nb-slide-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+@keyframes nb-slide-up-centred {
+  from {
+    transform: translate(-50%, 100%);
+  }
+  to {
+    transform: translate(-50%, 0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nb-scrim,
+  .nb-sheet {
+    animation: none;
+  }
+}
+.nb-grab {
+  display: flex;
+  justify-content: center;
+  padding-top: 0.5rem;
+}
+.nb-grab-bar {
+  width: 38px;
+  height: 5px;
+  border-radius: var(--radius-pill);
+  background: var(--line-strong);
 }
 .nb-sheet-head {
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  padding: 0.5rem 0.6rem;
+  padding: 0.5rem 1.15rem 0.75rem;
+}
+.nb-sheet-title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--text-strong);
+  margin: 0;
+}
+.nb-spacer {
+  flex: 1;
+}
+.nb-mark-all {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--color-brand-orange-dark);
+}
+.nb-mark-all:hover {
+  text-decoration: underline;
+}
+.nb-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 1.15rem 1.5rem;
+  -webkit-overflow-scrolling: touch;
+}
+.nb-state {
+  padding: 1rem 0;
+  font-size: 0.875rem;
+}
+.nb-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1.5rem 0;
+  text-align: center;
+}
+.nb-group-label {
   font-size: 0.7rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--color-brand-orange-dark);
+  color: var(--text-muted);
+  margin: 0.75rem 0 0.5rem;
 }
 .nb-item {
   display: flex;
-  align-items: center;
-  gap: 0.6rem;
+  align-items: flex-start;
+  gap: 0.75rem;
   width: 100%;
-  border-radius: 0.85rem;
-  padding: 0.6rem;
+  padding: 0.75rem 0.25rem;
   text-align: left;
   background: transparent;
   border: none;
+  border-bottom: 1px solid var(--line-soft);
   cursor: pointer;
   transition: background 120ms ease;
 }
 .nb-item:hover {
   background: var(--surface-hover);
 }
-.nb-item-dot {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  height: 2rem;
-  width: 2rem;
-  flex-shrink: 0;
-  border-radius: var(--radius-pill);
+/* Coloured icon tile per kind. Dark mode flips via [data-color] overrides. */
+.nb-tile {
+  display: grid;
+  place-items: center;
+  height: 2.25rem;
+  width: 2.25rem;
+  flex: none;
+  border-radius: 0.75rem;
+  font-size: 1.05rem;
+  line-height: 1;
+  background: var(--surface-card-alt);
+}
+.nb-tile[data-color="orange"] {
+  background: var(--color-brand-orange-soft);
+}
+.nb-tile[data-color="blue"] {
   background: var(--color-brand-blue-soft);
-  color: var(--color-brand-blue-dark);
-  font-size: 0.7rem;
-  font-weight: 700;
+}
+.nb-tile[data-color="amber"] {
+  background: #fef3c7;
+}
+.nb-tile[data-color="pink"] {
+  background: var(--color-brand-pink-soft);
+}
+.nb-tile-mascot {
+  height: 2.25rem;
+  width: 2.25rem;
+  flex: none;
+  object-fit: contain;
+}
+.nb-item-body {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+.nb-item-titlerow {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-width: 0;
+}
+.nb-item-title {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.nb-unread-dot {
+  width: 8px;
+  height: 8px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--color-brand-orange);
+}
+.nb-item-time {
+  flex: none;
+  font-size: 0.6875rem;
+  color: var(--text-muted);
+  padding-top: 0.1rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .nb-tile[data-color="amber"] {
+    background: var(--surface-banner-amber);
+  }
+}
+:root[data-theme="dark"] .nb-tile[data-color="amber"] {
+  background: var(--surface-banner-amber);
 }
 
 /* ============================================================

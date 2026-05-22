@@ -157,7 +157,7 @@ describe("<NotificationBell/>", () => {
 
     render(<NotificationBell />);
     fireEvent.click(await screen.findByRole("button", { name: /Notifications/i }));
-    const item = await screen.findByRole("menuitem", {
+    const item = await screen.findByRole("button", {
       name: /Bob answered your peer drill/i,
     });
 
@@ -175,5 +175,100 @@ describe("<NotificationBell/>", () => {
 
     // Navigated to the deep-link.
     expect(assignSpy).toHaveBeenCalledWith("/app/peer");
+  });
+
+  it("groups rows by Today / Yesterday and shows day labels", async () => {
+    const now = new Date();
+    const today = now.toISOString().slice(0, 19).replace("T", " ");
+    const yesterdayDate = new Date(now.getTime() - 26 * 3600_000);
+    const yesterday = yesterdayDate
+      .toISOString()
+      .slice(0, 19)
+      .replace("T", " ");
+    inboxFetchMock([
+      {
+        id: 1,
+        kind: "streak_recovery",
+        sentAt: today,
+        result: null,
+        link: null,
+        fromDisplayName: null,
+      },
+      {
+        id: 2,
+        kind: "badge_unlocked",
+        sentAt: yesterday,
+        result: null,
+        link: null,
+        fromDisplayName: null,
+      },
+    ]);
+    render(<NotificationBell />);
+    fireEvent.click(
+      await screen.findByRole("button", { name: /Notifications/i }),
+    );
+    await waitFor(() => {
+      expect(screen.getByText("Today")).toBeInTheDocument();
+      expect(screen.getByText("Yesterday")).toBeInTheDocument();
+    });
+    expect(screen.getByText(/Don't break your streak/i)).toBeInTheDocument();
+    expect(screen.getByText(/Badge unlocked/i)).toBeInTheDocument();
+  });
+
+  it("marks all read, POSTs each id, and shows the empty state", async () => {
+    const today = new Date()
+      .toISOString()
+      .slice(0, 19)
+      .replace("T", " ");
+    const posted: string[] = [];
+    fetchMock.mockImplementation(async (url: string, init?: RequestInit) => {
+      if (url === "/api/notifications/inbox") {
+        return jsonResponse({
+          notifications: [
+            {
+              id: 1,
+              kind: "streak_recovery",
+              sentAt: today,
+              result: null,
+              link: null,
+              fromDisplayName: null,
+            },
+            {
+              id: 2,
+              kind: "badge_unlocked",
+              sentAt: today,
+              result: null,
+              link: null,
+              fromDisplayName: null,
+            },
+          ],
+        });
+      }
+      if (init?.method === "POST") {
+        posted.push(url);
+        return jsonResponse({ updated: true });
+      }
+      return new Response("not found", { status: 404 });
+    });
+
+    render(<NotificationBell />);
+    fireEvent.click(
+      await screen.findByRole("button", { name: /Notifications/i }),
+    );
+    const markAll = await screen.findByRole("button", {
+      name: /Mark all read/i,
+    });
+    await act(async () => {
+      fireEvent.click(markAll);
+    });
+    await waitFor(() => {
+      expect(screen.getByText(/You are all caught up\./i)).toBeInTheDocument();
+    });
+    expect(posted).toEqual(
+      expect.arrayContaining([
+        "/api/notifications/1/read",
+        "/api/notifications/2/read",
+      ]),
+    );
   });
 });
