@@ -81,22 +81,25 @@ export function NeighbourhoodBlock({ unit }: { unit: PathUnit }) {
   const treat = treatFor(unit.order);
   const mood: "idle" | "happy" = isDone ? "happy" : "idle";
 
-  // Prefer real lesson rows; fall back to a single synthesised tile when the
-  // loader returned none (e.g. content not yet seeded for the unit).
+  // Prefer real lesson rows. When the loader returned none (e.g. content not
+  // yet seeded for the unit) synthesise one placeholder tile PER expected
+  // lesson so the grid still reads as a staggered tile-grid, never a single
+  // lonely box that looks like a broken image. The count tracks `lessonsTotal`
+  // (clamped to a sane range); each synthesised tile is locked + inert when the
+  // unit is locked, otherwise it deep-links to the unit overview.
+  const placeholderCount = Math.min(Math.max(unit.lessonsTotal, 1), 8);
   const tiles: PathLesson[] =
     unit.lessons.length > 0
       ? unit.lessons
-      : [
-          {
-            id: -1,
-            slug: `${unit.slug}-pending`,
-            order: 1,
-            titleNl: unit.titleNl,
-            titleEn: unit.titleEn,
-            state: isLocked ? "locked" : "available",
-            href: isLocked ? null : `/app/unit/${unit.slug}`,
-          },
-        ];
+      : Array.from({ length: placeholderCount }, (_, i) => ({
+          id: -(i + 1),
+          slug: `${unit.slug}-pending-${i + 1}`,
+          order: i + 1,
+          titleNl: unit.titleNl,
+          titleEn: unit.titleEn,
+          state: isLocked ? ("locked" as const) : ("available" as const),
+          href: isLocked ? null : `/app/unit/${unit.slug}`,
+        }));
 
   // 1–3 scattered treats, only for non-locked units. Count + slot choice are
   // derived from the unit order so the same unit always reads the same.
@@ -141,6 +144,11 @@ export function NeighbourhoodBlock({ unit }: { unit: PathUnit }) {
             alt=""
             aria-hidden
             className={`path-unit-mascot ${mood === "happy" ? "anim-happy-bounce" : "anim-idle-bob"}`}
+            // Never leave a broken/empty image box: if the treat art fails to
+            // load (missing asset on a unit) drop the element entirely.
+            onError={(e) => {
+              e.currentTarget.style.display = "none";
+            }}
           />
         </div>
       </header>
@@ -171,7 +179,14 @@ export function NeighbourhoodBlock({ unit }: { unit: PathUnit }) {
               animationDelay: `${(i * 0.4).toFixed(1)}s`,
             }}
           >
-            <img src={`/mascot/treats/${decoTreat}/idle.png`} alt="" aria-hidden />
+            <img
+              src={`/mascot/treats/${decoTreat}/idle.png`}
+              alt=""
+              aria-hidden
+              onError={(e) => {
+                e.currentTarget.style.display = "none";
+              }}
+            />
           </span>
         ))}
       </div>

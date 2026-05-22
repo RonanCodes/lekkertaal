@@ -490,18 +490,23 @@ h1, h2, h3, h4, h5, h6 {
   opacity: 0.6;
 }
 
-/* Tile grid: a staggered (brick-offset) grid, NOT a single-column tree. */
+/* Tile grid: a fixed 3-column staggered grid per the design
+   (docs/design/screens-path.jsx, UnitBlock). The centre column drops down a
+   touch so the tiles read as a winding stagger rather than a flat table. */
 .path-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
-  gap: 0.75rem 0.6rem;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.85rem 0.6rem;
+  justify-items: center;
   align-items: start;
 }
-/* Brick stagger: nudge every other column down a touch. The grid's direct
-   children are `.path-cell` wrappers (tile + visible label) since #243. */
-.path-grid > .path-cell:nth-child(even),
-.path-grid > .path-tile:nth-child(even) {
-  transform: translateY(14px);
+/* Brick stagger: nudge the centre column of each row down so the grid winds.
+   The grid's direct children are `.path-cell` wrappers (tile + visible label)
+   since #243. Targeting the 2nd column (3n + 2) keeps the middle tile, the one
+   that holds the current/star node in a 3-wide row, offset like the design. */
+.path-grid > .path-cell:nth-child(3n + 2),
+.path-grid > .path-tile:nth-child(3n + 2) {
+  transform: translateY(16px);
 }
 
 /* Individual lesson tile — chunky, tactile, 3D-offset like the buttons. */
@@ -514,7 +519,8 @@ h1, h2, h3, h4, h5, h6 {
   gap: 0.2rem;
   aspect-ratio: 1 / 1;
   width: 100%;
-  border-radius: 1rem;
+  max-width: 4.5rem;
+  border-radius: 1.1rem;
   border: none;
   font-weight: 700;
   color: #fff;
@@ -542,10 +548,14 @@ h1, h2, h3, h4, h5, h6 {
   background: var(--color-brand-blue);
   box-shadow: 0 4px 0 0 var(--color-brand-blue-dark);
 }
+/* Locked tile reads as a soft, empty-but-intentional node per the design: a
+   pale card with a clear lock glyph, NOT a flat grey block that looks like a
+   broken image placeholder. */
 .path-tile--locked {
-  background: var(--line-strong);
-  color: var(--text-faint);
-  box-shadow: 0 4px 0 0 var(--line-strong);
+  background: var(--surface-card-alt);
+  color: var(--text-muted);
+  border: 1.5px solid var(--line-soft);
+  box-shadow: 0 3px 0 0 var(--line-soft);
   cursor: not-allowed;
 }
 .path-tile--locked:hover {
