@@ -52,71 +52,75 @@ function ProfilePage() {
   return (
     <AppShell user={user}>
       <div className="mx-auto max-w-3xl space-y-6">
-        <header className="flex items-center gap-4">
-          {user.avatarUrl ? (
-            <img
-              src={user.avatarUrl}
-              alt=""
-              className="h-16 w-16 rounded-full ring-2 ring-orange-200"
-            />
-          ) : (
-            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-orange-100 text-xl font-bold text-orange-700">
-              {user.displayName.slice(0, 2).toUpperCase()}
-            </div>
-          )}
-          <div className="min-w-0 flex-1">
-            <h1 className="text-2xl font-bold text-neutral-900">{user.displayName}</h1>
-            <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-neutral-600">
-              <span>CEFR {user.cefrLevel}</span>
-              <span>·</span>
-              <span className="inline-flex items-center gap-1"><Flame size={14} className="text-orange-500" aria-hidden />{user.streakDays}</span>
-              <span>·</span>
-              <span className="inline-flex items-center gap-1"><Zap size={14} className="text-yellow-500" aria-hidden />{user.xpTotal} XP</span>
-              {league && (
-                <>
-                  <span>·</span>
+        <section className="sp-hero">
+          <div className="sp-hero__top">
+            {user.avatarUrl ? (
+              <img src={user.avatarUrl} alt="" className="sp-avatar" />
+            ) : (
+              <div className="sp-avatar sp-avatar--fallback">
+                {user.displayName.slice(0, 2).toUpperCase()}
+              </div>
+            )}
+            <div className="min-w-0 flex-1">
+              <h1 className="sp-hero__name">{user.displayName}</h1>
+              <div className="sp-hero__meta">
+                <span className="sp-pill sp-pill--cefr">CEFR {user.cefrLevel}</span>
+                {league && (
                   <span
                     data-testid="profile-league-badge"
-                    className="inline-flex items-center gap-1 rounded-full bg-orange-100 px-2 py-0.5 text-xs font-semibold text-orange-800"
+                    className="sp-pill sp-pill--league"
                     title={`${league.name} league — ${league.weeklyXp} XP this week`}
                   >
                     <span aria-hidden>{league.emoji}</span>
                     {league.name}
                   </span>
-                </>
-              )}
+                )}
+              </div>
             </div>
           </div>
-        </header>
+          <div className="sp-hero__stats">
+            <div className="sp-stat">
+              <div className="sp-stat__value inline-flex items-center justify-center gap-1">
+                <Zap size={16} className="text-yellow-500" aria-hidden />
+                {user.xpTotal}
+              </div>
+              <div className="sp-stat__label">XP</div>
+            </div>
+            <div className="sp-stat">
+              <div className="sp-stat__value inline-flex items-center justify-center gap-1">
+                <Flame size={16} className="text-orange-500" aria-hidden />
+                {user.streakDays}
+              </div>
+              <div className="sp-stat__label">Day streak</div>
+            </div>
+            <div className="sp-stat">
+              <div className="sp-stat__value">{user.coinsBalance}</div>
+              <div className="sp-stat__label">Coins</div>
+            </div>
+          </div>
+        </section>
 
-        <section className="rounded-2xl border border-neutral-200 bg-white p-5">
-          <div className="mb-4 flex items-baseline justify-between">
-            <h2 className="text-sm font-semibold uppercase tracking-wide text-neutral-500">
-              Badges
-            </h2>
-            <span className="text-sm text-neutral-500">
+        <section className="sp-section">
+          <div className="sp-section__head">
+            <h2 className="sp-section__title">Badges</h2>
+            <span className="sp-section__count">
               {earned.length} / {badges.length} unlocked
             </span>
           </div>
-          <ul className="grid grid-cols-3 gap-3 sm:grid-cols-5">
+          <ul className="sp-badges">
             {badges.map((b) => (
               <li
                 key={b.id}
-                className={`flex flex-col items-center rounded-xl p-3 text-center ${
-                  b.awarded
-                    ? "bg-amber-50 ring-1 ring-amber-200"
-                    : "bg-neutral-50 opacity-50 grayscale ring-1 ring-neutral-200"
-                }`}
+                className="sp-badge"
+                data-earned={b.awarded ? "true" : "false"}
                 title={b.description ?? b.titleEn}
               >
-                <div className="text-3xl" aria-hidden>
+                <div className="sp-badge__icon" aria-hidden>
                   {b.iconEmoji ?? "🏅"}
                 </div>
-                <div className="mt-1 text-xs font-medium leading-tight">
-                  {b.titleEn}
-                </div>
+                <div className="sp-badge__name">{b.titleEn}</div>
                 {b.awarded && b.awardedAt && (
-                  <div className="mt-0.5 text-[10px] text-neutral-500">
+                  <div className="sp-badge__date">
                     {new Date(b.awardedAt).toLocaleDateString()}
                   </div>
                 )}
@@ -159,14 +163,9 @@ function ResetMyDataSection() {
   }
 
   return (
-    <section
-      data-testid="reset-my-data-section"
-      className="rounded-2xl border border-red-200 bg-red-50 p-5"
-    >
-      <h2 className="text-sm font-semibold uppercase tracking-wide text-red-700">
-        Danger zone
-      </h2>
-      <p className="mt-2 text-sm text-red-900">
+    <section data-testid="reset-my-data-section" className="sp-danger">
+      <h2 className="sp-danger__title">Danger zone</h2>
+      <p className="sp-danger__body mt-2 text-sm">
         Wipe your XP, streak, lessons completed, drill attempts, friends, peer drills,
         and quest history. Your account stays signed in.
       </p>
@@ -175,7 +174,7 @@ function ResetMyDataSection() {
         <button
           type="button"
           onClick={() => setStage("confirm")}
-          className="mt-3 rounded-xl bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700"
+          className="btn-3d btn-3d-red btn-3d-sm mt-3"
           data-testid="reset-my-data-button"
         >
           Reset my learning data
@@ -186,13 +185,13 @@ function ResetMyDataSection() {
         <div
           role="dialog"
           aria-labelledby="reset-confirm-title"
-          className="mt-3 rounded-xl border border-red-300 bg-white p-4"
+          className="sp-danger__confirm mt-3"
           data-testid="reset-my-data-confirm"
         >
-          <h3 id="reset-confirm-title" className="text-base font-semibold text-red-800">
+          <h3 id="reset-confirm-title" className="text-base font-semibold" style={{ color: "var(--color-bad)" }}>
             Are you sure?
           </h3>
-          <p className="mt-1 text-sm text-neutral-700">
+          <p className="mt-1 text-sm" style={{ color: "var(--text-body)" }}>
             This will permanently clear your XP, streak, lessons completed, drill attempts,
             friends, peer drills, and quest history. Your account stays (you stay signed in).
             Continue?
@@ -201,7 +200,7 @@ function ResetMyDataSection() {
             <button
               type="button"
               onClick={onConfirm}
-              className="rounded-xl bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700"
+              className="btn-3d btn-3d-red btn-3d-sm"
               data-testid="reset-my-data-confirm-yes"
             >
               Yes, reset everything
@@ -209,7 +208,7 @@ function ResetMyDataSection() {
             <button
               type="button"
               onClick={() => setStage("idle")}
-              className="rounded-xl border border-neutral-300 bg-white px-4 py-2 text-sm font-semibold text-neutral-700 hover:bg-neutral-50"
+              className="btn-3d btn-3d-ghost btn-3d-sm"
             >
               Cancel
             </button>
@@ -218,15 +217,15 @@ function ResetMyDataSection() {
       )}
 
       {stage === "running" && (
-        <p className="mt-3 text-sm text-red-900" data-testid="reset-my-data-running">
+        <p className="sp-danger__body mt-3 text-sm" data-testid="reset-my-data-running">
           Resetting...
         </p>
       )}
 
       {stage === "error" && (
-        <div className="mt-3 rounded-xl border border-red-300 bg-white p-3" data-testid="reset-my-data-error">
-          <p className="text-sm font-semibold text-red-800">Reset failed</p>
-          {errorMsg && <p className="mt-1 text-xs text-red-700">{errorMsg}</p>}
+        <div className="sp-danger__confirm mt-3" data-testid="reset-my-data-error">
+          <p className="text-sm font-semibold" style={{ color: "var(--color-bad)" }}>Reset failed</p>
+          {errorMsg && <p className="mt-1 text-xs" style={{ color: "var(--text-muted)" }}>{errorMsg}</p>}
           <button
             type="button"
             onClick={() => setStage("idle")}

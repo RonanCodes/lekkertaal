@@ -78,66 +78,64 @@ function PublicProfilePage() {
   return (
     <AppShell user={viewer}>
       <div className="mx-auto max-w-3xl space-y-6">
-        <header className="flex items-center gap-4">
-          {profile.avatarUrl ? (
-            <img
-              src={profile.avatarUrl}
-              alt=""
-              className="h-16 w-16 rounded-full ring-2 ring-orange-200"
-            />
-          ) : (
-            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-orange-100 text-xl font-bold text-orange-700">
-              {profile.displayName.slice(0, 2).toUpperCase()}
+        <section className="sp-hero">
+          <div className="sp-hero__top">
+            {profile.avatarUrl ? (
+              <img src={profile.avatarUrl} alt="" className="sp-avatar" />
+            ) : (
+              <div className="sp-avatar sp-avatar--fallback">
+                {profile.displayName.slice(0, 2).toUpperCase()}
+              </div>
+            )}
+            <div className="min-w-0 flex-1">
+              <h1 className="sp-hero__name truncate">{profile.displayName}</h1>
+              <div className="sp-hero__meta">
+                <span className="sp-pill sp-pill--cefr">CEFR {profile.cefrLevel}</span>
+              </div>
             </div>
-          )}
-          <div className="min-w-0 flex-1">
-            <h1 className="truncate text-2xl font-bold text-neutral-900">
-              {profile.displayName}
-            </h1>
-            <div className="mt-1 flex items-center gap-3 text-sm text-neutral-600">
-              <span>CEFR {profile.cefrLevel}</span>
-              <span>·</span>
-              <span className="inline-flex items-center gap-1"><Flame size={14} className="text-orange-500" aria-hidden />{profile.streakDays}</span>
-              <span>·</span>
-              <span className="inline-flex items-center gap-1"><Zap size={14} className="text-yellow-500" aria-hidden />{profile.xpTotal} XP</span>
+            {profile.isSelf && (
+              <Link to="/app/profile" className="btn-3d btn-3d-ghost btn-3d-sm">
+                My profile
+              </Link>
+            )}
+          </div>
+          <div className="sp-hero__stats" style={{ gridTemplateColumns: "repeat(2, minmax(0, 1fr))" }}>
+            <div className="sp-stat">
+              <div className="sp-stat__value inline-flex items-center justify-center gap-1">
+                <Zap size={16} className="text-yellow-500" aria-hidden />
+                {profile.xpTotal}
+              </div>
+              <div className="sp-stat__label">XP</div>
+            </div>
+            <div className="sp-stat">
+              <div className="sp-stat__value inline-flex items-center justify-center gap-1">
+                <Flame size={16} className="text-orange-500" aria-hidden />
+                {profile.streakDays}
+              </div>
+              <div className="sp-stat__label">Day streak</div>
             </div>
           </div>
-          {profile.isSelf && (
-            <Link
-              to="/app/profile"
-              className="rounded-lg border border-neutral-300 bg-white px-3 py-1.5 text-sm hover:bg-neutral-50"
-            >
-              My profile
-            </Link>
-          )}
-        </header>
+        </section>
 
-        <section className="rounded-2xl border border-neutral-200 bg-white p-5">
-          <div className="mb-4 flex items-baseline justify-between">
-            <h2 className="text-sm font-semibold uppercase tracking-wide text-neutral-500">
-              Badges
-            </h2>
-            <span className="text-sm text-neutral-500">
+        <section className="sp-section">
+          <div className="sp-section__head">
+            <h2 className="sp-section__title">Badges</h2>
+            <span className="sp-section__count">
               {earned.length} / {badges.length}
             </span>
           </div>
-          <ul className="grid grid-cols-3 gap-3 sm:grid-cols-5">
+          <ul className="sp-badges">
             {badges.map((b) => (
               <li
                 key={b.id}
-                className={`flex flex-col items-center rounded-xl p-3 text-center ${
-                  b.awarded
-                    ? "bg-amber-50 ring-1 ring-amber-200"
-                    : "bg-neutral-50 opacity-50 grayscale ring-1 ring-neutral-200"
-                }`}
+                className="sp-badge"
+                data-earned={b.awarded ? "true" : "false"}
                 title={b.description ?? b.titleEn}
               >
-                <div className="text-3xl" aria-hidden>
+                <div className="sp-badge__icon" aria-hidden>
                   {b.iconEmoji ?? "🏅"}
                 </div>
-                <div className="mt-1 text-xs font-medium leading-tight">
-                  {b.titleEn}
-                </div>
+                <div className="sp-badge__name">{b.titleEn}</div>
               </li>
             ))}
           </ul>
