@@ -1,5 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
 import { setReminderPrefs } from "../lib/server/user";
 import { savePushSubscription } from "../lib/server/push";
 
@@ -178,22 +179,25 @@ function NotificationsPage() {
       </section>
 
       <div className="mt-6 flex flex-col gap-3">
-        <button
+        <Button
           type="button"
+          variant="orange"
+          size="lg"
+          fullWidth
           disabled={submitting}
           onClick={enableReminders}
-          className="btn-3d btn-3d-lg btn-3d-full"
         >
           Allow notifications
-        </button>
-        <button
+        </Button>
+        <Button
           type="button"
+          variant="ghost"
+          fullWidth
           disabled={submitting}
           onClick={skip}
-          className="btn-3d btn-3d-ghost btn-3d-full"
         >
           Maybe later
-        </button>
+        </Button>
       </div>
 
       {pushStatus === "denied" && (

@@ -1,6 +1,7 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { useAuth } from "@clerk/tanstack-react-start";
+import { Button } from "@/components/ui/button";
 import { tryGetUserClerkId } from "../lib/server/auth-helper";
 
 /**
@@ -267,27 +268,27 @@ function LandingCtas({ variant = "hero" }: { variant?: "hero" | "closing" }) {
     const href = isSignedIn ? "/app/path" : "/sign-up";
     const label = isSignedIn ? "Continue learning" : "Start learning, free";
     return (
-      <a href={href} className="btn-3d btn-3d-lg btn-3d-full max-w-sm">
-        {label}
-      </a>
+      <Button asChild variant="orange" size="lg" fullWidth className="max-w-sm">
+        <a href={href}>{label}</a>
+      </Button>
     );
   }
 
   if (isSignedIn) {
     return (
-      <a href="/app/path" className="btn-3d btn-3d-lg">
-        Continue learning
-      </a>
+      <Button asChild variant="orange" size="lg">
+        <a href="/app/path">Continue learning</a>
+      </Button>
     );
   }
   return (
     <>
-      <a href="/sign-up" className="btn-3d btn-3d-lg">
-        Start learning
-      </a>
-      <a href="/sign-in" className="btn-3d btn-3d-ghost btn-3d-lg">
-        Sign in
-      </a>
+      <Button asChild variant="orange" size="lg">
+        <a href="/sign-up">Start learning</a>
+      </Button>
+      <Button asChild variant="ghost" size="lg">
+        <a href="/sign-in">Sign in</a>
+      </Button>
     </>
   );
 }
