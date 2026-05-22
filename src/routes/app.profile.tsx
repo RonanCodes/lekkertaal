@@ -1,15 +1,20 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
-import { Flame, Zap } from "lucide-react";
 import { db } from "../db/client";
 import { useState } from "react";
+import { Settings } from "lucide-react";
 import { requireWorkerContext } from "../entry.server";
 import { requireUserClerkId } from "../lib/server/auth-helper";
 import { ensureUserRow } from "../lib/server/ensure-user-row";
 import { getProfileBadges } from "../lib/server/badges";
 import { getCurrentLeagueForUser, tierMeta } from "../lib/server/leagues";
+import {
+  getActivityHeatmap,
+  getLessonsCompleted,
+} from "../lib/server/profile-activity";
 import { resetMyData } from "../lib/server/user";
 import { AppShell } from "../components/AppShell";
+import { ProfileHero } from "../components/ProfileHero";
 
 /**
  * Owner profile view, the signed-in user's own profile. The PUBLIC version
@@ -23,6 +28,8 @@ const getOwnProfile = createServerFn({ method: "GET" }).handler(async () => {
   const me = [await ensureUserRow(clerkId, drz, env)];
   const badges = await getProfileBadges(drz, me[0].id);
   const league = await getCurrentLeagueForUser(drz, me[0].id);
+  const heatmap = await getActivityHeatmap(drz, me[0].id);
+  const lessonsCompleted = await getLessonsCompleted(drz, me[0].id);
   return {
     user: {
       displayName: me[0].displayName,
@@ -37,6 +44,8 @@ const getOwnProfile = createServerFn({ method: "GET" }).handler(async () => {
     league: league
       ? { tier: league.tier, weeklyXp: league.weeklyXp, ...tierMeta(league.tier) }
       : null,
+    heatmap,
+    lessonsCompleted,
   };
 });
 
@@ -46,59 +55,39 @@ export const Route = createFileRoute("/app/profile")({
 });
 
 function ProfilePage() {
-  const { user, badges, league } = Route.useLoaderData();
+  const { user, badges, league, heatmap, lessonsCompleted } =
+    Route.useLoaderData();
   const earned = badges.filter((b) => b.awarded);
 
   return (
     <AppShell user={user}>
       <div className="mx-auto max-w-3xl space-y-6">
-        <section className="sp-hero">
-          <div className="sp-hero__top">
-            {user.avatarUrl ? (
-              <img src={user.avatarUrl} alt="" className="sp-avatar" />
-            ) : (
-              <div className="sp-avatar sp-avatar--fallback">
-                {user.displayName.slice(0, 2).toUpperCase()}
-              </div>
-            )}
-            <div className="min-w-0 flex-1">
-              <h1 className="sp-hero__name">{user.displayName}</h1>
-              <div className="sp-hero__meta">
-                <span className="sp-pill sp-pill--cefr">CEFR {user.cefrLevel}</span>
-                {league && (
-                  <span
-                    data-testid="profile-league-badge"
-                    className="sp-pill sp-pill--league"
-                    title={`${league.name} league — ${league.weeklyXp} XP this week`}
-                  >
-                    <span aria-hidden>{league.emoji}</span>
-                    {league.name}
-                  </span>
-                )}
-              </div>
-            </div>
-          </div>
-          <div className="sp-hero__stats">
-            <div className="sp-stat">
-              <div className="sp-stat__value inline-flex items-center justify-center gap-1">
-                <Zap size={16} className="text-yellow-500" aria-hidden />
-                {user.xpTotal}
-              </div>
-              <div className="sp-stat__label">XP</div>
-            </div>
-            <div className="sp-stat">
-              <div className="sp-stat__value inline-flex items-center justify-center gap-1">
-                <Flame size={16} className="text-orange-500" aria-hidden />
-                {user.streakDays}
-              </div>
-              <div className="sp-stat__label">Day streak</div>
-            </div>
-            <div className="sp-stat">
-              <div className="sp-stat__value">{user.coinsBalance}</div>
-              <div className="sp-stat__label">Coins</div>
-            </div>
-          </div>
-        </section>
+        <ProfileHero
+          displayName={user.displayName}
+          cefrLevel={user.cefrLevel}
+          xpTotal={user.xpTotal}
+          streakDays={user.streakDays}
+          lessonsCompleted={lessonsCompleted}
+          league={league}
+          heatmap={heatmap}
+          metaExtra={
+            league && (
+              <span
+                data-testid="profile-league-badge"
+                className="sp-pill sp-pill--league"
+                title={`${league.name} league — ${league.weeklyXp} XP this week`}
+              >
+                <span aria-hidden>{league.emoji}</span>
+                {league.name}
+              </span>
+            )
+          }
+          action={
+            <span className="ph-hero-action" aria-hidden>
+              <Settings size={20} />
+            </span>
+          }
+        />
 
         <section className="sp-section">
           <div className="sp-section__head">
