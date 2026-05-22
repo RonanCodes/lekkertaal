@@ -4,6 +4,7 @@ import { Check, Lock, Sparkles, Swords, Target } from "lucide-react";
 import { getUnitDetail } from "../lib/server/unit";
 import { AppShell } from "../components/AppShell";
 import { Speaker } from "../components/drills/Speaker";
+import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/app/unit/$slug")({
   loader: async ({ params }) => {
@@ -341,9 +342,11 @@ function UnitDetailPage() {
             </div>
             <div className="boss-teaser-actions">
               {bossFight.unlocked ? (
-                <a href={`/app/roleplay/${bossFight.slug}`} className="btn-3d btn-3d-sm">
-                  Start scenario &rarr;
-                </a>
+                <Button asChild size="sm">
+                  <a href={`/app/roleplay/${bossFight.slug}`}>
+                    Start scenario &rarr;
+                  </a>
+                </Button>
               ) : (
                 <span className="boss-teaser-locked-hint">
                   <Lock size={16} strokeWidth={2.5} aria-hidden="true" />
@@ -367,9 +370,9 @@ function UnitDetailPage() {
               <span style={{ color: "var(--text-muted)" }}>Next lesson: </span>
               <span className="text-display font-bold">{nextLesson.titleNl}</span>
             </div>
-            <a href={`/app/lesson/${nextLesson.id}`} className="btn-3d btn-3d-sm shrink-0">
-              Start next lesson
-            </a>
+            <Button asChild size="sm" className="shrink-0">
+              <a href={`/app/lesson/${nextLesson.id}`}>Start next lesson</a>
+            </Button>
           </div>
         </div>
       )}
