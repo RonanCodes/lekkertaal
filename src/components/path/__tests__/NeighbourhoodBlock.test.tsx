@@ -114,13 +114,34 @@ describe("<NeighbourhoodBlock/>", () => {
     );
   });
 
-  it("falls back to a single tile when the unit carries no lesson rows", () => {
+  it("falls back to a single tile when the unit carries no lesson rows and no total", () => {
     render(
       <NeighbourhoodBlock
         unit={unit({ lessonsTotal: 0, lessonsCompleted: 0, lessons: [] })}
       />,
     );
     expect(screen.getByRole("list").children.length).toBe(1);
+  });
+
+  it("synthesises one placeholder tile per expected lesson when rows are missing", () => {
+    // A locked unit with no seeded lesson rows must NOT collapse to a single
+    // lonely box (which reads as a broken image): it renders `lessonsTotal`
+    // placeholder tiles, all locked + inert, so the grid still looks like a grid.
+    render(
+      <NeighbourhoodBlock
+        unit={unit({
+          status: "locked",
+          lessonsCompleted: 0,
+          lessonsTotal: 5,
+          lessons: [],
+        })}
+      />,
+    );
+    const list = screen.getByRole("list");
+    expect(list.children.length).toBe(5);
+    // Every synthesised tile is locked and links nowhere.
+    expect(within(list).queryByRole("link")).toBeNull();
+    expect(within(list).getAllByLabelText(/locked$/).length).toBe(5);
   });
 });
 
