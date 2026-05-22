@@ -41,6 +41,10 @@
     "CLERK_PUBLISHABLE_KEY": "pk_test_dml0YWwtbW9sbHktNTkuY2xlcmsuYWNjb3VudHMuZGV2JA",
     "VITE_CLERK_PUBLISHABLE_KEY": "pk_test_dml0YWwtbW9sbHktNTkuY2xlcmsuYWNjb3VudHMuZGV2JA",
     "LOG_LEVEL": "info",
+    // Clerk user ids granted admin access to admin-only routes (e.g. /styleguide,
+    // the design system). Comma-separated. ronan8642@gmail.com on the
+    // vital-molly-59 instance. See requireAdminClerkId() in auth-helper.ts.
+    "ADMIN_CLERK_IDS": "user_3DghhWjFjmC5OL9cd0xgvBOrDO6",
     // ElevenLabs is deprecated for this app: the Wikimedia Commons -> OpenAI
     // free stack covers the curriculum. The secret + code stay in place so
     // flipping this to "true" re-enables EL as a synth fallback in /api/tts.
