@@ -1121,6 +1121,71 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
+/* Docked check-row hint affordance (#259). Mirrors the design's LessonChrome
+ * docked row: a bordered ghost button that reveals a contextual hint panel.
+ * Sits at the bottom of the player while the drill is unanswered; the
+ * feedback bar replaces it on grade. Orange focus ring + blue panel accent. */
+.lesson-hintrow {
+  position: sticky;
+  bottom: 0;
+  margin-top: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.6rem;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  pointer-events: none;
+}
+.lesson-hintrow > * {
+  pointer-events: auto;
+}
+.lesson-hint-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  border: 1.5px solid var(--line-strong);
+  border-radius: 0.75rem;
+  background: var(--surface-card);
+  padding: 0.55rem 0.85rem;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text-soft);
+  cursor: pointer;
+  transition: border-color 120ms ease, background 120ms ease;
+}
+.lesson-hint-btn:hover {
+  border-color: var(--color-brand-orange);
+}
+.lesson-hint-btn:focus-visible {
+  outline: 2px solid var(--color-brand-orange);
+  outline-offset: 2px;
+}
+.lesson-hintrow__panel {
+  align-self: stretch;
+  border: 1.5px solid color-mix(in srgb, var(--color-brand-blue) 35%, transparent);
+  border-radius: var(--radius-card);
+  background: var(--color-brand-blue-soft);
+  color: var(--color-brand-blue-dark);
+  padding: 0.8rem 1rem;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  animation: lk-feedback-rise 180ms ease-out;
+}
+@media (prefers-reduced-motion: reduce) {
+  .lesson-hintrow__panel { animation: none; }
+}
+@media (prefers-color-scheme: dark) {
+  .lesson-hint-btn {
+    background: var(--surface-card);
+  }
+  .lesson-hintrow__panel {
+    background: color-mix(in srgb, var(--color-brand-blue) 22%, var(--surface-card));
+    color: #BBD8F2;
+    border-color: color-mix(in srgb, var(--color-brand-blue) 45%, transparent);
+  }
+}
+
 /* Inline feedback banner (rendered inside a drill body, not the sticky bar).
  * Shares the good/bad token tints with .feedback-bar so the two read alike. */
 .feedback-banner {
