@@ -21,6 +21,7 @@ import { listFriends } from "../lib/server/friends";
 import { listInbox  } from "../lib/server/peer-drills";
 import type {InboxEntry} from "../lib/server/peer-drills";
 import { AppShell } from "../components/AppShell";
+import { Button } from "@/components/ui/button";
 
 const loadPeer = createServerFn({ method: "GET" }).handler(async () => {
   const clerkId = await requireUserClerkId();
@@ -192,13 +193,9 @@ function PeerPage() {
                 />
               </label>
               <div className="flex items-center gap-3">
-                <button
-                  type="submit"
-                  disabled={sending || !prompt.trim()}
-                  className="btn-3d btn-3d-sm"
-                >
+                <Button type="submit" size="sm" disabled={sending || !prompt.trim()}>
                   {sending ? "Sending..." : "Send"}
-                </button>
+                </Button>
                 {sendStatus && (
                   <span className="text-sm" style={{ color: "var(--text-soft)" }}>
                     {sendStatus}
@@ -296,13 +293,9 @@ function InboxRow({
           value={answer}
           onChange={(e) => setAnswer(e.target.value)}
         />
-        <button
-          type="submit"
-          disabled={busy || !answer.trim()}
-          className="btn-3d btn-3d-green btn-3d-sm"
-        >
+        <Button type="submit" variant="green" size="sm" disabled={busy || !answer.trim()}>
           {busy ? "..." : "Send"}
-        </button>
+        </Button>
       </form>
       {err && (
         <div className="mt-1 text-xs font-semibold" style={{ color: "var(--color-bad)" }}>

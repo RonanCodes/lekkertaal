@@ -9,6 +9,7 @@ import type {
 } from "../lib/server/leaderboard";
 import { tierMeta } from "../lib/server/leagues";
 import { AppShell } from "../components/AppShell";
+import { Button } from "@/components/ui/button";
 
 const searchSchema = z.object({
   window: z.enum(["today", "week", "all-time"]).catch("today"),
@@ -257,13 +258,11 @@ function FriendsView({ rows }: { rows: Array<LeaderboardRow & { isMe: boolean }>
             only the API layer; the dedicated page lands with P2-SOC-3 / a
             future ticket). Plain anchor so we don't break TanStack's typed
             route table; the empty-state CTA still surfaces user intent. */}
-        <a
-          href="/app/friends"
-          className="btn-3d btn-3d-sm"
-          data-testid="leaderboard-friends-cta"
-        >
-          Find friends
-        </a>
+        <Button asChild size="sm">
+          <a href="/app/friends" data-testid="leaderboard-friends-cta">
+            Find friends
+          </a>
+        </Button>
       </div>
     );
   }
