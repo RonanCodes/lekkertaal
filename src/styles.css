@@ -3347,3 +3347,136 @@ h1, h2, h3, h4, h5, h6 {
   background: currentColor;
   border-radius: 1px;
 }
+
+/* ============================================================
+ * Roleplay full-fidelity additions (#246):
+ * dark bakkerij scene header, round composer mic, inline
+ * "Tiny tweak" correction cards, Kroket per-bubble avatar.
+ * All colours route through semantic tokens so dark mode flips
+ * for free. Appended at tail to stay merge-friendly; no global
+ * brand-token edits.
+ * ============================================================ */
+
+/* Dark bakkerij scene header — overrides the light header styles. */
+.roleplay-header--dark {
+  background: linear-gradient(160deg, #2A1810, #4A2810);
+  color: #fff;
+  border-bottom: 0;
+  border-radius: var(--radius-card) var(--radius-card) 0 0;
+  padding: 0.85rem 1rem 1rem;
+  margin: 0 -1rem;
+}
+.roleplay-header-eyebrow { color: rgba(255, 255, 255, 0.7); }
+.roleplay-header-title { color: #fff; }
+.roleplay-header--dark .roleplay-turn-meter {
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+}
+.roleplay-header--dark .roleplay-objective-chip {
+  background: rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+.roleplay-header--dark .roleplay-vocab-chip {
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+/* Per-bubble Kroket avatar (image replaces the initial-letter circle). */
+img.roleplay-bubble-avatar {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: var(--radius-pill);
+  object-fit: contain;
+  background: var(--surface-card-alt);
+  border: 1px solid var(--line-soft);
+  padding: 1px;
+  align-self: flex-end;
+}
+
+/* Round mic affordance in the composer (3D, brand-orange). */
+.roleplay-mic {
+  flex: none;
+  width: 2.85rem;
+  height: 2.85rem;
+  border-radius: 50%;
+  border: 0;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  background: var(--color-brand-orange);
+  box-shadow: 0 4px 0 0 var(--color-brand-orange-dark);
+  cursor: pointer;
+  transition: transform 0.05s ease, box-shadow 0.05s ease;
+}
+.roleplay-mic:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--color-brand-orange) 92%, white 8%);
+}
+.roleplay-mic:active:not(:disabled) {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 0 var(--color-brand-orange-dark);
+}
+.roleplay-mic:focus-visible {
+  outline: none;
+  box-shadow: 0 4px 0 0 var(--color-brand-orange-dark),
+    0 0 0 3px color-mix(in srgb, var(--color-brand-orange) 30%, transparent);
+}
+.roleplay-mic:disabled { opacity: 0.55; cursor: default; }
+.roleplay-mic--recording {
+  background: var(--color-bad);
+  box-shadow: 0 4px 0 0 color-mix(in srgb, var(--color-bad) 70%, black 30%);
+  animation: roleplay-mic-pulse 1.1s ease-in-out infinite;
+}
+@keyframes roleplay-mic-pulse {
+  0%, 100% { box-shadow: 0 4px 0 0 color-mix(in srgb, var(--color-bad) 70%, black 30%), 0 0 0 0 color-mix(in srgb, var(--color-bad) 50%, transparent); }
+  50% { box-shadow: 0 4px 0 0 color-mix(in srgb, var(--color-bad) 70%, black 30%), 0 0 0 7px color-mix(in srgb, var(--color-bad) 0%, transparent); }
+}
+.roleplay-mic-spinner {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-top-color: #fff;
+  animation: roleplay-mic-spin 0.7s linear infinite;
+}
+@keyframes roleplay-mic-spin {
+  to { transform: rotate(360deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .roleplay-mic--recording { animation: none; }
+  .roleplay-mic-spinner { animation: none; }
+}
+
+/* Inline "Tiny tweak" correction card under a learner bubble. */
+.roleplay-correction {
+  border-radius: var(--radius-button);
+  background: var(--surface-banner-amber);
+  border: 1px solid var(--color-warn);
+  padding: 0.6rem 0.75rem;
+  text-align: left;
+}
+.roleplay-correction-eyebrow {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-warn);
+}
+.roleplay-correction-body { margin-top: 0.25rem; font-size: 0.85rem; }
+.roleplay-correction-original {
+  color: var(--text-muted);
+  opacity: 0.85;
+}
+.roleplay-correction-fixed {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--text-strong);
+  margin-top: 0.15rem;
+}
+.roleplay-correction-note {
+  margin-top: 0.4rem;
+  font-size: 0.72rem;
+  color: var(--text-soft);
+}
