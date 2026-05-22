@@ -7,7 +7,7 @@ import type {
   LeaderboardWindow,
   LeaderboardScope,
 } from "../lib/server/leaderboard";
-import { tierMeta } from "../lib/server/leagues";
+import { tierMeta, TIER_MIN } from "../lib/server/leagues";
 import { AppShell } from "../components/AppShell";
 import { Button } from "@/components/ui/button";
 
@@ -120,8 +120,13 @@ function GlobalView({
 }) {
   const meIsInTop = current && rows.some((r) => r.userId === current.userId);
   // Anchor the league framing on the signed-in user's tier when known, else
-  // the top row's tier. null when nobody has a league row yet.
-  const headerTier = current?.leagueTier ?? rows[0]?.leagueTier ?? null;
+  // the top row's tier. Before the weekly league crosses its activation
+  // threshold every row carries a null tier, so we fall back to the entry
+  // tier (Bronze) — the header is always part of the screen's identity, the
+  // tier name just sharpens once real league rows exist. Only suppress the
+  // framing entirely on a genuinely empty board.
+  const headerTier =
+    current?.leagueTier ?? rows[0]?.leagueTier ?? (rows.length > 0 ? TIER_MIN : null);
   return (
     <>
       {headerTier !== null && <LeagueHeader tier={headerTier} />}
@@ -164,10 +169,11 @@ function GlobalView({
 /**
  * One board entry: the row, plus the dashed promotion / demotion dividers
  * that bracket the top-3 and bottom band (matching ScreenLeaderboard). The
- * promotion divider renders after rank 3; the demotion divider before the
- * final row. Bands only show when the board is large enough to have a
- * meaningful gap between them (>= 5 rows), so a 4-person board doesn't draw
- * overlapping lines.
+ * promotion divider renders after rank 3 whenever there's at least one row
+ * below the top three. The demotion divider renders before the final row,
+ * but only once the board is big enough (>= 5 rows) that it can't land on
+ * the same gap as the promotion line — so a 4-person board shows the
+ * promotion zone without two dividers stacking on top of each other.
  */
 function BoardItem({
   row,
@@ -180,9 +186,8 @@ function BoardItem({
   index: number;
   total: number;
 }) {
-  const showBands = total >= 5;
-  const promotion = showBands && index === 2;
-  const demotion = showBands && index === total - 2;
+  const promotion = total > 3 && index === 2;
+  const demotion = total >= 5 && index === total - 2;
   return (
     <>
       <Row row={row} isMe={isMe} />
