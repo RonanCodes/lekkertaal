@@ -40,9 +40,23 @@ function LessonPlayerPage() {
   const [incorrectCount, setIncorrectCount] = useState(0);
   const [skipConfirmOpen, setSkipConfirmOpen] = useState(false);
   const [finishing, setFinishing] = useState(false);
+  const [hintOpen, setHintOpen] = useState(false);
 
   const total = drills.length;
   const drill = drills[drillIdx];
+
+  // Contextual hint for the docked check row (#259). Prefer the drill's own
+  // authored hints; fall back to a gentle nudge so the affordance is never
+  // empty. Reset whenever the drill changes.
+  const hintText =
+    drill?.hints && drill.hints.length > 0
+      ? drill.hints.join(" · ")
+      : "Take your best guess. Wrong answers come back later for review, so you can't break anything.";
+
+  // Reset the revealed hint when moving to the next drill.
+  useEffect(() => {
+    setHintOpen(false);
+  }, [drillIdx]);
   const progressPct = total > 0 ? Math.round(((drillIdx + (feedback ? 1 : 0)) / total) * 100) : 0;
   const heartsLeft = Math.max(0, HEART_COUNT - incorrectCount);
 
@@ -175,6 +189,28 @@ function LessonPlayerPage() {
       </h1>
 
       <DrillRenderer key={drill.id} drill={drill} onSubmit={handleSubmit} vocabPool={vocabPool} imagePool={imagePool} vocabEnrichedMap={vocabEnrichedMap} />
+
+      {/* Docked check-row hint affordance (#259). Sits beneath the drill while
+          it's unanswered; the feedback bar takes over once the answer is
+          graded. Tapping reveals a contextual hint sourced from the drill. */}
+      {!feedback && (
+        <div className="lesson-hintrow">
+          {hintOpen && (
+            <div className="lesson-hintrow__panel" role="status" aria-live="polite">
+              {hintText}
+            </div>
+          )}
+          <button
+            type="button"
+            onClick={() => setHintOpen((open) => !open)}
+            aria-expanded={hintOpen}
+            className="lesson-hint-btn"
+          >
+            <span aria-hidden="true">💡</span>
+            {hintOpen ? "Hide hint" : "Hint"}
+          </button>
+        </div>
+      )}
 
       {feedback && (
         <div
