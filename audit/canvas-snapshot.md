@@ -1,0 +1,3360 @@
+- generic [ref=e4]:
+  - generic [ref=e5]:
+    - generic [ref=e7]:
+      - generic [ref=e8]: Lekkertaal — design exploration
+      - generic [ref=e9]: Hi-fi prototype · 14 screens · 9 drill types · 3 palettes. Built on the live tokens from src/styles.css (Fredoka / Nunito, chunky 3D buttons, paper background). Original layout language — not a clone of any specific app.
+    - generic [ref=e10]:
+      - text: How to read this canvas
+      - text: Scroll right within a row; scroll down for the next group. Tap any artboard to focus.
+      - text: Direction
+      - text: "Bold & playful. Tactile 3D buttons. Mascots present but never dense. Original metaphor: lessons are tiles in a \"neighbourhood block\" — not a tree. Boss-fights are wide gradient bars at the unit's foot."
+      - text: Light & dark covered in the Settings group.
+      - text: Mobile-first; desktop sidebar covered in design notes.
+  - generic [ref=e18]:
+    - generic [ref=e20]:
+      - generic [ref=e21]: 01 · Landing page
+      - generic [ref=e22]: Cold visitor from social → signup. Direction 1A is the chosen path; 1B (canal scene) is kept here as a deprecated reference.
+    - generic [ref=e23]:
+      - generic [ref=e24]:
+        - generic [ref=e25]:
+          - generic [ref=e26]:
+            - generic "Drag to reorder" [ref=e27]:
+              - img [ref=e28]
+            - generic "Click to focus" [ref=e35] [cursor=pointer]:
+              - generic [ref=e36]: 1A · CHOSEN — feature triplet + phone preview
+          - generic [ref=e37]:
+            - button "More" [ref=e39] [cursor=pointer]:
+              - img [ref=e40]
+            - button "Focus" [ref=e44] [cursor=pointer]:
+              - img [ref=e45]
+        - generic [ref=e51]:
+          - generic [ref=e52]:
+            - generic [ref=e53]: 9:41
+            - generic [ref=e54]:
+              - img [ref=e55]
+              - img [ref=e61]
+              - img [ref=e63]
+          - generic [ref=e67]:
+            - generic [ref=e68]:
+              - generic [ref=e69]: Lekkertaal
+              - button "Inloggen" [ref=e71] [cursor=pointer]
+            - generic [ref=e72]:
+              - generic [ref=e73]: Leer Nederlands · gezellig
+              - heading "Dutch that actually sticks." [level=1] [ref=e74]
+              - paragraph [ref=e75]: Five minutes a day, real bakkerij conversations, and a stroopwafel who genuinely roots for you.
+              - generic [ref=e76]:
+                - button "Start leren →" [ref=e77] [cursor=pointer]
+                - button "Try a lesson" [ref=e78] [cursor=pointer]
+              - generic [ref=e79]:
+                - img "stroop happy" [ref=e81]
+                - generic [ref=e82]:
+                  - generic [ref=e84]:
+                    - img [ref=e85]
+                    - generic [ref=e87]: "12"
+                    - generic [ref=e89]: "320"
+                  - generic [ref=e90]:
+                    - generic [ref=e91]: Unit 3 · Bij de bakker
+                    - generic [ref=e92]:
+                      - generic [ref=e93]:
+                        - img [ref=e95]
+                        - generic [ref=e97]: Les 1
+                      - generic [ref=e98]:
+                        - img [ref=e100]
+                        - generic [ref=e102]: Les 2
+                      - generic [ref=e103]:
+                        - img [ref=e105]
+                        - generic [ref=e107]: Les 3
+                      - generic [ref=e108]:
+                        - img [ref=e110]
+                        - generic [ref=e113]: Les 4
+                      - generic [ref=e114]:
+                        - img [ref=e116]
+                        - generic [ref=e119]: Les 5
+              - generic [ref=e120]:
+                - generic [ref=e121]: Why it works
+                - generic [ref=e122]:
+                  - generic [ref=e123]:
+                    - generic [ref=e124]: Daily drills
+                    - generic [ref=e125]:
+                      - generic [ref=e126]: Nine drill types, one rhythm.
+                      - generic [ref=e127]: Pairs, listening, speaking, fill-the-blank. Variety keeps your brain from autopiloting.
+                  - generic [ref=e128]:
+                    - generic [ref=e129]: Boss-fight
+                    - generic [ref=e130]:
+                      - generic [ref=e131]: Roleplay a real bakery.
+                      - generic [ref=e132]: Order broodjes from Kroket. He'll correct you, kindly. Streaming AI; you can speak or type.
+                  - generic [ref=e133]:
+                    - generic [ref=e134]: Streaks that mean it
+                    - generic [ref=e135]:
+                      - generic [ref=e136]: Show up. Bring snacks.
+                      - generic [ref=e137]: Stroopwafel freezes, weekly leagues, peer-drills from friends. Quietly competitive.
+              - generic [ref=e139]:
+                - img "bitterballen idle" [ref=e141]
+                - generic [ref=e142]:
+                  - generic [ref=e143]:
+                    - generic [ref=e144]: ★ 4.8
+                    - generic [ref=e145]: ·
+                    - generic [ref=e146]: 12k learners
+                    - generic [ref=e147]: ·
+                    - generic [ref=e148]: A1 → B2
+                  - generic [ref=e149]: "\"Eindelijk een app waar ik niet over de skip-knop fantaseer.\" — Liesbeth, A2"
+              - generic [ref=e150]:
+                - button "Start leren — gratis" [ref=e151] [cursor=pointer]
+                - generic [ref=e152]: No card. Cancel anytime. Doei!
+              - separator [ref=e153]
+              - generic [ref=e154]:
+                - generic [ref=e155]: Privacy
+                - generic [ref=e156]: ·
+                - generic [ref=e157]: Terms
+                - generic [ref=e158]: ·
+                - generic [ref=e159]: Contact
+                - generic [ref=e160]: NL · EN
+      - generic [ref=e162]:
+        - generic [ref=e163]:
+          - generic [ref=e164]:
+            - generic "Drag to reorder" [ref=e165]:
+              - img [ref=e166]
+            - generic "Click to focus" [ref=e173] [cursor=pointer]:
+              - generic [ref=e174]: 1B · DEPRECATED — canal scene hero
+          - generic [ref=e175]:
+            - button "More" [ref=e177] [cursor=pointer]:
+              - img [ref=e178]
+            - button "Focus" [ref=e182] [cursor=pointer]:
+              - img [ref=e183]
+        - generic [ref=e189]:
+          - generic [ref=e190]:
+            - generic [ref=e191]: 9:41
+            - generic [ref=e192]:
+              - img [ref=e193]
+              - img [ref=e199]
+              - img [ref=e201]
+          - generic [ref=e205]:
+            - generic [ref=e206]:
+              - generic [ref=e207]: Lekkertaal
+              - button "Inloggen" [ref=e209] [cursor=pointer]
+            - generic [ref=e210]:
+              - generic [ref=e211]: Dutch · A1 → B2
+              - heading "Lekker. Gezellig. Eindelijk leuk." [level=1] [ref=e212]:
+                - text: Lekker.
+                - text: Gezellig.
+                - text: Eindelijk leuk.
+              - paragraph [ref=e213]: Three Dutch words you'll learn this week. The rest? Same vibe — five minutes a day, real conversations, mascots who never patronise you.
+            - generic [ref=e214]:
+              - img [ref=e216]
+              - img [ref=e220]
+              - img [ref=e315]
+              - img [ref=e318]
+              - img [ref=e332]
+              - img "Stroop" [ref=e344]
+              - generic [ref=e348]: BAKKERIJ
+              - img "Kroket" [ref=e350]
+              - generic [ref=e351]: Goedemorgen!
+              - generic [ref=e353]: AMSTERDAM · 08:42
+            - generic [ref=e354]:
+              - button "Start leren — gratis" [ref=e355] [cursor=pointer]
+              - generic [ref=e356]:
+                - generic [ref=e357]: Free forever
+                - generic [ref=e358]: ·
+                - generic [ref=e359]: No card
+                - generic [ref=e360]: ·
+                - generic [ref=e361]: 30 sec to start
+            - generic [ref=e362]:
+              - generic [ref=e363]: ★ 4.8
+              - generic [ref=e364]: ·
+              - generic [ref=e365]: 12k learners
+              - generic [ref=e366]: ·
+              - generic [ref=e367]: "\"Eindelijk een app waar ik niet over de skip-knop fantaseer.\""
+            - separator [ref=e368]
+            - generic [ref=e369]:
+              - generic [ref=e370]: Privacy
+              - generic [ref=e371]: ·
+              - generic [ref=e372]: Terms
+              - generic [ref=e373]: ·
+              - generic [ref=e374]: Contact
+              - generic [ref=e375]: 🇳🇱 NL · 🇬🇧 EN
+  - generic [ref=e377]:
+    - generic [ref=e379]:
+      - generic [ref=e380]: 02 · Onboarding
+      - generic [ref=e381]: From signup → first lesson in under a minute. Three steps, Stroop guides each one.
+    - generic [ref=e382]:
+      - generic [ref=e383]:
+        - generic [ref=e384]:
+          - generic [ref=e385]:
+            - generic "Drag to reorder" [ref=e386]:
+              - img [ref=e387]
+            - generic "Click to focus" [ref=e394] [cursor=pointer]:
+              - generic [ref=e395]: (a) Welcome · Why Dutch?
+          - generic [ref=e396]:
+            - button "More" [ref=e398] [cursor=pointer]:
+              - img [ref=e399]
+            - button "Focus" [ref=e403] [cursor=pointer]:
+              - img [ref=e404]
+        - generic [ref=e410]:
+          - generic [ref=e411]:
+            - generic [ref=e412]: 9:41
+            - generic [ref=e413]:
+              - img [ref=e414]
+              - img [ref=e420]
+              - img [ref=e422]
+          - generic [ref=e426]:
+            - img "stroop happy" [ref=e433]
+            - generic [ref=e434]:
+              - text: Hoi! I'm Stroop.
+              - generic [ref=e435]: First — why are you learning Dutch? I'll plan the lessons around it.
+            - generic [ref=e436]:
+              - generic [ref=e437] [cursor=pointer]:
+                - generic [ref=e438]: ✈️
+                - generic [ref=e439]:
+                  - generic [ref=e440]: Moving to NL
+                  - generic [ref=e441]: Living, working, paperwork
+                - img [ref=e442]
+              - generic [ref=e444] [cursor=pointer]:
+                - generic [ref=e445]: ❤️
+                - generic [ref=e446]:
+                  - generic [ref=e447]: Dating a Dutchie
+                  - generic [ref=e448]: Family, friends, in-laws
+              - generic [ref=e449] [cursor=pointer]:
+                - generic [ref=e450]: 🎓
+                - generic [ref=e451]:
+                  - generic [ref=e452]: Study / school
+                  - generic [ref=e453]: Inburgering, exam prep
+              - generic [ref=e454] [cursor=pointer]:
+                - generic [ref=e455]: 🧠
+                - generic [ref=e456]:
+                  - generic [ref=e457]: Brain food
+                  - generic [ref=e458]: Just for fun
+            - button "Continue →" [ref=e460] [cursor=pointer]
+      - generic [ref=e462]:
+        - generic [ref=e463]:
+          - generic [ref=e464]:
+            - generic "Drag to reorder" [ref=e465]:
+              - img [ref=e466]
+            - generic "Click to focus" [ref=e473] [cursor=pointer]:
+              - generic [ref=e474]: (b) Level pick · A1 / A2 / B1
+          - generic [ref=e475]:
+            - button "More" [ref=e477] [cursor=pointer]:
+              - img [ref=e478]
+            - button "Focus" [ref=e482] [cursor=pointer]:
+              - img [ref=e483]
+        - generic [ref=e489]:
+          - generic [ref=e490]:
+            - generic [ref=e491]: 9:41
+            - generic [ref=e492]:
+              - img [ref=e493]
+              - img [ref=e499]
+              - img [ref=e501]
+          - generic [ref=e505]:
+            - heading "Where are you starting?" [level=2] [ref=e510]
+            - paragraph [ref=e511]: Pick what fits today. You can adjust anytime.
+            - generic [ref=e512]:
+              - generic [ref=e513] [cursor=pointer]:
+                - generic [ref=e514]: A1
+                - generic [ref=e515]:
+                  - generic [ref=e516]: Just beginning
+                  - generic [ref=e517]: Hi · my name is · the basics.
+                - img "poffertjes idle" [ref=e519]
+              - generic [ref=e520] [cursor=pointer]:
+                - generic [ref=e521]: A2
+                - generic [ref=e522]:
+                  - generic [ref=e523]: Some Dutch
+                  - generic [ref=e524]: Shops, cafés, getting around.
+                - img "kroket idle" [ref=e526]
+              - generic [ref=e527] [cursor=pointer]:
+                - generic [ref=e528]: B1
+                - generic [ref=e529]:
+                  - generic [ref=e530]: Holding my own
+                  - generic [ref=e531]: Work talk, news, opinions.
+                - img "kaas idle" [ref=e533]
+            - generic [ref=e534]:
+              - img [ref=e535]
+              - text: Not sure?
+              - generic [ref=e538]: Take the 2-min placement
+            - generic [ref=e540]:
+              - button "← Back" [ref=e541] [cursor=pointer]
+              - button "Continue →" [ref=e542] [cursor=pointer]
+      - generic [ref=e544]:
+        - generic [ref=e545]:
+          - generic [ref=e546]:
+            - generic "Drag to reorder" [ref=e547]:
+              - img [ref=e548]
+            - generic "Click to focus" [ref=e555] [cursor=pointer]:
+              - generic [ref=e556]: (c) Notifications opt-in
+          - generic [ref=e557]:
+            - button "More" [ref=e559] [cursor=pointer]:
+              - img [ref=e560]
+            - button "Focus" [ref=e564] [cursor=pointer]:
+              - img [ref=e565]
+        - generic [ref=e571]:
+          - generic [ref=e572]:
+            - generic [ref=e573]: 9:41
+            - generic [ref=e574]:
+              - img [ref=e575]
+              - img [ref=e581]
+              - img [ref=e583]
+          - generic [ref=e587]:
+            - img "stroop idle" [ref=e594]
+            - heading "One nudge a day, never twee." [level=2] [ref=e595]:
+              - text: One nudge a day,
+              - text: never twee.
+            - paragraph [ref=e596]: A tiny daily reminder so streaks don't slip. We won't spam — promise.
+            - generic [ref=e597]:
+              - generic [ref=e598]: Daily reminder time
+              - generic [ref=e599]:
+                - generic [ref=e600] [cursor=pointer]: 07:30
+                - generic [ref=e601] [cursor=pointer]: 12:30
+                - generic [ref=e602] [cursor=pointer]: 18:00
+                - generic [ref=e603] [cursor=pointer]: 20:30
+                - generic [ref=e604] [cursor=pointer]: 21:30
+              - generic [ref=e605]: Stroop will say hi at 20:30.
+            - generic [ref=e607]:
+              - img [ref=e609]
+              - generic [ref=e612]:
+                - generic [ref=e613]: Friend pings & peer drills
+                - generic [ref=e614]: Only when someone challenges you.
+            - generic [ref=e618]:
+              - button "Allow notifications" [ref=e619] [cursor=pointer]
+              - button "Maybe later" [ref=e620] [cursor=pointer]
+  - generic [ref=e622]:
+    - generic [ref=e624]:
+      - generic [ref=e625]: 03 · Learning Path
+      - generic [ref=e626]: Daily return surface. Unit = neighbourhood block; lessons are staggered tile-grids; boss-fight is a wide gradient bar at the foot. Live tokens (orange + canal blue).
+    - generic [ref=e627]:
+      - generic [ref=e628]:
+        - generic [ref=e629]:
+          - generic [ref=e630]:
+            - generic "Drag to reorder" [ref=e631]:
+              - img [ref=e632]
+            - generic "Click to focus" [ref=e639] [cursor=pointer]:
+              - generic [ref=e640]: Mid-progress (default)
+          - generic [ref=e641]:
+            - button "More" [ref=e643] [cursor=pointer]:
+              - img [ref=e644]
+            - button "Focus" [ref=e648] [cursor=pointer]:
+              - img [ref=e649]
+        - generic [ref=e655]:
+          - generic [ref=e656]:
+            - generic [ref=e657]: 9:41
+            - generic [ref=e658]:
+              - img [ref=e659]
+              - img [ref=e665]
+              - img [ref=e667]
+          - generic [ref=e671]:
+            - generic [ref=e672]: Lekkertaal
+            - button "Notifications" [ref=e674] [cursor=pointer]:
+              - img [ref=e675]
+          - generic [ref=e679]:
+            - generic [ref=e680]:
+              - img [ref=e681]
+              - text: "12"
+              - generic [ref=e683]:
+                - img [ref=e684]
+                - text: "2"
+            - generic [ref=e687]:
+              - img [ref=e688]
+              - text: Lv 7
+            - generic [ref=e690]:
+              - img [ref=e691]:
+                - generic [ref=e693]: ¢
+              - text: "320"
+          - generic [ref=e700]:
+            - generic [ref=e702]:
+              - generic [ref=e703]:
+                - img "oliebollen idle" [ref=e705]
+                - generic [ref=e706]:
+                  - generic [ref=e707]: Daily quests
+                  - generic [ref=e708]: Reset in 6u 14m
+                - generic [ref=e709]:
+                  - img [ref=e710]:
+                    - generic [ref=e712]: ¢
+                  - text: "25"
+              - generic [ref=e713]:
+                - generic [ref=e714]:
+                  - img [ref=e716]
+                  - generic [ref=e719]:
+                    - generic [ref=e720]: Earn 30 XP
+                    - generic [ref=e721]: 22/30
+                  - generic [ref=e724]:
+                    - img [ref=e725]:
+                      - generic [ref=e727]: ¢
+                    - text: "10"
+                - generic [ref=e728]:
+                  - img [ref=e730]
+                  - generic [ref=e733]:
+                    - generic [ref=e734]: Score 80%+ on 2 lessons
+                    - generic [ref=e735]: 1/2
+                  - generic [ref=e738]:
+                    - img [ref=e739]:
+                      - generic [ref=e741]: ¢
+                    - text: "10"
+                - generic [ref=e742]:
+                  - img [ref=e744]
+                  - generic [ref=e748]:
+                    - generic [ref=e749]: Speak in 1 roleplay
+                    - generic [ref=e750]: 0/1
+                  - generic [ref=e752]:
+                    - img [ref=e753]:
+                      - generic [ref=e755]: ¢
+                    - text: "5"
+            - generic [ref=e756]:
+              - generic [ref=e757]:
+                - generic [ref=e758]: "03"
+                - generic [ref=e759]:
+                  - generic [ref=e761]: Bij de bakker
+                  - generic [ref=e762]: At the bakery · 18 lessons
+                - img "tompouce happy" [ref=e767]
+              - generic [ref=e769]:
+                - generic [ref=e770]:
+                  - img [ref=e772]
+                  - generic [ref=e774]: Hallo
+                - generic [ref=e775]:
+                  - img [ref=e777]
+                  - generic [ref=e779]: Bestellen
+                - generic [ref=e780]:
+                  - img [ref=e782]
+                  - generic [ref=e784]: Cijfers
+                - generic [ref=e785]:
+                  - img [ref=e787]
+                  - generic [ref=e789]: Brood
+                - generic [ref=e790]:
+                  - img [ref=e792]
+                  - generic [ref=e794]: Tompouce
+                - generic [ref=e795]:
+                  - img [ref=e797]
+                  - generic [ref=e800]: Koffie
+                - generic [ref=e801]:
+                  - img [ref=e803]
+                  - generic [ref=e806]: Afrekenen
+              - generic [ref=e807]:
+                - img [ref=e809]
+                - generic [ref=e812]:
+                  - generic [ref=e813]: Boss fight
+                  - generic [ref=e814]: "Roleplay: Bij de bakker"
+                - img [ref=e815]
+            - generic [ref=e817]:
+              - generic [ref=e818]:
+                - generic [ref=e819]: "04"
+                - generic [ref=e820]:
+                  - generic [ref=e821]:
+                    - generic [ref=e822]: Op de markt
+                    - generic [ref=e823]:
+                      - img [ref=e824]
+                      - text: locked
+                  - generic [ref=e827]: At the market · 22 lessons
+                - img "kaas idle" [ref=e829]
+              - generic [ref=e831]:
+                - generic [ref=e832]:
+                  - img [ref=e834]
+                  - generic [ref=e837]: Groente
+                - generic [ref=e838]:
+                  - img [ref=e840]
+                  - generic [ref=e843]: Hoeveel?
+                - generic [ref=e844]:
+                  - img [ref=e846]
+                  - generic [ref=e849]: Kaas
+                - generic [ref=e850]:
+                  - img [ref=e852]
+                  - generic [ref=e855]: Vis
+              - generic [ref=e856]:
+                - img [ref=e858]
+                - generic [ref=e861]:
+                  - generic [ref=e862]: Boss fight
+                  - generic [ref=e863]: "Roleplay: Op de markt"
+                - img [ref=e864]
+          - navigation [ref=e866]:
+            - button "Path" [ref=e867] [cursor=pointer]:
+              - img [ref=e868]
+              - generic [ref=e871]: Path
+            - button "League" [ref=e872] [cursor=pointer]:
+              - img [ref=e873]
+              - generic [ref=e877]: League
+            - button "Shop" [ref=e878] [cursor=pointer]:
+              - img [ref=e879]
+              - generic [ref=e881]: Shop
+            - button "Me" [ref=e882] [cursor=pointer]:
+              - img [ref=e883]
+              - generic [ref=e886]: Me
+      - generic [ref=e888]:
+        - generic [ref=e889]:
+          - generic [ref=e890]:
+            - generic "Drag to reorder" [ref=e891]:
+              - img [ref=e892]
+            - generic "Click to focus" [ref=e899] [cursor=pointer]:
+              - generic [ref=e900]: Quests collapsed — fewer pixels
+          - generic [ref=e901]:
+            - button "More" [ref=e903] [cursor=pointer]:
+              - img [ref=e904]
+            - button "Focus" [ref=e908] [cursor=pointer]:
+              - img [ref=e909]
+        - generic [ref=e915]:
+          - generic [ref=e916]:
+            - generic [ref=e917]: 9:41
+            - generic [ref=e918]:
+              - img [ref=e919]
+              - img [ref=e925]
+              - img [ref=e927]
+          - generic [ref=e931]:
+            - generic [ref=e932]: Lekkertaal
+            - button "Notifications" [ref=e934] [cursor=pointer]:
+              - img [ref=e935]
+          - generic [ref=e939]:
+            - generic [ref=e940]:
+              - img [ref=e941]
+              - text: "12"
+              - generic [ref=e943]:
+                - img [ref=e944]
+                - text: "2"
+            - generic [ref=e947]:
+              - img [ref=e948]
+              - text: Lv 7
+            - generic [ref=e950]:
+              - img [ref=e951]:
+                - generic [ref=e953]: ¢
+              - text: "320"
+          - generic [ref=e960]:
+            - generic [ref=e961]:
+              - generic [ref=e962]:
+                - generic [ref=e963]: "03"
+                - generic [ref=e964]:
+                  - generic [ref=e966]: Bij de bakker
+                  - generic [ref=e967]: At the bakery · 18 lessons
+                - img "tompouce happy" [ref=e972]
+              - generic [ref=e974]:
+                - generic [ref=e975]:
+                  - img [ref=e977]
+                  - generic [ref=e979]: Hallo
+                - generic [ref=e980]:
+                  - img [ref=e982]
+                  - generic [ref=e984]: Bestellen
+                - generic [ref=e985]:
+                  - img [ref=e987]
+                  - generic [ref=e989]: Cijfers
+                - generic [ref=e990]:
+                  - img [ref=e992]
+                  - generic [ref=e994]: Brood
+                - generic [ref=e995]:
+                  - img [ref=e997]
+                  - generic [ref=e999]: Tompouce
+                - generic [ref=e1000]:
+                  - img [ref=e1002]
+                  - generic [ref=e1005]: Koffie
+                - generic [ref=e1006]:
+                  - img [ref=e1008]
+                  - generic [ref=e1011]: Afrekenen
+              - generic [ref=e1012]:
+                - img [ref=e1014]
+                - generic [ref=e1017]:
+                  - generic [ref=e1018]: Boss fight
+                  - generic [ref=e1019]: "Roleplay: Bij de bakker"
+                - img [ref=e1020]
+            - generic [ref=e1022]:
+              - generic [ref=e1023]:
+                - generic [ref=e1024]: "04"
+                - generic [ref=e1025]:
+                  - generic [ref=e1026]:
+                    - generic [ref=e1027]: Op de markt
+                    - generic [ref=e1028]:
+                      - img [ref=e1029]
+                      - text: locked
+                  - generic [ref=e1032]: At the market · 22 lessons
+                - img "kaas idle" [ref=e1034]
+              - generic [ref=e1036]:
+                - generic [ref=e1037]:
+                  - img [ref=e1039]
+                  - generic [ref=e1042]: Groente
+                - generic [ref=e1043]:
+                  - img [ref=e1045]
+                  - generic [ref=e1048]: Hoeveel?
+                - generic [ref=e1049]:
+                  - img [ref=e1051]
+                  - generic [ref=e1054]: Kaas
+                - generic [ref=e1055]:
+                  - img [ref=e1057]
+                  - generic [ref=e1060]: Vis
+              - generic [ref=e1061]:
+                - img [ref=e1063]
+                - generic [ref=e1066]:
+                  - generic [ref=e1067]: Boss fight
+                  - generic [ref=e1068]: "Roleplay: Op de markt"
+                - img [ref=e1069]
+          - navigation [ref=e1071]:
+            - button "Path" [ref=e1072] [cursor=pointer]:
+              - img [ref=e1073]
+              - generic [ref=e1076]: Path
+            - button "League" [ref=e1077] [cursor=pointer]:
+              - img [ref=e1078]
+              - generic [ref=e1082]: League
+            - button "Shop" [ref=e1083] [cursor=pointer]:
+              - img [ref=e1084]
+              - generic [ref=e1086]: Shop
+            - button "Me" [ref=e1087] [cursor=pointer]:
+              - img [ref=e1088]
+              - generic [ref=e1091]: Me
+  - generic [ref=e1093]:
+    - generic [ref=e1095]:
+      - generic [ref=e1096]: 04 · Unit detail
+      - generic [ref=e1097]: Preview a unit before diving in. Lesson list with per-lesson progress. The roleplay boss-fight teaser sits in a dark, premium card at the bottom.
+    - generic [ref=e1099]:
+      - generic [ref=e1100]:
+        - generic [ref=e1101]:
+          - generic "Drag to reorder" [ref=e1102]:
+            - img [ref=e1103]
+          - generic "Click to focus" [ref=e1110] [cursor=pointer]:
+            - generic [ref=e1111]: Unit 03 — Bij de bakker
+        - generic [ref=e1112]:
+          - button "More" [ref=e1114] [cursor=pointer]:
+            - img [ref=e1115]
+          - button "Focus" [ref=e1119] [cursor=pointer]:
+            - img [ref=e1120]
+      - generic [ref=e1126]:
+        - generic [ref=e1127]:
+          - generic [ref=e1128]: 9:41
+          - generic [ref=e1129]:
+            - img [ref=e1130]
+            - img [ref=e1136]
+            - img [ref=e1138]
+        - generic [ref=e1142]:
+          - generic [ref=e1143]: Lekkertaal
+          - button "Notifications" [ref=e1145] [cursor=pointer]:
+            - img [ref=e1146]
+        - generic [ref=e1150]:
+          - generic [ref=e1151]:
+            - generic [ref=e1153] [cursor=pointer]:
+              - img [ref=e1154]
+              - text: Path
+            - generic [ref=e1156]:
+              - img "tompouce happy" [ref=e1158]
+              - generic [ref=e1159]:
+                - generic [ref=e1160]: Unit 03
+                - heading "Bij de bakker" [level=2] [ref=e1161]
+                - generic [ref=e1162]: At the bakery — order broodjes, count change, befriend the lady at the counter.
+            - generic [ref=e1163]:
+              - generic [ref=e1164]: vocab · bread
+              - generic [ref=e1165]: vocab · numbers
+              - generic [ref=e1166]: grammar · zou
+              - generic [ref=e1167]: grammar · alstublieft
+            - generic [ref=e1169]:
+              - generic [ref=e1170]: 4 / 7 lessons
+              - generic [ref=e1171]: 62% complete
+          - generic [ref=e1175]:
+            - generic [ref=e1176]: Lessons
+            - generic [ref=e1177]:
+              - generic [ref=e1178]:
+                - img [ref=e1180]
+                - generic [ref=e1182]:
+                  - generic [ref=e1183]: Goedemorgen
+                  - generic [ref=e1184]: Greetings & polite forms
+                  - generic [ref=e1185]:
+                    - generic [ref=e1186]:
+                      - img [ref=e1187]
+                      - text: 12 XP
+                    - generic [ref=e1189]: 100% accuracy
+              - generic [ref=e1190]:
+                - img [ref=e1192]
+                - generic [ref=e1194]:
+                  - generic [ref=e1195]: Bestellen, alstublieft
+                  - generic [ref=e1196]: Ordering politely
+                  - generic [ref=e1197]:
+                    - generic [ref=e1198]:
+                      - img [ref=e1199]
+                      - text: 14 XP
+                    - generic [ref=e1201]: 92% accuracy
+              - generic [ref=e1202]:
+                - img [ref=e1204]
+                - generic [ref=e1206]:
+                  - generic [ref=e1207]: Cijfers 1–20
+                  - generic [ref=e1208]: Numbers at the counter
+                  - generic [ref=e1209]:
+                    - generic [ref=e1210]:
+                      - img [ref=e1211]
+                      - text: 10 XP
+                    - generic [ref=e1213]: 88% accuracy
+              - generic [ref=e1214]:
+                - img [ref=e1216]
+                - generic [ref=e1218]:
+                  - generic [ref=e1219]: Brood & broodjes
+                  - generic [ref=e1220]: Bread vocabulary
+                  - generic [ref=e1221]:
+                    - generic [ref=e1222]:
+                      - img [ref=e1223]
+                      - text: 12 XP
+                    - generic [ref=e1225]: 78% accuracy
+              - generic [ref=e1226]:
+                - generic [ref=e1227]: "5"
+                - generic [ref=e1228]:
+                  - generic [ref=e1229]: Tompouce, alstublieft
+                  - generic [ref=e1230]: Pastry case + sweet talk
+                - button "Continue" [ref=e1231] [cursor=pointer]
+              - generic [ref=e1232]:
+                - img [ref=e1234]
+                - generic [ref=e1237]:
+                  - generic [ref=e1238]: Koffie en thee
+                  - generic [ref=e1239]: Drinks & sizes
+                - img [ref=e1240]
+              - generic [ref=e1243]:
+                - img [ref=e1245]
+                - generic [ref=e1248]:
+                  - generic [ref=e1249]: Afrekenen
+                  - generic [ref=e1250]: Paying, change
+                - img [ref=e1251]
+            - generic [ref=e1254]:
+              - generic [ref=e1255]: Caps the unit
+              - generic [ref=e1256]:
+                - generic [ref=e1257]:
+                  - img [ref=e1258]
+                  - text: AI roleplay
+                - heading "\"Mag ik twee tompoezen, alstublieft?\"" [level=3] [ref=e1260]
+                - paragraph [ref=e1261]: Step into the bakkerij. Order pastries, count change, handle a small surprise. Type or speak. Kroket is on the till today.
+                - generic [ref=e1262]:
+                  - generic [ref=e1263]:
+                    - img [ref=e1264]
+                    - text: 5 objectives
+                  - generic [ref=e1268]: ~3 min
+                - button "Start scenario →" [ref=e1270] [cursor=pointer]
+                - img "kroket idle" [ref=e1272]
+        - navigation [ref=e1273]:
+          - button "Path" [ref=e1274] [cursor=pointer]:
+            - img [ref=e1275]
+            - generic [ref=e1278]: Path
+          - button "League" [ref=e1279] [cursor=pointer]:
+            - img [ref=e1280]
+            - generic [ref=e1284]: League
+          - button "Shop" [ref=e1285] [cursor=pointer]:
+            - img [ref=e1286]
+            - generic [ref=e1288]: Shop
+          - button "Me" [ref=e1289] [cursor=pointer]:
+            - img [ref=e1290]
+            - generic [ref=e1293]: Me
+  - generic [ref=e1295]:
+    - generic [ref=e1297]:
+      - generic [ref=e1298]: 05 · Lesson player — all 9 drill types
+      - generic [ref=e1299]: One question per screen. Top progress + hearts. Big chunky Check button docked at the bottom — green when satisfied, becomes Continue after grading.
+    - generic [ref=e1300]:
+      - generic [ref=e1301]:
+        - generic [ref=e1302]:
+          - generic [ref=e1303]:
+            - generic "Drag to reorder" [ref=e1304]:
+              - img [ref=e1305]
+            - generic "Click to focus" [ref=e1312] [cursor=pointer]:
+              - generic [ref=e1313]: ① multiple_choice — selected
+          - generic [ref=e1314]:
+            - button "More" [ref=e1316] [cursor=pointer]:
+              - img [ref=e1317]
+            - button "Focus" [ref=e1321] [cursor=pointer]:
+              - img [ref=e1322]
+        - generic [ref=e1328]:
+          - generic [ref=e1329]:
+            - generic [ref=e1330]: 9:41
+            - generic [ref=e1331]:
+              - img [ref=e1332]
+              - img [ref=e1338]
+              - img [ref=e1340]
+          - generic [ref=e1344]:
+            - button "Close" [ref=e1345] [cursor=pointer]:
+              - img [ref=e1346]
+            - generic [ref=e1351]:
+              - img [ref=e1352]
+              - text: "4"
+          - generic [ref=e1354]:
+            - generic [ref=e1355]:
+              - img "stroop idle" [ref=e1357]
+              - generic [ref=e1358]:
+                - generic [ref=e1359]: Choose the translation
+                - generic [ref=e1360]: Mag ik een tompouce, alstublieft?
+                - generic [ref=e1361]: May I have a tompouce, please?
+            - generic [ref=e1362]:
+              - generic [ref=e1363] [cursor=pointer]:
+                - generic [ref=e1364]: "1"
+                - text: May I borrow a tompouce?
+              - generic [ref=e1365] [cursor=pointer]:
+                - generic [ref=e1366]: "2"
+                - text: May I have a tompouce, please?
+              - generic [ref=e1367] [cursor=pointer]:
+                - generic [ref=e1368]: "3"
+                - text: Do you sell tompouces?
+              - generic [ref=e1369] [cursor=pointer]:
+                - generic [ref=e1370]: "4"
+                - text: A tompouce is delicious.
+          - generic [ref=e1371]:
+            - button [ref=e1372] [cursor=pointer]:
+              - img [ref=e1373]
+            - button "Check" [ref=e1376] [cursor=pointer]
+      - generic [ref=e1378]:
+        - generic [ref=e1379]:
+          - generic [ref=e1380]:
+            - generic "Drag to reorder" [ref=e1381]:
+              - img [ref=e1382]
+            - generic "Click to focus" [ref=e1389] [cursor=pointer]:
+              - generic [ref=e1390]: ② translation_typing — with word bank
+          - generic [ref=e1391]:
+            - button "More" [ref=e1393] [cursor=pointer]:
+              - img [ref=e1394]
+            - button "Focus" [ref=e1398] [cursor=pointer]:
+              - img [ref=e1399]
+        - generic [ref=e1405]:
+          - generic [ref=e1406]:
+            - generic [ref=e1407]: 9:41
+            - generic [ref=e1408]:
+              - img [ref=e1409]
+              - img [ref=e1415]
+              - img [ref=e1417]
+          - generic [ref=e1421]:
+            - button "Close" [ref=e1422] [cursor=pointer]:
+              - img [ref=e1423]
+            - generic [ref=e1428]:
+              - img [ref=e1429]
+              - text: "4"
+          - generic [ref=e1431]:
+            - generic [ref=e1432]:
+              - img "kaas idle" [ref=e1434]
+              - generic [ref=e1435]:
+                - generic [ref=e1436]: Write in Dutch
+                - generic [ref=e1437]: I'd like a coffee, please.
+                - generic [ref=e1438]: Tap a word for a hint
+            - generic [ref=e1439]: Ik wil graag een
+            - generic [ref=e1441]: Word bank
+            - generic [ref=e1442]:
+              - generic [ref=e1443] [cursor=pointer]: koffie
+              - generic [ref=e1444] [cursor=pointer]: alstublieft
+              - generic [ref=e1445] [cursor=pointer]: graag
+              - generic [ref=e1446] [cursor=pointer]: wil
+              - generic [ref=e1447] [cursor=pointer]: ik
+              - generic [ref=e1448] [cursor=pointer]: een
+            - generic [ref=e1449]:
+              - img [ref=e1450]
+              - text: Tap a word above or type freely.
+          - generic [ref=e1453]:
+            - button [ref=e1454] [cursor=pointer]:
+              - img [ref=e1455]
+            - button "Check" [ref=e1458] [cursor=pointer]
+      - generic [ref=e1460]:
+        - generic [ref=e1461]:
+          - generic [ref=e1462]:
+            - generic "Drag to reorder" [ref=e1463]:
+              - img [ref=e1464]
+            - generic "Click to focus" [ref=e1471] [cursor=pointer]:
+              - generic [ref=e1472]: ③ fill_blank — chip filled
+          - generic [ref=e1473]:
+            - button "More" [ref=e1475] [cursor=pointer]:
+              - img [ref=e1476]
+            - button "Focus" [ref=e1480] [cursor=pointer]:
+              - img [ref=e1481]
+        - generic [ref=e1487]:
+          - generic [ref=e1488]:
+            - generic [ref=e1489]: 9:41
+            - generic [ref=e1490]:
+              - img [ref=e1491]
+              - img [ref=e1497]
+              - img [ref=e1499]
+          - generic [ref=e1503]:
+            - button "Close" [ref=e1504] [cursor=pointer]:
+              - img [ref=e1505]
+            - generic [ref=e1510]:
+              - img [ref=e1511]
+              - text: "4"
+          - generic [ref=e1513]:
+            - generic [ref=e1514]:
+              - img "stroop idle" [ref=e1516]
+              - generic [ref=e1517]:
+                - generic [ref=e1518]: Fill the gap
+                - generic [ref=e1519]: Mag ik ___ tompoezen, alstublieft?
+                - generic [ref=e1520]: May I have two tompoezen, please?
+            - generic [ref=e1522]:
+              - text: Mag ik
+              - generic [ref=e1523]: twee
+              - text: tompoezen, alstublieft?
+            - generic [ref=e1524]: Tap to swap
+            - generic [ref=e1525]:
+              - generic [ref=e1526] [cursor=pointer]: een
+              - generic: twee
+              - generic [ref=e1527] [cursor=pointer]: drie
+              - generic [ref=e1528] [cursor=pointer]: veel
+              - generic [ref=e1529] [cursor=pointer]: wat
+          - generic [ref=e1530]:
+            - button [ref=e1531] [cursor=pointer]:
+              - img [ref=e1532]
+            - button "Check" [ref=e1535] [cursor=pointer]
+      - generic [ref=e1537]:
+        - generic [ref=e1538]:
+          - generic [ref=e1539]:
+            - generic "Drag to reorder" [ref=e1540]:
+              - img [ref=e1541]
+            - generic "Click to focus" [ref=e1548] [cursor=pointer]:
+              - generic [ref=e1549]: ④ word_ordering — tray in progress
+          - generic [ref=e1550]:
+            - button "More" [ref=e1552] [cursor=pointer]:
+              - img [ref=e1553]
+            - button "Focus" [ref=e1557] [cursor=pointer]:
+              - img [ref=e1558]
+        - generic [ref=e1564]:
+          - generic [ref=e1565]:
+            - generic [ref=e1566]: 9:41
+            - generic [ref=e1567]:
+              - img [ref=e1568]
+              - img [ref=e1574]
+              - img [ref=e1576]
+          - generic [ref=e1580]:
+            - button "Close" [ref=e1581] [cursor=pointer]:
+              - img [ref=e1582]
+            - generic [ref=e1587]:
+              - img [ref=e1588]
+              - text: "4"
+          - generic [ref=e1590]:
+            - generic [ref=e1591]:
+              - img "poffertjes idle" [ref=e1593]
+              - generic [ref=e1594]:
+                - generic [ref=e1595]: Build the sentence
+                - generic [ref=e1596]: “I would like two coffees, please.”
+                - generic [ref=e1597]: Tap words in order.
+            - generic [ref=e1598]:
+              - generic [ref=e1599] [cursor=pointer]: Ik
+              - generic [ref=e1600] [cursor=pointer]: wil
+              - generic [ref=e1601] [cursor=pointer]: graag
+              - generic [ref=e1602] [cursor=pointer]: twee
+            - generic [ref=e1603]: Tiles
+            - generic [ref=e1604]:
+              - generic [ref=e1605] [cursor=pointer]: koffies
+              - generic [ref=e1606] [cursor=pointer]: alstublieft
+              - generic: ik
+              - generic: wil
+              - generic [ref=e1607] [cursor=pointer]: graag
+              - generic [ref=e1608] [cursor=pointer]: twee
+          - generic [ref=e1609]:
+            - button [ref=e1610] [cursor=pointer]:
+              - img [ref=e1611]
+            - button "Check" [ref=e1614] [cursor=pointer]
+      - generic [ref=e1616]:
+        - generic [ref=e1617]:
+          - generic [ref=e1618]:
+            - generic "Drag to reorder" [ref=e1619]:
+              - img [ref=e1620]
+            - generic "Click to focus" [ref=e1627] [cursor=pointer]:
+              - generic [ref=e1628]: ⑤ match_pairs — one pair matched
+          - generic [ref=e1629]:
+            - button "More" [ref=e1631] [cursor=pointer]:
+              - img [ref=e1632]
+            - button "Focus" [ref=e1636] [cursor=pointer]:
+              - img [ref=e1637]
+        - generic [ref=e1643]:
+          - generic [ref=e1644]:
+            - generic [ref=e1645]: 9:41
+            - generic [ref=e1646]:
+              - img [ref=e1647]
+              - img [ref=e1653]
+              - img [ref=e1655]
+          - generic [ref=e1659]:
+            - button "Close" [ref=e1660] [cursor=pointer]:
+              - img [ref=e1661]
+            - generic [ref=e1666]:
+              - img [ref=e1667]
+              - text: "4"
+          - generic [ref=e1669]:
+            - generic [ref=e1670]:
+              - img "kaas idle" [ref=e1672]
+              - generic [ref=e1673]:
+                - generic [ref=e1674]: Match the pairs
+                - generic [ref=e1675]: Link Dutch and English.
+            - generic [ref=e1676]:
+              - generic [ref=e1677]:
+                - generic [ref=e1678] [cursor=pointer]: brood
+                - generic [ref=e1679] [cursor=pointer]: melk
+                - generic [ref=e1680] [cursor=pointer]: kaas
+                - generic [ref=e1681] [cursor=pointer]: ei
+                - generic [ref=e1682] [cursor=pointer]: appel
+              - generic [ref=e1683]:
+                - generic [ref=e1684] [cursor=pointer]: egg
+                - generic [ref=e1685] [cursor=pointer]: milk
+                - generic [ref=e1686] [cursor=pointer]: bread
+                - generic [ref=e1687] [cursor=pointer]: cheese
+                - generic [ref=e1688] [cursor=pointer]: apple
+            - generic [ref=e1689]: Tap a Dutch word, then its English match.
+          - generic [ref=e1690]:
+            - button [ref=e1691] [cursor=pointer]:
+              - img [ref=e1692]
+            - button "Check" [disabled] [ref=e1695]
+      - generic [ref=e1697]:
+        - generic [ref=e1698]:
+          - generic [ref=e1699]:
+            - generic "Drag to reorder" [ref=e1700]:
+              - img [ref=e1701]
+            - generic "Click to focus" [ref=e1708] [cursor=pointer]:
+              - generic [ref=e1709]: ⑥ listening_mc — slow replay
+          - generic [ref=e1710]:
+            - button "More" [ref=e1712] [cursor=pointer]:
+              - img [ref=e1713]
+            - button "Focus" [ref=e1717] [cursor=pointer]:
+              - img [ref=e1718]
+        - generic [ref=e1724]:
+          - generic [ref=e1725]:
+            - generic [ref=e1726]: 9:41
+            - generic [ref=e1727]:
+              - img [ref=e1728]
+              - img [ref=e1734]
+              - img [ref=e1736]
+          - generic [ref=e1740]:
+            - button "Close" [ref=e1741] [cursor=pointer]:
+              - img [ref=e1742]
+            - generic [ref=e1747]:
+              - img [ref=e1748]
+              - text: "4"
+          - generic [ref=e1750]:
+            - generic [ref=e1751]: Listen
+            - generic [ref=e1752]:
+              - button [ref=e1753] [cursor=pointer]:
+                - img [ref=e1754]
+              - button "🐢 Slow replay" [ref=e1777] [cursor=pointer]
+            - generic [ref=e1778]: What did you hear?
+            - generic [ref=e1779]:
+              - generic [ref=e1780] [cursor=pointer]:
+                - generic [ref=e1781]: "1"
+                - text: Het is koud vandaag.
+              - generic [ref=e1782] [cursor=pointer]:
+                - generic [ref=e1783]: "2"
+                - text: Het is mooi weer vandaag.
+              - generic [ref=e1784] [cursor=pointer]:
+                - generic [ref=e1785]: "3"
+                - text: Ik ben moe vandaag.
+          - generic [ref=e1786]:
+            - button [ref=e1787] [cursor=pointer]:
+              - img [ref=e1788]
+            - button "Check" [ref=e1791] [cursor=pointer]
+      - generic [ref=e1793]:
+        - generic [ref=e1794]:
+          - generic [ref=e1795]:
+            - generic "Drag to reorder" [ref=e1796]:
+              - img [ref=e1797]
+            - generic "Click to focus" [ref=e1804] [cursor=pointer]:
+              - generic [ref=e1805]: ⑦ listening_spell — typo-tolerant
+          - generic [ref=e1806]:
+            - button "More" [ref=e1808] [cursor=pointer]:
+              - img [ref=e1809]
+            - button "Focus" [ref=e1813] [cursor=pointer]:
+              - img [ref=e1814]
+        - generic [ref=e1820]:
+          - generic [ref=e1821]:
+            - generic [ref=e1822]: 9:41
+            - generic [ref=e1823]:
+              - img [ref=e1824]
+              - img [ref=e1830]
+              - img [ref=e1832]
+          - generic [ref=e1836]:
+            - button "Close" [ref=e1837] [cursor=pointer]:
+              - img [ref=e1838]
+            - generic [ref=e1843]:
+              - img [ref=e1844]
+              - text: "4"
+          - generic [ref=e1846]:
+            - generic [ref=e1847]: Listen and type
+            - generic [ref=e1848]:
+              - button [ref=e1849] [cursor=pointer]:
+                - img [ref=e1850]
+              - generic [ref=e1853]:
+                - generic [ref=e1854]: Spell what you hear
+                - generic [ref=e1855]: Tap 🐢 for slow.
+              - button "🐢" [ref=e1856] [cursor=pointer]
+            - generic [ref=e1857]: Goedemorgen
+            - generic [ref=e1860]:
+              - img [ref=e1861]
+              - generic [ref=e1864]: Close enough — minor typos won't cost you a heart.
+          - generic [ref=e1865]:
+            - button [ref=e1866] [cursor=pointer]:
+              - img [ref=e1867]
+            - button "Check" [ref=e1870] [cursor=pointer]
+      - generic [ref=e1872]:
+        - generic [ref=e1873]:
+          - generic [ref=e1874]:
+            - generic "Drag to reorder" [ref=e1875]:
+              - img [ref=e1876]
+            - generic "Click to focus" [ref=e1883] [cursor=pointer]:
+              - generic [ref=e1884]: ⑧ image_word — image-forward
+          - generic [ref=e1885]:
+            - button "More" [ref=e1887] [cursor=pointer]:
+              - img [ref=e1888]
+            - button "Focus" [ref=e1892] [cursor=pointer]:
+              - img [ref=e1893]
+        - generic [ref=e1899]:
+          - generic [ref=e1900]:
+            - generic [ref=e1901]: 9:41
+            - generic [ref=e1902]:
+              - img [ref=e1903]
+              - img [ref=e1909]
+              - img [ref=e1911]
+          - generic [ref=e1915]:
+            - button "Close" [ref=e1916] [cursor=pointer]:
+              - img [ref=e1917]
+            - generic [ref=e1922]:
+              - img [ref=e1923]
+              - text: "4"
+          - generic [ref=e1925]:
+            - generic [ref=e1926]: What is this in Dutch?
+            - generic [ref=e1927]:
+              - img "tompouce idle" [ref=e1929]
+              - generic [ref=e1930]:
+                - img [ref=e1931]
+                - text: AI image
+            - generic [ref=e1933]: tompo
+            - generic [ref=e1935]:
+              - button "Say it instead" [ref=e1936] [cursor=pointer]:
+                - img [ref=e1937]
+                - text: Say it instead
+              - generic [ref=e1940]: de · het ?
+          - generic [ref=e1941]:
+            - button [ref=e1942] [cursor=pointer]:
+              - img [ref=e1943]
+            - button "Check" [ref=e1946] [cursor=pointer]
+      - generic [ref=e1948]:
+        - generic [ref=e1949]:
+          - generic [ref=e1950]:
+            - generic "Drag to reorder" [ref=e1951]:
+              - img [ref=e1952]
+            - generic "Click to focus" [ref=e1959] [cursor=pointer]:
+              - generic [ref=e1960]: ⑨ speak — mic + scored transcript
+          - generic [ref=e1961]:
+            - button "More" [ref=e1963] [cursor=pointer]:
+              - img [ref=e1964]
+            - button "Focus" [ref=e1968] [cursor=pointer]:
+              - img [ref=e1969]
+        - generic [ref=e1975]:
+          - generic [ref=e1976]:
+            - generic [ref=e1977]: 9:41
+            - generic [ref=e1978]:
+              - img [ref=e1979]
+              - img [ref=e1985]
+              - img [ref=e1987]
+          - generic [ref=e1991]:
+            - button "Close" [ref=e1992] [cursor=pointer]:
+              - img [ref=e1993]
+            - generic [ref=e1998]:
+              - img [ref=e1999]
+              - text: "4"
+          - generic [ref=e2001]:
+            - generic [ref=e2002]:
+              - img "kroket idle" [ref=e2004]
+              - generic [ref=e2005]:
+                - generic [ref=e2006]: Say it aloud
+                - generic [ref=e2007]: “Mag ik twee tompoezen, alstublieft?”
+                - generic [ref=e2008]: Tap the mic, then say the sentence.
+            - generic [ref=e2009]:
+              - button [ref=e2011] [cursor=pointer]:
+                - img [ref=e2013]
+              - generic [ref=e2050]: Listening…
+              - generic [ref=e2051]:
+                - generic [ref=e2052]: Live transcript
+                - generic [ref=e2053]:
+                  - generic [ref=e2054]: Mag
+                  - generic [ref=e2055]: ik
+                  - generic [ref=e2056]: twee
+                  - generic [ref=e2057]: tom-poe-zen
+                  - generic [ref=e2058]: alstublieft
+                - generic [ref=e2059]: 87% match · keep going
+            - button "Can't speak right now — skip" [ref=e2061] [cursor=pointer]
+          - generic [ref=e2062]:
+            - button [ref=e2063] [cursor=pointer]:
+              - img [ref=e2064]
+            - button "Submit" [ref=e2067] [cursor=pointer]
+  - generic [ref=e2069]:
+    - generic [ref=e2071]:
+      - generic [ref=e2072]: 05b · Drill states
+      - generic [ref=e2073]: "Inline feedback (no separate screen): green flush + happy Stroop on correct; red shake + surprised + correct answer revealed on wrong. Out-of-hearts is a sheet, not a route."
+    - generic [ref=e2074]:
+      - generic [ref=e2075]:
+        - generic [ref=e2076]:
+          - generic [ref=e2077]:
+            - generic "Drag to reorder" [ref=e2078]:
+              - img [ref=e2079]
+            - generic "Click to focus" [ref=e2086] [cursor=pointer]:
+              - generic [ref=e2087]: Correct — green feedback bar
+          - generic [ref=e2088]:
+            - button "More" [ref=e2090] [cursor=pointer]:
+              - img [ref=e2091]
+            - button "Focus" [ref=e2095] [cursor=pointer]:
+              - img [ref=e2096]
+        - generic [ref=e2102]:
+          - generic [ref=e2103]:
+            - generic [ref=e2104]: 9:41
+            - generic [ref=e2105]:
+              - img [ref=e2106]
+              - img [ref=e2112]
+              - img [ref=e2114]
+          - generic [ref=e2118]:
+            - button "Close" [ref=e2119] [cursor=pointer]:
+              - img [ref=e2120]
+            - generic [ref=e2125]:
+              - img [ref=e2126]
+              - text: "4"
+          - generic [ref=e2128]:
+            - generic [ref=e2129]:
+              - img "stroop happy" [ref=e2131]
+              - generic [ref=e2132]:
+                - generic [ref=e2133]: Choose the translation
+                - generic [ref=e2134]: Mag ik een tompouce, alstublieft?
+                - generic [ref=e2135]: May I have a tompouce, please?
+            - generic [ref=e2136]:
+              - generic [ref=e2137] [cursor=pointer]: May I borrow a tompouce?
+              - generic [ref=e2138] [cursor=pointer]:
+                - img [ref=e2139]
+                - text: May I have a tompouce, please?
+              - generic [ref=e2141] [cursor=pointer]: Do you sell tompouces?
+              - generic [ref=e2142] [cursor=pointer]: A tompouce is delicious.
+          - generic [ref=e2143]:
+            - img [ref=e2145]
+            - generic [ref=e2147]:
+              - heading "Goed zo!" [level=4] [ref=e2148]
+              - paragraph [ref=e2149]: Politest form of asking. +12 XP
+            - button "Continue" [ref=e2150] [cursor=pointer]
+      - generic [ref=e2152]:
+        - generic [ref=e2153]:
+          - generic [ref=e2154]:
+            - generic "Drag to reorder" [ref=e2155]:
+              - img [ref=e2156]
+            - generic "Click to focus" [ref=e2163] [cursor=pointer]:
+              - generic [ref=e2164]: Wrong — red, answer revealed
+          - generic [ref=e2165]:
+            - button "More" [ref=e2167] [cursor=pointer]:
+              - img [ref=e2168]
+            - button "Focus" [ref=e2172] [cursor=pointer]:
+              - img [ref=e2173]
+        - generic [ref=e2179]:
+          - generic [ref=e2180]:
+            - generic [ref=e2181]: 9:41
+            - generic [ref=e2182]:
+              - img [ref=e2183]
+              - img [ref=e2189]
+              - img [ref=e2191]
+          - generic [ref=e2195]:
+            - button "Close" [ref=e2196] [cursor=pointer]:
+              - img [ref=e2197]
+            - generic [ref=e2202]:
+              - img [ref=e2203]
+              - text: "3"
+          - generic [ref=e2205]:
+            - generic [ref=e2206]:
+              - img "stroop surprised" [ref=e2208]
+              - generic [ref=e2209]:
+                - generic [ref=e2210]: Choose the translation
+                - generic [ref=e2211]: Mag ik een tompouce, alstublieft?
+                - generic [ref=e2212]: May I have a tompouce, please?
+            - generic [ref=e2213]:
+              - generic [ref=e2214] [cursor=pointer]:
+                - img [ref=e2215]
+                - text: May I borrow a tompouce?
+              - generic [ref=e2217] [cursor=pointer]: May I have a tompouce, please?
+              - generic [ref=e2218] [cursor=pointer]: Do you sell tompouces?
+              - generic [ref=e2219] [cursor=pointer]: A tompouce is delicious.
+          - generic [ref=e2220]:
+            - img [ref=e2222]
+            - generic [ref=e2224]:
+              - heading "Net niet" [level=4] [ref=e2225]
+              - paragraph [ref=e2226]: “Mag ik … alstublieft” is the polite request form.
+              - paragraph [ref=e2227]: "Correct: May I have a tompouce, please?"
+            - button "Continue" [ref=e2228] [cursor=pointer]
+      - generic [ref=e2230]:
+        - generic [ref=e2231]:
+          - generic [ref=e2232]:
+            - generic "Drag to reorder" [ref=e2233]:
+              - img [ref=e2234]
+            - generic "Click to focus" [ref=e2241] [cursor=pointer]:
+              - generic [ref=e2242]: Out of hearts — sheet
+          - generic [ref=e2243]:
+            - button "More" [ref=e2245] [cursor=pointer]:
+              - img [ref=e2246]
+            - button "Focus" [ref=e2250] [cursor=pointer]:
+              - img [ref=e2251]
+        - generic [ref=e2257]:
+          - generic [ref=e2258]:
+            - generic [ref=e2259]: 9:41
+            - generic [ref=e2260]:
+              - img [ref=e2261]
+              - img [ref=e2267]
+              - img [ref=e2269]
+          - generic [ref=e2273]:
+            - button "Close" [ref=e2274] [cursor=pointer]:
+              - img [ref=e2275]
+            - generic [ref=e2280]:
+              - img [ref=e2281]
+              - text: "0"
+          - generic [ref=e2283]:
+            - generic:
+              - generic:
+                - generic:
+                  - img "stroop idle"
+                - generic:
+                  - generic: Choose the translation
+                  - generic: Mag ik een tompouce, alstublieft?
+              - generic:
+                - generic: Option A
+                - generic: Option B
+                - generic: Option C
+            - generic [ref=e2284]:
+              - generic [ref=e2285]:
+                - img "stroop surprised" [ref=e2287]
+                - heading "Out of hearts!" [level=3] [ref=e2288]
+                - paragraph [ref=e2289]: Take a breather, refill with coins, or keep going at half-speed.
+              - generic [ref=e2290]:
+                - button "Refill — 50 coins" [ref=e2291] [cursor=pointer]:
+                  - img [ref=e2292]:
+                    - generic [ref=e2294]: ¢
+                  - text: Refill — 50 coins
+                - button "Use streak freeze" [ref=e2295] [cursor=pointer]:
+                  - img [ref=e2296]
+                  - text: Use streak freeze
+                - button "Wait — next heart in 23 min" [ref=e2299] [cursor=pointer]
+  - generic [ref=e2301]:
+    - generic [ref=e2303]:
+      - generic [ref=e2304]: 06 · Lesson complete
+      - generic [ref=e2305]: "Original celebration: a 'trofee postcard' stat card overlaps the mascot — not a giant mascot reveal. Waffle-square confetti. Milestone variant is full-bleed gradient + bigger mascot."
+    - generic [ref=e2306]:
+      - generic [ref=e2307]:
+        - generic [ref=e2308]:
+          - generic [ref=e2309]:
+            - generic "Drag to reorder" [ref=e2310]:
+              - img [ref=e2311]
+            - generic "Click to focus" [ref=e2318] [cursor=pointer]:
+              - generic [ref=e2319]: Normal
+          - generic [ref=e2320]:
+            - button "More" [ref=e2322] [cursor=pointer]:
+              - img [ref=e2323]
+            - button "Focus" [ref=e2327] [cursor=pointer]:
+              - img [ref=e2328]
+        - generic [ref=e2334]:
+          - generic [ref=e2335]:
+            - generic [ref=e2336]: 9:41
+            - generic [ref=e2337]:
+              - img [ref=e2338]
+              - img [ref=e2344]
+              - img [ref=e2346]
+          - generic [ref=e2351]:
+            - generic [ref=e2352]: Lesson complete
+            - heading "Lekker gedaan." [level=1] [ref=e2353]
+            - generic [ref=e2354]:
+              - img "stroop happy" [ref=e2356]
+              - generic [ref=e2358]:
+                - generic [ref=e2359]:
+                  - img [ref=e2361]
+                  - generic [ref=e2363]: "14"
+                  - generic [ref=e2364]: XP
+                - generic [ref=e2365]:
+                  - img [ref=e2367]:
+                    - generic [ref=e2369]: ¢
+                  - generic [ref=e2370]: "10"
+                  - generic [ref=e2371]: Coins
+                - generic [ref=e2372]:
+                  - img [ref=e2374]
+                  - generic [ref=e2376]: "12"
+                  - generic [ref=e2377]: Streak
+            - generic [ref=e2378]:
+              - generic [ref=e2379]:
+                - generic [ref=e2380]: Accuracy
+                - generic [ref=e2381]: 87%
+              - generic [ref=e2385]:
+                - generic [ref=e2386]: 8 correct
+                - generic [ref=e2387]: 2 mistakes
+                - generic [ref=e2388]: 2 min 14 s
+            - generic [ref=e2390]:
+              - button "Continue → Next lesson" [ref=e2391] [cursor=pointer]
+              - button "Review mistakes" [ref=e2392] [cursor=pointer]
+      - generic [ref=e2394]:
+        - generic [ref=e2395]:
+          - generic [ref=e2396]:
+            - generic "Drag to reorder" [ref=e2397]:
+              - img [ref=e2398]
+            - generic "Click to focus" [ref=e2405] [cursor=pointer]:
+              - generic [ref=e2406]: Perfect lesson — bonus card
+          - generic [ref=e2407]:
+            - button "More" [ref=e2409] [cursor=pointer]:
+              - img [ref=e2410]
+            - button "Focus" [ref=e2414] [cursor=pointer]:
+              - img [ref=e2415]
+        - generic [ref=e2421]:
+          - generic [ref=e2422]:
+            - generic [ref=e2423]: 9:41
+            - generic [ref=e2424]:
+              - img [ref=e2425]
+              - img [ref=e2431]
+              - img [ref=e2433]
+          - generic [ref=e2438]:
+            - generic [ref=e2439]: Perfect lesson
+            - heading "Geen foutjes! 🤌" [level=1] [ref=e2440]
+            - generic [ref=e2441]:
+              - img "stroop happy" [ref=e2443]
+              - generic [ref=e2444]:
+                - generic [ref=e2445]:
+                  - generic [ref=e2446]:
+                    - img [ref=e2448]
+                    - generic [ref=e2450]: "20"
+                    - generic [ref=e2451]: XP
+                  - generic [ref=e2452]:
+                    - img [ref=e2454]:
+                      - generic [ref=e2456]: ¢
+                    - generic [ref=e2457]: "15"
+                    - generic [ref=e2458]: Coins
+                  - generic [ref=e2459]:
+                    - img [ref=e2461]
+                    - generic [ref=e2463]: "12"
+                    - generic [ref=e2464]: Streak
+                - generic [ref=e2466]:
+                  - img [ref=e2467]
+                  - generic [ref=e2469]:
+                    - generic [ref=e2470]: Perfect lesson bonus
+                    - generic [ref=e2471]: No mistakes — +6 XP, +5 coins
+            - generic [ref=e2472]:
+              - generic [ref=e2473]:
+                - generic [ref=e2474]: Accuracy
+                - generic [ref=e2475]: 100%
+              - generic [ref=e2479]:
+                - generic [ref=e2480]: 10 correct
+                - generic [ref=e2481]: 0 mistakes
+                - generic [ref=e2482]: 2 min 14 s
+            - button "Continue → Next lesson" [ref=e2485] [cursor=pointer]
+      - generic [ref=e2487]:
+        - generic [ref=e2488]:
+          - generic [ref=e2489]:
+            - generic "Drag to reorder" [ref=e2490]:
+              - img [ref=e2491]
+            - generic "Click to focus" [ref=e2498] [cursor=pointer]:
+              - generic [ref=e2499]: 30-day milestone — full-bleed
+          - generic [ref=e2500]:
+            - button "More" [ref=e2502] [cursor=pointer]:
+              - img [ref=e2503]
+            - button "Focus" [ref=e2507] [cursor=pointer]:
+              - img [ref=e2508]
+        - generic [ref=e2514]:
+          - generic [ref=e2515]:
+            - generic [ref=e2516]: 9:41
+            - generic [ref=e2517]:
+              - img [ref=e2518]
+              - img [ref=e2524]
+              - img [ref=e2526]
+          - generic [ref=e2531]:
+            - generic [ref=e2532]: 30-day streak!
+            - heading "Dertig dagen!" [level=1] [ref=e2533]
+            - generic [ref=e2534]:
+              - img "oliebollen happy" [ref=e2536]
+              - generic [ref=e2537]:
+                - generic [ref=e2538]:
+                  - generic [ref=e2539]:
+                    - img [ref=e2541]
+                    - generic [ref=e2543]: "14"
+                    - generic [ref=e2544]: XP
+                  - generic [ref=e2545]:
+                    - img [ref=e2547]:
+                      - generic [ref=e2549]: ¢
+                    - generic [ref=e2550]: "10"
+                    - generic [ref=e2551]: Coins
+                  - generic [ref=e2552]:
+                    - img [ref=e2554]
+                    - generic [ref=e2556]: "30"
+                    - generic [ref=e2557]: Streak
+                - generic [ref=e2559]:
+                  - img [ref=e2561]
+                  - generic [ref=e2563]:
+                    - generic [ref=e2564]: "Badge unlocked: Maand-monster"
+                    - generic [ref=e2565]: 30 days in a row — that's the whole maand.
+            - generic [ref=e2566]:
+              - generic [ref=e2567]:
+                - generic [ref=e2568]: Accuracy
+                - generic [ref=e2569]: 87%
+              - generic [ref=e2573]:
+                - generic [ref=e2574]: 8 correct
+                - generic [ref=e2575]: 2 mistakes
+                - generic [ref=e2576]: 2 min 14 s
+            - generic [ref=e2578]:
+              - button "Continue → Next lesson" [ref=e2579] [cursor=pointer]
+              - button "Review mistakes" [ref=e2580] [cursor=pointer]
+  - generic [ref=e2582]:
+    - generic [ref=e2584]:
+      - generic [ref=e2585]: 07 · AI boss-fight roleplay
+      - generic [ref=e2586]: Scene-themed dark header; Kroket on the till. Objectives chips up top. Streaming text with a live caret. Gentle correction chips inline on the user's bubble — not a separate review screen.
+    - generic [ref=e2588]:
+      - generic [ref=e2589]:
+        - generic [ref=e2590]:
+          - generic "Drag to reorder" [ref=e2591]:
+            - img [ref=e2592]
+          - generic "Click to focus" [ref=e2599] [cursor=pointer]:
+            - generic [ref=e2600]: Mid-conversation · AI streaming
+        - generic [ref=e2601]:
+          - button "More" [ref=e2603] [cursor=pointer]:
+            - img [ref=e2604]
+          - button "Focus" [ref=e2608] [cursor=pointer]:
+            - img [ref=e2609]
+      - generic [ref=e2615]:
+        - generic [ref=e2616]:
+          - generic [ref=e2617]: 9:41
+          - generic [ref=e2618]:
+            - img [ref=e2619]
+            - img [ref=e2625]
+            - img [ref=e2627]
+        - generic [ref=e2631]:
+          - generic [ref=e2632]:
+            - button [ref=e2633] [cursor=pointer]:
+              - img [ref=e2634]
+            - generic [ref=e2636]: Bij de bakker · Roleplay
+            - generic [ref=e2637]: 2:14
+          - generic [ref=e2638]:
+            - img "kroket idle" [ref=e2640]
+            - generic [ref=e2641]:
+              - generic [ref=e2642]: Today's baker
+              - generic [ref=e2643]: Kroket · bakkerij De Stoeptegel
+              - generic [ref=e2644]: Order pastries · be polite · handle a small surprise.
+          - generic [ref=e2645]:
+            - generic [ref=e2646]:
+              - img [ref=e2647]
+              - text: Greet
+            - generic [ref=e2649]:
+              - img [ref=e2650]
+              - text: Use 'alstublieft'
+            - generic [ref=e2652]: Order 2+ items
+            - generic [ref=e2654]: Ask the price
+            - generic [ref=e2656]: Say goodbye
+        - generic [ref=e2658]:
+          - generic [ref=e2659]:
+            - img "kroket idle" [ref=e2661]
+            - generic [ref=e2662]: Goedemorgen! Wat mag het zijn?
+          - generic [ref=e2664]:
+            - generic [ref=e2665]: Goedemorgen. Mag ik een tompouce, alstublieft?
+            - generic [ref=e2666]:
+              - img [ref=e2667]
+              - text: Nailed it
+          - generic [ref=e2669]:
+            - img "kroket idle" [ref=e2671]
+            - generic [ref=e2672]: Natuurlijk! Anders nog iets erbij?
+          - generic [ref=e2674]:
+            - generic [ref=e2675]: Ja, en een koffie.
+            - generic [ref=e2676]:
+              - generic [ref=e2677]: Tiny tweak
+              - generic [ref=e2678]:
+                - text: Ja, en een koffie.
+                - generic [ref=e2679]: Ja, en een koffie, alstublieft.
+              - generic [ref=e2680]: Polite forms always like a closing 'alstublieft'.
+          - generic [ref=e2681]:
+            - img "kroket idle" [ref=e2683]
+            - generic [ref=e2684]: Dat wordt vijf euro vijftig. Met pin of contant?
+          - img "kroket idle" [ref=e2688]
+        - generic [ref=e2694]:
+          - generic [ref=e2695]: Typ je antwoord…
+          - button [ref=e2696] [cursor=pointer]:
+            - img [ref=e2697]
+  - generic [ref=e2701]:
+    - generic [ref=e2703]:
+      - generic [ref=e2704]: 08 · Roleplay scorecard
+      - generic [ref=e2705]: Feels like a win, not an exam. Headline score in a conic-gradient ring; criteria are individually cardified; tips are positive nudges, not corrections.
+    - generic [ref=e2707]:
+      - generic [ref=e2708]:
+        - generic [ref=e2709]:
+          - generic "Drag to reorder" [ref=e2710]:
+            - img [ref=e2711]
+          - generic "Click to focus" [ref=e2718] [cursor=pointer]:
+            - generic [ref=e2719]: Great-pass · 87
+        - generic [ref=e2720]:
+          - button "More" [ref=e2722] [cursor=pointer]:
+            - img [ref=e2723]
+          - button "Focus" [ref=e2727] [cursor=pointer]:
+            - img [ref=e2728]
+      - generic [ref=e2734]:
+        - generic [ref=e2735]:
+          - generic [ref=e2736]: 9:41
+          - generic [ref=e2737]:
+            - img [ref=e2738]
+            - img [ref=e2744]
+            - img [ref=e2746]
+        - generic [ref=e2750]:
+          - button [ref=e2751] [cursor=pointer]:
+            - img [ref=e2752]
+          - generic [ref=e2754]: Roleplay scorecard
+        - generic [ref=e2755]:
+          - generic [ref=e2756]:
+            - generic [ref=e2757]: Bij de bakker
+            - generic [ref=e2758]:
+              - generic [ref=e2761]:
+                - generic [ref=e2762]: "87"
+                - generic [ref=e2763]: score
+              - generic [ref=e2764]:
+                - generic [ref=e2765]: Great pass
+                - generic [ref=e2766]: 4 of 5 objectives met
+                - generic [ref=e2767]:
+                  - generic [ref=e2768]:
+                    - img [ref=e2769]
+                    - text: 28 XP
+                  - generic [ref=e2771]:
+                    - img [ref=e2772]:
+                      - generic [ref=e2774]: ¢
+                    - text: "15"
+            - img "stroop happy" [ref=e2776]
+          - generic [ref=e2777]: Breakdown
+          - generic [ref=e2778]:
+            - generic [ref=e2779]:
+              - generic [ref=e2780]:
+                - generic [ref=e2781]: Fluency
+                - generic [ref=e2782]: "85"
+              - generic [ref=e2786]: Solid pace, only one long pause.
+            - generic [ref=e2787]:
+              - generic [ref=e2788]:
+                - generic [ref=e2789]: Vocabulary
+                - generic [ref=e2790]: "92"
+              - generic [ref=e2794]: Used 4 target words.
+            - generic [ref=e2795]:
+              - generic [ref=e2796]:
+                - generic [ref=e2797]: Grammar
+                - generic [ref=e2798]: "78"
+              - generic [ref=e2802]: "'Alstublieft' placement still tricky."
+            - generic [ref=e2803]:
+              - generic [ref=e2804]:
+                - generic [ref=e2805]: Objectives
+                - generic [ref=e2806]: "80"
+              - generic [ref=e2810]: "Missed: ask the price."
+          - generic [ref=e2811]: Highlights
+          - generic [ref=e2812]:
+            - generic [ref=e2813]:
+              - img [ref=e2814]
+              - text: Best line
+            - generic [ref=e2816]: "\"Mag ik een tompouce, alstublieft?\""
+            - generic [ref=e2817]: Polite request — clean.
+          - generic [ref=e2818]: Try these next time
+          - generic [ref=e2819]:
+            - generic [ref=e2820]:
+              - img [ref=e2822]
+              - generic [ref=e2824]: Add 'alstublieft' more often — it's a Dutch reflex.
+            - generic [ref=e2825]:
+              - img [ref=e2827]
+              - generic [ref=e2829]: Ask price with 'Hoeveel kost dat?'.
+            - generic [ref=e2830]:
+              - img [ref=e2832]
+              - generic [ref=e2834]: "Use 'graag' to soften: 'Ik wil graag…'."
+          - generic [ref=e2835]:
+            - button "Retry" [ref=e2836] [cursor=pointer]
+            - button "Back to path" [ref=e2837] [cursor=pointer]
+  - generic [ref=e2839]:
+    - generic [ref=e2841]:
+      - generic [ref=e2842]: 09 · Leaderboard
+      - generic [ref=e2843]: Each league is a 'wafel tier'. Promotion and demotion zones are visible. The current user row glows and is pinned (off-screen pinning will be added in motion).
+    - generic [ref=e2845]:
+      - generic [ref=e2846]:
+        - generic [ref=e2847]:
+          - generic "Drag to reorder" [ref=e2848]:
+            - img [ref=e2849]
+          - generic "Click to focus" [ref=e2856] [cursor=pointer]:
+            - generic [ref=e2857]: League · you @ rank 5
+        - generic [ref=e2858]:
+          - button "More" [ref=e2860] [cursor=pointer]:
+            - img [ref=e2861]
+          - button "Focus" [ref=e2865] [cursor=pointer]:
+            - img [ref=e2866]
+      - generic [ref=e2872]:
+        - generic [ref=e2873]:
+          - generic [ref=e2874]: 9:41
+          - generic [ref=e2875]:
+            - img [ref=e2876]
+            - img [ref=e2882]
+            - img [ref=e2884]
+        - generic [ref=e2888]:
+          - generic [ref=e2889]: Lekkertaal
+          - button "Notifications" [ref=e2891] [cursor=pointer]:
+            - img [ref=e2892]
+        - generic [ref=e2896]:
+          - generic [ref=e2897]:
+            - img [ref=e2898]
+            - text: "12"
+            - generic [ref=e2900]:
+              - img [ref=e2901]
+              - text: "2"
+          - generic [ref=e2904]:
+            - img [ref=e2905]
+            - text: Lv 7
+          - generic [ref=e2907]:
+            - img [ref=e2908]:
+              - generic [ref=e2910]: ¢
+            - text: "320"
+        - generic [ref=e2917]:
+          - generic [ref=e2918]:
+            - generic [ref=e2919] [cursor=pointer]: League
+            - generic [ref=e2920] [cursor=pointer]: Friends
+            - generic [ref=e2921]: Resets in 2d 14h
+          - generic [ref=e2923]:
+            - img [ref=e2925]
+            - generic [ref=e2927]:
+              - generic [ref=e2928]: This week
+              - heading "Stroopwafel league" [level=2] [ref=e2929]
+              - generic [ref=e2930]: Top 3 promote to Kaas league.
+          - generic [ref=e2932]:
+            - generic [ref=e2933]:
+              - generic [ref=e2934]: "1"
+              - img "oliebollen idle" [ref=e2936]
+              - generic [ref=e2937]:
+                - generic [ref=e2938]: Marieke
+                - generic [ref=e2939]:
+                  - generic [ref=e2940]:
+                    - img [ref=e2941]
+                    - text: leader
+                  - generic [ref=e2943]: 1820 XP
+              - img [ref=e2945]
+            - generic [ref=e2947]:
+              - generic [ref=e2948]: "2"
+              - img "frikandel idle" [ref=e2950]
+              - generic [ref=e2951]:
+                - generic [ref=e2952]: Sander
+                - generic [ref=e2954]: 1640 XP
+            - generic [ref=e2957]:
+              - generic [ref=e2958]: "3"
+              - img "tompouce idle" [ref=e2960]
+              - generic [ref=e2961]:
+                - generic [ref=e2962]: Diede
+                - generic [ref=e2964]: 1390 XP
+              - img [ref=e2966]
+            - generic [ref=e2970]: Promotion zone
+            - generic [ref=e2972]:
+              - generic [ref=e2973]: "4"
+              - img "drop idle" [ref=e2975]
+              - generic [ref=e2976]:
+                - generic [ref=e2977]: Aafke
+                - generic [ref=e2979]: 1210 XP
+              - img [ref=e2981]
+            - generic [ref=e2983]:
+              - generic [ref=e2984]: "5"
+              - img "stroop idle" [ref=e2986]
+              - generic [ref=e2987]:
+                - generic [ref=e2988]: Jij(you)
+                - generic [ref=e2990]: 1180 XP
+              - img [ref=e2992]
+            - generic [ref=e2994]:
+              - generic [ref=e2995]: "6"
+              - img "kaas idle" [ref=e2997]
+              - generic [ref=e2998]:
+                - generic [ref=e2999]: Pieter
+                - generic [ref=e3001]: 990 XP
+              - img [ref=e3003]
+            - generic [ref=e3007]: Demotion zone
+            - generic [ref=e3009]:
+              - generic [ref=e3010]: "7"
+              - img "poffertjes idle" [ref=e3012]
+              - generic [ref=e3013]:
+                - generic [ref=e3014]: Saskia
+                - generic [ref=e3016]: 880 XP
+              - img [ref=e3018]
+          - generic [ref=e3020]: XP this week resets Sunday at 23:59
+        - navigation [ref=e3021]:
+          - button "Path" [ref=e3022] [cursor=pointer]:
+            - img [ref=e3023]
+            - generic [ref=e3026]: Path
+          - button "League" [ref=e3027] [cursor=pointer]:
+            - img [ref=e3028]
+            - generic [ref=e3032]: League
+          - button "Shop" [ref=e3033] [cursor=pointer]:
+            - img [ref=e3034]
+            - generic [ref=e3036]: Shop
+          - button "Me" [ref=e3037] [cursor=pointer]:
+            - img [ref=e3038]
+            - generic [ref=e3041]: Me
+  - generic [ref=e3043]:
+    - generic [ref=e3045]:
+      - generic [ref=e3046]: 12 · Friends, peer drills, requests
+      - generic [ref=e3047]: Peer drills sit at the top — they're the highest-intent inbox. Treat-mascot avatars carry identity. Add-friend / send-drill actions inline on rows.
+    - generic [ref=e3049]:
+      - generic [ref=e3050]:
+        - generic [ref=e3051]:
+          - generic "Drag to reorder" [ref=e3052]:
+            - img [ref=e3053]
+          - generic "Click to focus" [ref=e3060] [cursor=pointer]:
+            - generic [ref=e3061]: Friends + peer-drills inbox
+        - generic [ref=e3062]:
+          - button "More" [ref=e3064] [cursor=pointer]:
+            - img [ref=e3065]
+          - button "Focus" [ref=e3069] [cursor=pointer]:
+            - img [ref=e3070]
+      - generic [ref=e3076]:
+        - generic [ref=e3077]:
+          - generic [ref=e3078]: 9:41
+          - generic [ref=e3079]:
+            - img [ref=e3080]
+            - img [ref=e3086]
+            - img [ref=e3088]
+        - generic [ref=e3092]:
+          - generic [ref=e3093]: Lekkertaal
+          - button "Notifications" [ref=e3095] [cursor=pointer]:
+            - img [ref=e3096]
+        - generic [ref=e3100]:
+          - generic [ref=e3102]:
+            - generic [ref=e3103]:
+              - img [ref=e3104]
+              - generic [ref=e3107]: Search learners…
+            - button [ref=e3108] [cursor=pointer]:
+              - img [ref=e3109]
+          - generic [ref=e3111]:
+            - generic [ref=e3112]: Peer drills · 2 new
+            - generic [ref=e3113]:
+              - generic [ref=e3114]:
+                - img "oliebollen idle" [ref=e3116]
+                - generic [ref=e3117]:
+                  - generic [ref=e3118]:
+                    - generic [ref=e3119]: Marieke sent you a drill
+                    - generic [ref=e3120]: new
+                  - generic [ref=e3121]: 20-word vocab dash
+                  - generic [ref=e3122]: She built this from Unit 3 vocab.
+                  - generic [ref=e3123]: 2u ago
+                - button "Play" [ref=e3124] [cursor=pointer]
+              - generic [ref=e3125]:
+                - img "frikandel idle" [ref=e3127]
+                - generic [ref=e3128]:
+                  - generic [ref=e3129]:
+                    - generic [ref=e3130]: Sander sent you a drill
+                    - generic [ref=e3131]: new
+                  - generic [ref=e3132]: Word-order challenge
+                  - generic [ref=e3133]: 6 sentences, no hints.
+                  - generic [ref=e3134]: 1d ago
+                - button "Play" [ref=e3135] [cursor=pointer]
+              - generic [ref=e3136]:
+                - img "drop idle" [ref=e3138]
+                - generic [ref=e3139]:
+                  - generic [ref=e3141]: Aafke sent you a drill
+                  - generic [ref=e3142]: Listening spell, hard
+                  - generic [ref=e3143]: You played · 8/10
+                  - generic [ref=e3144]: 3d ago
+                - generic [ref=e3145]: Done
+          - generic [ref=e3146]:
+            - generic [ref=e3147]: Requests
+            - generic [ref=e3148]:
+              - generic [ref=e3149]:
+                - img "tompouce idle" [ref=e3151]
+                - generic [ref=e3152]:
+                  - generic [ref=e3153]: Diede
+                  - generic [ref=e3154]: Found you via leaderboard
+                - generic [ref=e3155]:
+                  - button "Decline" [ref=e3156] [cursor=pointer]
+                  - button "Accept" [ref=e3157] [cursor=pointer]
+              - generic [ref=e3158]:
+                - img "kaas idle" [ref=e3160]
+                - generic [ref=e3161]:
+                  - generic [ref=e3162]: Pieter
+                  - generic [ref=e3163]: "Mutual: Sander"
+                - generic [ref=e3164]:
+                  - button "Decline" [ref=e3165] [cursor=pointer]
+                  - button "Accept" [ref=e3166] [cursor=pointer]
+          - generic [ref=e3167]:
+            - generic [ref=e3168]: Friends · 14
+            - generic [ref=e3169]:
+              - generic [ref=e3170]:
+                - img "oliebollen idle" [ref=e3172]
+                - generic [ref=e3173]:
+                  - generic [ref=e3174]: Marieke
+                  - generic [ref=e3175]: 🔥 23 day streak · A2
+                - button "Send drill" [ref=e3176] [cursor=pointer]:
+                  - img [ref=e3177]
+                  - text: Send drill
+              - generic [ref=e3181]:
+                - img "frikandel idle" [ref=e3183]
+                - generic [ref=e3184]:
+                  - generic [ref=e3185]: Sander
+                  - generic [ref=e3186]: 🔥 9 day streak · B1
+                - button "Send drill" [ref=e3187] [cursor=pointer]:
+                  - img [ref=e3188]
+                  - text: Send drill
+              - generic [ref=e3192]:
+                - img "poffertjes idle" [ref=e3194]
+                - generic [ref=e3195]:
+                  - generic [ref=e3196]: Saskia
+                  - generic [ref=e3197]: 🔥 12 day streak · A2
+                - button "Send drill" [ref=e3198] [cursor=pointer]:
+                  - img [ref=e3199]
+                  - text: Send drill
+          - generic [ref=e3204]: Invite a friend & both earn 50 coins.
+        - navigation [ref=e3205]:
+          - button "Path" [ref=e3206] [cursor=pointer]:
+            - img [ref=e3207]
+            - generic [ref=e3210]: Path
+          - button "League" [ref=e3211] [cursor=pointer]:
+            - img [ref=e3212]
+            - generic [ref=e3216]: League
+          - button "Shop" [ref=e3217] [cursor=pointer]:
+            - img [ref=e3218]
+            - generic [ref=e3220]: Shop
+          - button "Me" [ref=e3221] [cursor=pointer]:
+            - img [ref=e3222]
+            - generic [ref=e3225]: Me
+  - generic [ref=e3227]:
+    - generic [ref=e3229]:
+      - generic [ref=e3230]: 13 · Notifications inbox
+      - generic [ref=e3231]: Slide-over sheet from the bell. Grouped by recency. Unread dot + bold title. Mascot avatars on social rows.
+    - generic [ref=e3233]:
+      - generic [ref=e3234]:
+        - generic [ref=e3235]:
+          - generic "Drag to reorder" [ref=e3236]:
+            - img [ref=e3237]
+          - generic "Click to focus" [ref=e3244] [cursor=pointer]:
+            - generic [ref=e3245]: Notifications sheet — unread
+        - generic [ref=e3246]:
+          - button "More" [ref=e3248] [cursor=pointer]:
+            - img [ref=e3249]
+          - button "Focus" [ref=e3253] [cursor=pointer]:
+            - img [ref=e3254]
+      - generic [ref=e3260]:
+        - generic [ref=e3261]:
+          - generic [ref=e3262]: 9:41
+          - generic [ref=e3263]:
+            - img [ref=e3264]
+            - img [ref=e3270]
+            - img [ref=e3272]
+        - generic:
+          - generic:
+            - generic: Lekkertaal
+            - generic:
+              - button "Notifications":
+                - img
+          - generic:
+            - generic:
+              - img
+              - text: "12"
+              - generic:
+                - img
+                - text: "2"
+            - generic:
+              - img
+              - text: Lv 7
+            - generic:
+              - img:
+                - generic: ¢
+              - text: "320"
+        - generic [ref=e3277]:
+          - generic [ref=e3280]:
+            - heading "Notifications" [level=3] [ref=e3281]
+            - button "Mark all read" [ref=e3282] [cursor=pointer]
+          - generic [ref=e3283]:
+            - generic [ref=e3284]: Today
+            - generic [ref=e3285]:
+              - img [ref=e3287]
+              - generic [ref=e3289]:
+                - generic [ref=e3291]: Don't break your streak
+                - generic [ref=e3293]: Day 12 — Stroop's counting on you.
+              - generic [ref=e3294]: 3u
+            - generic [ref=e3295]:
+              - img "oliebollen idle" [ref=e3297]
+              - generic [ref=e3298]:
+                - generic [ref=e3300]: Peer drill from Marieke
+                - generic [ref=e3302]: 20-word vocab dash · tap to play
+              - generic [ref=e3303]: 6u
+            - generic [ref=e3304]: Yesterday
+            - generic [ref=e3305]:
+              - img [ref=e3307]
+              - generic [ref=e3309]:
+                - generic [ref=e3311]: Badge unlocked — Maand-monster
+                - generic [ref=e3312]: 30 days in a row.
+              - generic [ref=e3313]: 1d
+            - generic [ref=e3314]:
+              - img [ref=e3316]
+              - generic [ref=e3320]:
+                - generic [ref=e3322]: Promoted to Stroopwafel league
+                - generic [ref=e3323]: You finished 2nd. Lekker.
+              - generic [ref=e3324]: 2d
+            - generic [ref=e3325]:
+              - img [ref=e3327]
+              - generic [ref=e3330]:
+                - generic [ref=e3332]: Diede sent a friend request
+                - generic [ref=e3333]: You met on the leaderboard.
+              - generic [ref=e3334]: 3d
+            - generic [ref=e3335]:
+              - img [ref=e3337]
+              - generic [ref=e3339]:
+                - generic [ref=e3341]: New cosmetic in shop
+                - generic [ref=e3342]: Drop & Tompouce avatars are back.
+              - generic [ref=e3343]: 4d
+  - generic [ref=e3345]:
+    - generic [ref=e3347]:
+      - generic [ref=e3348]: 10 · Shop
+      - generic [ref=e3349]: "Coin balance is the hero. Sections: Streak freezes, Heart refills, Avatar cosmetics (the treat family), Power-ups. Cosmetic cards show owned/equipped state visibly."
+    - generic [ref=e3351]:
+      - generic [ref=e3352]:
+        - generic [ref=e3353]:
+          - generic "Drag to reorder" [ref=e3354]:
+            - img [ref=e3355]
+          - generic "Click to focus" [ref=e3362] [cursor=pointer]:
+            - generic [ref=e3363]: Shop · 320 coins
+        - generic [ref=e3364]:
+          - button "More" [ref=e3366] [cursor=pointer]:
+            - img [ref=e3367]
+          - button "Focus" [ref=e3371] [cursor=pointer]:
+            - img [ref=e3372]
+      - generic [ref=e3378]:
+        - generic [ref=e3379]:
+          - generic [ref=e3380]: 9:41
+          - generic [ref=e3381]:
+            - img [ref=e3382]
+            - img [ref=e3388]
+            - img [ref=e3390]
+        - generic [ref=e3394]:
+          - generic [ref=e3395]: Lekkertaal
+          - button "Notifications" [ref=e3397] [cursor=pointer]:
+            - img [ref=e3398]
+        - generic [ref=e3402]:
+          - generic [ref=e3403]:
+            - img [ref=e3404]
+            - text: "12"
+            - generic [ref=e3406]:
+              - img [ref=e3407]
+              - text: "2"
+          - generic [ref=e3410]:
+            - img [ref=e3411]
+            - text: Lv 7
+          - generic [ref=e3413]:
+            - img [ref=e3414]:
+              - generic [ref=e3416]: ¢
+            - text: "320"
+        - generic [ref=e3423]:
+          - generic [ref=e3425]:
+            - img "bitterballen happy" [ref=e3427]
+            - generic [ref=e3428]:
+              - generic [ref=e3429]: Your balance
+              - generic [ref=e3430]:
+                - img [ref=e3431]:
+                  - generic [ref=e3433]: ¢
+                - generic [ref=e3434]: "320"
+              - generic [ref=e3435]: Earn 25 more by finishing today's quests.
+          - generic [ref=e3436]:
+            - generic [ref=e3437]: Streak freezes
+            - generic [ref=e3438]:
+              - generic [ref=e3439]:
+                - generic [ref=e3440]:
+                  - img [ref=e3442]
+                  - generic [ref=e3445]: ×2
+                - generic [ref=e3446]: Streak freeze
+                - generic [ref=e3447]: Skip a day, keep your streak
+                - button "120" [ref=e3448] [cursor=pointer]:
+                  - img [ref=e3449]:
+                    - generic [ref=e3451]: ¢
+                  - text: "120"
+              - generic [ref=e3452]:
+                - img [ref=e3455]
+                - generic [ref=e3458]: Triple freeze
+                - generic [ref=e3459]: 3 saves, bulk price
+                - button "300" [ref=e3460] [cursor=pointer]:
+                  - img [ref=e3461]:
+                    - generic [ref=e3463]: ¢
+                  - text: "300"
+          - generic [ref=e3464]:
+            - generic [ref=e3465]: Heart refills
+            - generic [ref=e3466]:
+              - generic [ref=e3467]:
+                - img [ref=e3470]
+                - generic [ref=e3472]: Refill hearts
+                - generic [ref=e3473]: Fill all 5 instantly
+                - button "50" [ref=e3474] [cursor=pointer]:
+                  - img [ref=e3475]:
+                    - generic [ref=e3477]: ¢
+                  - text: "50"
+              - generic [ref=e3478]:
+                - generic [ref=e3481]:
+                  - img [ref=e3482]
+                  - img [ref=e3484]
+                - generic [ref=e3486]: Unlimited 30 min
+                - generic [ref=e3487]: Practice without limits
+                - button "150" [ref=e3488] [cursor=pointer]:
+                  - img [ref=e3489]:
+                    - generic [ref=e3491]: ¢
+                  - text: "150"
+          - generic [ref=e3492]:
+            - generic [ref=e3493]: Avatars · treat family
+            - generic [ref=e3494]:
+              - generic [ref=e3495]:
+                - img "poffertjes idle" [ref=e3497]
+                - generic [ref=e3498]: Poffertjes
+                - generic [ref=e3499]: Equipped
+              - generic [ref=e3500]:
+                - img "oliebollen idle" [ref=e3502]
+                - generic [ref=e3503]: Oliebollen
+                - button "Equip" [ref=e3504] [cursor=pointer]
+              - generic [ref=e3505]:
+                - img "tompouce idle" [ref=e3507]
+                - generic [ref=e3508]: Tompouce
+                - generic [ref=e3509]:
+                  - img [ref=e3510]:
+                    - generic [ref=e3512]: ¢
+                  - text: "250"
+              - generic [ref=e3513]:
+                - img "kaas idle" [ref=e3515]
+                - generic [ref=e3516]: Kaas
+                - generic [ref=e3517]:
+                  - img [ref=e3518]:
+                    - generic [ref=e3520]: ¢
+                  - text: "250"
+              - generic [ref=e3521]:
+                - img "kroket idle" [ref=e3523]
+                - generic [ref=e3524]: Kroket
+                - generic [ref=e3525]:
+                  - img [ref=e3526]:
+                    - generic [ref=e3528]: ¢
+                  - text: "400"
+              - generic [ref=e3529]:
+                - img "drop idle" [ref=e3531]
+                - generic [ref=e3532]: Drop
+                - generic [ref=e3533]:
+                  - img [ref=e3534]:
+                    - generic [ref=e3536]: ¢
+                  - text: "400"
+          - generic [ref=e3537]:
+            - generic [ref=e3538]: Power-ups
+            - generic [ref=e3539]:
+              - generic [ref=e3540]:
+                - img [ref=e3542]
+                - generic [ref=e3544]:
+                  - generic [ref=e3545]: XP boost · 15 min
+                  - generic [ref=e3546]: Earn 2× XP on next session
+                - button "80" [ref=e3547] [cursor=pointer]:
+                  - img [ref=e3548]:
+                    - generic [ref=e3550]: ¢
+                  - text: "80"
+              - generic [ref=e3551]:
+                - img [ref=e3553]
+                - generic [ref=e3556]:
+                  - generic [ref=e3557]: 3 hint reveals
+                  - generic [ref=e3558]: Use any time
+                - button "40" [ref=e3559] [cursor=pointer]:
+                  - img [ref=e3560]:
+                    - generic [ref=e3562]: ¢
+                  - text: "40"
+              - generic [ref=e3563]:
+                - img [ref=e3565]
+                - generic [ref=e3568]:
+                  - generic [ref=e3569]: Restart a lesson, no heart cost
+                  - generic [ref=e3570]: One-shot
+                - button "60" [ref=e3571] [cursor=pointer]:
+                  - img [ref=e3572]:
+                    - generic [ref=e3574]: ¢
+                  - text: "60"
+          - generic [ref=e3575]:
+            - text: Need more?
+            - generic [ref=e3576]: Earn coins on the path.
+        - navigation [ref=e3577]:
+          - button "Path" [ref=e3578] [cursor=pointer]:
+            - img [ref=e3579]
+            - generic [ref=e3582]: Path
+          - button "League" [ref=e3583] [cursor=pointer]:
+            - img [ref=e3584]
+            - generic [ref=e3588]: League
+          - button "Shop" [ref=e3589] [cursor=pointer]:
+            - img [ref=e3590]
+            - generic [ref=e3592]: Shop
+          - button "Me" [ref=e3593] [cursor=pointer]:
+            - img [ref=e3594]
+            - generic [ref=e3597]: Me
+  - generic [ref=e3599]:
+    - generic [ref=e3601]:
+      - generic [ref=e3602]: 11 · Profile
+      - generic [ref=e3603]: Identity hero + 4-stat strip + GitHub-style activity heatmap + 28-badge grid. Friend's profile swaps the gear for an Add-friend button.
+    - generic [ref=e3604]:
+      - generic [ref=e3605]:
+        - generic [ref=e3606]:
+          - generic [ref=e3607]:
+            - generic "Drag to reorder" [ref=e3608]:
+              - img [ref=e3609]
+            - generic "Click to focus" [ref=e3616] [cursor=pointer]:
+              - generic [ref=e3617]: Own profile
+          - generic [ref=e3618]:
+            - button "More" [ref=e3620] [cursor=pointer]:
+              - img [ref=e3621]
+            - button "Focus" [ref=e3625] [cursor=pointer]:
+              - img [ref=e3626]
+        - generic [ref=e3632]:
+          - generic [ref=e3633]:
+            - generic [ref=e3634]: 9:41
+            - generic [ref=e3635]:
+              - img [ref=e3636]
+              - img [ref=e3642]
+              - img [ref=e3644]
+          - generic [ref=e3648]:
+            - generic [ref=e3649]: Lekkertaal
+            - button "Notifications" [ref=e3651] [cursor=pointer]:
+              - img [ref=e3652]
+          - generic [ref=e3656]:
+            - generic [ref=e3657]:
+              - generic [ref=e3658]:
+                - generic [ref=e3659]:
+                  - img "poffertjes idle" [ref=e3661]
+                  - generic [ref=e3662]: Lv 7
+                - generic [ref=e3663]:
+                  - generic [ref=e3664]: A2 · Learning Dutch
+                  - heading "Liesbeth" [level=2] [ref=e3665]
+                  - generic [ref=e3666]: Joined 14 March 2026 · 🇳🇱 Amsterdam
+                - button [ref=e3667] [cursor=pointer]:
+                  - img [ref=e3668]
+              - generic [ref=e3671]:
+                - generic [ref=e3672]:
+                  - generic [ref=e3673]:
+                    - img [ref=e3674]
+                    - generic [ref=e3676]: Streak
+                  - generic [ref=e3677]: "12"
+                - generic [ref=e3678]:
+                  - generic [ref=e3679]:
+                    - img [ref=e3680]
+                    - generic [ref=e3682]: Total XP
+                  - generic [ref=e3683]: 4 280
+                - generic [ref=e3684]:
+                  - generic [ref=e3685]:
+                    - img [ref=e3686]
+                    - generic [ref=e3690]: League
+                  - generic [ref=e3691]: Stroop.
+                - generic [ref=e3692]:
+                  - generic [ref=e3693]:
+                    - img [ref=e3694]
+                    - generic [ref=e3696]: Lessons
+                  - generic [ref=e3697]: "64"
+            - generic [ref=e3698]:
+              - generic [ref=e3699]:
+                - generic [ref=e3700]: Activity · last 12 weeks
+                - generic [ref=e3701]:
+                  - generic [ref=e3702]: Less
+                  - generic [ref=e3709]: More
+              - generic [ref=e3796]:
+                - generic [ref=e3797]: maa
+                - generic [ref=e3798]: apr
+                - generic [ref=e3799]: mei
+            - generic [ref=e3800]:
+              - generic [ref=e3801]: Badges · 11 of 28
+              - generic [ref=e3802]:
+                - generic [ref=e3803]:
+                  - img [ref=e3805]
+                  - generic [ref=e3807]: Maand-monster
+                  - generic [ref=e3808]: 30-day streak
+                - generic [ref=e3809]:
+                  - img [ref=e3811]
+                  - generic [ref=e3815]: Stroop. league
+                  - generic [ref=e3816]: 2nd weekly
+                - generic [ref=e3817]:
+                  - img [ref=e3819]
+                  - generic [ref=e3822]: Smooth talker
+                  - generic [ref=e3823]: 3× perfect roleplay
+                - generic [ref=e3824]:
+                  - img [ref=e3826]
+                  - generic [ref=e3828]: Bliksem
+                  - generic [ref=e3829]: Earn 200 XP in a day
+                - generic [ref=e3830]:
+                  - img [ref=e3832]
+                  - generic [ref=e3835]: Peer-shifter
+                  - generic [ref=e3836]: Win 5 peer drills
+                - generic [ref=e3837]:
+                  - img [ref=e3839]
+                  - generic [ref=e3842]: Vocabulair
+                  - generic [ref=e3843]: 500 words learned
+          - navigation [ref=e3844]:
+            - button "Path" [ref=e3845] [cursor=pointer]:
+              - img [ref=e3846]
+              - generic [ref=e3849]: Path
+            - button "League" [ref=e3850] [cursor=pointer]:
+              - img [ref=e3851]
+              - generic [ref=e3855]: League
+            - button "Shop" [ref=e3856] [cursor=pointer]:
+              - img [ref=e3857]
+              - generic [ref=e3859]: Shop
+            - button "Me" [ref=e3860] [cursor=pointer]:
+              - img [ref=e3861]
+              - generic [ref=e3864]: Me
+      - generic [ref=e3866]:
+        - generic [ref=e3867]:
+          - generic [ref=e3868]:
+            - generic "Drag to reorder" [ref=e3869]:
+              - img [ref=e3870]
+            - generic "Click to focus" [ref=e3877] [cursor=pointer]:
+              - generic [ref=e3878]: A friend's profile
+          - generic [ref=e3879]:
+            - button "More" [ref=e3881] [cursor=pointer]:
+              - img [ref=e3882]
+            - button "Focus" [ref=e3886] [cursor=pointer]:
+              - img [ref=e3887]
+        - generic [ref=e3893]:
+          - generic [ref=e3894]:
+            - generic [ref=e3895]: 9:41
+            - generic [ref=e3896]:
+              - img [ref=e3897]
+              - img [ref=e3903]
+              - img [ref=e3905]
+          - generic [ref=e3909]:
+            - generic [ref=e3910]: Lekkertaal
+            - button "Notifications" [ref=e3912] [cursor=pointer]:
+              - img [ref=e3913]
+          - generic [ref=e3917]:
+            - generic [ref=e3918]:
+              - generic [ref=e3919]:
+                - generic [ref=e3920]:
+                  - img "poffertjes idle" [ref=e3922]
+                  - generic [ref=e3923]: Lv 7
+                - generic [ref=e3924]:
+                  - generic [ref=e3925]: A2 · Learning Dutch
+                  - heading "Marieke" [level=2] [ref=e3926]
+                  - generic [ref=e3927]: Joined 14 March 2026 · 🇳🇱 Amsterdam
+                - button "Add friend" [ref=e3928] [cursor=pointer]
+              - generic [ref=e3929]:
+                - generic [ref=e3930]:
+                  - generic [ref=e3931]:
+                    - img [ref=e3932]
+                    - generic [ref=e3934]: Streak
+                  - generic [ref=e3935]: "12"
+                - generic [ref=e3936]:
+                  - generic [ref=e3937]:
+                    - img [ref=e3938]
+                    - generic [ref=e3940]: Total XP
+                  - generic [ref=e3941]: 4 280
+                - generic [ref=e3942]:
+                  - generic [ref=e3943]:
+                    - img [ref=e3944]
+                    - generic [ref=e3948]: League
+                  - generic [ref=e3949]: Stroop.
+                - generic [ref=e3950]:
+                  - generic [ref=e3951]:
+                    - img [ref=e3952]
+                    - generic [ref=e3954]: Lessons
+                  - generic [ref=e3955]: "64"
+            - generic [ref=e3956]:
+              - generic [ref=e3957]:
+                - generic [ref=e3958]: Activity · last 12 weeks
+                - generic [ref=e3959]:
+                  - generic [ref=e3960]: Less
+                  - generic [ref=e3967]: More
+              - generic [ref=e4054]:
+                - generic [ref=e4055]: maa
+                - generic [ref=e4056]: apr
+                - generic [ref=e4057]: mei
+            - generic [ref=e4058]:
+              - generic [ref=e4059]: Badges · 11 of 28
+              - generic [ref=e4060]:
+                - generic [ref=e4061]:
+                  - img [ref=e4063]
+                  - generic [ref=e4065]: Maand-monster
+                  - generic [ref=e4066]: 30-day streak
+                - generic [ref=e4067]:
+                  - img [ref=e4069]
+                  - generic [ref=e4073]: Stroop. league
+                  - generic [ref=e4074]: 2nd weekly
+                - generic [ref=e4075]:
+                  - img [ref=e4077]
+                  - generic [ref=e4080]: Smooth talker
+                  - generic [ref=e4081]: 3× perfect roleplay
+                - generic [ref=e4082]:
+                  - img [ref=e4084]
+                  - generic [ref=e4086]: Bliksem
+                  - generic [ref=e4087]: Earn 200 XP in a day
+                - generic [ref=e4088]:
+                  - img [ref=e4090]
+                  - generic [ref=e4093]: Peer-shifter
+                  - generic [ref=e4094]: Win 5 peer drills
+                - generic [ref=e4095]:
+                  - img [ref=e4097]
+                  - generic [ref=e4100]: Vocabulair
+                  - generic [ref=e4101]: 500 words learned
+            - generic [ref=e4102]:
+              - button "Send drill" [ref=e4103] [cursor=pointer]:
+                - img [ref=e4104]
+                - text: Send drill
+              - button "Add friend" [ref=e4108] [cursor=pointer]
+          - navigation [ref=e4109]:
+            - button "Path" [ref=e4110] [cursor=pointer]:
+              - img [ref=e4111]
+              - generic [ref=e4114]: Path
+            - button "League" [ref=e4115] [cursor=pointer]:
+              - img [ref=e4116]
+              - generic [ref=e4120]: League
+            - button "Shop" [ref=e4121] [cursor=pointer]:
+              - img [ref=e4122]
+              - generic [ref=e4124]: Shop
+            - button "Me" [ref=e4125] [cursor=pointer]:
+              - img [ref=e4126]
+              - generic [ref=e4129]: Me
+  - generic [ref=e4131]:
+    - generic [ref=e4133]:
+      - generic [ref=e4134]: 14 · Settings
+      - generic [ref=e4135]: Light only. Token infrastructure for system-dark stays in src/styles.css for users who hard-prefer it, but the brand is sunlight + paper + treats — that doesn't translate to dark.
+    - generic [ref=e4137]:
+      - generic [ref=e4138]:
+        - generic [ref=e4139]:
+          - generic "Drag to reorder" [ref=e4140]:
+            - img [ref=e4141]
+          - generic "Click to focus" [ref=e4148] [cursor=pointer]:
+            - generic [ref=e4149]: Settings
+        - generic [ref=e4150]:
+          - button "More" [ref=e4152] [cursor=pointer]:
+            - img [ref=e4153]
+          - button "Focus" [ref=e4157] [cursor=pointer]:
+            - img [ref=e4158]
+      - generic [ref=e4164]:
+        - generic [ref=e4165]:
+          - generic [ref=e4166]: 9:41
+          - generic [ref=e4167]:
+            - img [ref=e4168]
+            - img [ref=e4174]
+            - img [ref=e4176]
+        - generic [ref=e4180]:
+          - button [ref=e4181] [cursor=pointer]:
+            - img [ref=e4182]
+          - generic [ref=e4184]: Settings
+        - generic [ref=e4185]:
+          - generic [ref=e4186]:
+            - generic [ref=e4187]: Account
+            - generic [ref=e4188]:
+              - generic [ref=e4190]:
+                - generic [ref=e4191]: Display name
+                - generic [ref=e4192]: Liesbeth
+              - generic [ref=e4194]:
+                - generic [ref=e4195]: Email
+                - generic [ref=e4196]: liesbeth@example.com
+              - generic [ref=e4198]:
+                - generic [ref=e4199]: Manage subscription
+                - generic [ref=e4200]: Free
+          - generic [ref=e4201]:
+            - generic [ref=e4202]: Learning
+            - generic [ref=e4203]:
+              - generic [ref=e4205]:
+                - generic [ref=e4206]: Level
+                - generic [ref=e4207]: A2 · Some Dutch
+              - generic [ref=e4208]:
+                - generic [ref=e4210]: Daily goal
+                - generic [ref=e4211]:
+                  - generic [ref=e4212]: Casual · 10 XP
+                  - generic [ref=e4213]: Regular · 20 XP
+                  - generic [ref=e4214]: Serious · 50 XP
+                  - generic [ref=e4215]: Intense · 100 XP
+              - generic [ref=e4217]: Slow-replay by default in listening drills
+          - generic [ref=e4220]:
+            - generic [ref=e4221]: Notifications
+            - generic [ref=e4222]:
+              - generic [ref=e4224]: Daily reminder
+              - generic [ref=e4228]:
+                - generic [ref=e4229]: Reminder time
+                - generic [ref=e4230]: 20:30
+              - generic [ref=e4232]: Friend & peer-drill pings
+              - generic [ref=e4236]: Streak alerts
+              - generic [ref=e4240]: Email digest
+          - generic [ref=e4243]:
+            - generic [ref=e4244]: Sound & haptics
+            - generic [ref=e4245]:
+              - generic [ref=e4247]: Sound effects
+              - generic [ref=e4251]: Mascot voice
+              - generic [ref=e4255]: Haptic feedback
+          - generic [ref=e4258]:
+            - generic [ref=e4259]: Appearance
+            - generic [ref=e4261]:
+              - generic [ref=e4263]: Theme
+              - generic [ref=e4264]:
+                - generic [ref=e4265]: Light
+                - generic [ref=e4266]: Dark
+                - generic [ref=e4267]: System
+          - generic [ref=e4268]:
+            - generic [ref=e4269]: Privacy
+            - generic [ref=e4270]:
+              - generic [ref=e4272]:
+                - generic [ref=e4273]: Show me on leaderboard
+                - generic [ref=e4274]: Friends only
+              - generic [ref=e4276]:
+                - generic [ref=e4277]: Allow peer drills from
+                - generic [ref=e4278]: Friends
+              - generic [ref=e4280]:
+                - generic [ref=e4281]: Data & export
+                - generic [ref=e4282]: ">"
+          - generic [ref=e4283]:
+            - generic [ref=e4284]: Danger zone
+            - button "Sign out" [ref=e4286] [cursor=pointer]
+          - generic [ref=e4287]: Lekkertaal v0.4.2 · Made with ☕ in NL
+        - generic [ref=e4288]:
+          - img [ref=e4289]
+          - text: Opgeslagen
+  - generic [ref=e4292]:
+    - generic [ref=e4294]:
+      - generic [ref=e4295]: Mascot brand sheet
+      - generic [ref=e4296]: One-page reference for the cast. Each treat anchors a place in the world — a unit, a feature, an emotional beat. Hand-off doc for the vector redraw.
+    - generic [ref=e4298]:
+      - generic [ref=e4299]:
+        - generic [ref=e4300]:
+          - generic "Drag to reorder" [ref=e4301]:
+            - img [ref=e4302]
+          - generic "Click to focus" [ref=e4309] [cursor=pointer]:
+            - generic [ref=e4310]: The Lekkertaal cast
+        - generic [ref=e4311]:
+          - button "More" [ref=e4313] [cursor=pointer]:
+            - img [ref=e4314]
+          - button "Focus" [ref=e4318] [cursor=pointer]:
+            - img [ref=e4319]
+      - generic [ref=e4322]:
+        - generic [ref=e4323]:
+          - generic [ref=e4324]:
+            - generic [ref=e4325]: Brand reference · v0.4 · 2026-05-21
+            - heading "The Lekkertaal cast" [level=1] [ref=e4326]
+            - paragraph [ref=e4327]: "Nine characters. One stroopwafel and eight Dutch treats. Each treat anchors a place in the world — a unit, a feature, an emotional beat — so users meet them in context, not in a parade. Note for redraw: current PNGs are AI-rendered placeholders; final assets to be drawn vector, consistent line weight, no glossy highlights."
+          - img "stroop happy" [ref=e4330]
+        - generic [ref=e4331]:
+          - generic [ref=e4332]:
+            - generic [ref=e4333]: ANCHOR
+            - generic [ref=e4334]: Stroop
+            - generic [ref=e4335]: Stroopwafel
+            - generic [ref=e4336]:
+              - img "stroop idle" [ref=e4339]
+              - img "stroop happy" [ref=e4342]
+              - img "stroop surprised" [ref=e4345]
+            - generic [ref=e4346]:
+              - generic [ref=e4347]: idle
+              - generic [ref=e4348]: happy
+              - generic [ref=e4349]: surprised
+            - generic [ref=e4350]:
+              - generic [ref=e4351]: Mascot-in-chief
+              - generic [ref=e4352]: Your guide. Stroop greets you on day one and never patronises.
+            - generic [ref=e4353]:
+              - generic [ref=e4354]: Appears in
+              - generic [ref=e4355]:
+                - generic [ref=e4356]: Onboarding
+                - generic [ref=e4357]: Lesson feedback
+                - generic [ref=e4358]: Empty states
+                - generic [ref=e4359]: Streak nudges
+            - generic [ref=e4360]:
+              - generic [ref=e4361]: Brings vocab
+              - generic [ref=e4362]:
+                - generic [ref=e4363]: lekker
+                - generic [ref=e4364]: gezellig
+                - generic [ref=e4365]: hoi
+          - generic [ref=e4366]:
+            - generic [ref=e4367]: Kroket
+            - generic [ref=e4368]: Kroket — fried snack-bar staple
+            - generic [ref=e4369]:
+              - img "kroket idle" [ref=e4372]
+              - img "kroket happy" [ref=e4375]
+              - img "kroket surprised" [ref=e4378]
+            - generic [ref=e4379]:
+              - generic [ref=e4380]: idle
+              - generic [ref=e4381]: happy
+              - generic [ref=e4382]: surprised
+            - generic [ref=e4383]:
+              - generic [ref=e4384]: Bakkerij unit lead
+              - generic [ref=e4385]: Holds down the counter at Bakkerij De Stoeptegel. Patient correction-giver.
+            - generic [ref=e4386]:
+              - generic [ref=e4387]: Appears in
+              - generic [ref=e4388]:
+                - generic [ref=e4389]: Boss-fight roleplays
+                - generic [ref=e4390]: Unit 3 hero
+                - generic [ref=e4391]: Snack bar scenes
+            - generic [ref=e4392]:
+              - generic [ref=e4393]: Brings vocab
+              - generic [ref=e4394]:
+                - generic [ref=e4395]: bestellen
+                - generic [ref=e4396]: alstublieft
+                - generic [ref=e4397]: afrekenen
+          - generic [ref=e4398]:
+            - generic [ref=e4399]: Bitterballen
+            - generic [ref=e4400]: Bitterballen — bar snack
+            - generic [ref=e4401]:
+              - img "bitterballen idle" [ref=e4404]
+              - img "bitterballen happy" [ref=e4407]
+              - img "bitterballen surprised" [ref=e4410]
+            - generic [ref=e4411]:
+              - generic [ref=e4412]: idle
+              - generic [ref=e4413]: happy
+              - generic [ref=e4414]: surprised
+            - generic [ref=e4415]:
+              - generic [ref=e4416]: Café-scene chorus
+              - generic [ref=e4417]: Always shows up in threes. Knows everyone at the bar.
+            - generic [ref=e4418]:
+              - generic [ref=e4419]: Appears in
+              - generic [ref=e4420]:
+                - generic [ref=e4421]: Social-proof strip
+                - generic [ref=e4422]: Friend invites
+                - generic [ref=e4423]: Borrel scenes
+            - generic [ref=e4424]:
+              - generic [ref=e4425]: Brings vocab
+              - generic [ref=e4426]:
+                - generic [ref=e4427]: proost
+                - generic [ref=e4428]: een rondje
+                - generic [ref=e4429]: gezellig
+          - generic [ref=e4430]:
+            - generic [ref=e4431]: Oliebollen
+            - generic [ref=e4432]: Oliebollen — New Year's doughnut
+            - generic [ref=e4433]:
+              - img "oliebollen idle" [ref=e4436]
+              - img "oliebollen happy" [ref=e4439]
+              - img "oliebollen surprised" [ref=e4442]
+            - generic [ref=e4443]:
+              - generic [ref=e4444]: idle
+              - generic [ref=e4445]: happy
+              - generic [ref=e4446]: surprised
+            - generic [ref=e4447]:
+              - generic [ref=e4448]: Streak & celebration
+              - generic [ref=e4449]: Comes out for milestones — 7, 30, 100 day streaks.
+            - generic [ref=e4450]:
+              - generic [ref=e4451]: Appears in
+              - generic [ref=e4452]:
+                - generic [ref=e4453]: Daily quests card
+                - generic [ref=e4454]: Streak milestones
+                - generic [ref=e4455]: Promotion celebration
+            - generic [ref=e4456]:
+              - generic [ref=e4457]: Brings vocab
+              - generic [ref=e4458]:
+                - generic [ref=e4459]: gelukkig nieuwjaar
+                - generic [ref=e4460]: vuurwerk
+          - generic [ref=e4461]:
+            - generic [ref=e4462]: Drop
+            - generic [ref=e4463]: Drop — Dutch licorice
+            - generic [ref=e4464]:
+              - img "drop idle" [ref=e4467]
+              - img "drop happy" [ref=e4470]
+              - img "drop surprised" [ref=e4473]
+            - generic [ref=e4474]:
+              - generic [ref=e4475]: idle
+              - generic [ref=e4476]: happy
+              - generic [ref=e4477]: surprised
+            - generic [ref=e4478]:
+              - generic [ref=e4479]: The bouncer
+              - generic [ref=e4480]: Sits next to locked content. Doesn't smile. Means well.
+            - generic [ref=e4481]:
+              - generic [ref=e4482]: Appears in
+              - generic [ref=e4483]:
+                - generic [ref=e4484]: Locked tiles
+                - generic [ref=e4485]: Out-of-hearts state
+                - generic [ref=e4486]: Premium gates
+            - generic [ref=e4487]:
+              - generic [ref=e4488]: Brings vocab
+              - generic [ref=e4489]:
+                - generic [ref=e4490]: zout
+                - generic [ref=e4491]: zoet
+                - generic [ref=e4492]: kun je raden
+          - generic [ref=e4493]:
+            - generic [ref=e4494]: Poffertjes
+            - generic [ref=e4495]: Poffertjes — mini pancakes
+            - generic [ref=e4496]:
+              - img "poffertjes idle" [ref=e4499]
+              - img "poffertjes happy" [ref=e4502]
+              - img "poffertjes surprised" [ref=e4505]
+            - generic [ref=e4506]:
+              - generic [ref=e4507]: idle
+              - generic [ref=e4508]: happy
+              - generic [ref=e4509]: surprised
+            - generic [ref=e4510]:
+              - generic [ref=e4511]: Beginner cameo
+              - generic [ref=e4512]: Soft landing for A1 learners. The mascot you pick if you're new.
+            - generic [ref=e4513]:
+              - generic [ref=e4514]: Appears in
+              - generic [ref=e4515]:
+                - generic [ref=e4516]: A1 level card
+                - generic [ref=e4517]: Profile default
+                - generic [ref=e4518]: Tutorial walkthroughs
+            - generic [ref=e4519]:
+              - generic [ref=e4520]: Brings vocab
+              - generic [ref=e4521]:
+                - generic [ref=e4522]: een beetje
+                - generic [ref=e4523]: klein
+                - generic [ref=e4524]: lief
+          - generic [ref=e4525]:
+            - generic [ref=e4526]: Frikandel
+            - generic [ref=e4527]: Frikandel — snackbar sausage
+            - generic [ref=e4528]:
+              - img "frikandel idle" [ref=e4531]
+              - img "frikandel happy" [ref=e4534]
+              - img "frikandel surprised" [ref=e4537]
+            - generic [ref=e4538]:
+              - generic [ref=e4539]: idle
+              - generic [ref=e4540]: happy
+              - generic [ref=e4541]: surprised
+            - generic [ref=e4542]:
+              - generic [ref=e4543]: Energetic sidekick
+              - generic [ref=e4544]: The friend who challenges you to a peer drill at 11pm.
+            - generic [ref=e4545]:
+              - generic [ref=e4546]: Appears in
+              - generic [ref=e4547]:
+                - generic [ref=e4548]: Peer drills
+                - generic [ref=e4549]: Leaderboard fast-movers
+                - generic [ref=e4550]: Quick wins
+            - generic [ref=e4551]:
+              - generic [ref=e4552]: Brings vocab
+              - generic [ref=e4553]:
+                - generic [ref=e4554]: snel
+                - generic [ref=e4555]: lekker
+                - generic [ref=e4556]: doe maar
+          - generic [ref=e4557]:
+            - generic [ref=e4558]: Tompouce
+            - generic [ref=e4559]: Tompouce — fondant pastry
+            - generic [ref=e4560]:
+              - img "tompouce idle" [ref=e4563]
+              - img "tompouce happy" [ref=e4566]
+              - img "tompouce surprised" [ref=e4569]
+            - generic [ref=e4570]:
+              - generic [ref=e4571]: idle
+              - generic [ref=e4572]: happy
+              - generic [ref=e4573]: surprised
+            - generic [ref=e4574]:
+              - generic [ref=e4575]: Polite-conversation lead
+              - generic [ref=e4576]: Pink-frosted. Always says 'alstublieft'.
+            - generic [ref=e4577]:
+              - generic [ref=e4578]: Appears in
+              - generic [ref=e4579]:
+                - generic [ref=e4580]: Bakkerij window
+                - generic [ref=e4581]: Polite-form lessons
+                - generic [ref=e4582]: Profile cosmetic
+            - generic [ref=e4583]:
+              - generic [ref=e4584]: Brings vocab
+              - generic [ref=e4585]:
+                - generic [ref=e4586]: alstublieft
+                - generic [ref=e4587]: graag
+                - generic [ref=e4588]: mag ik
+          - generic [ref=e4589]:
+            - generic [ref=e4590]: Kaas
+            - generic [ref=e4591]: Kaas — Gouda wedge
+            - generic [ref=e4592]:
+              - img "kaas idle" [ref=e4595]
+              - img "kaas happy" [ref=e4598]
+              - img "kaas surprised" [ref=e4601]
+            - generic [ref=e4602]:
+              - generic [ref=e4603]: idle
+              - generic [ref=e4604]: happy
+              - generic [ref=e4605]: surprised
+            - generic [ref=e4606]:
+              - generic [ref=e4607]: Market-day veteran
+              - generic [ref=e4608]: Lives at the kaaswinkel. Will explain de vs het with patience.
+            - generic [ref=e4609]:
+              - generic [ref=e4610]: Appears in
+              - generic [ref=e4611]:
+                - generic [ref=e4612]: Op de markt unit
+                - generic [ref=e4613]: Grammar drills
+                - generic [ref=e4614]: Listening drills
+            - generic [ref=e4615]:
+              - generic [ref=e4616]: Brings vocab
+              - generic [ref=e4617]:
+                - generic [ref=e4618]: jong
+                - generic [ref=e4619]: belegen
+                - generic [ref=e4620]: een ons
+        - generic [ref=e4621]:
+          - generic [ref=e4622]:
+            - generic [ref=e4623]: Expressions
+            - generic [ref=e4624]: "idle · happy · surprised. Each as a PNG today, redraw to vector. Anim hooks: .anim-idle-bob (default), .anim-happy-bounce (correct/win), .anim-surprised-pop (wrong/reveal)."
+          - generic [ref=e4625]:
+            - generic [ref=e4626]: Voice
+            - generic [ref=e4627]: Encouraging, never twee. Stroop nudges; never lectures. Treats stay in character — Kroket is patient, Drop is stoic, Frikandel is fast, Oliebollen celebrates.
+          - generic [ref=e4628]:
+            - generic [ref=e4629]: Don'ts
+            - generic [ref=e4630]: No mascot pile-ups (max 2 visible per screen except this sheet & the celebration). No emoji on top of mascots. Never resize below 36px — detail gets lost.
+  - generic [ref=e4631]:
+    - generic [ref=e4633]:
+      - generic [ref=e4634]: Palette exploration · 3 directions on real surfaces
+      - generic [ref=e4635]: "The brief asks: show the path + lesson-complete in each palette so you can judge on real surfaces. Tokens are the candidate CSS files from src/styles/palettes/. Token names are identical so swapping is just a CSS file replacement."
+    - generic [ref=e4636]:
+      - generic [ref=e4637]:
+        - generic [ref=e4638]:
+          - generic [ref=e4639]:
+            - generic "Drag to reorder" [ref=e4640]:
+              - img [ref=e4641]
+            - generic "Click to focus" [ref=e4648] [cursor=pointer]:
+              - generic [ref=e4649]: A · Live · Dutch orange + canal blue · Path
+          - generic [ref=e4650]:
+            - button "More" [ref=e4652] [cursor=pointer]:
+              - img [ref=e4653]
+            - button "Focus" [ref=e4657] [cursor=pointer]:
+              - img [ref=e4658]
+        - generic [ref=e4664]:
+          - generic [ref=e4665]:
+            - generic [ref=e4666]: 9:41
+            - generic [ref=e4667]:
+              - img [ref=e4668]
+              - img [ref=e4674]
+              - img [ref=e4676]
+          - generic [ref=e4680]:
+            - generic [ref=e4681]: Lekkertaal
+            - button "Notifications" [ref=e4683] [cursor=pointer]:
+              - img [ref=e4684]
+          - generic [ref=e4688]:
+            - generic [ref=e4689]:
+              - img [ref=e4690]
+              - text: "12"
+              - generic [ref=e4692]:
+                - img [ref=e4693]
+                - text: "2"
+            - generic [ref=e4696]:
+              - img [ref=e4697]
+              - text: Lv 7
+            - generic [ref=e4699]:
+              - img [ref=e4700]:
+                - generic [ref=e4702]: ¢
+              - text: "320"
+          - generic [ref=e4709]:
+            - generic [ref=e4711]:
+              - generic [ref=e4712]:
+                - img "oliebollen idle" [ref=e4714]
+                - generic [ref=e4715]:
+                  - generic [ref=e4716]: Daily quests
+                  - generic [ref=e4717]: Reset in 6u 14m
+                - generic [ref=e4718]:
+                  - img [ref=e4719]:
+                    - generic [ref=e4721]: ¢
+                  - text: "25"
+              - generic [ref=e4722]:
+                - generic [ref=e4723]:
+                  - img [ref=e4725]
+                  - generic [ref=e4728]:
+                    - generic [ref=e4729]: Earn 30 XP
+                    - generic [ref=e4730]: 22/30
+                  - generic [ref=e4733]:
+                    - img [ref=e4734]:
+                      - generic [ref=e4736]: ¢
+                    - text: "10"
+                - generic [ref=e4737]:
+                  - img [ref=e4739]
+                  - generic [ref=e4742]:
+                    - generic [ref=e4743]: Score 80%+ on 2 lessons
+                    - generic [ref=e4744]: 1/2
+                  - generic [ref=e4747]:
+                    - img [ref=e4748]:
+                      - generic [ref=e4750]: ¢
+                    - text: "10"
+                - generic [ref=e4751]:
+                  - img [ref=e4753]
+                  - generic [ref=e4757]:
+                    - generic [ref=e4758]: Speak in 1 roleplay
+                    - generic [ref=e4759]: 0/1
+                  - generic [ref=e4761]:
+                    - img [ref=e4762]:
+                      - generic [ref=e4764]: ¢
+                    - text: "5"
+            - generic [ref=e4765]:
+              - generic [ref=e4766]:
+                - generic [ref=e4767]: "03"
+                - generic [ref=e4768]:
+                  - generic [ref=e4770]: Bij de bakker
+                  - generic [ref=e4771]: At the bakery · 18 lessons
+                - img "tompouce happy" [ref=e4776]
+              - generic [ref=e4778]:
+                - generic [ref=e4779]:
+                  - img [ref=e4781]
+                  - generic [ref=e4783]: Hallo
+                - generic [ref=e4784]:
+                  - img [ref=e4786]
+                  - generic [ref=e4788]: Bestellen
+                - generic [ref=e4789]:
+                  - img [ref=e4791]
+                  - generic [ref=e4793]: Cijfers
+                - generic [ref=e4794]:
+                  - img [ref=e4796]
+                  - generic [ref=e4798]: Brood
+                - generic [ref=e4799]:
+                  - img [ref=e4801]
+                  - generic [ref=e4803]: Tompouce
+                - generic [ref=e4804]:
+                  - img [ref=e4806]
+                  - generic [ref=e4809]: Koffie
+                - generic [ref=e4810]:
+                  - img [ref=e4812]
+                  - generic [ref=e4815]: Afrekenen
+              - generic [ref=e4816]:
+                - img [ref=e4818]
+                - generic [ref=e4821]:
+                  - generic [ref=e4822]: Boss fight
+                  - generic [ref=e4823]: "Roleplay: Bij de bakker"
+                - img [ref=e4824]
+            - generic [ref=e4826]:
+              - generic [ref=e4827]:
+                - generic [ref=e4828]: "04"
+                - generic [ref=e4829]:
+                  - generic [ref=e4830]:
+                    - generic [ref=e4831]: Op de markt
+                    - generic [ref=e4832]:
+                      - img [ref=e4833]
+                      - text: locked
+                  - generic [ref=e4836]: At the market · 22 lessons
+                - img "kaas idle" [ref=e4838]
+              - generic [ref=e4840]:
+                - generic [ref=e4841]:
+                  - img [ref=e4843]
+                  - generic [ref=e4846]: Groente
+                - generic [ref=e4847]:
+                  - img [ref=e4849]
+                  - generic [ref=e4852]: Hoeveel?
+                - generic [ref=e4853]:
+                  - img [ref=e4855]
+                  - generic [ref=e4858]: Kaas
+                - generic [ref=e4859]:
+                  - img [ref=e4861]
+                  - generic [ref=e4864]: Vis
+              - generic [ref=e4865]:
+                - img [ref=e4867]
+                - generic [ref=e4870]:
+                  - generic [ref=e4871]: Boss fight
+                  - generic [ref=e4872]: "Roleplay: Op de markt"
+                - img [ref=e4873]
+          - navigation [ref=e4875]:
+            - button "Path" [ref=e4876] [cursor=pointer]:
+              - img [ref=e4877]
+              - generic [ref=e4880]: Path
+            - button "League" [ref=e4881] [cursor=pointer]:
+              - img [ref=e4882]
+              - generic [ref=e4886]: League
+            - button "Shop" [ref=e4887] [cursor=pointer]:
+              - img [ref=e4888]
+              - generic [ref=e4890]: Shop
+            - button "Me" [ref=e4891] [cursor=pointer]:
+              - img [ref=e4892]
+              - generic [ref=e4895]: Me
+      - generic [ref=e4897]:
+        - generic [ref=e4898]:
+          - generic [ref=e4899]:
+            - generic "Drag to reorder" [ref=e4900]:
+              - img [ref=e4901]
+            - generic "Click to focus" [ref=e4908] [cursor=pointer]:
+              - generic [ref=e4909]: A · Live · Lesson Complete
+          - generic [ref=e4910]:
+            - button "More" [ref=e4912] [cursor=pointer]:
+              - img [ref=e4913]
+            - button "Focus" [ref=e4917] [cursor=pointer]:
+              - img [ref=e4918]
+        - generic [ref=e4925]:
+          - generic [ref=e4926]:
+            - generic [ref=e4927]: 9:41
+            - generic [ref=e4928]:
+              - img [ref=e4929]
+              - img [ref=e4935]
+              - img [ref=e4937]
+          - generic [ref=e4942]:
+            - generic [ref=e4943]: Lesson complete
+            - heading "Lekker gedaan." [level=1] [ref=e4944]
+            - generic [ref=e4945]:
+              - img "stroop happy" [ref=e4947]
+              - generic [ref=e4949]:
+                - generic [ref=e4950]:
+                  - img [ref=e4952]
+                  - generic [ref=e4954]: "14"
+                  - generic [ref=e4955]: XP
+                - generic [ref=e4956]:
+                  - img [ref=e4958]:
+                    - generic [ref=e4960]: ¢
+                  - generic [ref=e4961]: "10"
+                  - generic [ref=e4962]: Coins
+                - generic [ref=e4963]:
+                  - img [ref=e4965]
+                  - generic [ref=e4967]: "12"
+                  - generic [ref=e4968]: Streak
+            - generic [ref=e4969]:
+              - generic [ref=e4970]:
+                - generic [ref=e4971]: Accuracy
+                - generic [ref=e4972]: 87%
+              - generic [ref=e4976]:
+                - generic [ref=e4977]: 8 correct
+                - generic [ref=e4978]: 2 mistakes
+                - generic [ref=e4979]: 2 min 14 s
+            - generic [ref=e4981]:
+              - button "Continue → Next lesson" [ref=e4982] [cursor=pointer]
+              - button "Review mistakes" [ref=e4983] [cursor=pointer]
+      - generic [ref=e4985]:
+        - generic [ref=e4986]:
+          - generic [ref=e4987]:
+            - generic "Drag to reorder" [ref=e4988]:
+              - img [ref=e4989]
+            - generic "Click to focus" [ref=e4996] [cursor=pointer]:
+              - generic [ref=e4997]: B · Warm Bakery · Path
+          - generic [ref=e4998]:
+            - button "More" [ref=e5000] [cursor=pointer]:
+              - img [ref=e5001]
+            - button "Focus" [ref=e5005] [cursor=pointer]:
+              - img [ref=e5006]
+        - generic [ref=e5012]:
+          - generic [ref=e5013]:
+            - generic [ref=e5014]: 9:41
+            - generic [ref=e5015]:
+              - img [ref=e5016]
+              - img [ref=e5022]
+              - img [ref=e5024]
+          - generic [ref=e5028]:
+            - generic [ref=e5029]: Lekkertaal
+            - button "Notifications" [ref=e5031] [cursor=pointer]:
+              - img [ref=e5032]
+          - generic [ref=e5036]:
+            - generic [ref=e5037]:
+              - img [ref=e5038]
+              - text: "12"
+              - generic [ref=e5040]:
+                - img [ref=e5041]
+                - text: "2"
+            - generic [ref=e5044]:
+              - img [ref=e5045]
+              - text: Lv 7
+            - generic [ref=e5047]:
+              - img [ref=e5048]:
+                - generic [ref=e5050]: ¢
+              - text: "320"
+          - generic [ref=e5057]:
+            - generic [ref=e5059]:
+              - generic [ref=e5060]:
+                - img "oliebollen idle" [ref=e5062]
+                - generic [ref=e5063]:
+                  - generic [ref=e5064]: Daily quests
+                  - generic [ref=e5065]: Reset in 6u 14m
+                - generic [ref=e5066]:
+                  - img [ref=e5067]:
+                    - generic [ref=e5069]: ¢
+                  - text: "25"
+              - generic [ref=e5070]:
+                - generic [ref=e5071]:
+                  - img [ref=e5073]
+                  - generic [ref=e5076]:
+                    - generic [ref=e5077]: Earn 30 XP
+                    - generic [ref=e5078]: 22/30
+                  - generic [ref=e5081]:
+                    - img [ref=e5082]:
+                      - generic [ref=e5084]: ¢
+                    - text: "10"
+                - generic [ref=e5085]:
+                  - img [ref=e5087]
+                  - generic [ref=e5090]:
+                    - generic [ref=e5091]: Score 80%+ on 2 lessons
+                    - generic [ref=e5092]: 1/2
+                  - generic [ref=e5095]:
+                    - img [ref=e5096]:
+                      - generic [ref=e5098]: ¢
+                    - text: "10"
+                - generic [ref=e5099]:
+                  - img [ref=e5101]
+                  - generic [ref=e5105]:
+                    - generic [ref=e5106]: Speak in 1 roleplay
+                    - generic [ref=e5107]: 0/1
+                  - generic [ref=e5109]:
+                    - img [ref=e5110]:
+                      - generic [ref=e5112]: ¢
+                    - text: "5"
+            - generic [ref=e5113]:
+              - generic [ref=e5114]:
+                - generic [ref=e5115]: "03"
+                - generic [ref=e5116]:
+                  - generic [ref=e5118]: Bij de bakker
+                  - generic [ref=e5119]: At the bakery · 18 lessons
+                - img "tompouce happy" [ref=e5124]
+              - generic [ref=e5126]:
+                - generic [ref=e5127]:
+                  - img [ref=e5129]
+                  - generic [ref=e5131]: Hallo
+                - generic [ref=e5132]:
+                  - img [ref=e5134]
+                  - generic [ref=e5136]: Bestellen
+                - generic [ref=e5137]:
+                  - img [ref=e5139]
+                  - generic [ref=e5141]: Cijfers
+                - generic [ref=e5142]:
+                  - img [ref=e5144]
+                  - generic [ref=e5146]: Brood
+                - generic [ref=e5147]:
+                  - img [ref=e5149]
+                  - generic [ref=e5151]: Tompouce
+                - generic [ref=e5152]:
+                  - img [ref=e5154]
+                  - generic [ref=e5157]: Koffie
+                - generic [ref=e5158]:
+                  - img [ref=e5160]
+                  - generic [ref=e5163]: Afrekenen
+              - generic [ref=e5164]:
+                - img [ref=e5166]
+                - generic [ref=e5169]:
+                  - generic [ref=e5170]: Boss fight
+                  - generic [ref=e5171]: "Roleplay: Bij de bakker"
+                - img [ref=e5172]
+            - generic [ref=e5174]:
+              - generic [ref=e5175]:
+                - generic [ref=e5176]: "04"
+                - generic [ref=e5177]:
+                  - generic [ref=e5178]:
+                    - generic [ref=e5179]: Op de markt
+                    - generic [ref=e5180]:
+                      - img [ref=e5181]
+                      - text: locked
+                  - generic [ref=e5184]: At the market · 22 lessons
+                - img "kaas idle" [ref=e5186]
+              - generic [ref=e5188]:
+                - generic [ref=e5189]:
+                  - img [ref=e5191]
+                  - generic [ref=e5194]: Groente
+                - generic [ref=e5195]:
+                  - img [ref=e5197]
+                  - generic [ref=e5200]: Hoeveel?
+                - generic [ref=e5201]:
+                  - img [ref=e5203]
+                  - generic [ref=e5206]: Kaas
+                - generic [ref=e5207]:
+                  - img [ref=e5209]
+                  - generic [ref=e5212]: Vis
+              - generic [ref=e5213]:
+                - img [ref=e5215]
+                - generic [ref=e5218]:
+                  - generic [ref=e5219]: Boss fight
+                  - generic [ref=e5220]: "Roleplay: Op de markt"
+                - img [ref=e5221]
+          - navigation [ref=e5223]:
+            - button "Path" [ref=e5224] [cursor=pointer]:
+              - img [ref=e5225]
+              - generic [ref=e5228]: Path
+            - button "League" [ref=e5229] [cursor=pointer]:
+              - img [ref=e5230]
+              - generic [ref=e5234]: League
+            - button "Shop" [ref=e5235] [cursor=pointer]:
+              - img [ref=e5236]
+              - generic [ref=e5238]: Shop
+            - button "Me" [ref=e5239] [cursor=pointer]:
+              - img [ref=e5240]
+              - generic [ref=e5243]: Me
+      - generic [ref=e5245]:
+        - generic [ref=e5246]:
+          - generic [ref=e5247]:
+            - generic "Drag to reorder" [ref=e5248]:
+              - img [ref=e5249]
+            - generic "Click to focus" [ref=e5256] [cursor=pointer]:
+              - generic [ref=e5257]: B · Warm Bakery · Lesson Complete
+          - generic [ref=e5258]:
+            - button "More" [ref=e5260] [cursor=pointer]:
+              - img [ref=e5261]
+            - button "Focus" [ref=e5265] [cursor=pointer]:
+              - img [ref=e5266]
+        - generic [ref=e5273]:
+          - generic [ref=e5274]:
+            - generic [ref=e5275]: 9:41
+            - generic [ref=e5276]:
+              - img [ref=e5277]
+              - img [ref=e5283]
+              - img [ref=e5285]
+          - generic [ref=e5290]:
+            - generic [ref=e5291]: Lesson complete
+            - heading "Lekker gedaan." [level=1] [ref=e5292]
+            - generic [ref=e5293]:
+              - img "stroop happy" [ref=e5295]
+              - generic [ref=e5297]:
+                - generic [ref=e5298]:
+                  - img [ref=e5300]
+                  - generic [ref=e5302]: "14"
+                  - generic [ref=e5303]: XP
+                - generic [ref=e5304]:
+                  - img [ref=e5306]:
+                    - generic [ref=e5308]: ¢
+                  - generic [ref=e5309]: "10"
+                  - generic [ref=e5310]: Coins
+                - generic [ref=e5311]:
+                  - img [ref=e5313]
+                  - generic [ref=e5315]: "12"
+                  - generic [ref=e5316]: Streak
+            - generic [ref=e5317]:
+              - generic [ref=e5318]:
+                - generic [ref=e5319]: Accuracy
+                - generic [ref=e5320]: 87%
+              - generic [ref=e5324]:
+                - generic [ref=e5325]: 8 correct
+                - generic [ref=e5326]: 2 mistakes
+                - generic [ref=e5327]: 2 min 14 s
+            - generic [ref=e5329]:
+              - button "Continue → Next lesson" [ref=e5330] [cursor=pointer]
+              - button "Review mistakes" [ref=e5331] [cursor=pointer]
+      - generic [ref=e5333]:
+        - generic [ref=e5334]:
+          - generic [ref=e5335]:
+            - generic "Drag to reorder" [ref=e5336]:
+              - img [ref=e5337]
+            - generic "Click to focus" [ref=e5344] [cursor=pointer]:
+              - generic [ref=e5345]: C · Candy · Path
+          - generic [ref=e5346]:
+            - button "More" [ref=e5348] [cursor=pointer]:
+              - img [ref=e5349]
+            - button "Focus" [ref=e5353] [cursor=pointer]:
+              - img [ref=e5354]
+        - generic [ref=e5360]:
+          - generic [ref=e5361]:
+            - generic [ref=e5362]: 9:41
+            - generic [ref=e5363]:
+              - img [ref=e5364]
+              - img [ref=e5370]
+              - img [ref=e5372]
+          - generic [ref=e5376]:
+            - generic [ref=e5377]: Lekkertaal
+            - button "Notifications" [ref=e5379] [cursor=pointer]:
+              - img [ref=e5380]
+          - generic [ref=e5384]:
+            - generic [ref=e5385]:
+              - img [ref=e5386]
+              - text: "12"
+              - generic [ref=e5388]:
+                - img [ref=e5389]
+                - text: "2"
+            - generic [ref=e5392]:
+              - img [ref=e5393]
+              - text: Lv 7
+            - generic [ref=e5395]:
+              - img [ref=e5396]:
+                - generic [ref=e5398]: ¢
+              - text: "320"
+          - generic [ref=e5405]:
+            - generic [ref=e5407]:
+              - generic [ref=e5408]:
+                - img "oliebollen idle" [ref=e5410]
+                - generic [ref=e5411]:
+                  - generic [ref=e5412]: Daily quests
+                  - generic [ref=e5413]: Reset in 6u 14m
+                - generic [ref=e5414]:
+                  - img [ref=e5415]:
+                    - generic [ref=e5417]: ¢
+                  - text: "25"
+              - generic [ref=e5418]:
+                - generic [ref=e5419]:
+                  - img [ref=e5421]
+                  - generic [ref=e5424]:
+                    - generic [ref=e5425]: Earn 30 XP
+                    - generic [ref=e5426]: 22/30
+                  - generic [ref=e5429]:
+                    - img [ref=e5430]:
+                      - generic [ref=e5432]: ¢
+                    - text: "10"
+                - generic [ref=e5433]:
+                  - img [ref=e5435]
+                  - generic [ref=e5438]:
+                    - generic [ref=e5439]: Score 80%+ on 2 lessons
+                    - generic [ref=e5440]: 1/2
+                  - generic [ref=e5443]:
+                    - img [ref=e5444]:
+                      - generic [ref=e5446]: ¢
+                    - text: "10"
+                - generic [ref=e5447]:
+                  - img [ref=e5449]
+                  - generic [ref=e5453]:
+                    - generic [ref=e5454]: Speak in 1 roleplay
+                    - generic [ref=e5455]: 0/1
+                  - generic [ref=e5457]:
+                    - img [ref=e5458]:
+                      - generic [ref=e5460]: ¢
+                    - text: "5"
+            - generic [ref=e5461]:
+              - generic [ref=e5462]:
+                - generic [ref=e5463]: "03"
+                - generic [ref=e5464]:
+                  - generic [ref=e5466]: Bij de bakker
+                  - generic [ref=e5467]: At the bakery · 18 lessons
+                - img "tompouce happy" [ref=e5472]
+              - generic [ref=e5474]:
+                - generic [ref=e5475]:
+                  - img [ref=e5477]
+                  - generic [ref=e5479]: Hallo
+                - generic [ref=e5480]:
+                  - img [ref=e5482]
+                  - generic [ref=e5484]: Bestellen
+                - generic [ref=e5485]:
+                  - img [ref=e5487]
+                  - generic [ref=e5489]: Cijfers
+                - generic [ref=e5490]:
+                  - img [ref=e5492]
+                  - generic [ref=e5494]: Brood
+                - generic [ref=e5495]:
+                  - img [ref=e5497]
+                  - generic [ref=e5499]: Tompouce
+                - generic [ref=e5500]:
+                  - img [ref=e5502]
+                  - generic [ref=e5505]: Koffie
+                - generic [ref=e5506]:
+                  - img [ref=e5508]
+                  - generic [ref=e5511]: Afrekenen
+              - generic [ref=e5512]:
+                - img [ref=e5514]
+                - generic [ref=e5517]:
+                  - generic [ref=e5518]: Boss fight
+                  - generic [ref=e5519]: "Roleplay: Bij de bakker"
+                - img [ref=e5520]
+            - generic [ref=e5522]:
+              - generic [ref=e5523]:
+                - generic [ref=e5524]: "04"
+                - generic [ref=e5525]:
+                  - generic [ref=e5526]:
+                    - generic [ref=e5527]: Op de markt
+                    - generic [ref=e5528]:
+                      - img [ref=e5529]
+                      - text: locked
+                  - generic [ref=e5532]: At the market · 22 lessons
+                - img "kaas idle" [ref=e5534]
+              - generic [ref=e5536]:
+                - generic [ref=e5537]:
+                  - img [ref=e5539]
+                  - generic [ref=e5542]: Groente
+                - generic [ref=e5543]:
+                  - img [ref=e5545]
+                  - generic [ref=e5548]: Hoeveel?
+                - generic [ref=e5549]:
+                  - img [ref=e5551]
+                  - generic [ref=e5554]: Kaas
+                - generic [ref=e5555]:
+                  - img [ref=e5557]
+                  - generic [ref=e5560]: Vis
+              - generic [ref=e5561]:
+                - img [ref=e5563]
+                - generic [ref=e5566]:
+                  - generic [ref=e5567]: Boss fight
+                  - generic [ref=e5568]: "Roleplay: Op de markt"
+                - img [ref=e5569]
+          - navigation [ref=e5571]:
+            - button "Path" [ref=e5572] [cursor=pointer]:
+              - img [ref=e5573]
+              - generic [ref=e5576]: Path
+            - button "League" [ref=e5577] [cursor=pointer]:
+              - img [ref=e5578]
+              - generic [ref=e5582]: League
+            - button "Shop" [ref=e5583] [cursor=pointer]:
+              - img [ref=e5584]
+              - generic [ref=e5586]: Shop
+            - button "Me" [ref=e5587] [cursor=pointer]:
+              - img [ref=e5588]
+              - generic [ref=e5591]: Me
+      - generic [ref=e5593]:
+        - generic [ref=e5594]:
+          - generic [ref=e5595]:
+            - generic "Drag to reorder" [ref=e5596]:
+              - img [ref=e5597]
+            - generic "Click to focus" [ref=e5604] [cursor=pointer]:
+              - generic [ref=e5605]: C · Candy · Lesson Complete
+          - generic [ref=e5606]:
+            - button "More" [ref=e5608] [cursor=pointer]:
+              - img [ref=e5609]
+            - button "Focus" [ref=e5613] [cursor=pointer]:
+              - img [ref=e5614]
+        - generic [ref=e5621]:
+          - generic [ref=e5622]:
+            - generic [ref=e5623]: 9:41
+            - generic [ref=e5624]:
+              - img [ref=e5625]
+              - img [ref=e5631]
+              - img [ref=e5633]
+          - generic [ref=e5638]:
+            - generic [ref=e5639]: Lesson complete
+            - heading "Lekker gedaan." [level=1] [ref=e5640]
+            - generic [ref=e5641]:
+              - img "stroop happy" [ref=e5643]
+              - generic [ref=e5645]:
+                - generic [ref=e5646]:
+                  - img [ref=e5648]
+                  - generic [ref=e5650]: "14"
+                  - generic [ref=e5651]: XP
+                - generic [ref=e5652]:
+                  - img [ref=e5654]:
+                    - generic [ref=e5656]: ¢
+                  - generic [ref=e5657]: "10"
+                  - generic [ref=e5658]: Coins
+                - generic [ref=e5659]:
+                  - img [ref=e5661]
+                  - generic [ref=e5663]: "12"
+                  - generic [ref=e5664]: Streak
+            - generic [ref=e5665]:
+              - generic [ref=e5666]:
+                - generic [ref=e5667]: Accuracy
+                - generic [ref=e5668]: 87%
+              - generic [ref=e5672]:
+                - generic [ref=e5673]: 8 correct
+                - generic [ref=e5674]: 2 mistakes
+                - generic [ref=e5675]: 2 min 14 s
+            - generic [ref=e5677]:
+              - button "Continue → Next lesson" [ref=e5678] [cursor=pointer]
+              - button "Review mistakes" [ref=e5679] [cursor=pointer]
+  - generic [ref=e5681]:
+    - generic [ref=e5684]: Design notes & next steps
+    - generic [ref=e5685]:
+      - text: What this proto covers
+      - text: • 14 screens (Landing, Onboarding ×3, Path, Unit, Lesson player ×9 drills, drill states, Complete ×3, Roleplay, Scorecard, Leaderboard, Friends, Notifications, Shop, Profile ×2, Settings light + dark).
+      - text: • Palette comparison on real surfaces.
+      - text: Decisions that broke from the cited reference app
+      - text: "• Path: staggered tile-grid inside neighbourhood blocks (NOT a winding skill-tree). Boss-fight is a wide gradient bar at the foot — not a separate node."
+      - text: "• Lesson complete: stat-postcard overlapping the mascot — not a giant mascot hero. Waffle confetti instead of generic squares."
+      - text: "• Roleplay: objectives are chips in the dark header — always visible, never modal."
+      - text: "• Correction: inline yellow card on your own bubble — no separate \"review\" route."
+      - text: Tokens introduced beyond the repo
+      - text: •
+      - code [ref=e5697]: "--color-good-soft"
+      - text: ","
+      - code [ref=e5698]: "--color-bad-soft"
+      - text: ","
+      - code [ref=e5699]: "--color-streak"
+      - text: — colour-mix sugar for feedback bars and the streak chip. Otherwise everything is straight from
+      - code [ref=e5700]: src/styles.css
+      - text: .
+      - text: Recommended palette
+      - text: "Keep the live palette (orange #FF6B1A + blue #1F6FB2). It scores best on visual contrast at the path & celebration screens, and the warm paper background (#FFF8EE) does heavy lifting against pure-white drill cards. Candy is great for a seasonal skin; Warm Bakery for a premium B1/B2 future tier."
+      - text: Components built (matching repo names)
+      - text: Button (3 kinds), Card, Chip, Badge, Progress, Hearts, Toggle, Mascot (Stroop + 8 treats × 3 moods), StatusStrip, TopBar, TabDock, LessonChrome, FeedbackBar, Prompt, Confetti.
