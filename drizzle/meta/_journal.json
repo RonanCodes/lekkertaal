@@ -99,6 +99,13 @@
       "when": 1747872000000,
       "tag": "0013_learning_goal",
       "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "6",
+      "when": 1747958400000,
+      "tag": "0014_daily_goal_xp",
+      "breakpoints": true
     }
   ]
 }

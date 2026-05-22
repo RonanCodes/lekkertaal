@@ -297,7 +297,7 @@ h1, h2, h3, h4, h5, h6 {
  * so primary CTAs read correctly in both schemes.
  * ============================================================ */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --surface-page: #14110E;
     --surface-app: #1B1714;
     --surface-card: #2A2420;
@@ -328,13 +328,13 @@ h1, h2, h3, h4, h5, h6 {
     --color-bad-soft: #3D1F1F;
   }
 
-  body {
+  :root:not([data-theme="light"]) body {
     background-color: var(--surface-page);
     color: var(--text-body);
   }
-  h1, h2, h3, h4, h5, h6 { color: var(--text-strong); }
+  :root:not([data-theme="light"]) :is(h1), :root:not([data-theme="light"]) h2, :root:not([data-theme="light"]) h3, :root:not([data-theme="light"]) h4, :root:not([data-theme="light"]) h5, :root:not([data-theme="light"]) h6 { color: var(--text-strong); }
 
-  .card {
+  :root:not([data-theme="light"]) .card {
     background: var(--surface-card);
     border-color: var(--line-soft);
     box-shadow:
@@ -342,29 +342,29 @@ h1, h2, h3, h4, h5, h6 {
       0 8px 24px -8px rgba(0,0,0,0.5);
   }
 
-  .btn-3d-ghost {
+  :root:not([data-theme="light"]) .btn-3d-ghost {
     background: var(--surface-card);
     color: var(--text-strong);
     border-color: var(--line-strong);
     box-shadow: 0 4px 0 0 var(--line-strong);
   }
-  .btn-3d-ghost:hover {
+  :root:not([data-theme="light"]) .btn-3d-ghost:hover {
     background: var(--surface-hover);
     box-shadow: 0 5px 0 0 var(--line-strong);
   }
-  .btn-3d-ghost:active {
+  :root:not([data-theme="light"]) .btn-3d-ghost:active {
     box-shadow: 0 1px 0 0 var(--line-strong);
   }
 
-  .chip {
+  :root:not([data-theme="light"]) .chip {
     background: var(--surface-banner);
     color: var(--text-on-banner);
   }
-  .chip-blue {
+  :root:not([data-theme="light"]) .chip-blue {
     background: var(--surface-banner-blue);
     color: #BDD7EE;
   }
-  .chip-pink {
+  :root:not([data-theme="light"]) .chip-pink {
     background: #3D1F2C;
     color: #FFB8CE;
   }
@@ -372,66 +372,66 @@ h1, h2, h3, h4, h5, h6 {
   /* ---- Tailwind utility overrides ---- */
 
   /* Backgrounds */
-  .bg-white { background-color: var(--surface-card) !important; }
-  .bg-white\/95 { background-color: color-mix(in srgb, var(--surface-card) 95%, transparent) !important; }
-  .bg-white\/90 { background-color: color-mix(in srgb, var(--surface-card) 90%, transparent) !important; }
-  .bg-neutral-50 { background-color: var(--surface-card-alt) !important; }
-  .bg-neutral-100 { background-color: var(--surface-hover) !important; }
-  .bg-neutral-200 { background-color: var(--line-soft) !important; }
-  .bg-neutral-300 { background-color: var(--line-strong) !important; }
+  :root:not([data-theme="light"]) .bg-white { background-color: var(--surface-card) !important; }
+  :root:not([data-theme="light"]) .bg-white\/95 { background-color: color-mix(in srgb, var(--surface-card) 95%, transparent) !important; }
+  :root:not([data-theme="light"]) .bg-white\/90 { background-color: color-mix(in srgb, var(--surface-card) 90%, transparent) !important; }
+  :root:not([data-theme="light"]) .bg-neutral-50 { background-color: var(--surface-card-alt) !important; }
+  :root:not([data-theme="light"]) .bg-neutral-100 { background-color: var(--surface-hover) !important; }
+  :root:not([data-theme="light"]) .bg-neutral-200 { background-color: var(--line-soft) !important; }
+  :root:not([data-theme="light"]) .bg-neutral-300 { background-color: var(--line-strong) !important; }
 
   /* Soft tinted banners */
-  .bg-orange-50 { background-color: var(--surface-banner) !important; }
-  .bg-orange-50\/30 { background-color: color-mix(in srgb, var(--surface-banner) 30%, transparent) !important; }
-  .bg-blue-50 { background-color: var(--surface-banner-blue) !important; }
-  .bg-amber-50 { background-color: var(--surface-banner-amber) !important; }
-  .bg-amber-50\/40 { background-color: color-mix(in srgb, var(--surface-banner-amber) 40%, transparent) !important; }
-  .bg-red-50 { background-color: var(--surface-banner-red) !important; }
-  .bg-green-50 { background-color: var(--surface-banner-green) !important; }
-  .bg-emerald-50 { background-color: var(--surface-banner-green) !important; }
-  .bg-sky-50 { background-color: var(--surface-banner-sky) !important; }
-  .bg-amber-100 { background-color: #4A3A1F !important; }
-  .bg-orange-100 { background-color: #4A2F18 !important; }
-  .bg-sky-100 { background-color: #1F3548 !important; }
+  :root:not([data-theme="light"]) .bg-orange-50 { background-color: var(--surface-banner) !important; }
+  :root:not([data-theme="light"]) .bg-orange-50\/30 { background-color: color-mix(in srgb, var(--surface-banner) 30%, transparent) !important; }
+  :root:not([data-theme="light"]) .bg-blue-50 { background-color: var(--surface-banner-blue) !important; }
+  :root:not([data-theme="light"]) .bg-amber-50 { background-color: var(--surface-banner-amber) !important; }
+  :root:not([data-theme="light"]) .bg-amber-50\/40 { background-color: color-mix(in srgb, var(--surface-banner-amber) 40%, transparent) !important; }
+  :root:not([data-theme="light"]) .bg-red-50 { background-color: var(--surface-banner-red) !important; }
+  :root:not([data-theme="light"]) .bg-green-50 { background-color: var(--surface-banner-green) !important; }
+  :root:not([data-theme="light"]) .bg-emerald-50 { background-color: var(--surface-banner-green) !important; }
+  :root:not([data-theme="light"]) .bg-sky-50 { background-color: var(--surface-banner-sky) !important; }
+  :root:not([data-theme="light"]) .bg-amber-100 { background-color: #4A3A1F !important; }
+  :root:not([data-theme="light"]) .bg-orange-100 { background-color: #4A2F18 !important; }
+  :root:not([data-theme="light"]) .bg-sky-100 { background-color: #1F3548 !important; }
 
   /* Text colours */
-  .text-neutral-900 { color: var(--text-strong) !important; }
-  .text-neutral-800 { color: var(--text-strong) !important; }
-  .text-neutral-700 { color: var(--text-body) !important; }
-  .text-neutral-600 { color: var(--text-soft) !important; }
-  .text-neutral-500 { color: var(--text-muted) !important; }
-  .text-neutral-400 { color: var(--text-faint) !important; }
-  .text-neutral-300 { color: var(--text-faint) !important; }
+  :root:not([data-theme="light"]) .text-neutral-900 { color: var(--text-strong) !important; }
+  :root:not([data-theme="light"]) .text-neutral-800 { color: var(--text-strong) !important; }
+  :root:not([data-theme="light"]) .text-neutral-700 { color: var(--text-body) !important; }
+  :root:not([data-theme="light"]) .text-neutral-600 { color: var(--text-soft) !important; }
+  :root:not([data-theme="light"]) .text-neutral-500 { color: var(--text-muted) !important; }
+  :root:not([data-theme="light"]) .text-neutral-400 { color: var(--text-faint) !important; }
+  :root:not([data-theme="light"]) .text-neutral-300 { color: var(--text-faint) !important; }
 
   /* Borders */
-  .border-neutral-200 { border-color: var(--line-soft) !important; }
-  .border-neutral-300 { border-color: var(--line-strong) !important; }
-  .border-orange-200 { border-color: #5C3A1A !important; }
-  .border-amber-200 { border-color: #5C4520 !important; }
-  .border-red-200 { border-color: #5C2828 !important; }
-  .border-red-300 { border-color: #7A3535 !important; }
-  .border-blue-200 { border-color: #2A4660 !important; }
+  :root:not([data-theme="light"]) .border-neutral-200 { border-color: var(--line-soft) !important; }
+  :root:not([data-theme="light"]) .border-neutral-300 { border-color: var(--line-strong) !important; }
+  :root:not([data-theme="light"]) .border-orange-200 { border-color: #5C3A1A !important; }
+  :root:not([data-theme="light"]) .border-amber-200 { border-color: #5C4520 !important; }
+  :root:not([data-theme="light"]) .border-red-200 { border-color: #5C2828 !important; }
+  :root:not([data-theme="light"]) .border-red-300 { border-color: #7A3535 !important; }
+  :root:not([data-theme="light"]) .border-blue-200 { border-color: #2A4660 !important; }
 
   /* Rings (used as 1px borders in shadow form) */
-  .ring-orange-200 {
+  :root:not([data-theme="light"]) .ring-orange-200 {
     --tw-ring-color: #5C3A1A !important;
   }
-  .ring-amber-200 {
+  :root:not([data-theme="light"]) .ring-amber-200 {
     --tw-ring-color: #5C4520 !important;
   }
-  .ring-neutral-200 {
+  :root:not([data-theme="light"]) .ring-neutral-200 {
     --tw-ring-color: var(--line-soft) !important;
   }
-  .ring-amber-300 {
+  :root:not([data-theme="light"]) .ring-amber-300 {
     --tw-ring-color: #7A5828 !important;
   }
 
   /* Brand-tint text used on dark surfaces in light mode → keep readable */
-  .text-amber-900 { color: #FFE5B4 !important; }
-  .text-amber-800 { color: #FFD89A !important; }
-  .text-sky-700 { color: #BDD7EE !important; }
-  .text-orange-700 { color: #FFB47A !important; }
-  .text-red-700 { color: #FFA8A8 !important; }
+  :root:not([data-theme="light"]) .text-amber-900 { color: #FFE5B4 !important; }
+  :root:not([data-theme="light"]) .text-amber-800 { color: #FFD89A !important; }
+  :root:not([data-theme="light"]) .text-sky-700 { color: #BDD7EE !important; }
+  :root:not([data-theme="light"]) .text-orange-700 { color: #FFB47A !important; }
+  :root:not([data-theme="light"]) .text-red-700 { color: #FFA8A8 !important; }
 }
 
 /* ============================================================
@@ -3823,3 +3823,254 @@ img.roleplay-bubble-avatar {
     color: var(--color-brand-orange-soft);
   }
 }
+
+/* ============================================================
+ * Settings groups — Account / Learning / Appearance (#251).
+ * Read-only value rows, the daily-goal pill grid, the theme
+ * picker, and the "Opgeslagen" save toast. All route through the
+ * semantic surface/brand tokens so dark mode flips for free.
+ * ============================================================ */
+.sp-setting-row__value {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-soft);
+  font-family: var(--font-display);
+  text-align: right;
+}
+
+/* Daily-goal + theme pill grids share a responsive auto-fit layout. */
+.sp-goal-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(5rem, 1fr));
+  gap: 0.5rem;
+}
+.sp-theme-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+}
+
+.sp-goal-pill,
+.sp-theme-pill {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  border-radius: var(--radius-button);
+  border: 1.5px solid var(--line-soft);
+  background: var(--surface-card);
+  color: var(--text-soft);
+  padding: 0.6rem 0.4rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    border-color 120ms ease,
+    background 120ms ease,
+    color 120ms ease;
+}
+.sp-theme-pill {
+  font-size: 0.85rem;
+  padding: 0.7rem 0.5rem;
+}
+.sp-goal-pill:hover:not([data-active="true"]):not(:disabled),
+.sp-theme-pill:hover:not([data-active="true"]) {
+  border-color: var(--color-brand-orange);
+}
+.sp-goal-pill[data-active="true"],
+.sp-theme-pill[data-active="true"] {
+  border-color: var(--color-brand-orange);
+  background: var(--color-brand-orange-soft);
+  color: var(--color-brand-orange-dark);
+  box-shadow: 0 3px 0 0 var(--color-brand-orange);
+}
+.sp-goal-pill:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.sp-goal-pill__label {
+  font-size: 0.78rem;
+}
+.sp-goal-pill__xp {
+  font-size: 0.68rem;
+  font-weight: 600;
+  opacity: 0.85;
+}
+
+/* Save toast: pinned bottom-centre, fades out after ~2.2s. */
+.sp-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 1.75rem;
+  transform: translateX(-50%) translateY(0.5rem);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 0.9rem;
+  border-radius: var(--radius-pill);
+  background: var(--color-good);
+  color: #fff;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.85rem;
+  box-shadow: 0 6px 18px -6px rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 180ms ease,
+    transform 180ms ease;
+  z-index: 50;
+}
+.sp-toast[data-show="true"] {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+@media (prefers-reduced-motion: reduce) {
+  .sp-toast {
+    transition: opacity 180ms ease;
+  }
+}
+
+/* ============================================================
+ * Forced-dark override (Settings -> Appearance theme picker, #251).
+ * Mirrors the prefers-color-scheme block higher up so picking
+ * "Dark" applies the dark token set on any OS. Picking "Light"
+ * sets data-theme="light", which the media block excludes; System
+ * leaves data-theme unset and defers to prefers-color-scheme.
+ * ============================================================ */
+  :root[data-theme="dark"] {
+    --surface-page: #14110E;
+    --surface-app: #1B1714;
+    --surface-card: #2A2420;
+    --surface-card-alt: #221C18;
+    --surface-input: #2A2420;
+    --surface-hover: #34291F;
+    --surface-banner: #3A2916;
+    --surface-banner-blue: #1A2C3D;
+    --surface-banner-amber: #3D2E16;
+    --surface-banner-red: #3D1F1F;
+    --surface-banner-green: #1F3A22;
+    --surface-banner-sky: #1A2A38;
+
+    --text-strong: #F8F2E5;
+    --text-body: #ECE3D2;
+    --text-soft: #C9BCA5;
+    --text-muted: #9C8E78;
+    --text-faint: #6B5F4F;
+    --text-on-banner: #FFE5D2;
+
+    --line-soft: #3C322A;
+    --line-strong: #5C4A3A;
+
+    /* Feedback tints: the light values are near-white and would glare on the
+     * dark paper, so retune to dim, readable surfaces that match the banner
+     * tints above. The strong --color-good / --color-bad stay as-is. */
+    --color-good-soft: #1F3A22;
+    --color-bad-soft: #3D1F1F;
+  }
+
+  [data-theme="dark"] body {
+    background-color: var(--surface-page);
+    color: var(--text-body);
+  }
+  [data-theme="dark"] :is(h1), [data-theme="dark"] h2, [data-theme="dark"] h3, [data-theme="dark"] h4, [data-theme="dark"] h5, [data-theme="dark"] h6 { color: var(--text-strong); }
+
+  [data-theme="dark"] .card {
+    background: var(--surface-card);
+    border-color: var(--line-soft);
+    box-shadow:
+      0 1px 0 0 rgba(0,0,0,0.4),
+      0 8px 24px -8px rgba(0,0,0,0.5);
+  }
+
+  [data-theme="dark"] .btn-3d-ghost {
+    background: var(--surface-card);
+    color: var(--text-strong);
+    border-color: var(--line-strong);
+    box-shadow: 0 4px 0 0 var(--line-strong);
+  }
+  [data-theme="dark"] .btn-3d-ghost:hover {
+    background: var(--surface-hover);
+    box-shadow: 0 5px 0 0 var(--line-strong);
+  }
+  [data-theme="dark"] .btn-3d-ghost:active {
+    box-shadow: 0 1px 0 0 var(--line-strong);
+  }
+
+  [data-theme="dark"] .chip {
+    background: var(--surface-banner);
+    color: var(--text-on-banner);
+  }
+  [data-theme="dark"] .chip-blue {
+    background: var(--surface-banner-blue);
+    color: #BDD7EE;
+  }
+  [data-theme="dark"] .chip-pink {
+    background: #3D1F2C;
+    color: #FFB8CE;
+  }
+
+  /* ---- Tailwind utility overrides ---- */
+
+  /* Backgrounds */
+  [data-theme="dark"] .bg-white { background-color: var(--surface-card) !important; }
+  [data-theme="dark"] .bg-white\/95 { background-color: color-mix(in srgb, var(--surface-card) 95%, transparent) !important; }
+  [data-theme="dark"] .bg-white\/90 { background-color: color-mix(in srgb, var(--surface-card) 90%, transparent) !important; }
+  [data-theme="dark"] .bg-neutral-50 { background-color: var(--surface-card-alt) !important; }
+  [data-theme="dark"] .bg-neutral-100 { background-color: var(--surface-hover) !important; }
+  [data-theme="dark"] .bg-neutral-200 { background-color: var(--line-soft) !important; }
+  [data-theme="dark"] .bg-neutral-300 { background-color: var(--line-strong) !important; }
+
+  /* Soft tinted banners */
+  [data-theme="dark"] .bg-orange-50 { background-color: var(--surface-banner) !important; }
+  [data-theme="dark"] .bg-orange-50\/30 { background-color: color-mix(in srgb, var(--surface-banner) 30%, transparent) !important; }
+  [data-theme="dark"] .bg-blue-50 { background-color: var(--surface-banner-blue) !important; }
+  [data-theme="dark"] .bg-amber-50 { background-color: var(--surface-banner-amber) !important; }
+  [data-theme="dark"] .bg-amber-50\/40 { background-color: color-mix(in srgb, var(--surface-banner-amber) 40%, transparent) !important; }
+  [data-theme="dark"] .bg-red-50 { background-color: var(--surface-banner-red) !important; }
+  [data-theme="dark"] .bg-green-50 { background-color: var(--surface-banner-green) !important; }
+  [data-theme="dark"] .bg-emerald-50 { background-color: var(--surface-banner-green) !important; }
+  [data-theme="dark"] .bg-sky-50 { background-color: var(--surface-banner-sky) !important; }
+  [data-theme="dark"] .bg-amber-100 { background-color: #4A3A1F !important; }
+  [data-theme="dark"] .bg-orange-100 { background-color: #4A2F18 !important; }
+  [data-theme="dark"] .bg-sky-100 { background-color: #1F3548 !important; }
+
+  /* Text colours */
+  [data-theme="dark"] .text-neutral-900 { color: var(--text-strong) !important; }
+  [data-theme="dark"] .text-neutral-800 { color: var(--text-strong) !important; }
+  [data-theme="dark"] .text-neutral-700 { color: var(--text-body) !important; }
+  [data-theme="dark"] .text-neutral-600 { color: var(--text-soft) !important; }
+  [data-theme="dark"] .text-neutral-500 { color: var(--text-muted) !important; }
+  [data-theme="dark"] .text-neutral-400 { color: var(--text-faint) !important; }
+  [data-theme="dark"] .text-neutral-300 { color: var(--text-faint) !important; }
+
+  /* Borders */
+  [data-theme="dark"] .border-neutral-200 { border-color: var(--line-soft) !important; }
+  [data-theme="dark"] .border-neutral-300 { border-color: var(--line-strong) !important; }
+  [data-theme="dark"] .border-orange-200 { border-color: #5C3A1A !important; }
+  [data-theme="dark"] .border-amber-200 { border-color: #5C4520 !important; }
+  [data-theme="dark"] .border-red-200 { border-color: #5C2828 !important; }
+  [data-theme="dark"] .border-red-300 { border-color: #7A3535 !important; }
+  [data-theme="dark"] .border-blue-200 { border-color: #2A4660 !important; }
+
+  /* Rings (used as 1px borders in shadow form) */
+  [data-theme="dark"] .ring-orange-200 {
+    --tw-ring-color: #5C3A1A !important;
+  }
+  [data-theme="dark"] .ring-amber-200 {
+    --tw-ring-color: #5C4520 !important;
+  }
+  [data-theme="dark"] .ring-neutral-200 {
+    --tw-ring-color: var(--line-soft) !important;
+  }
+  [data-theme="dark"] .ring-amber-300 {
+    --tw-ring-color: #7A5828 !important;
+  }
+
+  /* Brand-tint text used on dark surfaces in light mode → keep readable */
+  [data-theme="dark"] .text-amber-900 { color: #FFE5B4 !important; }
+  [data-theme="dark"] .text-amber-800 { color: #FFD89A !important; }
+  [data-theme="dark"] .text-sky-700 { color: #BDD7EE !important; }
+  [data-theme="dark"] .text-orange-700 { color: #FFB47A !important; }
+  [data-theme="dark"] .text-red-700 { color: #FFA8A8 !important; }
+

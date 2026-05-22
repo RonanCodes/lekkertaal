@@ -6,6 +6,7 @@ import { ClerkProvider, UserButton, useAuth } from "@clerk/tanstack-react-start"
 import appCss from "../styles.css?url";
 import { IosInstallBanner } from "../components/IosInstallBanner";
 import { getEffectiveAuth } from "../lib/server/user";
+import { THEME_NOFLASH_SCRIPT } from "../lib/theme";
 
 type EffectiveAuth = Awaited<ReturnType<typeof getEffectiveAuth>>;
 
@@ -41,6 +42,9 @@ export const Route = createRootRoute({
       { rel: "apple-touch-icon", sizes: "180x180", href: "/apple-touch-icon.png" },
     ],
     scripts: [
+      // Apply the saved Light/Dark override before first paint to avoid a
+      // light→dark flash. System (no override) defers to prefers-color-scheme.
+      { children: THEME_NOFLASH_SCRIPT },
       {
         children:
           "if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('/sw.js').catch(console.error)})}",

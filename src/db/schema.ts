@@ -38,6 +38,10 @@ export const users = sqliteTable(
     hintsBalance: integer("hints_balance").default(0).notNull(),
     sfxEnabled: integer("sfx_enabled", { mode: "boolean" }).default(true).notNull(),
     isPublic: integer("is_public", { mode: "boolean" }).default(true).notNull(),
+    // Daily XP target picked in Settings → Learning. One of 10 (Casual),
+    // 20 (Regular), 50 (Serious), 100 (Intense). Defaults to 20 so existing
+    // rows stay valid without a backfill.
+    dailyGoalXp: integer("daily_goal_xp").default(20).notNull(),
     // Why the learner is here, captured on the first onboarding step. One of
     // "moving" | "dating" | "study" | "fun"; nullable so existing rows and
     // users who skip the step stay valid.
