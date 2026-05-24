@@ -7,6 +7,20 @@ if [ "$SKIP_QUALITY_CHECKS" = "1" ]; then
   exit 0
 fi
 
+# Never push to main. Always a feature branch → PR → squash-merge (canon).
+# Override for emergency rollback: ALLOW_PUSH_TO_MAIN=1 git push
+while read -r local_ref local_sha remote_ref remote_sha; do
+  case "$remote_ref" in
+    refs/heads/main | refs/heads/master)
+      if [ -z "$ALLOW_PUSH_TO_MAIN" ]; then
+        echo "✋ Direct push to main is blocked. Open a PR and squash-merge (/ro:ship)."
+        echo "   Override (emergency rollback only): ALLOW_PUSH_TO_MAIN=1 git push"
+        exit 1
+      fi
+      ;;
+  esac
+done
+
 set -e
 # Build first so routeTree.gen.ts exists (gitignored, generated as a side
 # effect of the tanstackStart vite plugin). Typecheck + lint need it to
