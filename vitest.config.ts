@@ -26,6 +26,11 @@ export default defineConfig({
     },
   },
   test: {
+    // Cap workers so concurrent worktrees do not stampede the machine.
+    // Vitest defaults to roughly one worker per core, per run. Several
+    // worktrees running their gate at once oversubscribes an 8 core box
+    // and every run gets slower, agent runs included.
+    maxWorkers: 2,
     environment: "jsdom",
     globals: true,
     setupFiles: ["./src/test-setup.ts"],
